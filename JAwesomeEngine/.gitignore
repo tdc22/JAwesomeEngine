@@ -1,0 +1,5 @@
+bin/
+.metadata
+.classpath
+hs_err_pid*
+*~

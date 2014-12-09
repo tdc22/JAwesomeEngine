@@ -1,0 +1,37 @@
+package shapedata;
+
+import objects.DataObject;
+import vector.Vector3f;
+
+/**
+ * Not-rendered representation of sphere data.
+ * 
+ * @author Oliver Schall
+ * 
+ */
+
+public class SphereData extends DataObject implements SphereStructure {
+	float radius;
+
+	public SphereData(float x, float y, float z, float radius) {
+		super();
+		translate(x, y, z);
+		shapetype = SHAPE_SPHERE;
+		this.radius = radius;
+	}
+
+	public SphereData(Vector3f pos, float radius) {
+		super();
+		translate(pos);
+		shapetype = SHAPE_SPHERE;
+		this.radius = radius;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public float getRadius() {
+		return radius;
+	}
+}
