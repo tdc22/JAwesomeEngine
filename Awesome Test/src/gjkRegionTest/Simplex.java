@@ -1,0 +1,34 @@
+package gjkRegionTest;
+
+import java.awt.Color;
+import java.util.List;
+
+import objects.ShapedObject;
+import vector.Vector2f;
+import vector.Vector3f;
+
+public class Simplex extends ShapedObject {
+	public Simplex(List<Vector3f> simplices) {
+		int simplexsize = simplices.size();
+		if (simplexsize == 1) {
+			setRenderMode(GL11.GL_POINTS);
+		}
+		if (simplexsize == 2) {
+			setRenderMode(GL11.GL_LINES);
+		}
+		if (simplexsize >= 3) {
+			setRenderMode(GL11.GL_TRIANGLES);
+		}
+
+		for (int i = 0; i < simplices.size(); i++) {
+			addVertex(simplices.get(i), Color.GRAY, new Vector2f(0, 0),
+					new Vector3f(0, 1, 0));
+			addIndex(i);
+		}
+		if (simplices.size() == 4) {
+			addIndices(1, 0, 3, 2, 1, 3, 0, 2);
+		}
+
+		prerender();
+	}
+}

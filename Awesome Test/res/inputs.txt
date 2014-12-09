@@ -1,0 +1,8 @@
+"Translate1": 0;20;2.0/
+"Translate2": 0;34;2.0/
+"Translate3": 0;33;2.0/
+"Translate4": 0;35;2.0/
+"Rotate1": 0;23;2.0/
+"Rotate2": 0;37;2.0/
+"Rotate3": 0;36;2.0/
+"Rotate4": 0;38;2.0/

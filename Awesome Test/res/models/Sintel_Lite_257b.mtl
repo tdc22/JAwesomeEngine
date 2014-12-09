@@ -1,0 +1,389 @@
+# Blender MTL File: 'Sintel_Lite_257b.blend'
+# Material Count: 36
+newmtl Grey
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.100000 0.100000 0.100000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl Light_Emit_Blue
+Ns 27.450980
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.329481 1.000000
+Ks 0.025000 0.037649 0.050000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl Light_Emit_Orange
+Ns 27.450980
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 0.138000 0.000000
+Ks 0.050000 0.030292 0.025000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl Sintel_Skin1_layer_sintel_skin_diff.jpg
+Ns 47.058824
+Ka 0.000000 0.000000 0.000000
+Kd 0.400000 0.400000 0.400000
+Ks 0.100000 0.100000 0.100000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Sintel_Lite_257b.blend/textures/sintel_skin_diff.jpg
+
+
+newmtl cornea_eye_sintel_eyeball_bmp.jp
+Ns 292.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 1.000000 1.000000 1.000000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd Sintel_Lite_257b.blend/textures/sintel_eyeball_bmp.jpg
+map_Bump Sintel_Lite_257b.blend/textures/sintel_eyeball_bmp.jpg
+
+
+newmtl do_not_render_this
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.489440 0.800000
+Ks 0.100000 0.100000 0.100000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl dull_metal1
+Ns 17.647059
+Ka 0.000000 0.000000 0.000000
+Kd 0.064380 0.063247 0.075293
+Ks 0.104313 0.106824 0.117646
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl eye_white_proxy_sintel_eyeball_diff.j
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.585644 0.585644 0.585644
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd Sintel_Lite_257b.blend/textures/sintel_eyeball_diff.jpg
+
+
+newmtl eyelash_lo
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.001563 0.001254 0.001094
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 1
+
+
+newmtl eyelash_up
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.001563 0.001254 0.001094
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 1
+
+
+newmtl grey_edges_sintel_sweater_painte
+Ns 37.254902
+Ka 0.000000 0.000000 0.000000
+Kd 0.250000 0.250000 0.250000
+Ks 0.020000 0.020000 0.020000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Sintel_Lite_257b.blend/textures/sintel_sweater_painted.jpg
+
+
+newmtl ground
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+
+
+newmtl hair_collider
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.518577 0.363094
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl inside_mouth.teeth
+Ns 615.686275
+Ka 0.000000 0.000000 0.000000
+Kd 0.405874 0.370854 0.286820
+Ks 0.287238 0.365131 0.329389
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Sintel_Lite_257b.blend/textures/sintel_teeth_diff.jpg
+
+
+newmtl inside_mouth_sintel_teeth_diff.jpg
+Ns 978.431373
+Ka 0.000000 0.000000 0.000000
+Kd 0.728189 0.800000 0.753730
+Ks 0.800000 0.800000 0.800000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Sintel_Lite_257b.blend/textures/sintel_teeth_diff.jpg
+
+
+newmtl iris_proxy_sintel_eyeball_diff.j
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.170246 0.083877 0.036335
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd Sintel_Lite_257b.blend/textures/sintel_eyeball_diff.jpg
+
+
+newmtl leatherBoots_sintel_boots.jpg
+Ns 37.254902
+Ka 0.000000 0.000000 0.000000
+Kd 0.012523 0.009382 0.009820
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Sintel_Lite_257b.blend/textures/sintel_boots.jpg
+map_Ks Sintel_Lite_257b.blend/textures/sintel_boots.jpg
+map_Bump Sintel_Lite_257b.blend/textures/sintel_boots.jpg
+
+
+newmtl leatherGloves_leather_06_diff.jpg
+Ns 37.254902
+Ka 0.000000 0.000000 0.000000
+Kd 0.282505 0.207572 0.098711
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Sintel_Lite_257b.blend/textures/leather_06_diff.jpg
+map_Ks Sintel_Lite_257b.blend/textures/leather_06_diff.jpg
+map_Bump Sintel_Lite_257b.blend/textures/leather_06_diff.jpg
+
+
+newmtl leatherPants_sintel_pants.jpg
+Ns 76.470588
+Ka 0.000000 0.000000 0.000000
+Kd 0.100000 0.081684 0.051362
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Sintel_Lite_257b.blend/textures/sintel_pants.jpg
+map_Ks Sintel_Lite_257b.blend/textures/sintel_pants.jpg
+map_Bump Sintel_Lite_257b.blend/textures/sintel_pants.jpg
+
+
+newmtl mdef_cage_transp
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 0.500000
+illum 2
+
+
+newmtl proxy-hair
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.155285 0.014461 0.009319
+Ks 0.100000 0.042346 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl proxy_brown1
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.295693 0.266282 0.226721
+Ks 0.007610 0.007610 0.007610
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl proxy_brown2
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.189049 0.129808 0.072131
+Ks 0.001944 0.001944 0.001944
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl proxy_brown3
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.226859 0.155769 0.086558
+Ks 0.001944 0.001944 0.001944
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl proxy_brown4
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.177416 0.159769 0.136033
+Ks 0.007610 0.007610 0.007610
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl proxy_mouth_sintel_teeth_diff.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.186153 0.095592 0.083354
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Sintel_Lite_257b.blend/textures/sintel_teeth_diff.jpg
+
+
+newmtl proxy_red
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.289329 0.088967 0.069659
+Ks 0.700000 0.700000 0.700000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl proxy_skin
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.390168 0.201482
+Ks 0.100000 0.100000 0.100000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl proxy_teeth_sintel_teeth_diff.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Sintel_Lite_257b.blend/textures/sintel_teeth_diff.jpg
+
+
+newmtl pupil_proxy_sintel_eyeball_diff.j
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd Sintel_Lite_257b.blend/textures/sintel_eyeball_diff.jpg
+
+
+newmtl sintel_eye_sintel_eyeball_diff.j
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.480000 0.455110 0.380440
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Sintel_Lite_257b.blend/textures/sintel_eyeball_diff.jpg
+map_Bump Sintel_Lite_257b.blend/textures/sintel_eyeball_diff.jpg
+
+
+newmtl sintel_eyebrows
+Ns 56.862745
+Ka 0.000000 0.000000 0.000000
+Kd 0.011928 0.004953 0.004771
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Sintel_Lite_257b.blend/textures/sintel_hair_diff.jpg
+
+
+newmtl sintel_hair
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.350671 0.121828 0.121828
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl sintel_tearline
+Ns 17.647059
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 1.000000 1.000000 1.000000
+Ni 1.000000
+d 0.000000
+illum 2
+
+
+newmtl sweater_main_sintel_sweater_painte
+Ns 37.254902
+Ka 0.000000 0.000000 0.000000
+Kd 0.345880 0.309265 0.240385
+Ks 0.003079 0.003280 0.003884
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Sintel_Lite_257b.blend/textures/sintel_sweater_painted.jpg
+map_Bump Sintel_Lite_257b.blend/textures/sintel_sweater_painted.jpg
+
+
+newmtl sweater_straps_sintel_sweater_painte
+Ns 84.313725
+Ka 0.000000 0.000000 0.000000
+Kd 0.172940 0.154633 0.120192
+Ks 0.020524 0.021867 0.025895
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Sintel_Lite_257b.blend/textures/sintel_sweater_painted.jpg
+map_Bump Sintel_Lite_257b.blend/textures/sintel_sweater_painted.jpg
+
+
