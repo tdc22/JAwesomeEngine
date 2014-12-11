@@ -26,8 +26,8 @@ public class TextTest extends StandardGame {
 		add2dObject(new Text(
 				"Hello this is a test!\nYou can make line breaks.", 100, 100,
 				font, 40));
-		add2dObject(new Text("This font is rendered in polygons.", 100,
-				200, font, 10));
+		add2dObject(new Text("This font is rendered in polygons.", 100, 200,
+				font, 10));
 	}
 
 	@Override

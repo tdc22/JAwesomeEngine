@@ -1,21 +1,21 @@
 package input;
 
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_2;
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_3;
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_4;
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_5;
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_6;
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_7;
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_8;
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_LAST;
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
-import static org.lwjgl.system.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
-import static org.lwjgl.system.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.system.glfw.GLFW.glfwGetCursorPos;
-import static org.lwjgl.system.glfw.GLFW.glfwGetKey;
-import static org.lwjgl.system.glfw.GLFW.glfwGetMouseButton;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_2;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_3;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_4;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_5;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_6;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_7;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_8;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LAST;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
+import static org.lwjgl.glfw.GLFW.glfwGetKey;
+import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 
 import java.nio.DoubleBuffer;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.system.glfw.GLFW;
+import org.lwjgl.glfw.GLFW;
 
 public class GLFWInputReader extends InputReader {
 	List<Long> windowids;

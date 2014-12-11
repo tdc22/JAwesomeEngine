@@ -1,5 +1,41 @@
 package gui;
 
+import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
+import static org.lwjgl.glfw.GLFW.GLFW_ACCUM_ALPHA_BITS;
+import static org.lwjgl.glfw.GLFW.GLFW_ACCUM_BLUE_BITS;
+import static org.lwjgl.glfw.GLFW.GLFW_ACCUM_GREEN_BITS;
+import static org.lwjgl.glfw.GLFW.GLFW_ACCUM_RED_BITS;
+import static org.lwjgl.glfw.GLFW.GLFW_ALPHA_BITS;
+import static org.lwjgl.glfw.GLFW.GLFW_AUX_BUFFERS;
+import static org.lwjgl.glfw.GLFW.GLFW_BLUE_BITS;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
+import static org.lwjgl.glfw.GLFW.GLFW_DEPTH_BITS;
+import static org.lwjgl.glfw.GLFW.GLFW_GREEN_BITS;
+import static org.lwjgl.glfw.GLFW.GLFW_RED_BITS;
+import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
+import static org.lwjgl.glfw.GLFW.GLFW_SAMPLES;
+import static org.lwjgl.glfw.GLFW.GLFW_SRGB_CAPABLE;
+import static org.lwjgl.glfw.GLFW.GLFW_STENCIL_BITS;
+import static org.lwjgl.glfw.GLFW.GLFW_STEREO;
+import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
@@ -7,55 +43,21 @@ import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import static org.lwjgl.system.glfw.GLFW.GLFW_ACCUM_ALPHA_BITS;
-import static org.lwjgl.system.glfw.GLFW.GLFW_ACCUM_BLUE_BITS;
-import static org.lwjgl.system.glfw.GLFW.GLFW_ACCUM_GREEN_BITS;
-import static org.lwjgl.system.glfw.GLFW.GLFW_ACCUM_RED_BITS;
-import static org.lwjgl.system.glfw.GLFW.GLFW_ALPHA_BITS;
-import static org.lwjgl.system.glfw.GLFW.GLFW_AUX_BUFFERS;
-import static org.lwjgl.system.glfw.GLFW.GLFW_BLUE_BITS;
-import static org.lwjgl.system.glfw.GLFW.GLFW_CURSOR;
-import static org.lwjgl.system.glfw.GLFW.GLFW_CURSOR_DISABLED;
-import static org.lwjgl.system.glfw.GLFW.GLFW_DEPTH_BITS;
-import static org.lwjgl.system.glfw.GLFW.GLFW_GREEN_BITS;
-import static org.lwjgl.system.glfw.GLFW.GLFW_RED_BITS;
-import static org.lwjgl.system.glfw.GLFW.GLFW_RESIZABLE;
-import static org.lwjgl.system.glfw.GLFW.GLFW_SAMPLES;
-import static org.lwjgl.system.glfw.GLFW.GLFW_SRGB_CAPABLE;
-import static org.lwjgl.system.glfw.GLFW.GLFW_STENCIL_BITS;
-import static org.lwjgl.system.glfw.GLFW.GLFW_STEREO;
-import static org.lwjgl.system.glfw.GLFW.GLFW_VISIBLE;
-import static org.lwjgl.system.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.system.glfw.GLFW.glfwDefaultWindowHints;
-import static org.lwjgl.system.glfw.GLFW.glfwDestroyWindow;
-import static org.lwjgl.system.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.system.glfw.GLFW.glfwGetVideoMode;
-import static org.lwjgl.system.glfw.GLFW.glfwInit;
-import static org.lwjgl.system.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.system.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.system.glfw.GLFW.glfwSetErrorCallback;
-import static org.lwjgl.system.glfw.GLFW.glfwSetInputMode;
-import static org.lwjgl.system.glfw.GLFW.glfwSetWindowPos;
-import static org.lwjgl.system.glfw.GLFW.glfwShowWindow;
-import static org.lwjgl.system.glfw.GLFW.glfwSwapBuffers;
-import static org.lwjgl.system.glfw.GLFW.glfwSwapInterval;
-import static org.lwjgl.system.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.system.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.system.glfw.GLFW.glfwWindowShouldClose;
 
 import java.nio.ByteBuffer;
 
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWvidmode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
-import org.lwjgl.system.glfw.ErrorCallback;
-import org.lwjgl.system.glfw.GLFWvidmode;
 
 public class GLDisplay extends Display {
 	private long windowid;
+	private GLFWErrorCallback errorCallback;
 
 	@Override
 	public void open(DisplayMode displaymode, PixelFormat pixelformat) {
-		glfwSetErrorCallback(ErrorCallback.Util.getDefault());
+		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
 
 		if (glfwInit() != GL11.GL_TRUE)
 			throw new IllegalStateException("Unable to initialize GLFW");
@@ -111,6 +113,7 @@ public class GLDisplay extends Display {
 	public void close() {
 		glfwDestroyWindow(windowid);
 		glfwTerminate();
+		errorCallback.release();
 	}
 
 	@Override

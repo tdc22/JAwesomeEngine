@@ -5,7 +5,6 @@ import gui.DisplayMode;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
-import input.GLFWInputReader;
 import shape.Box;
 import shape.Capsule;
 import shape.Cylinder;
@@ -23,8 +22,8 @@ public class GeometryTest extends StandardGame {
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-//		inputs.setInputReader(new GLFWInputReader(((GLDisplay) display)
-//				.getWindowID()));
+		// inputs.setInputReader(new GLFWInputReader(((GLDisplay) display)
+		// .getWindowID()));
 		/*
 		 * lineshader = new Shader(ShaderLoader.loadShaderPair(
 		 * "res/shaders/geometrytestshader.vert",

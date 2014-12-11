@@ -34,8 +34,8 @@ public class Test2d extends StandardGame {
 
 		addObject(new Box(0, 0, 0, 0.5f, 0.5f, 0.5f));
 		add2dObject(new Quad(25, 25, 50, 50));
-		add2dObject(new Text("2D Fonttest... seems to work perfectly!",
-				100, 100, font));
+		add2dObject(new Text("2D Fonttest... seems to work perfectly!", 100,
+				100, font));
 
 		rotquad = new Quad(500, 50, 25, 25);
 		add2dObject(rotquad);

@@ -27,14 +27,14 @@ public class PhysicsDebug {
 	boolean showCollisionNormals = false;
 	boolean showVelocities = false;
 	private InputEvent toggleAABBs, toggleContractPoints,
-	toggleCollisionNormals, toggleVelocities;
+			toggleCollisionNormals, toggleVelocities;
 
 	public PhysicsDebug(InputManager inputs, Font f, Space3 physics) {
 		font = f;
 		this.physics = physics;
 		setupControls(inputs);
 	}
-	
+
 	private void setupControls(InputManager inputs) {
 		toggleAABBs = new InputEvent("debug_physics2_showAABBs", new Input(
 				Input.KEYBOARD_EVENT, "F5", KeyEvent.KEY_PRESSED));
