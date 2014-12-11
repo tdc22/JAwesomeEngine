@@ -1,14 +1,16 @@
 package physics;
 
 import gui.Font;
+import input.Input;
+import input.InputEvent;
 import input.InputManager;
+import input.KeyEvent;
 
 import java.awt.Color;
 import java.util.List;
 
 import manifold.CollisionManifold;
 import math.VecMath;
-import net.java.games.input.Component.Identifier.Key;
 import objects.RigidBody;
 import objects.ShapedObject;
 
@@ -19,17 +21,36 @@ import space.Space3;
 import vector.Vector3f;
 
 public class PhysicsDebug {
-	InputManager inputs;
 	Font font;
 	Space3 physics;
 	boolean showAABBs = false;
 	boolean showCollisionNormals = false;
 	boolean showVelocities = false;
+	private InputEvent toggleAABBs, toggleContractPoints,
+	toggleCollisionNormals, toggleVelocities;
 
-	public PhysicsDebug(InputManager i, Font f, Space3 physics) {
-		inputs = i;
+	public PhysicsDebug(InputManager inputs, Font f, Space3 physics) {
 		font = f;
 		this.physics = physics;
+		setupControls(inputs);
+	}
+	
+	private void setupControls(InputManager inputs) {
+		toggleAABBs = new InputEvent("debug_physics2_showAABBs", new Input(
+				Input.KEYBOARD_EVENT, "F5", KeyEvent.KEY_PRESSED));
+		toggleContractPoints = new InputEvent(
+				"debug_physics2_showContactPoints", new Input(
+						Input.KEYBOARD_EVENT, "F6", KeyEvent.KEY_PRESSED));
+		toggleCollisionNormals = new InputEvent(
+				"debug_physics2_showCollisionNormals", new Input(
+						Input.KEYBOARD_EVENT, "F7", KeyEvent.KEY_PRESSED));
+		toggleVelocities = new InputEvent("debug_physics2_showVelocities",
+				new Input(Input.KEYBOARD_EVENT, "F8", KeyEvent.KEY_PRESSED));
+
+		inputs.addEvent(toggleAABBs);
+		inputs.addEvent(toggleContractPoints);
+		inputs.addEvent(toggleCollisionNormals);
+		inputs.addEvent(toggleVelocities);
 	}
 
 	public boolean isAABBsShown() {
@@ -123,12 +144,11 @@ public class PhysicsDebug {
 	}
 
 	public void update() {
-		// TODO: put that somewhere else
-		if (inputs.isKeyPressed(Key.F5))
+		if (toggleAABBs.isActive())
 			toggleShowAABBs();
-		if (inputs.isKeyPressed(Key.F6))
+		if (toggleCollisionNormals.isActive())
 			toggleShowCollisionNormals();
-		if (inputs.isKeyPressed(Key.F7))
+		if (toggleVelocities.isActive())
 			toggleShowVelocities();
 	}
 }
