@@ -7,7 +7,7 @@ import java.util.List;
 
 import manifold.ManifoldManager;
 import narrowphase.Narrowphase;
-import objects.DataObject;
+import objects.DataGameObject;
 import objects.GameObject;
 import objects.RigidBody;
 import positionalcorrection.PositionalCorrection;
@@ -30,11 +30,11 @@ public class PhysicsSpace extends Space3 {
 		addedobjects = new ArrayList<GameObject>();
 	}
 
-	public void addRigidBody(DataObject obj, float mass) {
+	public void addRigidBody(DataGameObject obj, float mass) {
 
 	}
 
-	public void addRigidBody(DataObject obj,
+	public void addRigidBody(DataGameObject obj,
 			RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
 		body.setRotation(obj.getRotation());
 		body.setTranslation(obj.getTranslation());

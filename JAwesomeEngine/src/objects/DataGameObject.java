@@ -1,6 +1,6 @@
 package objects;
 
-public abstract class DataObject extends GameObject implements ObjectData {
+public abstract class DataGameObject extends GameObject implements ObjectData {
 	protected int shapetype;
 
 	@Override
