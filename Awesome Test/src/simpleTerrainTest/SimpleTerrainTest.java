@@ -2,6 +2,13 @@ package simpleTerrainTest;
 
 import game.Debugger;
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
+import input.Input;
+import input.InputEvent;
+import input.KeyEvent;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,14 +21,16 @@ import terrain.Terrain;
 
 public class SimpleTerrainTest extends StandardGame {
 	Debugger debugmanager;
+	InputEvent toggleMouseBind;
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		initDisplay(false, 800, 600, false);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		this.setRendering2d(true);
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 3, 0);
 		cam.rotateTo(225, 0);
@@ -35,6 +44,10 @@ public class SimpleTerrainTest extends StandardGame {
 		Terrain terrain = new Terrain(heightmap);
 		terrain.scale(0.1f, 0.5f, 0.1f);
 		addObject(terrain);
+		
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT,
+				"T", KeyEvent.KEY_PRESSED));
+		inputs.addEvent(toggleMouseBind);
 	}
 
 	@Override
@@ -53,5 +66,9 @@ public class SimpleTerrainTest extends StandardGame {
 	public void update(int delta) {
 		debugmanager.update();
 		cam.update(delta);
+		if (toggleMouseBind.isActive()) {
+			if(!display.isMouseBound()) display.bindMouse();
+			else display.unbindMouse();
+		}
 	}
 }

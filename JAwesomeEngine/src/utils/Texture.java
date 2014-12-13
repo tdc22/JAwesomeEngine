@@ -1,4 +1,4 @@
-package texture;
+package utils;
 
 import org.lwjgl.opengl.GL11;
 

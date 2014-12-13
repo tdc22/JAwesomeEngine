@@ -2,6 +2,10 @@ package OGLRotationTest;
 
 import game.Debugger;
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import loader.FontLoader;
 
 public class RotationTest extends StandardGame {
@@ -10,7 +14,8 @@ public class RotationTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(false, 800, 600, true);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		this.setRendering2d(true);

@@ -8,6 +8,7 @@ import gui.VideoSettings;
 import input.GLFWInputReader;
 import input.Input;
 import input.InputEvent;
+import input.KeyEvent;
 import input.MouseEvent;
 import shape.Box;
 
@@ -22,8 +23,8 @@ public class InputTest extends StandardGame {
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
 
-		inputs.setInputReader(new GLFWInputReader(((GLDisplay) display)
-				.getWindowID()));
+//		inputs.setInputReader(new GLFWInputReader(((GLDisplay) display)
+//				.getWindowID()));
 
 		initEvents();
 	}
@@ -37,6 +38,13 @@ public class InputTest extends StandardGame {
 				Input.MOUSE_EVENT, "1", MouseEvent.MOUSE_BUTTON_PRESSED)));
 		inputs.addEvent(new InputEvent("MouseButton1Released", new Input(
 				Input.MOUSE_EVENT, "1", MouseEvent.MOUSE_BUTTON_RELEASED)));
+		
+		inputs.addEvent(new InputEvent("Key_W_Down", new Input(Input.KEYBOARD_EVENT,
+				"W", KeyEvent.KEY_DOWN)));
+		inputs.addEvent(new InputEvent("Key_A_Released", new Input(Input.KEYBOARD_EVENT,
+				"A", KeyEvent.KEY_RELEASED)));
+		inputs.addEvent(new InputEvent("Key_D_Pressed", new Input(Input.KEYBOARD_EVENT,
+				"D", KeyEvent.KEY_PRESSED)));
 	}
 
 	@Override
@@ -62,6 +70,13 @@ public class InputTest extends StandardGame {
 			System.out.println("Mouse Button 2 Pressed");
 		if (inputs.isEventActive("MouseButton1Released"))
 			System.out.println("Mouse Button 2 Released");
+		
+		if (inputs.isEventActive("Key_W_Down"))
+			System.out.println("Key W is Down.");
+		if (inputs.isEventActive("Key_A_Released"))
+			System.out.println("Key A is Released.");
+		if (inputs.isEventActive("Key_D_Pressed"))
+			System.out.println("Key D is Pressed.");
 	}
 
 }

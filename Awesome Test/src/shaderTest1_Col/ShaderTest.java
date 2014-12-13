@@ -17,6 +17,7 @@ public class ShaderTest extends StandardGame {
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);

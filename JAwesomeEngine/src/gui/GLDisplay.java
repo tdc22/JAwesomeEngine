@@ -10,6 +10,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_AUX_BUFFERS;
 import static org.lwjgl.glfw.GLFW.GLFW_BLUE_BITS;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
 import static org.lwjgl.glfw.GLFW.GLFW_DEPTH_BITS;
 import static org.lwjgl.glfw.GLFW.GLFW_GREEN_BITS;
 import static org.lwjgl.glfw.GLFW.GLFW_RED_BITS;
@@ -54,6 +55,7 @@ import org.lwjgl.opengl.GLContext;
 public class GLDisplay extends Display {
 	private long windowid;
 	private GLFWErrorCallback errorCallback;
+	private boolean mousebound = false;
 
 	@Override
 	public void open(DisplayMode displaymode, PixelFormat pixelformat) {
@@ -140,5 +142,17 @@ public class GLDisplay extends Display {
 	@Override
 	public void bindMouse() {
 		glfwSetInputMode(windowid, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		mousebound = true;
+	}
+
+	@Override
+	public void unbindMouse() {
+		glfwSetInputMode(windowid, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		mousebound = false;
+	}
+
+	@Override
+	public boolean isMouseBound() {
+		return mousebound;
 	}
 }

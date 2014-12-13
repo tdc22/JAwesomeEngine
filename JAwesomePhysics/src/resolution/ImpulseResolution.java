@@ -163,7 +163,7 @@ public class ImpulseResolution implements CollisionResolution {
 				B.getRollingFriction());
 		Vector1f rav = VecMath.subtraction(B.getAngularVelocity(),
 				A.getAngularVelocity());
-		rav.scale(-rollingFriction);
+		rav.scale(rollingFriction);
 		// TODO: change!!!
 		// Vector3f directionA = VecMath.crossproduct(new Vector3f(A
 		// .getAngularVelocity().getXf(), 0, 0), VecMath

@@ -10,8 +10,8 @@ import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
 import shape.Box;
-import texture.Texture;
 import utils.Shader;
+import utils.Texture;
 
 public class MassBoxesTest extends StandardGame {
 	Debugger debugmanager;

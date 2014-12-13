@@ -1,13 +1,17 @@
 package shaderTest4_Cube;
 
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import loader.ShaderLoader;
 import loader.TextureLoader;
 import shape.Box;
 import shape.Sphere;
-import texture.Texture;
 import utils.CubeEnvMapper;
 import utils.Shader;
+import utils.Texture;
 import vector.Vector4f;
 
 public class ShaderTest4 extends StandardGame {
@@ -16,7 +20,9 @@ public class ShaderTest4 extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(false, 800, 600, false);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);

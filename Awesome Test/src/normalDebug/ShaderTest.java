@@ -1,6 +1,10 @@
 package normalDebug;
 
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import objects.ShapedObject;
@@ -13,8 +17,8 @@ public class ShaderTest extends StandardGame {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		initDisplay(false, 800, 600, false);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0.5f, 5);
 		cam.rotateTo(0, 0);

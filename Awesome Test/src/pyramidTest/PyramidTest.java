@@ -2,6 +2,10 @@ package pyramidTest;
 
 import game.Debugger;
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import loader.FontLoader;
 import shape.Box;
 
@@ -10,10 +14,12 @@ public class PyramidTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(false, 800, 600, false);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		this.setRendering2d(true);
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(-1, 1, -1);
 		cam.rotateTo(225, 30);

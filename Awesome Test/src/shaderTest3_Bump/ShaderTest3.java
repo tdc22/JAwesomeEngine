@@ -3,21 +3,27 @@ package shaderTest3_Bump;
 import game.StandardGame;
 import gui.DisplayMode;
 import gui.GLDisplay;
+import gui.PixelFormat;
 import gui.VideoSettings;
 import input.Input;
+import input.InputEvent;
+import input.KeyEvent;
 import loader.ShaderLoader;
 import loader.TextureLoader;
 import shape.Box;
-import texture.Texture;
 import utils.Shader;
+import utils.Texture;
 import vector.Vector4f;
 
 public class ShaderTest3 extends StandardGame {
 	Texture texture, diffuse, bumpmap;
+	InputEvent toggleMouseBind;
 
 	@Override
 	public void init() {
-		setDisplay(new GLDisplay(), new DisplayMode(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
@@ -64,9 +70,9 @@ public class ShaderTest3 extends StandardGame {
 		c.setShader(bumpmapshader);
 		addObject(c);
 
-		inputs.createInputEvent("toggle Mouse grab").addEventTrigger(
-				new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_T,
-						KeyEvent.Key_Pressed));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT,
+				"T", KeyEvent.KEY_PRESSED));
+		inputs.addEvent(toggleMouseBind);
 	}
 
 	@Override
@@ -83,9 +89,9 @@ public class ShaderTest3 extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		// TODO Auto-generated method stub
-		if (inputs.isInputEventActive("toggle Mouse grab")) {
-			mouse.setGrabbed(!mouse.isGrabbed());
+		if (toggleMouseBind.isActive()) {
+			if(!display.isMouseBound()) display.bindMouse();
+			else display.unbindMouse();
 		}
 		cam.update(delta);
 	}

@@ -12,4 +12,8 @@ public abstract class Display {
 	public abstract boolean isCloseRequested();
 
 	public abstract void bindMouse();
+	
+	public abstract void unbindMouse();
+	
+	public abstract boolean isMouseBound();
 }

@@ -1,6 +1,10 @@
 package loaderTest;
 
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import loader.ModelLoader;
 import objects.ShapedObject;
 
@@ -8,14 +12,16 @@ public class LoaderTest extends StandardGame {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		initDisplay(false, 800, 600, false);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0.5f, 5);
 		cam.rotateTo(0, 0);
 
 		ShapedObject obj = ModelLoader.load("res/models/Sintel_Lite_257b.obj");
 		addObject(obj);
+		System.out.println("Finished loading!");
 	}
 
 	@Override

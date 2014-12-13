@@ -1,7 +1,13 @@
 package transRot;
 
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import input.Input;
+import input.InputEvent;
+import input.KeyEvent;
 import loader.ModelLoader;
 import math.FastMath;
 import objects.RenderedObject;
@@ -9,10 +15,13 @@ import objects.RenderedObject;
 public class TransRot extends StandardGame {
 	RenderedObject rabbit1, rabbit2;
 	float r2y;
+	InputEvent toggleMouseBind;
 
 	@Override
 	public void init() {
-		initDisplay(false, 800, 600, true);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 5, 40);
 		cam.rotateTo(0, 0);
@@ -25,9 +34,9 @@ public class TransRot extends StandardGame {
 		rabbit1.translateTo(-10, 0, 0);
 		rabbit2.translateTo(10, 0, 0);
 
-		inputs.createInputEvent("toggle Mouse grab").addEventTrigger(
-				new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_T,
-						KeyEvent.Key_Pressed));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT,
+				"T", KeyEvent.KEY_PRESSED));
+		inputs.addEvent(toggleMouseBind);
 	}
 
 	@Override
@@ -44,16 +53,17 @@ public class TransRot extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		if (inputs.isInputEventActive("toggle Mouse grab")) {
-			mouse.setGrabbed(!mouse.isGrabbed());
+		cam.update(delta);
+		if (toggleMouseBind.isActive()) {
+			if(!display.isMouseBound()) display.bindMouse();
+			else display.unbindMouse();
 		}
-
+		
 		float speed = 0.01f * delta;
 		rabbit1.rotate(speed, speed, speed);
 		r2y += speed;
 		rabbit2.translateTo(rabbit2.getTranslation().getXf(),
 				FastMath.sin(r2y) * 3, 0);
-		cam.update(delta);
 	}
 
 }

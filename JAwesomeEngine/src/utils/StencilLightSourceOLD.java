@@ -1,11 +1,11 @@
-package lighting;
+package utils;
 
 /**
  * @deprecated
  * @see #meineNeueMethode
  */
 @Deprecated
-public class StencilLightSource { // implements Runnable {
+public class StencilLightSourceOLD { // implements Runnable {
 	/*
 	 * Vector3f pos; float extend; boolean near; List<GameObject> objects;
 	 * List<List<Vector3f[]>> edges, projecteds; List<Vector3f[]> objectedges,
