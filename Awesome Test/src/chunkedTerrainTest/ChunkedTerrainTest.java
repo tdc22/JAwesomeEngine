@@ -2,6 +2,10 @@ package chunkedTerrainTest;
 
 import game.Debugger;
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -19,7 +23,8 @@ public class ChunkedTerrainTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(false, 800, 600, true);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0, 3, 0);
 		cam.rotateTo(225, 0);

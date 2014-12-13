@@ -1,6 +1,7 @@
 package gjkRegionTest;
 
 import objects.ShapedObject;
+import utils.GLConstants;
 import utils.Shader;
 import vector.Vector3f;
 import vector.Vector4f;
@@ -9,7 +10,7 @@ public class Points extends ShapedObject {
 	int region;
 
 	public Points(int reg, int shader) {
-		rendermode = GL11.GL_POINTS;
+		rendermode = GLConstants.POINTS;
 		// addVertex(new Vector3f(0, 0, 0), Color.GRAY, new Vector2f(0, 0), new
 		// Vector3f(0, 1, 0));
 		// addIndex(0);

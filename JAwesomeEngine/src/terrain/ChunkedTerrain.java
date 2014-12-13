@@ -8,14 +8,14 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+import math.QuatMath;
 import math.VecMath;
-import matrix.Matrix4f;
 import objects.RenderedObject;
 import objects.ShapedObject;
+import quaternion.Quaternion;
 import utils.Shader;
 import vector.Vector2f;
 import vector.Vector3f;
-import vector.Vector4f;
 
 class Chunk extends ShapedObject {
 	int posx, posy;
@@ -41,11 +41,12 @@ class Chunk extends ShapedObject {
 		}
 	}
 
-	public void computeCenter(Matrix4f termatrix) {
+	public void computeCenter(Quaternion rotation, Vector3f translation) {
 		center = new Vector3f(posx * (sizex - 1) + sizex / 2f, 0, posy
 				* (sizey - 1) + sizey / 2f);
-		Vector4f transformed = new Vector4f(center.x, center.y, center.z, 1);
-		transformed.transform(termatrix);
+		Vector3f transformed = new Vector3f(center.x, center.y, center.z);
+		QuatMath.transform(rotation, transformed);
+		transformed.translate(translation);
 		center = new Vector3f(transformed.x, transformed.y, transformed.z);
 	}
 
@@ -341,7 +342,7 @@ public class ChunkedTerrain extends RenderedObject {
 		for (int chx = 0; chx < chunks.length; chx++) {
 			for (int chy = 0; chy < chunks[0].length; chy++) {
 				Chunk chunk = chunks[chx][chy];
-				chunk.computeCenter(getMatrix());
+				chunk.computeCenter(this.getRotation(), this.getTranslation());
 			}
 		}
 		updateLODstart(campos);

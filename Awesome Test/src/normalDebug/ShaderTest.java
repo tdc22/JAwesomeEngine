@@ -10,6 +10,7 @@ import loader.ShaderLoader;
 import objects.ShapedObject;
 import shape.Box;
 import shape.Sphere;
+import utils.GLConstants;
 import utils.Shader;
 
 public class ShaderTest extends StandardGame {
@@ -19,14 +20,15 @@ public class ShaderTest extends StandardGame {
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0.5f, 5);
 		cam.rotateTo(0, 0);
 
 		normalshader = new Shader(ShaderLoader.loadShaderPair(
 				"res/shaders/normaldebug.vert", "res/shaders/normaldebug.geo",
-				ARBGeometryShader4.GL_TRIANGLES_ADJACENCY_ARB,
-				GL11.GL_LINE_STRIP, 6));
+				GLConstants.TRIANGLE_ADJACENCY,
+				GLConstants.LINE_STRIP, 6));
 		normalshader.addArgumentName("uNormalsLength");
 		normalshader.addArgument(0.4f);
 

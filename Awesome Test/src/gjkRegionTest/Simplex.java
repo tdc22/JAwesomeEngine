@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.List;
 
 import objects.ShapedObject;
+import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -11,13 +12,13 @@ public class Simplex extends ShapedObject {
 	public Simplex(List<Vector3f> simplices) {
 		int simplexsize = simplices.size();
 		if (simplexsize == 1) {
-			setRenderMode(GL11.GL_POINTS);
+			setRenderMode(GLConstants.POINTS);
 		}
 		if (simplexsize == 2) {
-			setRenderMode(GL11.GL_LINES);
+			setRenderMode(GLConstants.LINES);
 		}
 		if (simplexsize >= 3) {
-			setRenderMode(GL11.GL_TRIANGLES);
+			setRenderMode(GLConstants.TRIANGLES);
 		}
 
 		for (int i = 0; i < simplices.size(); i++) {

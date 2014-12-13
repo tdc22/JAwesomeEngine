@@ -2,7 +2,13 @@ package gjkRegionTest;
 
 import game.Debugger;
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import input.Input;
+import input.InputEvent;
+import input.KeyEvent;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -34,6 +40,8 @@ public class RegionTest extends StandardGame {
 
 	final Vector2f zero = new Vector2f();
 	final Vector3f up = new Vector3f();
+	
+	InputEvent toggleMouseBind;
 
 	// TODO: Tetrahedron face orientation
 	// TODO: Tetrahedron regions
@@ -201,16 +209,17 @@ public class RegionTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(false, 800, 600, true);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		setRendering2d(true); // for debugmanager
-		mouse.setGrabbed(false);
+		display.bindMouse();
 		cam.setFlyCam(true);
 
-		inputs.createInputEvent("toggle Mouse grab").addEventTrigger(
-				new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_T,
-						KeyEvent.Key_Pressed));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT,
+				"T", KeyEvent.KEY_PRESSED));
+		inputs.addEvent(toggleMouseBind);
 
 		simplices = new ArrayList<Vector3f>();
 		pointbatches = new ArrayList<Points>();
@@ -355,8 +364,9 @@ public class RegionTest extends StandardGame {
 				pointnum += p.getIndexCount();
 			System.out.println("Total point number: " + pointnum);
 		}
-		if (inputs.isInputEventActive("toggle Mouse grab")) {
-			mouse.setGrabbed(!mouse.isGrabbed());
+		if (toggleMouseBind.isActive()) {
+			if(!display.isMouseBound()) display.bindMouse();
+			else display.unbindMouse();
 		}
 		debugmanager.update();
 		cam.update(delta);

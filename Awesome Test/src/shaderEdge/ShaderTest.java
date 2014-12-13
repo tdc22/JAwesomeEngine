@@ -9,6 +9,7 @@ import gui.VideoSettings;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import shape.Box;
+import utils.GLConstants;
 import utils.Shader;
 
 public class ShaderTest extends StandardGame {
@@ -22,14 +23,15 @@ public class ShaderTest extends StandardGame {
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		this.setRendering2d(true);
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(5, 5, 5);
 		cam.rotateTo(45, -35);
 
 		edgeshader = new Shader(ShaderLoader.loadShaderPair(
 				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.geo",
-				ARBGeometryShader4.GL_TRIANGLES_ADJACENCY_ARB,
-				GL11.GL_LINE_STRIP, 6));
+				GLConstants.TRIANGLE_ADJACENCY,
+				GLConstants.LINE_STRIP, 6));
 
 		Box a = new Box(0, 0, 0, 1, 1, 1);
 		a.setRenderHints(false, false, true);
