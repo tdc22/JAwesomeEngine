@@ -1,7 +1,7 @@
 JAwesomeEngine
 ==============
 
-JAwesomeEngine is a java-based 3D engine using OpenGL, OpenAL (via [LWJGL](http://www.lwjgl.org/)) and [JInput](https://java.net/projects/jinput). The goal is to create a stable and easy-to-use game engine. Right now JAwesomeEngine is still under development but you can already use the working parts. (rendering!)
+JAwesomeEngine is a java-based 3D engine using OpenGL, OpenAL (via [LWJGL](http://www.lwjgl.org/)) and [JInput](https://java.net/projects/jinput). The goal is to create a stable and easy-to-use game engine. Right now JAwesomeEngine is still under development but you can already use the working parts. (rendering!)  
 The engine is splitted into three parts:
 * *JAwesomeEngine*: the core game engine handling rendering, inputs, etc.
 * *JAwesomeBase*: the small base package with everything needed by the Engine and the Physics parts like vector calculation
