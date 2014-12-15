@@ -2,11 +2,14 @@ package physicsBasicTest;
 
 import game.Debugger;
 import game.StandardGame;
+import gui.DisplayMode;
 import gui.Font;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import integration.VerletIntegration;
 import loader.FontLoader;
 import manifold.PersistentManifoldManager;
-import matrix.Matrix3f;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import objects.RigidBody3;
@@ -14,6 +17,7 @@ import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import positionalcorrection.ProjectionCorrection;
+import quaternion.Quaternionf;
 import resolution.ImpulseResolution;
 import shape.Box;
 import shape.Sphere;
@@ -30,7 +34,8 @@ public class BasicTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(false, 800, 600, true);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
@@ -54,7 +59,7 @@ public class BasicTest extends StandardGame {
 		Box q = new Box(0, 0, 0, 0.5f, 0.5f, 0.5f);
 		rb1 = PhysicsShapeCreator.create(q);
 		rb1.setMass(1f);
-		rb1.setInertia(new Matrix3f());
+		rb1.setInertia(new Quaternionf());
 		space.addRigidBody(q, rb1);
 		addObject(q);
 	}
@@ -76,20 +81,20 @@ public class BasicTest extends StandardGame {
 	public void update(int delta) {
 		// System.out.println(rb1.getLinearVelocity());
 		if (tempdelta > 200) {
-			if (mouse.isButtonDown(0)) {
+			if (inputs.isMouseButtonDown("0")) {
 				Box q = new Box(0, 0, 0, 0.5f, 0.5f, 0.5f);
 				RigidBody3 rb = PhysicsShapeCreator.create(q);
 				rb.setMass(1f);
-				rb.setInertia(new Matrix3f());
+				rb.setInertia(new Quaternionf());
 				space.addRigidBody(q, rb);
 				addObject(q);
 				tempdelta = 0;
 			}
-			if (mouse.isButtonDown(1)) {
+			if (inputs.isMouseButtonDown("1")) {
 				Sphere c = new Sphere(0, 0, 0, 0.5f, 36, 36);
 				RigidBody3 rb = PhysicsShapeCreator.create(c);
 				rb.setMass(1f);
-				rb.setInertia(new Matrix3f());
+				rb.setInertia(new Quaternionf());
 				space.addRigidBody(c, rb);
 				addObject(c);
 				tempdelta = 0;

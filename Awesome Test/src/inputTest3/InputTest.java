@@ -5,7 +5,6 @@ import gui.DisplayMode;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
-import input.GLFWInputReader;
 import input.Input;
 import input.InputEvent;
 import input.KeyEvent;
