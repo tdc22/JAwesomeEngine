@@ -20,6 +20,6 @@ A list of most current, wip and planned features can be found here: [Featureslis
 The whole engine is under the [zlib-license](http://opensource.org/licenses/Zlib). (see LICENSE)
 
 ##Credits
-The code was entirely written by me. Some parts are inspired by tutorials or various other sources.
-Me: Oliver Schall (aka tdc)
+The code was entirely written by me. Some parts are inspired by tutorials or various other sources.  
+Me: Oliver Schall (aka tdc)  
 Special thanks: Florian (aka Symorphy), Markus (aka SCBTF)
