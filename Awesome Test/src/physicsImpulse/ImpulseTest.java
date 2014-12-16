@@ -2,16 +2,20 @@ package physicsImpulse;
 
 import game.Debugger;
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import manifold.SimpleManifoldManager;
-import matrix.Matrix3f;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import objects.RigidBody3;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import positionalcorrection.NullCorrection;
+import quaternion.Quaternionf;
 import resolution.NullResolution;
 import shape.Box;
 import vector.Vector3f;
@@ -27,7 +31,8 @@ public class ImpulseTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(false, 800, 600, true);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
@@ -44,7 +49,7 @@ public class ImpulseTest extends StandardGame {
 		b = new Box(0, 0, 0, 1, 1, 1);
 		rb = PhysicsShapeCreator.create(b);
 		rb.setMass(1);
-		rb.setInertia(new Matrix3f());
+		rb.setInertia(new Quaternionf());
 		space.addRigidBody(b, rb);
 		addObject(b);
 	}

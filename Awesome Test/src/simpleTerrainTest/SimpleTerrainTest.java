@@ -44,9 +44,9 @@ public class SimpleTerrainTest extends StandardGame {
 		Terrain terrain = new Terrain(heightmap);
 		terrain.scale(0.1f, 0.5f, 0.1f);
 		addObject(terrain);
-		
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT,
-				"T", KeyEvent.KEY_PRESSED));
+
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyEvent.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 
@@ -67,8 +67,10 @@ public class SimpleTerrainTest extends StandardGame {
 		debugmanager.update();
 		cam.update(delta);
 		if (toggleMouseBind.isActive()) {
-			if(!display.isMouseBound()) display.bindMouse();
-			else display.unbindMouse();
+			if (!display.isMouseBound())
+				display.bindMouse();
+			else
+				display.unbindMouse();
 		}
 	}
 }

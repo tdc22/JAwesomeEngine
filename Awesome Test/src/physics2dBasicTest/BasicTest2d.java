@@ -19,7 +19,6 @@ import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
 import positionalcorrection.ProjectionCorrection;
 import resolution.ImpulseResolution;
-import resolution.LinearImpulseResolution;
 import shape2d.Circle;
 import shape2d.Quad;
 import vector.Vector2f;
@@ -36,7 +35,7 @@ public class BasicTest2d extends StandardGame {
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
-//		display.bindMouse();
+		// display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);

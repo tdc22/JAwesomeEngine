@@ -34,8 +34,8 @@ public class TransRot extends StandardGame {
 		rabbit1.translateTo(-10, 0, 0);
 		rabbit2.translateTo(10, 0, 0);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT,
-				"T", KeyEvent.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyEvent.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 
@@ -55,10 +55,12 @@ public class TransRot extends StandardGame {
 	public void update(int delta) {
 		cam.update(delta);
 		if (toggleMouseBind.isActive()) {
-			if(!display.isMouseBound()) display.bindMouse();
-			else display.unbindMouse();
+			if (!display.isMouseBound())
+				display.bindMouse();
+			else
+				display.unbindMouse();
 		}
-		
+
 		float speed = 0.01f * delta;
 		rabbit1.rotate(speed, speed, speed);
 		r2y += speed;

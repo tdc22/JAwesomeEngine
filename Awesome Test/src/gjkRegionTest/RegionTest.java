@@ -40,7 +40,7 @@ public class RegionTest extends StandardGame {
 
 	final Vector2f zero = new Vector2f();
 	final Vector3f up = new Vector3f();
-	
+
 	InputEvent toggleMouseBind;
 
 	// TODO: Tetrahedron face orientation
@@ -217,8 +217,8 @@ public class RegionTest extends StandardGame {
 		display.bindMouse();
 		cam.setFlyCam(true);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT,
-				"T", KeyEvent.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyEvent.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
 		simplices = new ArrayList<Vector3f>();
@@ -365,8 +365,10 @@ public class RegionTest extends StandardGame {
 			System.out.println("Total point number: " + pointnum);
 		}
 		if (toggleMouseBind.isActive()) {
-			if(!display.isMouseBound()) display.bindMouse();
-			else display.unbindMouse();
+			if (!display.isMouseBound())
+				display.bindMouse();
+			else
+				display.unbindMouse();
 		}
 		debugmanager.update();
 		cam.update(delta);

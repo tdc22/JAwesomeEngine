@@ -164,6 +164,9 @@ public class ImpulseResolution implements CollisionResolution {
 		Vector1f rav = VecMath.subtraction(B.getAngularVelocity(),
 				A.getAngularVelocity());
 		rav.scale(rollingFriction);
+		A.applyTorqueImpulse(rav);
+		B.applyTorqueImpulse(VecMath.negate(rav));
+		
 		// TODO: change!!!
 		// Vector3f directionA = VecMath.crossproduct(new Vector3f(A
 		// .getAngularVelocity().getXf(), 0, 0), VecMath
@@ -177,8 +180,7 @@ public class ImpulseResolution implements CollisionResolution {
 		// B.applyImpulse(VecMath.scale(new Vector2f(directionB.x,
 		// directionB.y),
 		// rollingFriction), contactB);
-		A.applyTorqueImpulse(rav);
-		B.applyTorqueImpulse(VecMath.negate(rav));
+		
 //		System.out.println(impulse.x);
 //		if(new Float(impulse.x).equals(Float.NaN)) System.exit(1);
 //		System.out.println(impulse + "; " + frictionImpulse + "; " + rav + "; "

@@ -30,8 +30,7 @@ public class ShaderTest extends StandardGame {
 
 		edgeshader = new Shader(ShaderLoader.loadShaderPair(
 				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.geo",
-				GLConstants.TRIANGLE_ADJACENCY,
-				GLConstants.LINE_STRIP, 6));
+				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 
 		Box a = new Box(0, 0, 0, 1, 1, 1);
 		a.setRenderHints(false, false, true);

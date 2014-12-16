@@ -27,8 +27,7 @@ public class ShaderTest extends StandardGame {
 
 		normalshader = new Shader(ShaderLoader.loadShaderPair(
 				"res/shaders/normaldebug.vert", "res/shaders/normaldebug.geo",
-				GLConstants.TRIANGLE_ADJACENCY,
-				GLConstants.LINE_STRIP, 6));
+				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 		normalshader.addArgumentName("uNormalsLength");
 		normalshader.addArgument(0.4f);
 

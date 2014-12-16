@@ -2,7 +2,11 @@ package physics2dFriction3;
 
 import game.Debugger;
 import game.StandardGame;
+import gui.DisplayMode;
 import gui.Font;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import manifold.SimpleManifoldManager;
@@ -28,11 +32,12 @@ public class FrictionTest2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(false, 800, 600, true);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
-		mouse.setGrabbed(false);
+		// mouse.setGrabbed(false);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(
 				new EPA2()), new ImpulseResolution(), new ProjectionCorrection(

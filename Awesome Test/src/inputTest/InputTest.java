@@ -1,7 +1,14 @@
 package inputTest;
 
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import input.Input;
+import input.InputEvent;
+import input.KeyEvent;
+import input.MouseEvent;
 import shape.Box;
 
 public class InputTest extends StandardGame {
@@ -9,76 +16,34 @@ public class InputTest extends StandardGame {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		initDisplay(false, 800, 600, true);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
 
+		// inputs.setInputReader(new GLFWInputReader(((GLDisplay) display)
+		// .getWindowID()));
+
 		initEvents();
-		box = new Box(0, 0, 0, 0.5f, 0.5f, 0.5f);
-		addObject(box);
 	}
 
 	private void initEvents() {
-		inputs.showControllerOutput(true);
+		inputs.addEvent(new InputEvent("MouseMoved", new Input(
+				Input.MOUSE_EVENT, "", MouseEvent.MOUSE_MOVED)));
+		inputs.addEvent(new InputEvent("MouseButton0", new Input(
+				Input.MOUSE_EVENT, "0", MouseEvent.MOUSE_BUTTON_DOWN)));
+		inputs.addEvent(new InputEvent("MouseButton1Pressed", new Input(
+				Input.MOUSE_EVENT, "1", MouseEvent.MOUSE_BUTTON_PRESSED)));
+		inputs.addEvent(new InputEvent("MouseButton1Released", new Input(
+				Input.MOUSE_EVENT, "1", MouseEvent.MOUSE_BUTTON_RELEASED)));
 
-		InputEvent released = inputs.createInputEvent("KeyReleased");
-		InputEvent pressed = inputs.createInputEvent("KeyPressed");
-		InputEvent down = inputs.createInputEvent("KeyDown");
-
-		InputEvent translate1 = inputs.createInputEvent("Translate1");
-		InputEvent translate2 = inputs.createInputEvent("Translate2");
-		InputEvent translate3 = inputs.createInputEvent("Translate3");
-		InputEvent translate4 = inputs.createInputEvent("Translate4");
-
-		InputEvent rotate1 = inputs.createInputEvent("Rotate1");
-		InputEvent rotate2 = inputs.createInputEvent("Rotate2");
-		InputEvent rotate3 = inputs.createInputEvent("Rotate3");
-		InputEvent rotate4 = inputs.createInputEvent("Rotate4");
-
-		released.addEventTrigger(new Input(Input.KEYBOARD_EVENT,
-				Keyboard.KEY_B, KeyEvent.Key_Released));
-		pressed.addEventTrigger(new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_N,
-				KeyEvent.Key_Pressed));
-		down.addEventTrigger(new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_M,
-				KeyEvent.Key_Down));
-
-		translate1.addEventTrigger(new Input(Input.KEYBOARD_EVENT,
-				Keyboard.KEY_T, KeyEvent.Key_Down));
-		translate2.addEventTrigger(new Input(Input.KEYBOARD_EVENT,
-				Keyboard.KEY_G, KeyEvent.Key_Down));
-		translate3.addEventTrigger(new Input(Input.KEYBOARD_EVENT,
-				Keyboard.KEY_F, KeyEvent.Key_Down));
-		translate4.addEventTrigger(new Input(Input.KEYBOARD_EVENT,
-				Keyboard.KEY_H, KeyEvent.Key_Down));
-
-		rotate1.addEventTrigger(new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_I,
-				KeyEvent.Key_Down));
-		rotate2.addEventTrigger(new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_K,
-				KeyEvent.Key_Down));
-		rotate3.addEventTrigger(new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_J,
-				KeyEvent.Key_Down));
-		rotate4.addEventTrigger(new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_L,
-				KeyEvent.Key_Down));
-
-		translate1.addEventTrigger(new Input(Input.CONTROLLER_EVENT, "y", 0,
-				0.5f));
-		// translate2.addEventTrigger(new Input(Input.CONTROLLER_EVENT, "y", 0,
-		// -0.5f));
-		translate3.addEventTrigger(new Input(Input.CONTROLLER_EVENT, "x", 0,
-				0.5f));
-		translate4.addEventTrigger(new Input(Input.CONTROLLER_EVENT, "x", 0,
-				-0.5f));
-		//
-		// rotate1.addEventTrigger(new Input(Input.CONTROLLER_EVENT,
-		// Keyboard.KEY_I, KeyEvent.Key_Down));
-		// rotate2.addEventTrigger(new Input(Input.CONTROLLER_EVENT,
-		// Keyboard.KEY_K, KeyEvent.Key_Down));
-		// rotate3.addEventTrigger(new Input(Input.CONTROLLER_EVENT,
-		// Keyboard.KEY_J, KeyEvent.Key_Down));
-		// rotate4.addEventTrigger(new Input(Input.CONTROLLER_EVENT,
-		// Keyboard.KEY_L, KeyEvent.Key_Down));
+		inputs.addEvent(new InputEvent("Key_W_Down", new Input(
+				Input.KEYBOARD_EVENT, "W", KeyEvent.KEY_DOWN)));
+		inputs.addEvent(new InputEvent("Key_A_Released", new Input(
+				Input.KEYBOARD_EVENT, "A", KeyEvent.KEY_RELEASED)));
+		inputs.addEvent(new InputEvent("Key_D_Pressed", new Input(
+				Input.KEYBOARD_EVENT, "D", KeyEvent.KEY_PRESSED)));
 	}
 
 	@Override
@@ -95,42 +60,22 @@ public class InputTest extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		if (inputs.isInputEventActive("KeyReleased")) {
-			System.out.println("Key released.");
-		}
-		if (inputs.isInputEventActive("KeyPressed")) {
-			System.out.println("Key pressed.");
-		}
-		if (inputs.isInputEventActive("KeyDown")) {
-			System.out.println("Key down.");
-		}
+		if (inputs.isEventActive("MouseMoved"))
+			System.out.println("Mouse movement: " + inputs.getMouseDX() + "; "
+					+ inputs.getMouseDY());
+		if (inputs.isEventActive("MouseButton0"))
+			System.out.println("Mouse Button 1 Down");
+		if (inputs.isEventActive("MouseButton1Pressed"))
+			System.out.println("Mouse Button 2 Pressed");
+		if (inputs.isEventActive("MouseButton1Released"))
+			System.out.println("Mouse Button 2 Released");
 
-		if (inputs.isInputEventActive("Translate1")) {
-			box.translate(0, delta / 100f, 0);
-		}
-		if (inputs.isInputEventActive("Translate2")) {
-			box.translate(0, -delta / 100f, 0);
-		}
-		if (inputs.isInputEventActive("Translate3")) {
-			box.translate(-delta / 100f, 0, 0);
-		}
-		if (inputs.isInputEventActive("Translate4")) {
-			box.translate(delta / 100f, 0, 0);
-		}
-
-		if (inputs.isInputEventActive("Rotate1")) {
-			box.rotate(delta / 10f, 0, 0);
-		}
-		if (inputs.isInputEventActive("Rotate2")) {
-			box.rotate(-delta / 10f, 0, 0);
-		}
-		if (inputs.isInputEventActive("Rotate3")) {
-			box.rotate(0, -delta / 10f, 0);
-		}
-		if (inputs.isInputEventActive("Rotate4")) {
-			box.rotate(0, delta / 10f, 0);
-		}
-		cam.update(delta);
+		if (inputs.isEventActive("Key_W_Down"))
+			System.out.println("Key W is Down.");
+		if (inputs.isEventActive("Key_A_Released"))
+			System.out.println("Key A is Released.");
+		if (inputs.isEventActive("Key_D_Pressed"))
+			System.out.println("Key D is Pressed.");
 	}
 
 }

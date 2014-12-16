@@ -1,6 +1,10 @@
 package physics2dFriction;
 
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import integration.EulerIntegration;
 import manifold.SimpleManifoldManager;
 import narrowphase.EPA2;
@@ -21,11 +25,12 @@ public class FrictionTest2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(false, 800, 600, true);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
-		mouse.setGrabbed(false);
+		// mouse.setGrabbed(false);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(
 				new EPA2()), new LinearImpulseResolution(),
@@ -60,7 +65,7 @@ public class FrictionTest2d extends StandardGame {
 	public void update(int delta) {
 		// System.out.println(rb1.getLinearVelocity());
 		if (tempdelta > 200) {
-			if (mouse.isButtonDown(0)) {
+			if (inputs.isMouseButtonDown("0")) {
 				Quad q = new Quad(100, 450, 10, 10);
 				RigidBody2 rb = PhysicsShapeCreator.create(q);
 				rb.setMass(1f);
@@ -69,7 +74,7 @@ public class FrictionTest2d extends StandardGame {
 				add2dObject(q);
 				tempdelta = 0;
 			}
-			if (mouse.isButtonDown(1)) {
+			if (inputs.isMouseButtonDown("1")) {
 				Quad q = new Quad(700, 450, 10, 10);
 				RigidBody2 rb = PhysicsShapeCreator.create(q);
 				rb.setMass(1f);
