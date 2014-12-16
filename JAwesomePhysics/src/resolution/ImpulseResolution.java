@@ -178,8 +178,10 @@ public class ImpulseResolution implements CollisionResolution {
 		// directionB.y),
 		// rollingFriction), contactB);
 		A.applyTorqueImpulse(rav);
-		B.applyTorqueImpulse(rav);
-		System.out.println(impulse + "; " + frictionImpulse + "; " + rav + "; "
-				+ rollingFriction);
+		B.applyTorqueImpulse(VecMath.negate(rav));
+//		System.out.println(impulse.x);
+//		if(new Float(impulse.x).equals(Float.NaN)) System.exit(1);
+//		System.out.println(impulse + "; " + frictionImpulse + "; " + rav + "; "
+//				+ rollingFriction);
 	}
 }
