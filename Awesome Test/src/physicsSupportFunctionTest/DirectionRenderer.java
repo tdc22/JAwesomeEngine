@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.ShapedObject;
+import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
 public class DirectionRenderer extends ShapedObject {
 	public DirectionRenderer() {
-		rendermode = GL11.GL_LINES;
+		rendermode = GLConstants.LINES;
 		setDirections(new ArrayList<Vector3f>());
 	}
 

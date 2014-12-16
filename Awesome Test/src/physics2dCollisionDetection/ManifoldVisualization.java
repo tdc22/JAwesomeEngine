@@ -5,11 +5,12 @@ import java.awt.Color;
 import manifold.CollisionManifold;
 import math.VecMath;
 import objects.ShapedObject2;
+import utils.GLConstants;
 import vector.Vector2f;
 
 public class ManifoldVisualization extends ShapedObject2 {
 	ManifoldVisualization(CollisionManifold<Vector2f> cm) {
-		setRenderMode(GL11.GL_LINES);
+		setRenderMode(GLConstants.LINES);
 		Vector2f ca = VecMath.subtraction(cm.getContactPointA(), cm
 				.getObjects().getFirst().getTranslation2());
 		Vector2f cb = VecMath.subtraction(cm.getContactPointB(), cm

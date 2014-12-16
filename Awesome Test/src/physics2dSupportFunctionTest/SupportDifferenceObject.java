@@ -10,6 +10,7 @@ import objects.RigidBody;
 import objects.ShapedObject;
 import objects.ShapedObject2;
 import objects.SupportMap;
+import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -20,7 +21,7 @@ public class SupportDifferenceObject extends ShapedObject2 {
 	public SupportDifferenceObject(ShapedObject s1,
 			RigidBody<Vector2f, ?, ?, ?> r1, ShapedObject s2,
 			RigidBody<Vector2f, ?, ?, ?> r2) {
-		rendermode = GL11.GL_POINTS;
+		rendermode = GLConstants.POINTS;
 		so1 = s1;
 		rb1 = r1;
 		so2 = s2;

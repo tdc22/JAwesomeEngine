@@ -4,11 +4,12 @@ import java.awt.Color;
 import java.util.List;
 
 import objects.ShapedObject2;
+import utils.GLConstants;
 import vector.Vector2f;
 
 public class ResultTetrahedron extends ShapedObject2 {
 	public ResultTetrahedron(List<Vector2f> simplex) {
-		setRenderMode(GL11.GL_TRIANGLES);
+		setRenderMode(GLConstants.TRIANGLES);
 
 		for (int v = simplex.size() - 1; v > -1; v--) {
 			// System.out.println(v);

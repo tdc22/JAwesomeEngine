@@ -1,6 +1,7 @@
 package loader;
 
 import input.Input;
+import input.InputEvent;
 import input.InputManager;
 
 import java.io.BufferedReader;
@@ -17,26 +18,25 @@ public class InputLoader {
 		return line.split(":")[1].replace(" ", "");
 	}
 
-	public static InputManager load(File file) {
+	public static InputManager load(InputManager inputmanager, File file) {
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader(file));
 		} catch (FileNotFoundException e) {
 			try {
-				save(new InputManager(), file);
+				save(inputmanager, file);
 				System.out.println("Settings file created.");
 				reader = new BufferedReader(new FileReader(file));
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		}
-		InputManager inputs = new InputManager();
 		String line;
 		try {
 			while ((line = reader.readLine()) != null) {
 				if (line.startsWith("\"")) {
 					String eventname = line.split("\"")[1];
-					InputEvent inputevent = inputs.createInputEvent(eventname);
+					InputEvent inputevent = inputmanager.createInputEvent(eventname);
 					line = line.split(":")[1];
 					// System.out.println(line);
 					String[] eventtriggers = line.split("/");
@@ -70,11 +70,11 @@ public class InputLoader {
 			e.printStackTrace();
 		}
 
-		return inputs;
+		return inputmanager;
 	}
 
-	public static InputManager load(String path) {
-		return load(new File(path));
+	public static InputManager load(InputManager inputmanager, String path) {
+		return load(inputmanager, new File(path));
 	}
 
 	public static void save(InputManager inputs, File file) throws IOException {

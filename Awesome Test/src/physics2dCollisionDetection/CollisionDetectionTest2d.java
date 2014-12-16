@@ -5,6 +5,9 @@ import gui.DisplayMode;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
+import input.Input;
+import input.InputEvent;
+import input.KeyEvent;
 import integration.EulerIntegration;
 
 import java.util.ArrayList;
@@ -100,7 +103,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 		space.addRigidBody(e1, rb5);
 		add2dObject(e1);
 
-		inputs = InputLoader.load("res/inputs.txt");
+		inputs = InputLoader.load(inputs, "res/inputs.txt");
 	}
 
 	@Override

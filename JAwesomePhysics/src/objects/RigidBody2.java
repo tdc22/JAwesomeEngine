@@ -81,19 +81,14 @@ public abstract class RigidBody2 extends
 
 	@Override
 	public Vector2f supportPoint(Vector2f direction) {
-		return VecMath.addition(ComplexMath.transform(this.getRotation()
-				.get2dRotationf(), supportPointLocal(direction)),
+		return VecMath.addition(supportPointRelative(direction),
 				getTranslation2());
-		// return VecMath.transformVector(this.getMatrix(),
-		// supportPointLocal(direction));
 	}
 
 	@Override
 	public Vector2f supportPointRelative(Vector2f direction) {
 		return ComplexMath.transform(this.getRotation().get2dRotationf(),
 				supportPointLocal(direction));
-		// return VecMath.transformVector(this.getRotation2(),
-		// supportPointLocal(direction));
 	}
 
 	@Override

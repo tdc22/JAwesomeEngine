@@ -78,18 +78,14 @@ public abstract class RigidBody3 extends
 
 	@Override
 	public Vector3f supportPoint(Vector3f direction) {
-		return VecMath.addition(QuatMath.transform(this.getRotation(),
-				supportPointLocal(direction)), this.getTranslation());
-		// return VecMath.transformVector(this.getMatrix(),
-		// supportPointLocal(direction));
+		return VecMath.addition(supportPointRelative(direction),
+				this.getTranslation());
 	}
 
 	@Override
 	public Vector3f supportPointRelative(Vector3f direction) {
 		return QuatMath.transform(this.getRotation(),
 				supportPointLocal(direction));
-		// return VecMath.transformVector(this.getRotation(),
-		// supportPointLocal(direction));
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.List;
 
 import objects.RigidBody;
 import objects.ShapedObject2;
+import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -14,7 +15,7 @@ public class SupportObject extends ShapedObject2 {
 	RigidBody<Vector2f, ?, ?, ?> rb;
 
 	public SupportObject(ShapedObject2 s, RigidBody<Vector2f, ?, ?, ?> r) {
-		rendermode = GL11.GL_POINTS;
+		rendermode = GLConstants.POINTS;
 		so = s;
 		rb = r;
 		updateShape();
