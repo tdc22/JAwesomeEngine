@@ -31,6 +31,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected List<RigidBody<L, A1, A2, A3>> objects;
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> overlaps;
 	protected L globalForce;
+	protected int resolutionIterations = 20;
 
 	public Space(IntegrationSolver integrationsolver, Broadphase<L> broadphase,
 			Narrowphase<L> narrowphase,
@@ -112,6 +113,14 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public void setGlobalForce(L force) {
 		globalForce = force;
 	}
+	
+	public void setResolutionIterations(int count) {
+		resolutionIterations = count;
+	}
+	
+	public int getResolutionIterations() {
+		return resolutionIterations;
+	}
 
 	@Override
 	public void update(int delta) {
@@ -122,7 +131,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		for (RigidBody<?, ?, ?, ?> o : objects)
 			o.updateInverseRotation();
 
-		System.out.println("Physics start");
+//		System.out.println("Physics start");
 
 		broadphase.update();
 		overlaps = broadphase.getOverlaps();
@@ -139,13 +148,14 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 			}
 		}
 		manifoldmanager.end();
-		resolve();
+		for(int i = 0; i < resolutionIterations; i++)
+			resolve();
 		applyGlobalForce();
-		for (RigidBody<?, ?, ?, ?> o : objects)
-			System.out.println(o.getRotation().magnitude());
+//		for (RigidBody<?, ?, ?, ?> o : objects)
+//			System.out.println(o.getRotation().magnitude());
 		integrate(delta);
-		for (RigidBody<?, ?, ?, ?> o : objects)
-			System.out.println(o.getRotation().magnitude());
+//		for (RigidBody<?, ?, ?, ?> o : objects)
+//			System.out.println(o.getRotation().magnitude());
 		correct();
 
 		// TESTING...
