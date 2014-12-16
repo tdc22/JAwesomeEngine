@@ -19,6 +19,7 @@ import physics.PhysicsSpace;
 import positionalcorrection.ProjectionCorrection;
 import quaternion.Quaternionf;
 import resolution.ImpulseResolution;
+import resolution.LinearImpulseResolution;
 import shape.Box;
 import shape.Sphere;
 import vector.Vector3f;
@@ -42,7 +43,7 @@ public class BasicTest extends StandardGame {
 		setRendering2d(true);
 
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
-				new EPA()), new ImpulseResolution(), new ProjectionCorrection(
+				new EPA()), new LinearImpulseResolution(), new ProjectionCorrection(
 				0.02f, 0.0f), new PersistentManifoldManager());// new
 																// SimpleManifoldManager<Vector3f>());
 		space.setGlobalForce(new Vector3f(0, -5, 0));
