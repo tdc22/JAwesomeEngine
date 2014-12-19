@@ -4,7 +4,7 @@ import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
-import input.KeyEvent;
+import input.KeyInput;
 
 import java.awt.Color;
 import java.util.List;
@@ -37,15 +37,15 @@ public class PhysicsDebug {
 
 	private void setupControls(InputManager inputs) {
 		toggleAABBs = new InputEvent("debug_physics2_showAABBs", new Input(
-				Input.KEYBOARD_EVENT, "F5", KeyEvent.KEY_PRESSED));
+				Input.KEYBOARD_EVENT, "F5", KeyInput.KEY_PRESSED));
 		toggleContractPoints = new InputEvent(
 				"debug_physics2_showContactPoints", new Input(
-						Input.KEYBOARD_EVENT, "F6", KeyEvent.KEY_PRESSED));
+						Input.KEYBOARD_EVENT, "F6", KeyInput.KEY_PRESSED));
 		toggleCollisionNormals = new InputEvent(
 				"debug_physics2_showCollisionNormals", new Input(
-						Input.KEYBOARD_EVENT, "F7", KeyEvent.KEY_PRESSED));
+						Input.KEYBOARD_EVENT, "F7", KeyInput.KEY_PRESSED));
 		toggleVelocities = new InputEvent("debug_physics2_showVelocities",
-				new Input(Input.KEYBOARD_EVENT, "F8", KeyEvent.KEY_PRESSED));
+				new Input(Input.KEYBOARD_EVENT, "F8", KeyInput.KEY_PRESSED));
 
 		inputs.addEvent(toggleAABBs);
 		inputs.addEvent(toggleContractPoints);

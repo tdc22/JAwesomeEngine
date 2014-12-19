@@ -7,7 +7,7 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
-import input.KeyEvent;
+import input.KeyInput;
 import math.QuatMath;
 import math.VecMath;
 import matrix.Matrix4f;
@@ -40,17 +40,17 @@ public class Camera extends RenderedObject {
 
 	private void setupControls(InputManager inputs) {
 		forwards = new InputEvent("camera_forwards", new Input(
-				Input.KEYBOARD_EVENT, "Up", KeyEvent.KEY_DOWN), new Input(
-				Input.KEYBOARD_EVENT, "W", KeyEvent.KEY_DOWN));
+				Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN), new Input(
+				Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN));
 		backwards = new InputEvent("camera_backwards", new Input(
-				Input.KEYBOARD_EVENT, "Down", KeyEvent.KEY_DOWN), new Input(
-				Input.KEYBOARD_EVENT, "S", KeyEvent.KEY_DOWN));
+				Input.KEYBOARD_EVENT, "Down", KeyInput.KEY_DOWN), new Input(
+				Input.KEYBOARD_EVENT, "S", KeyInput.KEY_DOWN));
 		left = new InputEvent("camera_left", new Input(Input.KEYBOARD_EVENT,
-				"Left", KeyEvent.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
-				"A", KeyEvent.KEY_DOWN));
+				"Left", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
+				"A", KeyInput.KEY_DOWN));
 		right = new InputEvent("camera_right", new Input(Input.KEYBOARD_EVENT,
-				"Right", KeyEvent.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
-				"D", KeyEvent.KEY_DOWN));
+				"Right", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
+				"D", KeyInput.KEY_DOWN));
 
 		inputs.addEvent(forwards);
 		inputs.addEvent(backwards);

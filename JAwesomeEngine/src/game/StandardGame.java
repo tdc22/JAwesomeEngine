@@ -40,8 +40,7 @@ import input.GLFWInputReader;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
-import input.JInputReader;
-import input.KeyEvent;
+import input.KeyInput;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -111,16 +110,16 @@ public abstract class StandardGame extends AbstractGame {
 		objects = new ArrayList<RenderedObject>();
 		objects2d = new ArrayList<ShapedObject2>();
 
-		JInputReader jinput = new JInputReader();
-		if (jinput.isUseable()) {
-			inputs = new InputManager(jinput);
-			System.out.println("Using JInput.");
-		} else {
-			inputs = new InputManager(new GLFWInputReader());
-			System.out.println("Using GLFW input.");
-		}
+		// JInputReader jinput = new JInputReader();
+		// if (jinput.isUseable()) {
+		// inputs = new InputManager(jinput);
+		// System.out.println("Using JInput.");
+		// } else {
+		inputs = new InputManager(new GLFWInputReader());
+		System.out.println("Using GLFW input.");
+		// }
 		closeEvent = new InputEvent("Game_Close", new Input(
-				Input.KEYBOARD_EVENT, "Escape", KeyEvent.KEY_DOWN));
+				Input.KEYBOARD_EVENT, "Escape", KeyInput.KEY_DOWN));
 		inputs.addEvent(closeEvent);
 
 		cam = new Camera(inputs);

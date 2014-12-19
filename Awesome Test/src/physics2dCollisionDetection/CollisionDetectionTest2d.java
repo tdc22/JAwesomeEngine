@@ -5,9 +5,6 @@ import gui.DisplayMode;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
-import input.Input;
-import input.InputEvent;
-import input.KeyEvent;
 import integration.EulerIntegration;
 
 import java.util.ArrayList;

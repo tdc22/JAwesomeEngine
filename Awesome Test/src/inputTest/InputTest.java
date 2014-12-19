@@ -5,10 +5,11 @@ import gui.DisplayMode;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
+import input.GamepadInput;
 import input.Input;
 import input.InputEvent;
-import input.KeyEvent;
-import input.MouseEvent;
+import input.KeyInput;
+import input.MouseInput;
 import shape.Box;
 
 public class InputTest extends StandardGame {
@@ -30,26 +31,36 @@ public class InputTest extends StandardGame {
 
 	private void initEvents() {
 		inputs.addEvent(new InputEvent("MouseMoved", new Input(
-				Input.MOUSE_EVENT, "", MouseEvent.MOUSE_MOVED)));
+				Input.MOUSE_EVENT, "", MouseInput.MOUSE_MOVED)));
 		inputs.addEvent(new InputEvent("MouseButton0", new Input(
-				Input.MOUSE_EVENT, "0", MouseEvent.MOUSE_BUTTON_DOWN)));
+				Input.MOUSE_EVENT, "0", MouseInput.MOUSE_BUTTON_DOWN)));
 		inputs.addEvent(new InputEvent("MouseButton1Pressed", new Input(
-				Input.MOUSE_EVENT, "1", MouseEvent.MOUSE_BUTTON_PRESSED)));
+				Input.MOUSE_EVENT, "1", MouseInput.MOUSE_BUTTON_PRESSED)));
 		inputs.addEvent(new InputEvent("MouseButton1Released", new Input(
-				Input.MOUSE_EVENT, "1", MouseEvent.MOUSE_BUTTON_RELEASED)));
+				Input.MOUSE_EVENT, "1", MouseInput.MOUSE_BUTTON_RELEASED)));
 
 		inputs.addEvent(new InputEvent("Key_W_Down", new Input(
-				Input.KEYBOARD_EVENT, "W", KeyEvent.KEY_DOWN)));
+				Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN)));
 		inputs.addEvent(new InputEvent("Key_A_Released", new Input(
-				Input.KEYBOARD_EVENT, "A", KeyEvent.KEY_RELEASED)));
+				Input.KEYBOARD_EVENT, "A", KeyInput.KEY_RELEASED)));
 		inputs.addEvent(new InputEvent("Key_D_Pressed", new Input(
-				Input.KEYBOARD_EVENT, "D", KeyEvent.KEY_PRESSED)));
+				Input.KEYBOARD_EVENT, "D", KeyInput.KEY_PRESSED)));
+
+		// Button naming for XBox 360 Gamepad
+		inputs.addEvent(new InputEvent("A Down", new GamepadInput(0, "0",
+				GamepadInput.BUTTON_DOWN)));
+		inputs.addEvent(new InputEvent("B Pressed", new GamepadInput(0, "1",
+				GamepadInput.BUTTON_PRESSED)));
+		inputs.addEvent(new InputEvent("X Released", new GamepadInput(0, "2",
+				GamepadInput.BUTTON_RELEASED)));
+		inputs.addEvent(new InputEvent("Stick Active", new GamepadInput(0, "0",
+				0.2f)));
 	}
 
 	@Override
 	public void render() {
 		// TODO Auto-generated method stub
-		renderScene();
+
 	}
 
 	@Override
@@ -76,6 +87,17 @@ public class InputTest extends StandardGame {
 			System.out.println("Key A is Released.");
 		if (inputs.isEventActive("Key_D_Pressed"))
 			System.out.println("Key D is Pressed.");
+
+		if (inputs.isEventActive("A Down"))
+			System.out.println("A Button Down");
+		if (inputs.isEventActive("B Pressed"))
+			System.out.println("B Button Pressed");
+		if (inputs.isEventActive("X Released"))
+			System.out.println("X Button Released");
+		if (inputs.isEventActive("Stick Active"))
+			System.out.println("Stick Active: "
+					+ inputs.getGamepadStickValue(0, 0, "x") + "; "
+					+ inputs.getGamepadStickValue(0, 0, "y"));
 	}
 
 }

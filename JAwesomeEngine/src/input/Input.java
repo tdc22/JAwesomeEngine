@@ -3,7 +3,8 @@ package input;
 public class Input {
 	public static final int KEYBOARD_EVENT = 0;
 	public static final int MOUSE_EVENT = 1;
-	public static final int GAMEPAD_EVENT = 2;
+	public static final int GAMEPAD_EVENT = 2; // This can only be used via the
+												// GamepadInput class
 
 	private int inputtype, eventtype;
 	String componentname;

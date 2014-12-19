@@ -7,7 +7,7 @@ public class DisplayMode {
 	private final String DEFAULT_TITLE = "JAwesomeEngine Display";
 
 	public DisplayMode() {
-		init(800, 600, DEFAULT_TITLE, false, true);
+		init(800, 600, DEFAULT_TITLE, true, true);
 	}
 
 	public DisplayMode(int width, int height) {

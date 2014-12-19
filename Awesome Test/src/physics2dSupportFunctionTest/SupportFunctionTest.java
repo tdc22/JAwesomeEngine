@@ -7,6 +7,7 @@ import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
 import input.Input;
+import input.KeyInput;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.InputLoader;
@@ -88,7 +89,7 @@ public class SupportFunctionTest extends StandardGame {
 
 		inputs.createInputEvent("toggle Mouse grab").addEventTrigger(
 				new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_R,
-						KeyEvent.Key_Pressed));
+						KeyInput.Key_Pressed));
 	}
 
 	@Override

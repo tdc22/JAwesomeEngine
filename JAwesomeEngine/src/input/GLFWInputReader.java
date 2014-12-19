@@ -1,5 +1,7 @@
 package input;
 
+import static org.lwjgl.glfw.GLFW.GLFW_JOYSTICK_1;
+import static org.lwjgl.glfw.GLFW.GLFW_JOYSTICK_LAST;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_2;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_3;
@@ -8,16 +10,21 @@ import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_5;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_6;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_7;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_8;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LAST;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
+import static org.lwjgl.glfw.GLFW.glfwGetJoystickAxes;
+import static org.lwjgl.glfw.GLFW.glfwGetJoystickButtons;
 import static org.lwjgl.glfw.GLFW.glfwGetKey;
 import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
+import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
+import static org.lwjgl.opengl.GL11.GL_TRUE;
 
+import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +37,9 @@ public class GLFWInputReader extends InputReader {
 	HashMap<String, Integer> keys;
 	private DoubleBuffer tmpMousePosX, tmpMousePosY;
 	private int lastMousePosX, lastMousePosY;
+	private List<Integer> gamepads;
+	private HashMap<Integer, FloatBuffer> gamepadaxes;
+	private HashMap<Integer, ByteBuffer> gamepadbuttons;
 
 	public GLFWInputReader(Long... windowids) {
 		this.windowids = new ArrayList<Long>();
@@ -46,6 +56,10 @@ public class GLFWInputReader extends InputReader {
 
 		keys = new HashMap<String, Integer>();
 		setupKeys();
+
+		gamepads = new ArrayList<Integer>();
+		gamepadaxes = new HashMap<Integer, FloatBuffer>();
+		gamepadbuttons = new HashMap<Integer, ByteBuffer>();
 	}
 
 	public void addWindowID(Long windowid) {
@@ -55,6 +69,7 @@ public class GLFWInputReader extends InputReader {
 	@Override
 	public void update() {
 		updateMouseData();
+		updateGamepadData();
 	}
 
 	private void updateMouseData() {
@@ -78,6 +93,32 @@ public class GLFWInputReader extends InputReader {
 		lastMousePosY = curry;
 	}
 
+	private void updateGamepadData() {
+		gamepadaxes.clear();
+		gamepadbuttons.clear();
+		int a = 0;
+		for (int i = GLFW_JOYSTICK_1; i < GLFW_JOYSTICK_LAST; i++) {
+			if (glfwJoystickPresent(i) == GL_TRUE) {
+				gamepadaxes.put(a, glfwGetJoystickAxes(i));
+				gamepadbuttons.put(a, glfwGetJoystickButtons(i));
+				if (a < gamepads.size()) {
+					if (gamepads.get(a) != i)
+						gamepads.set(a, i);
+				} else {
+					gamepads.add(a, i);
+					System.out.println("Gamepad added (" + i + ")");
+				}
+				a++;
+			}
+		}
+		if (gamepads.size() > a) {
+			for (int i = a; i < gamepads.size(); i++) {
+				gamepads.remove(i);
+				System.out.println("Gamepad removed (" + i + ")");
+			}
+		}
+	}
+
 	@Override
 	public boolean isKeyDown(String keyname) {
 		for (Long i : windowids)
@@ -99,9 +140,9 @@ public class GLFWInputReader extends InputReader {
 		case ("Right"):
 			buttonvalue = GLFW_MOUSE_BUTTON_RIGHT;
 			break;
-		case ("Last"):
-			buttonvalue = GLFW_MOUSE_BUTTON_LAST;
-			break;
+		// case ("Last"):
+		// buttonvalue = GLFW_MOUSE_BUTTON_LAST;
+		// break;
 		case ("0"):
 			buttonvalue = GLFW_MOUSE_BUTTON_1;
 			break;
@@ -137,7 +178,7 @@ public class GLFWInputReader extends InputReader {
 	private void setupKeys() {
 		keys.clear();
 
-		keys.put("Void", null);
+		// keys.put("Void", null);
 		keys.put("Escape", GLFW.GLFW_KEY_ESCAPE);
 		keys.put("1", GLFW.GLFW_KEY_1);
 		keys.put("2", GLFW.GLFW_KEY_2);
@@ -262,5 +303,25 @@ public class GLFWInputReader extends InputReader {
 		// keys.put("Power", GLFW.GLFW_KEY_POWER);
 		// keys.put("Sleep", GLFW.GLFW_KEY_SLEEP);
 		keys.put("Unknown", GLFW.GLFW_KEY_UNKNOWN);
+	}
+
+	@Override
+	public int getGamepadCount() {
+		return gamepads.size();
+	}
+
+	@Override
+	public boolean isGamepadButtonDown(int gamepad, String button) {
+		if (getGamepadCount() == 0)
+			return false;
+		return gamepadbuttons.get(gamepad).get(Integer.parseInt(button)) == 1;
+	}
+
+	@Override
+	public float getGamepadStickValue(int gamepad, int sticknum, String axis) {
+		if (getGamepadCount() == 0)
+			return 0;
+		int offset = axis.toLowerCase().equals("x") ? 0 : 1;
+		return gamepadaxes.get(gamepad).get(sticknum + offset);
 	}
 }

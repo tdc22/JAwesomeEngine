@@ -7,7 +7,7 @@ import gui.PixelFormat;
 import gui.VideoSettings;
 import input.Input;
 import input.InputEvent;
-import input.KeyEvent;
+import input.KeyInput;
 import loader.ModelLoader;
 import math.FastMath;
 import objects.RenderedObject;
@@ -35,7 +35,7 @@ public class TransRot extends StandardGame {
 		rabbit2.translateTo(10, 0, 0);
 
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyEvent.KEY_PRESSED));
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 

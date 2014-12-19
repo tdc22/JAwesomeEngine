@@ -14,7 +14,7 @@ import gui.Text;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
-import input.KeyEvent;
+import input.KeyInput;
 
 import java.awt.Color;
 
@@ -52,13 +52,13 @@ public class Debugger {
 
 	private void setupControls(InputManager inputs) {
 		toggledata = new InputEvent("debug_showdata", new Input(
-				Input.KEYBOARD_EVENT, "F1", KeyEvent.KEY_PRESSED));
+				Input.KEYBOARD_EVENT, "F1", KeyInput.KEY_PRESSED));
 		toggleaxis = new InputEvent("debug_showaxis", new Input(
-				Input.KEYBOARD_EVENT, "F2", KeyEvent.KEY_PRESSED));
+				Input.KEYBOARD_EVENT, "F2", KeyInput.KEY_PRESSED));
 		togglegrid = new InputEvent("debug_showgrid", new Input(
-				Input.KEYBOARD_EVENT, "F3", KeyEvent.KEY_PRESSED));
+				Input.KEYBOARD_EVENT, "F3", KeyInput.KEY_PRESSED));
 		togglewireframe = new InputEvent("debug_showwireframe", new Input(
-				Input.KEYBOARD_EVENT, "F4", KeyEvent.KEY_PRESSED));
+				Input.KEYBOARD_EVENT, "F4", KeyInput.KEY_PRESSED));
 
 		inputs.addEvent(toggledata);
 		inputs.addEvent(toggleaxis);

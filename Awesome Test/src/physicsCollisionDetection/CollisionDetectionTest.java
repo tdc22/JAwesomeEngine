@@ -7,6 +7,7 @@ import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
 import input.Input;
+import input.KeyInput;
 import integration.EulerIntegration;
 
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class CollisionDetectionTest extends StandardGame {
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		inputs.createInputEvent("toggle Mouse grab").addEventTrigger(
 				new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_E,
-						KeyEvent.Key_Pressed));
+						KeyInput.Key_Pressed));
 	}
 
 	@Override

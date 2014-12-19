@@ -36,7 +36,7 @@ public class InputLoader {
 			while ((line = reader.readLine()) != null) {
 				if (line.startsWith("\"")) {
 					String eventname = line.split("\"")[1];
-					InputEvent inputevent = inputmanager.createInputEvent(eventname);
+					InputEvent inputevent = new InputEvent(eventname);
 					line = line.split(":")[1];
 					// System.out.println(line);
 					String[] eventtriggers = line.split("/");
@@ -44,10 +44,10 @@ public class InputLoader {
 						String[] params = et.split(";");
 						int type = Integer.parseInt(params[0].replace(" ", ""));
 						Input trigger = null;
-						if (type == Input.CONTROLLER_EVENT) {
+						String componentname = params[2].replace(" ", "");
+						if (type == Input.GAMEPAD_EVENT) {
 							int controllerid = Integer.parseInt(params[1]
 									.replace(" ", ""));
-							String componentname = params[2].replace(" ", "");
 							float value = Float.parseFloat(params[3].replace(
 									" ", ""));
 							trigger = new Input(type, componentname,
@@ -55,12 +55,13 @@ public class InputLoader {
 						} else {
 							int componentid = Integer.parseInt(params[1]
 									.replace(" ", ""));
-							float value = Float.parseFloat(params[2].replace(
-									" ", ""));
-							trigger = new Input(type, componentid, value);
+							int value = Integer.parseInt(params[2].replace(" ",
+									""));
+							trigger = new Input(type, componentname, value);
 						}
 						inputevent.addEventTrigger(trigger);
 					}
+					inputmanager.addEvent(inputevent);
 				}
 			}
 			reader.close();
@@ -89,7 +90,7 @@ public class InputLoader {
 			for (Input i : e.getEventTriggers()) {
 				int itype = i.getInputType();
 				sb.append(" " + itype + ";");
-				if (itype == Input.CONTROLLER_EVENT) {
+				if (itype == Input.GAMEPAD_EVENT) {
 					sb.append(i.getControllerId() + ";");
 				}
 				sb.append(i.getComponentIdentifier() + ";" + i.getValue() + "/");

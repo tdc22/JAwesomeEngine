@@ -44,6 +44,22 @@ public class InputManager {
 		return inputreader.isMouseButtonDown(button);
 	}
 
+	public int getGamepadCount() {
+		return inputreader.getGamepadCount();
+	}
+
+	public boolean isGamepadButtonDown(int gamepad, String button) {
+		return inputreader.isGamepadButtonDown(gamepad, button);
+	}
+
+	public float getGamepadStickValue(int gamepad, int sticknum, String axis) {
+		return inputreader.getGamepadStickValue(gamepad, sticknum, axis);
+	}
+
+	public float getGamepadStickValue(int gamepad, int sticknum) {
+		return inputreader.getGamepadStickValue(gamepad, sticknum);
+	}
+
 	public int getMouseDX() {
 		return inputreader.getMouseDX();
 	}

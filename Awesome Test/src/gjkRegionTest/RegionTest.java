@@ -8,7 +8,7 @@ import gui.PixelFormat;
 import gui.VideoSettings;
 import input.Input;
 import input.InputEvent;
-import input.KeyEvent;
+import input.KeyInput;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -218,7 +218,7 @@ public class RegionTest extends StandardGame {
 		cam.setFlyCam(true);
 
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyEvent.KEY_PRESSED));
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
 		simplices = new ArrayList<Vector3f>();

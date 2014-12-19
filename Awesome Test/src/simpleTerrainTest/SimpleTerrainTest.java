@@ -8,7 +8,7 @@ import gui.PixelFormat;
 import gui.VideoSettings;
 import input.Input;
 import input.InputEvent;
-import input.KeyEvent;
+import input.KeyInput;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -46,7 +46,7 @@ public class SimpleTerrainTest extends StandardGame {
 		addObject(terrain);
 
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyEvent.KEY_PRESSED));
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 

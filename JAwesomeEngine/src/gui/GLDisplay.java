@@ -31,6 +31,7 @@ import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
@@ -48,6 +49,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.glfw.GLFWvidmode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
@@ -55,7 +57,9 @@ import org.lwjgl.opengl.GLContext;
 public class GLDisplay extends Display {
 	private long windowid;
 	private GLFWErrorCallback errorCallback;
+	private GLFWWindowSizeCallback sizeCallback;
 	private boolean mousebound = false;
+	private int width, height;
 
 	@Override
 	public void open(DisplayMode displaymode, PixelFormat pixelformat) {
@@ -90,13 +94,24 @@ public class GLDisplay extends Display {
 		glfwWindowHint(GLFW_SRGB_CAPABLE, pixelformat.isSRGB() ? GL_TRUE
 				: GL_FALSE);
 
-		int width = displaymode.getWidth();
-		int height = displaymode.getHeight();
+		width = displaymode.getWidth();
+		height = displaymode.getHeight();
 
 		windowid = glfwCreateWindow(width, height, displaymode.getTitle(),
 				NULL, NULL);
 		if (windowid == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
+
+		if (displaymode.isResizeable()) {
+			glfwSetWindowSizeCallback(windowid,
+					sizeCallback = new GLFWWindowSizeCallback() {
+						@Override
+						public void invoke(long arg0, int arg1, int arg2) {
+							width = arg1;
+							height = arg2;
+						}
+					});
+		}
 
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		glfwSetWindowPos(windowid, (GLFWvidmode.width(vidmode) - width) / 2,
@@ -115,6 +130,7 @@ public class GLDisplay extends Display {
 	public void close() {
 		glfwDestroyWindow(windowid);
 		glfwTerminate();
+		sizeCallback.release();
 		errorCallback.release();
 	}
 
