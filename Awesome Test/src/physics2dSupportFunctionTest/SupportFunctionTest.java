@@ -7,6 +7,7 @@ import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
 import input.Input;
+import input.InputEvent;
 import input.KeyInput;
 import integration.EulerIntegration;
 import loader.FontLoader;
@@ -33,6 +34,7 @@ public class SupportFunctionTest extends StandardGame {
 	DirectionRenderer dirrenderer;
 	RigidBody2 rb1, rb2, rb3;
 	Debugger debugmanager;
+	InputEvent toggleMouseBind;
 
 	@Override
 	public void init() {
@@ -42,7 +44,7 @@ public class SupportFunctionTest extends StandardGame {
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		inputs = InputLoader.load("res/inputs.txt");
+		inputs = InputLoader.load(inputs, "res/inputs.txt");
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		this.setRendering2d(true);
@@ -87,9 +89,9 @@ public class SupportFunctionTest extends StandardGame {
 		// Vector3f(2,5,2)); add(new Vector3f(8,5,2)); add(new Vector3f(2,5,8));
 		// add(new Vector3f(4,8,4)); }}));
 
-		inputs.createInputEvent("toggle Mouse grab").addEventTrigger(
-				new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_R,
-						KeyInput.Key_Pressed));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		inputs.addEvent(toggleMouseBind);
 	}
 
 	@Override
@@ -107,34 +109,37 @@ public class SupportFunctionTest extends StandardGame {
 	@Override
 	public void update(int delta) {
 		boolean moved = false;
-		if (inputs.isInputEventActive("Translate1")) {
+		if (inputs.isEventActive("Translate1")) {
 			q1.translate(0, -delta / 4f);
 			moved = true;
 		}
-		if (inputs.isInputEventActive("Translate2")) {
+		if (inputs.isEventActive("Translate2")) {
 			q1.translate(0, delta / 4f);
 			moved = true;
 		}
-		if (inputs.isInputEventActive("Translate3")) {
+		if (inputs.isEventActive("Translate3")) {
 			q1.translate(-delta / 4f, 0);
 			moved = true;
 		}
-		if (inputs.isInputEventActive("Translate4")) {
+		if (inputs.isEventActive("Translate4")) {
 			q1.translate(delta / 4f, 0);
 			moved = true;
 		}
 
-		if (inputs.isInputEventActive("Rotate2")) {
+		if (inputs.isEventActive("Rotate2")) {
 			q1.rotate(delta / 10f);
 			moved = true;
 		}
-		if (inputs.isInputEventActive("Rotate3")) {
+		if (inputs.isEventActive("Rotate3")) {
 			q1.rotate(-delta / 10f);
 			moved = true;
 		}
 
-		if (inputs.isInputEventActive("toggle Mouse grab")) {
-			mouse.setGrabbed(!mouse.isGrabbed());
+		if (toggleMouseBind.isActive()) {
+			if (!display.isMouseBound())
+				display.bindMouse();
+			else
+				display.unbindMouse();
 		}
 
 		if (moved) {

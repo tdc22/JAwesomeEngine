@@ -54,7 +54,7 @@ public class InputTest extends StandardGame {
 		inputs.addEvent(new InputEvent("X Released", new GamepadInput(0, "2",
 				GamepadInput.BUTTON_RELEASED)));
 		inputs.addEvent(new InputEvent("Stick Active", new GamepadInput(0, "0",
-				0.2f)));
+				GamepadInput.STICK_ACTIVE, 0.2f)));
 	}
 
 	@Override

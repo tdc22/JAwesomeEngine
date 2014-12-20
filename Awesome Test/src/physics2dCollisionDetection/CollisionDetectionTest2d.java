@@ -122,23 +122,23 @@ public class CollisionDetectionTest2d extends StandardGame {
 	public void update(int delta) {
 		q1.rotate(delta / 10f);
 
-		if (inputs.isInputEventActive("Translate1")) {
+		if (inputs.isEventActive("Translate1")) {
 			q1.translate(0, -delta / 4f);
 		}
-		if (inputs.isInputEventActive("Translate2")) {
+		if (inputs.isEventActive("Translate2")) {
 			q1.translate(0, delta / 4f);
 		}
-		if (inputs.isInputEventActive("Translate3")) {
+		if (inputs.isEventActive("Translate3")) {
 			q1.translate(-delta / 4f, 0);
 		}
-		if (inputs.isInputEventActive("Translate4")) {
+		if (inputs.isEventActive("Translate4")) {
 			q1.translate(delta / 4f, 0);
 		}
 
-		if (inputs.isInputEventActive("Rotate2")) {
+		if (inputs.isEventActive("Rotate2")) {
 			q1.rotate(delta / 10f);
 		}
-		if (inputs.isInputEventActive("Rotate3")) {
+		if (inputs.isEventActive("Rotate3")) {
 			q1.rotate(-delta / 10f);
 		}
 

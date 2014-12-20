@@ -5,7 +5,8 @@ public class GamepadInput extends Input {
 	public float deadzone;
 
 	// Constructor for analog (e.g. stick) events
-	public GamepadInput(int gamepadID, String componentname, float deadzone) {
+	public GamepadInput(int gamepadID, String componentname, int eventtype,
+			float deadzone) {
 		super(GAMEPAD_EVENT, componentname, STICK_ACTIVE);
 		this.gamepadID = gamepadID;
 		this.deadzone = deadzone;

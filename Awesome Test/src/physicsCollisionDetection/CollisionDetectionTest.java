@@ -7,6 +7,7 @@ import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
 import input.Input;
+import input.InputEvent;
 import input.KeyInput;
 import integration.EulerIntegration;
 
@@ -45,6 +46,7 @@ public class CollisionDetectionTest extends StandardGame {
 	RigidBody3 rb1, rb2, rb3, rb4, rb5;
 	Debugger debugmanager;
 	List<ManifoldVisualization> manifolds;
+	InputEvent toggleMouseBind;
 
 	@Override
 	public void init() {
@@ -106,12 +108,12 @@ public class CollisionDetectionTest extends StandardGame {
 		space.addRigidBody(c1, rb5);
 		addObject(c1);
 
-		inputs = InputLoader.load("res/inputs.txt");
+		inputs = InputLoader.load(inputs, "res/inputs.txt");
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		inputs.createInputEvent("toggle Mouse grab").addEventTrigger(
-				new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_E,
-						KeyInput.Key_Pressed));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		inputs.addEvent(toggleMouseBind);
 	}
 
 	@Override
@@ -132,33 +134,36 @@ public class CollisionDetectionTest extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		if (inputs.isInputEventActive("toggle Mouse grab")) {
-			mouse.setGrabbed(!mouse.isGrabbed());
+		if (toggleMouseBind.isActive()) {
+			if (!display.isMouseBound())
+				display.bindMouse();
+			else
+				display.unbindMouse();
 		}
 
-		if (inputs.isInputEventActive("Translate1")) {
+		if (inputs.isEventActive("Translate1")) {
 			b1.translate(0, delta / 100f, 0);
 		}
-		if (inputs.isInputEventActive("Translate2")) {
+		if (inputs.isEventActive("Translate2")) {
 			b1.translate(0, -delta / 100f, 0);
 		}
-		if (inputs.isInputEventActive("Translate3")) {
+		if (inputs.isEventActive("Translate3")) {
 			b1.translate(-delta / 100f, 0, 0);
 		}
-		if (inputs.isInputEventActive("Translate4")) {
+		if (inputs.isEventActive("Translate4")) {
 			b1.translate(delta / 100f, 0, 0);
 		}
 
-		if (inputs.isInputEventActive("Rotate1")) {
+		if (inputs.isEventActive("Rotate1")) {
 			b1.rotate(delta / 10f, 0, 0);
 		}
-		if (inputs.isInputEventActive("Rotate2")) {
+		if (inputs.isEventActive("Rotate2")) {
 			b1.rotate(-delta / 10f, 0, 0);
 		}
-		if (inputs.isInputEventActive("Rotate3")) {
+		if (inputs.isEventActive("Rotate3")) {
 			b1.rotate(0, -delta / 10f, 0);
 		}
-		if (inputs.isInputEventActive("Rotate4")) {
+		if (inputs.isEventActive("Rotate4")) {
 			b1.rotate(0, delta / 10f, 0);
 		}
 
@@ -199,7 +204,7 @@ public class CollisionDetectionTest extends StandardGame {
 				s4.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
 			if (o.contains(rb5))
 				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
-			GL11.glDisable(GL_DEPTH_TEST);
+			// GL11.glDisable(GL_DEPTH_TEST);
 		}
 
 		debugmanager.update();

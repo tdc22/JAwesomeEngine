@@ -24,6 +24,10 @@ public class InputManager {
 		return inputreader;
 	}
 
+	public LinkedHashMap<String, InputEvent> getInputEvents() {
+		return inputevents;
+	}
+
 	public void update() {
 		inputreader.update();
 		Iterator<InputEvent> it = inputevents.values().iterator();

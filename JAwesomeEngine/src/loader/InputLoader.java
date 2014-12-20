@@ -1,5 +1,6 @@
 package loader;
 
+import input.GamepadInput;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
@@ -11,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InputLoader {
@@ -44,20 +46,21 @@ public class InputLoader {
 						String[] params = et.split(";");
 						int type = Integer.parseInt(params[0].replace(" ", ""));
 						Input trigger = null;
-						String componentname = params[2].replace(" ", "");
 						if (type == Input.GAMEPAD_EVENT) {
-							int controllerid = Integer.parseInt(params[1]
-									.replace(" ", ""));
-							float value = Float.parseFloat(params[3].replace(
+							int gamepadid = Integer.parseInt(params[1].replace(
 									" ", ""));
-							trigger = new Input(type, componentname,
-									controllerid, value);
-						} else {
-							int componentid = Integer.parseInt(params[1]
+							String componentname = params[2];
+							int eventtype = Integer.parseInt(params[3].replace(
+									" ", ""));
+							float deadzone = Float.parseFloat(params[4]
 									.replace(" ", ""));
-							int value = Integer.parseInt(params[2].replace(" ",
-									""));
-							trigger = new Input(type, componentname, value);
+							trigger = new GamepadInput(gamepadid,
+									componentname, eventtype, deadzone);
+						} else {
+							String componentname = params[1];
+							int eventtype = Integer.parseInt(params[2].replace(
+									" ", ""));
+							trigger = new Input(type, componentname, eventtype);
 						}
 						inputevent.addEventTrigger(trigger);
 					}
@@ -83,7 +86,8 @@ public class InputLoader {
 
 		writer.write("Input Settings\n");
 		StringBuilder sb;
-		List<InputEvent> inputevents = inputs.getInputEvents();
+		List<InputEvent> inputevents = new ArrayList<InputEvent>(inputs
+				.getInputEvents().values());
 		for (InputEvent e : inputevents) {
 			sb = new StringBuilder();
 			sb.append("\"" + e.getName() + "\":");
@@ -91,9 +95,16 @@ public class InputLoader {
 				int itype = i.getInputType();
 				sb.append(" " + itype + ";");
 				if (itype == Input.GAMEPAD_EVENT) {
-					sb.append(i.getControllerId() + ";");
+					sb.append(((GamepadInput) i).getGamepadID() + ";");
+					sb.append(((GamepadInput) i).getComponentName() + ";");
+					sb.append(((GamepadInput) i).getEventType() + ";");
+					sb.append(((GamepadInput) i).getDeadZone());
+				} else {
+					sb.append(i.getComponentName() + ";");
+					sb.append(i.getEventType());
 				}
-				sb.append(i.getComponentIdentifier() + ";" + i.getValue() + "/");
+				sb.append("/");
+				// sb.append(i.getComponentIdentifier() + ";" + i + "/");
 			}
 			sb.append("\n");
 			writer.write(sb.toString());
