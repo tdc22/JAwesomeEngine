@@ -58,12 +58,12 @@ public class Quaterniond extends Quaternion {
 
 	@Override
 	public Complex get2dRotation() {
-		return new Complexd(q0, q1);
+		return new Complexd(q0, q3);
 	}
 
 	@Override
 	public Complexf get2dRotationf() {
-		return new Complexf(q0, q1);
+		return new Complexf(q0, q3);
 	}
 
 	/**
