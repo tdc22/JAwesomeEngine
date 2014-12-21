@@ -161,7 +161,7 @@ public class Quaternionf extends Quaternion {
 	 */
 	@Override
 	public void rotate(double angle, Vector3 axis) {
-		float halfangle = (float) (angle / 2f);
+		float halfangle = (float) Math.toRadians(angle / 2f);
 		float sina = (float) Math.sin(halfangle);
 		float nq1 = axis.getXf() * sina;
 		float nq2 = axis.getYf() * sina;
@@ -175,7 +175,7 @@ public class Quaternionf extends Quaternion {
 	 */
 	@Override
 	public void rotate(float angle, Vector3 axis) {
-		float halfangle = angle / 2f;
+		float halfangle = (float) Math.toRadians(angle / 2f);
 		float sina = (float) Math.sin(halfangle);
 		float nq1 = axis.getXf() * sina;
 		float nq2 = axis.getYf() * sina;

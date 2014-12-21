@@ -154,7 +154,7 @@ public class Quaterniond extends Quaternion {
 	 */
 	@Override
 	public void rotate(double angle, Vector3 axis) {
-		double halfangle = angle / 2d;
+		double halfangle = Math.toRadians(angle / 2d);
 		double sina = Math.sin(halfangle);
 		double nq1 = axis.getX() * sina;
 		double nq2 = axis.getY() * sina;
@@ -168,7 +168,7 @@ public class Quaterniond extends Quaternion {
 	 */
 	@Override
 	public void rotate(float angle, Vector3 axis) {
-		double halfangle = angle / 2d;
+		double halfangle = Math.toRadians(angle / 2d);
 		double sina = Math.sin(halfangle);
 		double nq1 = axis.getX() * sina;
 		double nq2 = axis.getY() * sina;

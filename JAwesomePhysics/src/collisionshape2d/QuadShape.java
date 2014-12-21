@@ -57,7 +57,6 @@ public class QuadShape extends RigidBody2 implements QuadStructure {
 	public Vector2f supportPointLocal(Vector2f direction) {
 		Vector2f v = ComplexMath
 				.transform(this.getInverseRotation(), direction);
-		System.out.println(v + "; " + this.getRotation() + "; " + this.getRotation().get2dRotationf() + "; " + this.getInverseRotation());
 		return new Vector2f((v.x < 0 ? -1 : 1) * halfsize.x, (v.y < 0 ? -1 : 1)
 				* halfsize.y);
 	}

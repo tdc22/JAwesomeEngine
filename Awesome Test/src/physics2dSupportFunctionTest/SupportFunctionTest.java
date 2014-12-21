@@ -58,32 +58,32 @@ public class SupportFunctionTest extends StandardGame {
 		space.addRigidBody(q1, rb1);
 		// addObject(b1);
 
-//		q2 = new Quad(400, 200, 25, 25);
-//		rb2 = PhysicsShapeCreator.create(q2);
-//		space.addRigidBody(q2, rb2);
-//		// addObject(b2);
-//
-//		c1 = new Circle(80, 80, 25, 50);
-//		rb3 = PhysicsShapeCreator.create(c1);
-//		space.addRigidBody(c1, rb3);
-//		// addObject(s1);
+		q2 = new Quad(400, 200, 25, 25);
+		rb2 = PhysicsShapeCreator.create(q2);
+		space.addRigidBody(q2, rb2);
+		// addObject(b2);
+
+		c1 = new Circle(80, 80, 25, 50);
+		rb3 = PhysicsShapeCreator.create(c1);
+		space.addRigidBody(c1, rb3);
+		// addObject(s1);
 
 		dirrenderer = new DirectionRenderer();
 		addObject(dirrenderer);
 
 		so1 = new SupportObject(q1, rb1);
-//		so2 = new SupportObject(q2, rb2);
-//		so3 = new SupportObject(c1, rb3);
+		so2 = new SupportObject(q2, rb2);
+		so3 = new SupportObject(c1, rb3);
 
 		add2dObject(so1);
-//		add2dObject(so2);
-//		add2dObject(so3);
+		add2dObject(so2);
+		add2dObject(so3);
 
-//		support1 = new SupportDifferenceObject(q1, rb1, q2, rb2);
-//		support2 = new SupportDifferenceObject(q1, rb1, c1, rb3);
-//
-//		add2dObject(support1);
-//		add2dObject(support2);
+		support1 = new SupportDifferenceObject(q1, rb1, q2, rb2);
+		support2 = new SupportDifferenceObject(q1, rb1, c1, rb3);
+
+		add2dObject(support1);
+		add2dObject(support2);
 
 		// addObject(new ResultTetrahedron(new ArrayList<Vector3f>() {{add(new
 		// Vector3f(2,5,2)); add(new Vector3f(8,5,2)); add(new Vector3f(2,5,8));
@@ -145,11 +145,12 @@ public class SupportFunctionTest extends StandardGame {
 		if (moved) {
 			System.out.println("----------------------------------");
 			so1.updateShape();
-//			so2.updateShape();
-//			so3.updateShape();
-//
-//			dirrenderer.setDirections(support1.updateShape());
-//			dirrenderer.setDirections(support2.updateShape());
+			System.out.println(rb1.getRotation() + "; " + rb1.getRotation().get2dRotationf());
+			so2.updateShape();
+			so3.updateShape();
+
+			dirrenderer.setDirections(support1.updateShape());
+			dirrenderer.setDirections(support2.updateShape());
 		}
 
 		// if(space.testlist.size() > 0) {
