@@ -31,7 +31,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected List<RigidBody<L, A1, A2, A3>> objects;
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> overlaps;
 	protected L globalForce;
-	protected int resolutionIterations = 20;
+	protected int resolutionIterations = 25;
 
 	public Space(IntegrationSolver integrationsolver, Broadphase<L> broadphase,
 			Narrowphase<L> narrowphase,
@@ -151,11 +151,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		for (int i = 0; i < resolutionIterations; i++)
 			resolve();
 		applyGlobalForce();
-		// for (RigidBody<?, ?, ?, ?> o : objects)
-		// System.out.println(o.getRotation().magnitude());
 		integrate(delta);
-		// for (RigidBody<?, ?, ?, ?> o : objects)
-		// System.out.println(o.getRotation().magnitude());
 		correct();
 
 		// TESTING...

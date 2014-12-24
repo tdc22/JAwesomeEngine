@@ -59,9 +59,9 @@ public abstract class GameObject extends BaseObject {
 
 	@Override
 	public void rotate(float roll, float pitch, float yaw) {
-		rotation.rotate(Math.toRadians(yaw), new Vector3f(0.0f, 0.0f, 1.0f));
-		rotation.rotate(Math.toRadians(pitch), new Vector3f(0.0f, 1.0f, 0.0f));
-		rotation.rotate(Math.toRadians(roll), new Vector3f(1.0f, 0.0f, 0.0f));
+		rotation.rotate(yaw, new Vector3f(0.0f, 0.0f, 1.0f));
+		rotation.rotate(pitch, new Vector3f(0.0f, 1.0f, 0.0f));
+		rotation.rotate(roll, new Vector3f(1.0f, 0.0f, 0.0f));
 		updateBuffer();
 	}
 
@@ -85,19 +85,15 @@ public abstract class GameObject extends BaseObject {
 
 	@Override
 	public void rotate(Vector1 rot) {
-		rotation.rotate(Math.toRadians(rot.getX()), new Vector3f(0.0f, 0.0f,
-				1.0f));
+		rotation.rotate(rot.getX(), new Vector3f(0.0f, 0.0f, 1.0f));
 		updateBuffer();
 	}
 
 	@Override
 	public void rotate(Vector3 rot) {
-		rotation.rotate(Math.toRadians(rot.getZ()), new Vector3d(0.0d, 0.0d,
-				1.0d));
-		rotation.rotate(Math.toRadians(rot.getY()), new Vector3d(0.0d, 1.0d,
-				0.0d));
-		rotation.rotate(Math.toRadians(rot.getX()), new Vector3d(1.0d, 0.0d,
-				0.0d));
+		rotation.rotate(rot.getZ(), new Vector3d(0.0d, 0.0d, 1.0d));
+		rotation.rotate(rot.getY(), new Vector3d(0.0d, 1.0d, 0.0d));
+		rotation.rotate(rot.getX(), new Vector3d(1.0d, 0.0d, 0.0d));
 		updateBuffer();
 	}
 

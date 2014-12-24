@@ -25,9 +25,9 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 		restitution = 0.5f;
 		staticfriction = 0.3f;
 		dynamicfriction = 0.2f;
-		rollingfriction = 0.003f;
+		rollingfriction = 0.01f;
 		lineardamping = 0.05f;
-		angulardamping = 0.0003f;
+		angulardamping = 0.05f;
 	}
 
 	public abstract void applyCentralForce(L force);

@@ -158,7 +158,7 @@ public class ImpulseResolution implements CollisionResolution {
 		A.applyImpulse(VecMath.negate(frictionImpulse), contactA);
 		B.applyImpulse(frictionImpulse, contactB);
 
-		// Rolling friction
+		// Rolling friction (reduces difference in angular movement)
 		float rollingFriction = pythagoreanSolve(A.getRollingFriction(),
 				B.getRollingFriction());
 		Vector1f rav = VecMath.subtraction(B.getAngularVelocity(),
