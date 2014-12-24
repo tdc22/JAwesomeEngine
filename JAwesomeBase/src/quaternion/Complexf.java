@@ -193,7 +193,8 @@ public class Complexf extends Complex {
 	 */
 	@Override
 	public Matrix2d toMatrix() {
-		return new Matrix2d(real, -imaginary, imaginary, real);
+		return new Matrix2d(1 - 2 * imaginary * imaginary, -2 * imaginary
+				* real, 2 * imaginary * real, 1 - 2 * imaginary * imaginary);
 	}
 
 	/**
@@ -201,7 +202,8 @@ public class Complexf extends Complex {
 	 */
 	@Override
 	public Matrix2f toMatrixf() {
-		return new Matrix2f(real, -imaginary, imaginary, real);
+		return new Matrix2f(1 - 2 * imaginary * imaginary, -2 * imaginary
+				* real, 2 * imaginary * real, 1 - 2 * imaginary * imaginary);
 	}
 
 	/**

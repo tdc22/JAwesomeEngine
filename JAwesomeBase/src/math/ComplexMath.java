@@ -66,14 +66,17 @@ public class ComplexMath {
 	}
 
 	public static Vector2 transform(Complex c, Vector2 v) {
-		return new Vector2d(c.getReal() * v.getX() + -c.getImaginary()
-				* v.getY(), c.getImaginary() * v.getX() + c.getReal()
-				* v.getY());
+		return new Vector2d((1 - 2 * c.getImaginary() * c.getImaginary())
+				* v.getX() + (-2 * c.getImaginary() * c.getReal()) * v.getY(),
+				(2 * c.getImaginary() * c.getReal()) * v.getX()
+						+ (1 - 2 * c.getImaginary() * c.getImaginary())
+						* v.getY());
 	}
 
 	public static Vector2f transform(Complexf c, Vector2f v) {
-		return new Vector2f(c.getRealf() * v.getXf() + -c.getImaginaryf()
-				* v.getYf(), c.getImaginaryf() * v.getXf() + c.getRealf()
-				* v.getYf());
+		return new Vector2f((1 - 2 * c.getImaginaryf() * c.getImaginaryf())
+				* v.getXf() + (-2 * c.getImaginaryf() * c.getRealf())
+				* v.getYf(), (2 * c.getImaginaryf() * c.getRealf()) * v.getXf()
+				+ (1 - 2 * c.getImaginaryf() * c.getImaginaryf()) * v.getYf());
 	}
 }

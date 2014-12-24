@@ -143,9 +143,7 @@ public class SupportFunctionTest extends StandardGame {
 		}
 
 		if (moved) {
-			System.out.println("----------------------------------");
 			so1.updateShape();
-			System.out.println(rb1.getRotation() + "; " + rb1.getRotation().get2dRotationf());
 			so2.updateShape();
 			so3.updateShape();
 

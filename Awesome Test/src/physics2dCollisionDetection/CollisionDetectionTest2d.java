@@ -121,7 +121,6 @@ public class CollisionDetectionTest2d extends StandardGame {
 	@Override
 	public void update(int delta) {
 		q1.rotate(delta / 10f);
-		System.out.println(delta);
 
 		if (inputs.isEventActive("Translate1")) {
 			q1.translate(0, -delta / 4f);
