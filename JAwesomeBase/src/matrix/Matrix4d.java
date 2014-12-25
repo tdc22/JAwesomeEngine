@@ -411,6 +411,7 @@ public class Matrix4d extends Matrix4 {
 	 */
 	@Override
 	public void rotate(double angle, Vector3 axis) {
+		angle = Math.toRadians(angle);
 		double c = FastMath.cos(angle);
 		double s = FastMath.sin(angle);
 		double oneminusc = 1.0d - c;
