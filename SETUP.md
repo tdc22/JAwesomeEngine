@@ -2,16 +2,15 @@ Setup
 ==============
 
 ##Dependencies
-Your Project
 * JAwesomeBase
 * JAwesomeEngine
 * JAwesomeBase
-** disruptor.jar (lwjgl)
-** jinput.jar (JInput)
-** lwjgl.jar (lwjgl)
-*** lwjgl native
+  * disruptor.jar (lwjgl)
+  * jinput.jar (JInput)
+  * lwjgl.jar (lwjgl)
+    * lwjgl native
 * JAwesomePhysics
-** JAwesomeBase
+  * JAwesomeBase
 
 ##Instructions
 The following instructions show you how to setup JAwesomeEngine in [Eclipse](https://eclipse.org/).
