@@ -2,7 +2,7 @@ Setup
 ==============
 
 ##Dependencies
-> Your Project
+\> Your Project
 -> JAwesomeBase
 -> JAwesomeEngine
 --> JAwesomeBase
