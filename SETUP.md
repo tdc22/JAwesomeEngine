@@ -22,7 +22,7 @@ Now you have to setup the project dependencies correctly. For this you go back t
 For JAwesomePhysics you have to add the project "JAwesomeBase" again in the project dialog. (Properties -> Java Build Path -> Projects)  
   
 After this you have to add for every project that should use JAwesomeEngine the projects JAwesomeBase, JAwesomeEngine and JAwesomePhysics in the same dialog as before and you are ready to start!  
-You can check if everything is running by adding the projects to the AwesomeTests dependencies and try to run the "DisplayTest" in the package "display" for example. (via "Start.java")
+You can check if everything is running by adding the projects to the AwesomeTests dependencies and try to run the "DisplayTest" in the package "display" for example. (via "Start.java")  
 Whenever you want to update to the most recent version all you have to do is to right click JAwesomeEngine (or one of the other projects) and go to Team -> Pull.
 
 ###Method 2: download latest .jar files
