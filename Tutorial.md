@@ -1,13 +1,17 @@
 Tutorial
 ==============
 
-##Index
+[0]: Index
+[1]: Introduction
 
-##Introduction
-In this tutorial you'll learn the basics of the JAwesomeEngine and at the end of it you'll have a very basic and simple game. If you havn't set the engine up yet read [Setup](https://github.com/tdc22/JAwesomeEngine/blob/master/SETUP.md) first.
+##[0]
+[1](#[1])
+
+##[1]
+In this tutorial you'll learn the basics of the JAwesomeEngine and at the end of it you'll have a very basic and simple game. If you havn't set the engine up yet read [Setup](../SETUP.md) first.
 
 ##Part 1: Display and basic rendering
-In this part of the tutorial you're going to create a basic display window with just a white rendered box and a camera you can move around freely. But before you start set up a new project according to [Setup](https://github.com/tdc22/JAwesomeEngine/blob/master/SETUP.md).  
+In this part of the tutorial you're going to create a basic display window with just a white rendered box and a camera you can move around freely. But before you start set up a new project according to [Setup](../SETUP.md).  
 Now we start by creating two classes: "Start" and "Tutorial". Start will just contain the following code:  
 ```java
 public class Start {
@@ -55,7 +59,7 @@ If you try to run the current code (right-click on "Start.java" -> Run As -> Jav
 				new VideoSettings());
 	}
 ```
-The method initDisplay creates a display using the settings given by the parameters. If you run the code now, you should see a black and empty window, if not check the [Setup](https://github.com/tdc22/JAwesomeEngine/blob/master/SETUP.md)-page again.  
+The method initDisplay creates a display using the settings given by the parameters. If you run the code now, you should see a black and empty window, if not check the [Setup](../SETUP.md)-page again.  
 Next, we'll add a simple box that will represent the player later. For that we start by declaring the player in the Tutorial-class:
 ```java
 	Box player;
