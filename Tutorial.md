@@ -7,7 +7,7 @@ Tutorial
 In this tutorial you'll learn the basics of the JAwesomeEngine and at the end of it you'll have a very basic and simple game. If you havn't set the engine up yet read [Setup](https://github.com/tdc22/JAwesomeEngine/blob/master/SETUP.md) first.
 
 ##Part 1: Display and basic rendering
-In this part of the tutorial you're going to create a basic display window with just a white rendered cube and a camera you can move around freely. But before you start set up a new project according to [Setup](https://github.com/tdc22/JAwesomeEngine/blob/master/SETUP.md).  
+In this part of the tutorial you're going to create a basic display window with just a white rendered box and a camera you can move around freely. But before you start set up a new project according to [Setup](https://github.com/tdc22/JAwesomeEngine/blob/master/SETUP.md).  
 Now we start by creating two classes: "Start" and "Tutorial". Start will just contain the following code:  
 ```java
 public class Start {
@@ -55,7 +55,94 @@ If you try to run the current code (right-click on "Start.java" -> Run As -> Jav
 				new VideoSettings());
 	}
 ```
-The method initDisplay creates a display using the settings given by the parameters. If you run the code now, you should see a black and empty window, if not check the [Setup](https://github.com/tdc22/JAwesomeEngine/blob/master/SETUP.md)-page again.
+The method initDisplay creates a display using the settings given by the parameters. If you run the code now, you should see a black and empty window, if not check the [Setup](https://github.com/tdc22/JAwesomeEngine/blob/master/SETUP.md)-page again.  
+Next, we'll add a simple box that will represent the player later. For that we start by declaring the player in the Tutorial-class:
+```java
+	Box player;
+```
+(don't forget to choose the right import location, in this case: shape.Box)
+But we also have to initialize it and add it to the scene. For that we have to edit the init()-method:
+```java
+	@Override
+	public void init() {
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
+		
+		player = new Box(0,0,0,1,1.7f,1);
+		this.addObject(player);
+	}
+```
+Now we run the code and see.... nothing? What has gone wrong? Well, two things are still wrong:
+1. The box doesn't get rendered. For that we edit the render()-method. We could simply add player.render(); and it would be fixed but we would have to do this for every object we add to the scene and we don't want to do this, so instead we use:
+```java
+	@Override
+	public void render() {
+		renderScene();
+	}
+```
+Now, every object that gets added via addObject(RenderedObject obj) will be rendered and drawn to the screen.
+2. Still we can't see anything because the Camera is in the wrong location. To fix this we edit the init()-method again and add:
+```java
+	cam.translateTo(0f, 0f, 5);
+	cam.rotateTo(0, 0);
+```
+  
+In addition we also want to move the camera around freely by using the mouse and arrow- or wasd-keys. For that you can simply use the default fly-cam by adding
+```java
+	display.bindMouse();
+	cam.setFlyCam(true);
+```
+to init() and edit update(int delta):
+```java
+	@Override
+	public void update(int delta) {
+		cam.update(delta);
+	}
+```
+  
+So the entire code should look like that:
+```java
+import shape.Box;
+import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
+
+public class Tutorial extends StandardGame {
+	Box player;
+
+	@Override
+	public void init() {
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
+		display.bindMouse();
+		cam.setFlyCam(true);
+		cam.translateTo(0f, 0f, 5);
+		cam.rotateTo(0, 0);
+		
+		player = new Box(0,0,0,1,1.7f,1);
+		this.addObject(player);
+	}
+	
+	@Override
+	public void update(int delta) {
+		cam.update(delta);
+	}
+
+	@Override
+	public void render() {
+		renderScene();
+	}
+
+	@Override
+	public void render2d() {
+		
+	}
+
+}
+```
+Now we actually see the white box in the center of the screen and move the camera around using the mouse and the arrow- or wasd-keys. That's it for the first part.
 
 ##Part 2: Input
 
