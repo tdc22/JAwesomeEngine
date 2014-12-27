@@ -142,7 +142,7 @@ public class Tutorial extends StandardGame {
 
 }
 ```
-Now we actually see the white box in the center of the screen and move the camera around using the mouse and the arrow- or wasd-keys. That's it for the first part.
+Now we actually see the white box in the center of the screen and you're able to move the camera around using the mouse and the arrow- or wasd-keys. That's it for the first part.
 
 ##Part 2: Input
 
