@@ -60,7 +60,7 @@ Next, we'll add a simple box that will represent the player later. For that we s
 ```java
 	Box player;
 ```
-(don't forget to choose the right import location, in this case: shape.Box)
+(don't forget to choose the right import location, in this case: shape.Box)  
 But we also have to initialize it and add it to the scene. For that we have to edit the init()-method:
 ```java
 	@Override
@@ -72,7 +72,7 @@ But we also have to initialize it and add it to the scene. For that we have to e
 		this.addObject(player);
 	}
 ```
-Now we run the code and see.... nothing? What has gone wrong? Well, two things are still wrong:
+Now we run the code and see.... nothing? What has gone wrong? Well, two things are still wrong:  
 1. The box doesn't get rendered. For that we edit the render()-method. We could simply add player.render(); and it would be fixed but we would have to do this for every object we add to the scene and we don't want to do this, so instead we use:
 ```java
 	@Override
@@ -80,7 +80,7 @@ Now we run the code and see.... nothing? What has gone wrong? Well, two things a
 		renderScene();
 	}
 ```
-Now, every object that gets added via addObject(RenderedObject obj) will be rendered and drawn to the screen.
+Now, every object that gets added via addObject(RenderedObject obj) will be rendered and drawn to the screen.  
 2. Still we can't see anything because the Camera is in the wrong location. To fix this we edit the init()-method again and add:
 ```java
 	cam.translateTo(0f, 0f, 5);
