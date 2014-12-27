@@ -23,7 +23,7 @@ Now that we have the Start-class we can create the Tutorial-class which will con
 ```java
 public class Tutorial extends StandardGame {
 
-  @Override
+	@Override
 	public void init() {
 		
 	}
@@ -49,7 +49,7 @@ So let me explain it: we're starting in the first line by extending the class St
 The method init() is called once at the start of the program. It can be used to create objects, load data or initialize the scene. The method update(int delta) gets called once per rendered frame. The parameter gives you the passed time since the last frame in milliseconds. You can use that method to update the game logic, move objects, etc.. The last two methods "render" and "render2d" are called once per frame too but after the update-method. They should just be used to render the objects in the scene. You should also be careful that render2d() just gets called if you have added 2d-Objects (Object2d) or activated it manually but more about this later.  
 If you try to run the current code (right-click on "Start.java" -> Run As -> Java Application) you'll probably get an error because we havn't created a display yet. We'll change this now by adding some lines to the init() method:
 ```java
-  @Override
+	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
