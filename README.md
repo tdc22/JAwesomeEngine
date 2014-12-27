@@ -18,7 +18,7 @@ A list of most current, wip and planned features can be found here: [Featureslis
 [Tutorial](/Tutorial.md)
 
 ##License
-The whole engine is under the [zlib-license](http://opensource.org/licenses/Zlib). (see [LICENSE](/LICENSE.md))
+The whole engine is under the [zlib-license](http://opensource.org/licenses/Zlib). (see [LICENSE](/LICENSE))
 
 ##Credits
 The code was entirely written by me. Some parts are inspired by tutorials or various other sources.  
