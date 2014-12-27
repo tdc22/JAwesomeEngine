@@ -12,13 +12,13 @@ A list of most current, wip and planned features can be found here: [Featureslis
 
 ##Getting Started
 ###Setup
-[Setup](https://github.com/tdc22/JAwesomeEngine/blob/master/SETUP.md)
+[Setup](/SETUP.md)
 
 ###Tutorials
-[Tutorial](https://github.com/tdc22/JAwesomeEngine/blob/master/Tutorial.md)
+[Tutorial](/Tutorial.md)
 
 ##License
-The whole engine is under the [zlib-license](http://opensource.org/licenses/Zlib). (see LICENSE)
+The whole engine is under the [zlib-license](http://opensource.org/licenses/Zlib). (see [LICENSE](/LICENSE.md))
 
 ##Credits
 The code was entirely written by me. Some parts are inspired by tutorials or various other sources.  
