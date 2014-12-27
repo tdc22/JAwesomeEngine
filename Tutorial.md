@@ -2,7 +2,7 @@ Tutorial
 ==============
 
 ##Index
-[Introduction](##Introduction)
+[Introduction](#introduction)
 
 ##Introduction
 In this tutorial you'll learn the basics of the JAwesomeEngine and at the end of it you'll have a very basic and simple game. If you havn't set the engine up yet read [Setup](/SETUP.md) first.
