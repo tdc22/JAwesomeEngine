@@ -7,7 +7,7 @@ Tutorial
 [Part 2: Input](#part-2-input)  
 [Part 3: Simple physics](#part-3-simple-physics)  
 [Part 4: Shaders](#part-4-shaders)  
-[Part 5: 2d and GUI](#part-5-2d-and-gui)  
+[Part 5: 2d and GUI](#part-5-2d-and-gui)
 
 ##Introduction
 In this tutorial you'll learn the basics of the JAwesomeEngine and at the end of it you'll have a very basic and simple game. If you havn't set the engine up yet read [Setup](/SETUP.md) first.
