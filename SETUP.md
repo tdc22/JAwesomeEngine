@@ -29,3 +29,5 @@ Whenever you want to update the engine to the most recent version all you have t
 
 ###Method 2: download latest .jar files
 --- not available yet ---
+
+**If this is your first time using JAwesomeEngine it's recommended to take a look at the [Tutorial](/Tutorial.md) next.**
