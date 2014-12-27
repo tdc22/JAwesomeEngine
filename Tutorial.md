@@ -17,7 +17,7 @@ public class Start {
 	}
 }
 ```
-(Yes, you can also put this into the Tutorial-class but I like to seperate that)  
+(Yes, you can also put this into the Tutorial-class but I like to seperate that.)  
   
 Now that we have the Start-class we can create the Tutorial-class which will contain the actual code. We start by including the basic structure of the JAwesomeEngine:
 ```java
@@ -72,6 +72,7 @@ But we also have to initialize it and add it to the scene. For that we have to e
 		this.addObject(player);
 	}
 ```
+The parameters of the box are x, y, z, width, height, depth. 
 Now we run the code and see.... nothing? What has gone wrong? Well, two things are still wrong:  
 1. The box doesn't get rendered. For that we edit the render()-method. We could simply add player.render(); and it would be fixed but we would have to do this for every object we add to the scene and we don't want to do this, so instead we use:
 ```java
