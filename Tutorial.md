@@ -149,9 +149,123 @@ public class Tutorial extends StandardGame {
 
 }
 ```
-Now we actually see the white box in the center of the screen and you're able to move the camera around using the mouse and the arrow- or wasd-keys. That's it for the first part.
+Now we actually see the white box in the center of the screen and you're able to move the camera around using the mouse and the arrow- or wasd-keys. You can then exit by using the Escape-key. That's it for the first part.
 
 ##Part 2: Input
+In this part we'll set up the input system but leave it without functionality for now. The class StandardGame, which we extended in the first part, contains the variable inputs which we use to check the inputs.  
+In the end we want to have a first-person like movement and controls similar to the camera but we want to move the player object at the same time. Because of that we have to disable the flying camera first so we remove the line
+```java
+		cam.setFlyCam(true);
+```
+The camera was nice for demonstration but now we want to program our own movement.  
+Now we initialize the input events:
+```java
+		forward = new InputEvent("Forward", new Input(
+				Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN), new Input(
+						Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN));
+		backward = new InputEvent("Backward", new Input(
+				Input.KEYBOARD_EVENT, "S", KeyInput.KEY_DOWN), new Input(
+						Input.KEYBOARD_EVENT, "Down", KeyInput.KEY_DOWN));
+		left = new InputEvent("Left", new Input(
+				Input.KEYBOARD_EVENT, "A", KeyInput.KEY_DOWN), new Input(
+						Input.KEYBOARD_EVENT, "Left", KeyInput.KEY_DOWN));
+		right = new InputEvent("Right", new Input(
+				Input.KEYBOARD_EVENT, "D", KeyInput.KEY_DOWN), new Input(
+						Input.KEYBOARD_EVENT, "Right", KeyInput.KEY_DOWN));
+		inputs.addEvent(forward);
+		inputs.addEvent(backward);
+		inputs.addEvent(left);
+		inputs.addEvent(right);
+```
+What we do here is we add an InputEvent for forward, backward, left and right movement and for each event we add a trigger for the wasd- and one for the arrow keys. Besides Keyboard events, there are also mouse and gamepad events. Moreover instead of KEY\_DOWN you can use KEY\_PRESSED and KEY\_RELEASED to trigger an event. Another thing is that you can add as many triggers (Input) as you want within the constructor of InputEvent. At the end we have to pass every event to the inputs-Object to update the status of each InputEvent.  
+To test this we edit the update(int delta) method to:
+```java
+		if(inputs.isMouseMoved()) {
+			System.out.println("mouse moved (" + inputs.getMouseDX() + "; " + inputs.getMouseDY() + ")");
+		}
+		if(forward.isActive()) {
+			System.out.println("forward");
+		}
+		if(backward.isActive()) {
+			System.out.println("backward");
+		}
+		if(left.isActive()) {
+			System.out.println("left");
+		}
+		if(right.isActive()) {
+			System.out.println("right");
+		}
+		
+		cam.update(delta);
+```
+Now you can run the program again and test the events which will result in a console output. The entire code should now like like this:
+```java
+public class Tutorial extends StandardGame {
+	Box player;
+	InputEvent forward, backward, left, right;
+
+	@Override
+	public void init() {
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
+		display.bindMouse();
+		cam.translateTo(0f, 0f, 5);
+		cam.rotateTo(0, 0);
+		
+		player = new Box(0,0,0,1,1.7f,1);
+		this.addObject(player);
+		
+		forward = new InputEvent("Forward", new Input(
+				Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN), new Input(
+						Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN));
+		backward = new InputEvent("Backward", new Input(
+				Input.KEYBOARD_EVENT, "S", KeyInput.KEY_DOWN), new Input(
+						Input.KEYBOARD_EVENT, "Down", KeyInput.KEY_DOWN));
+		left = new InputEvent("Left", new Input(
+				Input.KEYBOARD_EVENT, "A", KeyInput.KEY_DOWN), new Input(
+						Input.KEYBOARD_EVENT, "Left", KeyInput.KEY_DOWN));
+		right = new InputEvent("Right", new Input(
+				Input.KEYBOARD_EVENT, "D", KeyInput.KEY_DOWN), new Input(
+						Input.KEYBOARD_EVENT, "Right", KeyInput.KEY_DOWN));
+		inputs.addEvent(forward);
+		inputs.addEvent(backward);
+		inputs.addEvent(left);
+		inputs.addEvent(right);
+	}
+	
+	@Override
+	public void update(int delta) {
+		if(inputs.isMouseMoved()) {
+			System.out.println("mouse moved (" + inputs.getMouseDX() + "; " + inputs.getMouseDY() + ")");
+		}
+		if(forward.isActive()) {
+			System.out.println("forward");
+		}
+		if(backward.isActive()) {
+			System.out.println("backward");
+		}
+		if(left.isActive()) {
+			System.out.println("left");
+		}
+		if(right.isActive()) {
+			System.out.println("right");
+		}
+		
+		cam.update(delta);
+	}
+
+	@Override
+	public void render() {
+		renderScene();
+	}
+
+	@Override
+	public void render2d() {
+		
+	}
+
+}
+```
 
 ##Part 3: Simple physics
 
