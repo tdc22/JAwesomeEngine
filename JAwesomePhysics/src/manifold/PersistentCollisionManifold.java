@@ -57,8 +57,8 @@ public class PersistentCollisionManifold extends CollisionManifold<Vector3f> {
 
 	public void add(ContactManifold<Vector3f> cm) {
 		penetrationdepth = cm.getPenetrationDepth();
-		addPoint(storedpointsA, cm.getContactPointA(), lastareaA);
-		addPoint(storedpointsB, cm.getContactPointB(), lastareaB);
+		lastareaA = addPoint(storedpointsA, cm.getContactPointA(), lastareaA);
+		lastareaB = addPoint(storedpointsB, cm.getContactPointB(), lastareaB);
 		contactA = computeCenter(storedpointsA);
 		contactB = computeCenter(storedpointsB);
 		relativecontactA = VecMath.subtraction(contactA, getObjects()
@@ -68,7 +68,7 @@ public class PersistentCollisionManifold extends CollisionManifold<Vector3f> {
 		collisionnormal = cm.getCollisionNormal();
 	}
 
-	private void addPoint(List<Vector3f> list, Vector3f point, float lastarea) {
+	private float addPoint(List<Vector3f> list, Vector3f point, float lastarea) {
 		if (list.size() == 3) {
 			float area = triangleSize(list);
 			if (area > lastarea) {
@@ -84,6 +84,7 @@ public class PersistentCollisionManifold extends CollisionManifold<Vector3f> {
 				list.add(point);
 			}
 		}
+		return lastarea;
 	}
 
 	public void clear() {
