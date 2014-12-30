@@ -93,6 +93,14 @@ public class Camera extends RenderedObject {
 		return flycam;
 	}
 
+	public float getHorizontalRotation() {
+		return hrot;
+	}
+
+	public float getVerticalRotation() {
+		return vrot;
+	}
+
 	@Override
 	public void render() {
 
@@ -174,54 +182,19 @@ public class Camera extends RenderedObject {
 				move = VecMath.scale(move, delta * speed);
 				translateTo(VecMath.addition(getTranslation(), move));
 			}
-		} else {
-			if (attachedTo != null) {
-				// rotation(0, 0);
-			}
 		}
 	}
 
 	@Override
 	public void updateBuffer() {
-		// Matrix4f transformmatrix = new Matrix4f(matrix);
-		// // if (isAttached()) {
-		// // transformmatrix = VecMath.transformMatrix(transformmatrix,
-		// // attachedTo.getMatrix());
-		// // }
-		// position = getTranslation();
-		// direction = VecMath.transformVector(transformmatrix.getSubMatrix(),
-		// new Vector3f(0, 0, -1));
-		// transformmatrix.invert();
-		// transformmatrix.store(buf);
-		// buf.rewind();
 		position = getTranslation();
 		direction = QuatMath.transform(rotation, new Vector3f(0, 0, -1));
-		// Quaternionf tmp = new Quaternionf(rotation);
-		// tmp.invert();
+
 		Matrix4f mat = new Matrix4f();
 		mat.setSubMatrix(rotation.toMatrixf());
 		mat.translate(position);
 		mat.invert();
 		mat.store(buf);
 		buf.rewind();
-
-		// float[][] mat = tmp.toMatrixf().getArrayf();
-		// buf.put(mat[0][0]);
-		// buf.put(mat[0][1]);
-		// buf.put(mat[0][2]);
-		// // buf.put(0);
-		// buf.put(mat[1][0]);
-		// buf.put(mat[1][1]);
-		// buf.put(mat[1][2]);
-		// // buf.put(0);
-		// buf.put(mat[2][0]);
-		// buf.put(mat[2][1]);
-		// buf.put(mat[2][2]);
-		// // buf.put(0);
-		// // buf.put(translation.getXf());
-		// // buf.put(translation.getYf());
-		// // buf.put(translation.getZf());
-		// // buf.put(1);
-		// buf.rewind();
 	}
 }

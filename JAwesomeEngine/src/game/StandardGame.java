@@ -188,11 +188,15 @@ public abstract class StandardGame extends AbstractGame {
 		glMatrixMode(GL_MODELVIEW);
 	}
 
-	public void updateEngine() {
+	protected void updateEngine() {
 		inputs.update();
 		if (closeEvent.isActive())
 			running = false;
+	}
+
+	protected void updateEngine2() {
 		cam.begin();
+		display.clear();
 	}
 
 	public abstract void render();
@@ -228,7 +232,7 @@ public abstract class StandardGame extends AbstractGame {
 			updateFPS();
 			updateEngine();
 			update(delta);
-			display.clear();
+			updateEngine2();
 			render();
 			if (render2d) {
 				mode2d();

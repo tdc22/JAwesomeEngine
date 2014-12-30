@@ -11,7 +11,7 @@ import vector.Vector2f;
 public class PersistentCollisionManifold2 extends CollisionManifold<Vector2f> {
 	List<Vector2f> storedpointsA, storedpointsB;
 	float lastdistA = 0, lastdistB = 0;
-	int timetreshold, disttreshold; //TODO
+	int timetreshold, disttreshold; // TODO
 
 	public PersistentCollisionManifold2(CollisionManifold<Vector2f> cm) {
 		super(cm);

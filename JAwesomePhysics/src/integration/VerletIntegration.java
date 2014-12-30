@@ -64,38 +64,4 @@ public class VerletIntegration implements IntegrationSolver {
 				VecMath.addition(oldangularvel, obj.getAngularVelocity()),
 				delta * 0.5f));
 	}
-
-	// @Override
-	// public void integrate3(
-	// RigidBody<Vector3f, Vector3f, Matrix3f, Matrix3f> obj, int delta) {
-	// obj.setLinearVelocity(VecMath.substraction(obj.getTranslation(),
-	// obj.getLastPosition()));
-	// obj.setAngularVelocity(VecMath.substraction(obj.getRotation(),
-	// obj.getLastRotation()));
-	// obj.setLastPosition(obj.getTranslation());
-	// obj.setLastRotation(obj.getRotation());
-	// obj.translate(VecMath.addition(
-	// VecMath.addition(obj.getTranslation(), obj.getLinearVelocity()),
-	// VecMath.scale(obj.getLinearAcceleration(), delta)));
-	// obj.rotate(VecMath.addition(
-	// VecMath.addition(obj.getRotation(), obj.getAngularVelocity()),
-	// VecMath.scale(obj.getAngularAcceleration(), delta)));
-	// }
-	//
-	// @Override
-	// public void integrate2(
-	// RigidBody<Vector2f, Vector1f, Matrix2f, Matrix1f> obj, int delta) {
-	// Matrix2f rot = obj.getRotation2();
-	// obj.setLinearVelocity(VecMath.substraction(obj.getTranslation2(),
-	// obj.getLastPosition()));
-	// obj.setAngularVelocity(VecMath.substraction(rot, obj.getLastRotation()));
-	// obj.setLastPosition(obj.getTranslation2());
-	// obj.setLastRotation(rot);
-	// obj.translate(VecMath.addition(VecMath.addition(obj.getTranslation2(),
-	// obj.getLinearVelocity()), VecMath.scale(
-	// obj.getLinearAcceleration(), delta)));
-	// obj.rotate(VecMath.addition(
-	// VecMath.addition(rot, obj.getAngularVelocity()),
-	// VecMath.scale(obj.getAngularAcceleration(), delta)));
-	// }
 }
