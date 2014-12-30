@@ -62,12 +62,7 @@ If you try to run the current code (right-click on "Start.java" -> Run As -> Jav
 	}
 ```
 The method initDisplay creates a display using the settings given by the parameters. If you run the code now, you should see a black and empty window, if not check the [Setup](/SETUP.md)-page again.  
-Next, we'll add a simple box that will represent the player later. For that we start by declaring the player in the Tutorial-class:
-```java
-	Box player;
-```
-(don't forget to choose the right import location, in this case: shape.Box)  
-But we also have to initialize it and add it to the scene. For that we have to edit the init()-method:
+Next, we'll add a simple box that will represent the player later. For that we start by initializing and adding it to the scene. For that we have to edit the init()-method:
 ```java
 	@Override
 	public void init() {
@@ -78,6 +73,7 @@ But we also have to initialize it and add it to the scene. For that we have to e
 		this.addObject(player);
 	}
 ```
+(don't forget to choose the right import location, in this case: shape.Box)  
 The parameters of the box are x, y, z, width, height, depth.  
 Now we run the code and see.... nothing? What has gone wrong? Well, two things are still wrong:  
 1. The box doesn't get rendered. For that we edit the render()-method. We could simply add player.render(); and it would be fixed but we would have to do this for every object we add to the scene and we don't want to do this, so instead we use:
@@ -117,7 +113,6 @@ import gui.PixelFormat;
 import gui.VideoSettings;
 
 public class Tutorial extends StandardGame {
-	Box player;
 
 	@Override
 	public void init() {
@@ -128,7 +123,7 @@ public class Tutorial extends StandardGame {
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 		
-		player = new Box(0,0,0,1,1.7f,1);
+		Box player = new Box(0,0,0,1,1.7f,1);
 		this.addObject(player);
 	}
 	
@@ -200,8 +195,17 @@ To test this we edit the update(int delta) method to:
 ```
 Now you can run the program again and test the events which will result in a console output. The entire code should now like like this:
 ```java
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
+import shape.Box;
+import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
+
 public class Tutorial extends StandardGame {
-	Box player;
 	InputEvent forward, backward, left, right;
 
 	@Override
@@ -212,7 +216,7 @@ public class Tutorial extends StandardGame {
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 		
-		player = new Box(0,0,0,1,1.7f,1);
+		Box player = new Box(0,0,0,1,1.7f,1);
 		this.addObject(player);
 		
 		forward = new InputEvent("Forward", new Input(
