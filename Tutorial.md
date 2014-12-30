@@ -268,6 +268,24 @@ public class Tutorial extends StandardGame {
 ```
 
 ##Part 3: Simple physics
+This part is about adding physics and movement to the current game. For this we need to use the physics class PhysicsSpace which handles all the collision objects and manages the collisions. So we start by adding the decleration:
+```java
+	PhysicsSpace space;
+```
+And initialize it with:
+```java
+		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
+				new EPA()), new LinearImpulseResolution(),
+				new ProjectionCorrection(0.02f, 0.0f),
+				new PersistentManifoldManager());
+```
+The meaning of most of these parameters is not so trivial to understand so just take it for now. Still an important one is LinearImpulseResolution which restricts the collision resolution to a linear one which is sufficient for now but if you want to change that later you can use ImpulseResolution instead.  
+But we still have to add gravity by using
+```java
+	space.setGlobalForce(new Vector3f(0, -5, 0));
+```
+within the init() method which applys a global force pointing downward. By changing the magnitude of the given vector you can increase or decrease the intensity of the gravity.  
+Now we can simply add our player object to the PhysicsSpace by adding [...]
 
 ##Part 4: Shaders
 
