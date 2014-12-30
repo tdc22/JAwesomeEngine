@@ -286,10 +286,75 @@ And initialize it with:
 The meaning of most of these parameters is not so trivial to understand so just take it for now. Still an important one is LinearImpulseResolution which restricts the collision resolution to a linear one which is sufficient for now but if you want to change that later you can use ImpulseResolution instead.  
 But we still have to add gravity by using
 ```java
-	space.setGlobalForce(new Vector3f(0, -5, 0));
+		space.setGlobalForce(new Vector3f(0, -5, 0));
 ```
 within the init() method which applys a global force pointing downward. By changing the magnitude of the given vector you can increase or decrease the intensity of the gravity.  
-Now we can simply add our player object to the PhysicsSpace by adding [...]
+Now we can simply add our player object to the PhysicsSpace by adding the following lines:
+```java
+		playerbody = PhysicsShapeCreator.create(player);
+		playerbody.setMass(1f);
+		space.addRigidBody(player, playerbody);
+```
+The first line takes a game-object and generates a collision-object from it. The second one sets the mass of that object. The default value is 0 which means that it's a static object, any other value means that it's a moveable object that physically interacts with the world. You can choose any value but you should keep the values for mass in a certain range. The last one - of course - adds the object to the physics space which handles the collision and everything connected to that.  
+Like stated before we ignore the rotation but if you want to have physics with the rotational part you had to add playerbody.setInertia(new Quaternionf());.  
+Next we need to add the decleration:
+```java
+	RigidBody3 playerbody;
+```
+Furthermore we have to make sure that the physics gets updated every loop. To achieve that we add to the update-method:
+```java
+		space.update(delta);
+```
+If you run the game now you should see our white playerbox falling down out of sight. If not something probably went wrong and you should check your code again.  
+In the last part we added input events which, so far, just output a line if the defined keys get pressed. We'll change that now and add interaction to the player. For that we need to apply a force into the direction we want to move the player in. For that we start by creating an accumulation vector:
+```java
+	Vector3f move = new Vector3f();
+```
+Then we simply add a vector pointing into the direction we want to move in:
+```java
+		if(forward.isActive()) {
+			move = VecMath.addition(move, new Vector3f(0, 0, 1));
+		}
+		if(backward.isActive()) {
+			move = VecMath.addition(move, new Vector3f(0, 0, -1));
+		}
+		if(left.isActive()) {
+			move = VecMath.addition(move, new Vector3f(1, 0, 0));
+		}
+		if(right.isActive()) {
+			move = VecMath.addition(move, new Vector3f(-1, 0, 0));
+		}
+```
+Then we normalize the vector and apply a force to the player object:
+```java
+		if(move.length() > 0 ) {
+			move.normalize();
+			move.scale(playerspeed);
+			playerbody.applyCentralForce(move);
+		}
+```
+Of course we then set the playerspeed:
+```java
+	float playerspeed = 10;
+```
+To then stop the player from falling infinitely we add a ground within the init-method:
+```java
+		Box ground = new Box(0, -5, 0, 10, 1, 10);
+		RigidBody3 rb = PhysicsShapeCreator.create(ground);
+		space.addRigidBody(ground, rb);
+		addObject(ground);
+```
+Because we want the ground to be static we set the mass this time to 0.  
+If we start it now we see that everything seems to work so far but we don't see too much yet, because everything is still white (which we'll fix in the next part), and that the movement of the player object is a bit slippery, it feels like the player is walking on ice and sliding around way too much. To fix that we have to change the metod to move the player object. For that we change the line:
+```java
+			playerbody.applyCentralForce(move);
+```
+to
+```java
+		playerbody.setLinearVelocity(new Vector3f(move.x, playerbody.getLinearVelocity().y, move.z));
+```
+*and take it out of the if-check.*  
+Now the movement feels like a more "usual" FPS-movement. But we still have to make it actually first-person.
 
 ##Part 4: Shaders
 
