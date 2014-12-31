@@ -1,5 +1,6 @@
 package tutorialp3;
 
+import game.Debugger;
 import game.StandardGame;
 import gui.DisplayMode;
 import gui.GLDisplay;
@@ -9,6 +10,7 @@ import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
+import loader.FontLoader;
 import manifold.PersistentManifoldManager;
 import math.VecMath;
 import narrowphase.EPA;
@@ -29,6 +31,7 @@ public class Tutorial extends StandardGame {
 	float playerspeed = 10;
 	Vector3f playersize = new Vector3f(1, 1.7f, 1);
 	float mousesensitivity = 0.2f;
+	Debugger debugmanager;
 
 	@Override
 	public void init() {
@@ -37,7 +40,12 @@ public class Tutorial extends StandardGame {
 		display.bindMouse();
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
-		cam.setRotationCenter(new Vector3f(0, 0, -playersize.z * 0.5f));
+		cam.setRotationCenter(new Vector3f(1,1,1));
+//		cam.setRotationCenter(new Vector3f(2,0,2));
+		
+		debugmanager = new Debugger(inputs,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		this.setRendering2d(true);
 
 		Box player = new Box(new Vector3f(), playersize);
 		this.addObject(player);
@@ -70,8 +78,8 @@ public class Tutorial extends StandardGame {
 
 		playerbody = PhysicsShapeCreator.create(player);
 		playerbody.setMass(1f);
-		playerbody.setLinearDamping(0);
-		playerbody.setAngularDamping(0);
+		playerbody.setLinearFactor(new Vector3f(0, 1, 0));
+		playerbody.setAngularFactor(new Vector3f());
 		playerbody.setRestitution(0);
 		space.addRigidBody(player, playerbody);
 
@@ -87,11 +95,9 @@ public class Tutorial extends StandardGame {
 		if (inputs.isMouseMoved()) {
 			mousedx = -inputs.getMouseDX() * mousesensitivity;
 			float mousedy = -inputs.getMouseDY() * mousesensitivity;
-			cam.rotate((float) Math.toRadians(mousedx),
-					(float) Math.toRadians(mousedy));
-			System.out.println(mousedx);
+			cam.rotate(mousedx, mousedy);
+			playerbody.rotate(new Vector3f(0, mousedx, 0));
 		}
-		playerbody.setAngularVelocity(new Vector3f(0, mousedx, 0));
 
 		Vector3f move = new Vector3f();
 		if (forward.isActive()) {
@@ -109,30 +115,34 @@ public class Tutorial extends StandardGame {
 					cam.getDirection(), new Vector3f(0, 1, 0)));
 		}
 		if (move.length() > 0) {
+			move.setY(0);
 			move.normalize();
 			move.scale(playerspeed);
 		}
 		if (jump.isActive()) {
-			move = VecMath.addition(move, new Vector3f(0, 6, 0));
+			move = VecMath.addition(move, new Vector3f(0, 8, 0));
 		}
 		playerbody.setLinearVelocity(new Vector3f(move.x, playerbody
 				.getLinearVelocity().y + move.y, move.z));
 
 		space.update(delta);
+		debugmanager.update();
 
-		cam.translateTo(VecMath.addition(playerbody.getTranslation(),
-				new Vector3f(playersize.x * 0.5f, playersize.y * 0.8f,
-						playersize.z)));
+		cam.translateTo(VecMath.addition(playerbody.getTranslation(), new Vector3f(0, 4, 0)));
+//		cam.translateTo(VecMath.addition(playerbody.getTranslation(),
+//				new Vector3f(playersize.x * 0.5f, playersize.y * 0.8f+2,
+//						playersize.z)));
 	}
 
 	@Override
 	public void render() {
+		debugmanager.render3d();
 		renderScene();
 	}
 
 	@Override
 	public void render2d() {
-
+		debugmanager.render2d(fps, objects.size());
 	}
 
 }
