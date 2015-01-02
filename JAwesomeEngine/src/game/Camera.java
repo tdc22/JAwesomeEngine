@@ -184,9 +184,6 @@ public class Camera extends RenderedObject {
 	public void updateBuffer() {
 		direction = QuatMath.transform(rotation, new Vector3f(0, 0, -1));
 
-		// Vector3f test = QuatMath.transform(rotation,
-		// VecMath.addition(getTranslation(), rotcenter))
-
 		Matrix4f mat = new Matrix4f();
 		mat.setSubMatrix(rotation.toMatrixf());
 		mat.translate(getTranslation());

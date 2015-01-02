@@ -12,6 +12,7 @@ import input.KeyInput;
 import integration.VerletIntegration;
 import loader.FontLoader;
 import manifold.PersistentManifoldManager;
+import math.QuatMath;
 import math.VecMath;
 import narrowphase.EPA;
 import narrowphase.GJK;
@@ -29,7 +30,7 @@ public class Tutorial extends StandardGame {
 	InputEvent forward, backward, left, right, jump;
 	PhysicsSpace space;
 	RigidBody3 playerbody;
-	float playerradius = 0.5f;
+	float playerradius = 0.7f;
 	float playerheight = 1.7f;
 	float playerspeed = 10;
 	float mousesensitivity = 0.2f;
@@ -41,7 +42,6 @@ public class Tutorial extends StandardGame {
 				new VideoSettings());
 		display.bindMouse();
 		cam.rotateTo(0, 0);
-		cam.setRotationCenter(new Vector3f(0, 0, playerradius + 0.1f));
 
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
@@ -129,9 +129,9 @@ public class Tutorial extends StandardGame {
 		space.update(delta);
 		debugmanager.update();
 
-		cam.translateTo(VecMath.addition(playerbody.getTranslation(),
-				new Vector3f(0, playerheight * 5 / 6f + 0.3f,
-						-playerradius - 0.1f)));
+		Vector3f offset = QuatMath.transform(playerbody.getRotation(), new Vector3f(0,0,-1));
+		offset.setY(playerheight * 5 / 6f);
+		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
 	}
 
 	@Override
