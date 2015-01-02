@@ -27,13 +27,8 @@ public class DisplayMode {
 		init(width, height, title, resizeable, vsync);
 	}
 
-	private void init(int width, int height, String title, boolean resizeable,
-			boolean vsync) {
-		this.width = width;
-		this.height = height;
-		this.title = title;
-		this.resizeable = resizeable;
-		this.vsync = vsync;
+	public int getHeight() {
+		return height;
 	}
 
 	public String getTitle() {
@@ -44,8 +39,13 @@ public class DisplayMode {
 		return width;
 	}
 
-	public int getHeight() {
-		return height;
+	private void init(int width, int height, String title, boolean resizeable,
+			boolean vsync) {
+		this.width = width;
+		this.height = height;
+		this.title = title;
+		this.resizeable = resizeable;
+		this.vsync = vsync;
 	}
 
 	public boolean isResizeable() {

@@ -48,13 +48,12 @@ import java.util.List;
 
 import math.VecMath;
 import objects.RenderedObject;
-import objects.ShapedObject2;
 
 import org.lwjgl.BufferUtils;
 
 public abstract class StandardGame extends AbstractGame {
 	protected List<RenderedObject> objects;
-	protected List<ShapedObject2> objects2d;
+	protected List<RenderedObject> objects2d;
 	public VideoSettings settings;
 	public Display display;
 	public Camera cam;
@@ -65,14 +64,14 @@ public abstract class StandardGame extends AbstractGame {
 	private FloatBuffer identity;
 	boolean render2d = false;
 
-	public void addObject(RenderedObject obj) {
-		objects.add(obj);
-	}
-
-	public void add2dObject(ShapedObject2 element) {
+	public void add2dObject(RenderedObject element) {
 		if (!render2d)
 			render2d = true;
 		objects2d.add(element);
+	}
+
+	public void addObject(RenderedObject obj) {
+		objects.add(obj);
 	}
 
 	@Override
@@ -85,12 +84,17 @@ public abstract class StandardGame extends AbstractGame {
 		}
 	}
 
-	public List<RenderedObject> getObjects() {
-		return objects;
+	protected void endRender() {
+		cam.end();
+		display.swap();
 	}
 
-	public List<ShapedObject2> get2dObjects() {
+	public List<RenderedObject> get2dObjects() {
 		return objects2d;
+	}
+
+	public List<RenderedObject> getObjects() {
+		return objects;
 	}
 
 	public void initDisplay(Display display, DisplayMode displaymode,
@@ -108,7 +112,7 @@ public abstract class StandardGame extends AbstractGame {
 	@Override
 	protected void initEngine() {
 		objects = new ArrayList<RenderedObject>();
-		objects2d = new ArrayList<ShapedObject2>();
+		objects2d = new ArrayList<RenderedObject>();
 
 		// JInputReader jinput = new JInputReader();
 		// if (jinput.isUseable()) {
@@ -118,7 +122,7 @@ public abstract class StandardGame extends AbstractGame {
 		inputs = new InputManager(new GLFWInputReader());
 		System.out.println("Using GLFW input.");
 		// }
-		closeEvent = new InputEvent("Game_Close", new Input(
+		closeEvent = new InputEvent("game_close", new Input(
 				Input.KEYBOARD_EVENT, "Escape", KeyInput.KEY_DOWN));
 		inputs.addEvent(closeEvent);
 
@@ -149,9 +153,6 @@ public abstract class StandardGame extends AbstractGame {
 		glLoadMatrix(identity); // Reset The Projection Matrix
 
 		// Calculate The Aspect Ratio Of The Window
-		// GLU.gluPerspective(settings.getFOVy(), settings.getResolutionX()
-		// / (float) settings.getResolutionY(), settings.getZNear(),
-		// settings.getZFar());
 		float fH = (float) (Math.tan(settings.getFOVy() / 360f * Math.PI) * settings
 				.getZNear());
 		float fW = fH * settings.getResolutionX()
@@ -188,23 +189,9 @@ public abstract class StandardGame extends AbstractGame {
 		glMatrixMode(GL_MODELVIEW);
 	}
 
-	protected void updateEngine() {
-		display.pollInputs();
-		inputs.update();
-		if (display.isMouseBound())
-			display.resetMouse();
-		if (closeEvent.isActive())
-			running = false;
-	}
-
 	protected void prepareRender() {
 		display.clear();
 		cam.begin();
-	}
-
-	protected void endRender() {
-		cam.end();
-		display.swap();
 	}
 
 	public abstract void render();
@@ -254,5 +241,14 @@ public abstract class StandardGame extends AbstractGame {
 		System.out.println("Destroy Engine");
 		display.close();
 		System.out.println("Destroy Display");
+	}
+
+	protected void updateEngine() {
+		display.pollInputs();
+		inputs.update();
+		if (display.isMouseBound())
+			display.resetMouse();
+		if (closeEvent.isActive())
+			running = false;
 	}
 }

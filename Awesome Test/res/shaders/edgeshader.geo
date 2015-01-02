@@ -16,7 +16,7 @@ void main() {
   vec4 normal2 = normalize(vec4(cross(adj2.xyz - posb.xyz, posb.xyz - posc.xyz), 0));
   vec4 normal3 = normalize(vec4(cross(posa.xyz - adj3.xyz, adj3.xyz - posc.xyz), 0));
   
-  if(dot(normal, normal1) == 0) {
+  if(dot(normal, normal1) >= 0) {
   	gl_Position = gl_ModelViewProjectionMatrix * posa;
     gl_FrontColor = vec4(0,0,0,1);
     EmitVertex();
@@ -25,7 +25,7 @@ void main() {
     gl_FrontColor = vec4(0,0,0,1);
     EmitVertex();
   }
-  if(dot(normal, normal2) == 0) {
+  if(dot(normal, normal2) >= 0) {
   	gl_Position = gl_ModelViewProjectionMatrix * posb;
     gl_FrontColor = vec4(0,0,0,1);
     EmitVertex();
@@ -34,7 +34,7 @@ void main() {
     gl_FrontColor = vec4(0,0,0,1);
     EmitVertex();
   }
-  if(dot(normal, normal3) == 0) {
+  if(dot(normal, normal3) >= 0) {
   	gl_Position = gl_ModelViewProjectionMatrix * posc;
     gl_FrontColor = vec4(0,0,0,1);
     EmitVertex();

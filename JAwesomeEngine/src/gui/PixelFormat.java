@@ -32,6 +32,38 @@ public class PixelFormat {
 				pf.isStereo(), pf.isSRGB());
 	}
 
+	public int getAccumulationAlpha() {
+		return accum_alpha;
+	}
+
+	public int getAccumulationBitsPerPixel() {
+		return accum_bpp;
+	}
+
+	public int getAlpha() {
+		return alpha;
+	}
+
+	public int getAuxBuffers() {
+		return num_aux_buffers;
+	}
+
+	public int getBitsPerPixel() {
+		return bpp;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public int getSamples() {
+		return samples;
+	}
+
+	public int getStencil() {
+		return stencil;
+	}
+
 	private void init(int bpp, int alpha, int depth, int stencil, int samples,
 			int num_aux_buffers, int accum_bpp, int accum_alpha,
 			boolean stereo, boolean sRGB) {
@@ -47,108 +79,12 @@ public class PixelFormat {
 		this.sRGB = sRGB;
 	}
 
-	public int getBitsPerPixel() {
-		return bpp;
+	public boolean isSRGB() {
+		return sRGB;
 	}
 
-	public PixelFormat withBitsPerPixel(final int bpp) {
-		if (bpp < 0)
-			throw new IllegalArgumentException(
-					"Invalid number of bits per pixel specified: " + bpp);
-
-		final PixelFormat pf = new PixelFormat(this);
-		pf.bpp = bpp;
-		return pf;
-	}
-
-	public int getAlpha() {
-		return alpha;
-	}
-
-	public PixelFormat withAlphaBits(final int alpha) {
-		if (alpha < 0)
-			throw new IllegalArgumentException(
-					"Invalid number of alpha bits specified: " + alpha);
-
-		final PixelFormat pf = new PixelFormat(this);
-		pf.alpha = alpha;
-		return pf;
-	}
-
-	public int getDepth() {
-		return depth;
-	}
-
-	public PixelFormat withDepthBits(final int depth) {
-		if (depth < 0)
-			throw new IllegalArgumentException(
-					"Invalid number of depth bits specified: " + depth);
-
-		final PixelFormat pf = new PixelFormat(this);
-		pf.depth = depth;
-		return pf;
-	}
-
-	public int getStencil() {
-		return stencil;
-	}
-
-	public PixelFormat withStencilBits(final int stencil) {
-		if (stencil < 0)
-			throw new IllegalArgumentException(
-					"Invalid number of stencil bits specified: " + stencil);
-
-		final PixelFormat pf = new PixelFormat(this);
-		pf.stencil = stencil;
-		return pf;
-	}
-
-	public int getSamples() {
-		return samples;
-	}
-
-	public PixelFormat withSamples(final int samples) {
-		if (samples < 0)
-			throw new IllegalArgumentException(
-					"Invalid number of samples specified: " + samples);
-
-		final PixelFormat pf = new PixelFormat(this);
-		pf.samples = samples;
-		return pf;
-	}
-
-	public int getAuxBuffers() {
-		return num_aux_buffers;
-	}
-
-	public PixelFormat withAuxBuffers(final int num_aux_buffers) {
-		if (num_aux_buffers < 0)
-			throw new IllegalArgumentException(
-					"Invalid number of auxiliary buffers specified: "
-							+ num_aux_buffers);
-
-		final PixelFormat pf = new PixelFormat(this);
-		pf.num_aux_buffers = num_aux_buffers;
-		return pf;
-	}
-
-	public int getAccumulationBitsPerPixel() {
-		return accum_bpp;
-	}
-
-	public PixelFormat withAccumulationBitsPerPixel(final int accum_bpp) {
-		if (accum_bpp < 0)
-			throw new IllegalArgumentException(
-					"Invalid number of bits per pixel in the accumulation buffer specified: "
-							+ accum_bpp);
-
-		final PixelFormat pf = new PixelFormat(this);
-		pf.accum_bpp = accum_bpp;
-		return pf;
-	}
-
-	public int getAccumulationAlpha() {
-		return accum_alpha;
+	public boolean isStereo() {
+		return stereo;
 	}
 
 	public PixelFormat withAccumulationAlpha(final int accum_alpha) {
@@ -162,23 +98,87 @@ public class PixelFormat {
 		return pf;
 	}
 
-	public boolean isStereo() {
-		return stereo;
-	}
+	public PixelFormat withAccumulationBitsPerPixel(final int accum_bpp) {
+		if (accum_bpp < 0)
+			throw new IllegalArgumentException(
+					"Invalid number of bits per pixel in the accumulation buffer specified: "
+							+ accum_bpp);
 
-	public PixelFormat withStereo(final boolean stereo) {
 		final PixelFormat pf = new PixelFormat(this);
-		pf.stereo = stereo;
+		pf.accum_bpp = accum_bpp;
 		return pf;
 	}
 
-	public boolean isSRGB() {
-		return sRGB;
+	public PixelFormat withAlphaBits(final int alpha) {
+		if (alpha < 0)
+			throw new IllegalArgumentException(
+					"Invalid number of alpha bits specified: " + alpha);
+
+		final PixelFormat pf = new PixelFormat(this);
+		pf.alpha = alpha;
+		return pf;
+	}
+
+	public PixelFormat withAuxBuffers(final int num_aux_buffers) {
+		if (num_aux_buffers < 0)
+			throw new IllegalArgumentException(
+					"Invalid number of auxiliary buffers specified: "
+							+ num_aux_buffers);
+
+		final PixelFormat pf = new PixelFormat(this);
+		pf.num_aux_buffers = num_aux_buffers;
+		return pf;
+	}
+
+	public PixelFormat withBitsPerPixel(final int bpp) {
+		if (bpp < 0)
+			throw new IllegalArgumentException(
+					"Invalid number of bits per pixel specified: " + bpp);
+
+		final PixelFormat pf = new PixelFormat(this);
+		pf.bpp = bpp;
+		return pf;
+	}
+
+	public PixelFormat withDepthBits(final int depth) {
+		if (depth < 0)
+			throw new IllegalArgumentException(
+					"Invalid number of depth bits specified: " + depth);
+
+		final PixelFormat pf = new PixelFormat(this);
+		pf.depth = depth;
+		return pf;
+	}
+
+	public PixelFormat withSamples(final int samples) {
+		if (samples < 0)
+			throw new IllegalArgumentException(
+					"Invalid number of samples specified: " + samples);
+
+		final PixelFormat pf = new PixelFormat(this);
+		pf.samples = samples;
+		return pf;
 	}
 
 	public PixelFormat withSRGB(final boolean sRGB) {
 		final PixelFormat pf = new PixelFormat(this);
 		pf.sRGB = sRGB;
+		return pf;
+	}
+
+	public PixelFormat withStencilBits(final int stencil) {
+		if (stencil < 0)
+			throw new IllegalArgumentException(
+					"Invalid number of stencil bits specified: " + stencil);
+
+		final PixelFormat pf = new PixelFormat(this);
+		pf.stencil = stencil;
+		return pf;
+	}
+
+	public PixelFormat withStereo(final boolean stereo) {
+		final PixelFormat pf = new PixelFormat(this);
+		pf.stereo = stereo;
 		return pf;
 	}
 }

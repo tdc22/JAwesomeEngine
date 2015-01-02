@@ -50,22 +50,6 @@ public class Debugger {
 		setupControls(i);
 	}
 
-	private void setupControls(InputManager inputs) {
-		toggledata = new InputEvent("debug_showdata", new Input(
-				Input.KEYBOARD_EVENT, "F1", KeyInput.KEY_PRESSED));
-		toggleaxis = new InputEvent("debug_showaxis", new Input(
-				Input.KEYBOARD_EVENT, "F2", KeyInput.KEY_PRESSED));
-		togglegrid = new InputEvent("debug_showgrid", new Input(
-				Input.KEYBOARD_EVENT, "F3", KeyInput.KEY_PRESSED));
-		togglewireframe = new InputEvent("debug_showwireframe", new Input(
-				Input.KEYBOARD_EVENT, "F4", KeyInput.KEY_PRESSED));
-
-		inputs.addEvent(toggledata);
-		inputs.addEvent(toggleaxis);
-		inputs.addEvent(togglegrid);
-		inputs.addEvent(togglewireframe);
-	}
-
 	public boolean isAxisShown() {
 		return showaxis;
 	}
@@ -182,6 +166,22 @@ public class Debugger {
 
 	public void setShowGrid(boolean g) {
 		showgrid = g;
+	}
+
+	private void setupControls(InputManager inputs) {
+		toggledata = new InputEvent("debug_showdata", new Input(
+				Input.KEYBOARD_EVENT, "F1", KeyInput.KEY_PRESSED));
+		toggleaxis = new InputEvent("debug_showaxis", new Input(
+				Input.KEYBOARD_EVENT, "F2", KeyInput.KEY_PRESSED));
+		togglegrid = new InputEvent("debug_showgrid", new Input(
+				Input.KEYBOARD_EVENT, "F3", KeyInput.KEY_PRESSED));
+		togglewireframe = new InputEvent("debug_showwireframe", new Input(
+				Input.KEYBOARD_EVENT, "F4", KeyInput.KEY_PRESSED));
+
+		inputs.addEvent(toggledata);
+		inputs.addEvent(toggleaxis);
+		inputs.addEvent(togglegrid);
+		inputs.addEvent(togglewireframe);
 	}
 
 	public void toggleAxis() {

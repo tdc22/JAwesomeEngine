@@ -16,10 +16,6 @@ public class Input {
 		this.eventtype = eventtype;
 	}
 
-	public int getInputType() {
-		return inputtype;
-	}
-
 	public String getComponentName() {
 		return componentname;
 	}
@@ -28,8 +24,16 @@ public class Input {
 		return eventtype;
 	}
 
+	public int getInputType() {
+		return inputtype;
+	}
+
 	public boolean isControllerInput() {
 		return inputtype == GAMEPAD_EVENT;
+	}
+
+	public boolean isFlag() {
+		return flag;
 	}
 
 	public boolean isKeyboardInput() {
@@ -42,9 +46,5 @@ public class Input {
 
 	public void setFlag(boolean flag) {
 		this.flag = flag;
-	}
-
-	public boolean isFlag() {
-		return flag;
 	}
 }

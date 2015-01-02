@@ -37,26 +37,6 @@ public class Camera extends RenderedObject {
 		setupControls(inputs);
 	}
 
-	private void setupControls(InputManager inputs) {
-		forwards = new InputEvent("camera_forwards", new Input(
-				Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN), new Input(
-				Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN));
-		backwards = new InputEvent("camera_backwards", new Input(
-				Input.KEYBOARD_EVENT, "Down", KeyInput.KEY_DOWN), new Input(
-				Input.KEYBOARD_EVENT, "S", KeyInput.KEY_DOWN));
-		left = new InputEvent("camera_left", new Input(Input.KEYBOARD_EVENT,
-				"Left", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
-				"A", KeyInput.KEY_DOWN));
-		right = new InputEvent("camera_right", new Input(Input.KEYBOARD_EVENT,
-				"Right", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
-				"D", KeyInput.KEY_DOWN));
-
-		inputs.addEvent(forwards);
-		inputs.addEvent(backwards);
-		inputs.addEvent(left);
-		inputs.addEvent(right);
-	}
-
 	public void begin() {
 		glPushMatrix();
 		glTranslatef(rotcenter.x, rotcenter.y, rotcenter.z);
@@ -76,24 +56,24 @@ public class Camera extends RenderedObject {
 		return speed;
 	}
 
-	public boolean isInvertedX() {
-		return invertX;
-	}
-
-	public boolean isInvertedY() {
-		return invertY;
-	}
-
-	public boolean isFlyCam() {
-		return flycam;
-	}
-
 	public float getHorizontalRotation() {
 		return hrot;
 	}
 
 	public float getVerticalRotation() {
 		return vrot;
+	}
+
+	public boolean isFlyCam() {
+		return flycam;
+	}
+
+	public boolean isInvertedX() {
+		return invertX;
+	}
+
+	public boolean isInvertedY() {
+		return invertY;
 	}
 
 	@Override
@@ -122,6 +102,14 @@ public class Camera extends RenderedObject {
 		rotateTo(vrot, hrot, 0);
 	}
 
+	public void setFlyCam(boolean fly) {
+		flycam = fly;
+	}
+
+	public void setFlySpeed(float speed) {
+		this.speed = speed;
+	}
+
 	public void setInverted(boolean inverted) {
 		invertX = inverted;
 		invertY = inverted;
@@ -135,12 +123,24 @@ public class Camera extends RenderedObject {
 		invertY = inverted;
 	}
 
-	public void setFlyCam(boolean fly) {
-		flycam = fly;
-	}
+	private void setupControls(InputManager inputs) {
+		forwards = new InputEvent("camera_forwards", new Input(
+				Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN), new Input(
+				Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN));
+		backwards = new InputEvent("camera_backwards", new Input(
+				Input.KEYBOARD_EVENT, "Down", KeyInput.KEY_DOWN), new Input(
+				Input.KEYBOARD_EVENT, "S", KeyInput.KEY_DOWN));
+		left = new InputEvent("camera_left", new Input(Input.KEYBOARD_EVENT,
+				"Left", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
+				"A", KeyInput.KEY_DOWN));
+		right = new InputEvent("camera_right", new Input(Input.KEYBOARD_EVENT,
+				"Right", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
+				"D", KeyInput.KEY_DOWN));
 
-	public void setFlySpeed(float speed) {
-		this.speed = speed;
+		inputs.addEvent(forwards);
+		inputs.addEvent(backwards);
+		inputs.addEvent(left);
+		inputs.addEvent(right);
 	}
 
 	public void update(int delta) {

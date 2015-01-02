@@ -1,18 +1,9 @@
 package input;
 
 public abstract class InputReader {
-	public abstract void update();
-
-	public abstract boolean isKeyDown(String keyname);
-
-	public abstract boolean isMouseButtonDown(String button);
+	protected float mousedx, mousedy;
 
 	public abstract int getGamepadCount();
-
-	public abstract boolean isGamepadButtonDown(int gamepad, String button);
-
-	public abstract float getGamepadStickValue(int gamepad, int sticknum,
-			String axis);
 
 	public float getGamepadStickValue(int gamepad, int sticknum) {
 		return (float) Math.sqrt(Math.pow(
@@ -20,7 +11,8 @@ public abstract class InputReader {
 				+ Math.pow(getGamepadStickValue(gamepad, sticknum, "y"), 2));
 	}
 
-	protected float mousedx, mousedy;
+	public abstract float getGamepadStickValue(int gamepad, int sticknum,
+			String axis);
 
 	public float getMouseDX() {
 		return mousedx;
@@ -30,9 +22,7 @@ public abstract class InputReader {
 		return mousedy;
 	}
 
-	public boolean isMouseMoved() {
-		return (getMouseDX() != 0 || getMouseDY() != 0);
-	}
+	public abstract boolean isGamepadButtonDown(int gamepad, String button);
 
 	public boolean isInputActive(Input input) {
 		switch (input.getInputType()) {
@@ -153,4 +143,14 @@ public abstract class InputReader {
 		}
 		return false;
 	}
+
+	public abstract boolean isKeyDown(String keyname);
+
+	public abstract boolean isMouseButtonDown(String button);
+
+	public boolean isMouseMoved() {
+		return (getMouseDX() != 0 || getMouseDY() != 0);
+	}
+
+	public abstract void update();
 }

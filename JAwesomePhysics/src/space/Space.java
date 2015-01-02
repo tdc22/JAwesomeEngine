@@ -101,6 +101,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		return positionalcorrection;
 	}
 
+	public int getResolutionIterations() {
+		return resolutionIterations;
+	}
+
 	protected abstract void integrate(float delta);
 
 	public void removeRigidBody(RigidBody<L, A1, A2, A3> body) {
@@ -116,10 +120,6 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	public void setResolutionIterations(int count) {
 		resolutionIterations = count;
-	}
-
-	public int getResolutionIterations() {
-		return resolutionIterations;
 	}
 
 	@Override

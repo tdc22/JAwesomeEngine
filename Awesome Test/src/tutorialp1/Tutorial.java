@@ -23,11 +23,6 @@ public class Tutorial extends StandardGame {
 	}
 
 	@Override
-	public void update(int delta) {
-		cam.update(delta);
-	}
-
-	@Override
 	public void render() {
 		renderScene();
 	}
@@ -35,6 +30,11 @@ public class Tutorial extends StandardGame {
 	@Override
 	public void render2d() {
 
+	}
+
+	@Override
+	public void update(int delta) {
+		cam.update(delta);
 	}
 
 }

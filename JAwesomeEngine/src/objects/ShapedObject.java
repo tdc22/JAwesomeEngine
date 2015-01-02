@@ -381,6 +381,10 @@ public class ShapedObject extends RenderedObject {
 		shadered = true;
 	}
 
+	public void setShaderActive(boolean active) {
+		shadered = active;
+	}
+
 	public void setVertices(List<Vector3f> verts) {
 		vertices = verts;
 	}

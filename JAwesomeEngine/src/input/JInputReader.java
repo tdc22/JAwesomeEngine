@@ -33,49 +33,6 @@ public class JInputReader extends InputReader {
 		setupKeys();
 	}
 
-	public void updateControllers() {
-		mousecontrollers.clear();
-		keyboardcontrollers.clear();
-		gamepadcontrollers.clear();
-
-		Controller[] ca = ControllerEnvironment.getDefaultEnvironment()
-				.getControllers();
-		for (Controller c : ca) {
-			Type t = c.getType();
-			if (t == Type.MOUSE)
-				mousecontrollers.add((Mouse) c);
-			if (t == Type.KEYBOARD)
-				keyboardcontrollers.add((Keyboard) c);
-			if (t == Type.GAMEPAD)
-				gamepadcontrollers.add(c);
-		}
-	}
-
-	public boolean isUseable() {
-		return (mousecontrollers.size() > 0)
-				&& (keyboardcontrollers.size() > 0);
-	}
-
-	@Override
-	public void update() {
-		mousedx = 0;
-		mousedy = 0;
-		for (Mouse m : mousecontrollers) {
-			m.poll();
-			if (m.getX().getPollData() != 0 || m.getY().getPollData() != 0) {
-				mousedx += m.getX().getPollData();
-				mousedy += m.getY().getPollData();
-			}
-		}
-
-		for (Keyboard k : keyboardcontrollers) {
-			k.poll();
-		}
-		for (Controller c : gamepadcontrollers) {
-			c.poll();
-		}
-	}
-
 	public boolean isKeyDown(String componentid) {
 		for (Keyboard k : keyboardcontrollers) {
 			if (k.isKeyDown(keys.get(componentid)))
@@ -131,6 +88,11 @@ public class JInputReader extends InputReader {
 				return true;
 		}
 		return false;
+	}
+
+	public boolean isUseable() {
+		return (mousecontrollers.size() > 0)
+				&& (keyboardcontrollers.size() > 0);
 	}
 
 	private void setupKeys() {
@@ -261,5 +223,43 @@ public class JInputReader extends InputReader {
 		keys.put("Power", Key.POWER);
 		keys.put("Sleep", Key.SLEEP);
 		keys.put("Unknown", Key.UNKNOWN);
+	}
+
+	@Override
+	public void update() {
+		mousedx = 0;
+		mousedy = 0;
+		for (Mouse m : mousecontrollers) {
+			m.poll();
+			if (m.getX().getPollData() != 0 || m.getY().getPollData() != 0) {
+				mousedx += m.getX().getPollData();
+				mousedy += m.getY().getPollData();
+			}
+		}
+
+		for (Keyboard k : keyboardcontrollers) {
+			k.poll();
+		}
+		for (Controller c : gamepadcontrollers) {
+			c.poll();
+		}
+	}
+
+	public void updateControllers() {
+		mousecontrollers.clear();
+		keyboardcontrollers.clear();
+		gamepadcontrollers.clear();
+
+		Controller[] ca = ControllerEnvironment.getDefaultEnvironment()
+				.getControllers();
+		for (Controller c : ca) {
+			Type t = c.getType();
+			if (t == Type.MOUSE)
+				mousecontrollers.add((Mouse) c);
+			if (t == Type.KEYBOARD)
+				keyboardcontrollers.add((Keyboard) c);
+			if (t == Type.GAMEPAD)
+				gamepadcontrollers.add(c);
+		}
 	}
 }

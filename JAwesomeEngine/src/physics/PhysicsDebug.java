@@ -35,24 +35,6 @@ public class PhysicsDebug {
 		setupControls(inputs);
 	}
 
-	private void setupControls(InputManager inputs) {
-		toggleAABBs = new InputEvent("debug_physics2_showAABBs", new Input(
-				Input.KEYBOARD_EVENT, "F5", KeyInput.KEY_PRESSED));
-		toggleContractPoints = new InputEvent(
-				"debug_physics2_showContactPoints", new Input(
-						Input.KEYBOARD_EVENT, "F6", KeyInput.KEY_PRESSED));
-		toggleCollisionNormals = new InputEvent(
-				"debug_physics2_showCollisionNormals", new Input(
-						Input.KEYBOARD_EVENT, "F7", KeyInput.KEY_PRESSED));
-		toggleVelocities = new InputEvent("debug_physics2_showVelocities",
-				new Input(Input.KEYBOARD_EVENT, "F8", KeyInput.KEY_PRESSED));
-
-		inputs.addEvent(toggleAABBs);
-		inputs.addEvent(toggleContractPoints);
-		inputs.addEvent(toggleCollisionNormals);
-		inputs.addEvent(toggleVelocities);
-	}
-
 	public boolean isAABBsShown() {
 		return showAABBs;
 	}
@@ -129,6 +111,24 @@ public class PhysicsDebug {
 
 	public void setShowVelocities(boolean s) {
 		showVelocities = s;
+	}
+
+	private void setupControls(InputManager inputs) {
+		toggleAABBs = new InputEvent("debug_physics2_showAABBs", new Input(
+				Input.KEYBOARD_EVENT, "F5", KeyInput.KEY_PRESSED));
+		toggleContractPoints = new InputEvent(
+				"debug_physics2_showContactPoints", new Input(
+						Input.KEYBOARD_EVENT, "F6", KeyInput.KEY_PRESSED));
+		toggleCollisionNormals = new InputEvent(
+				"debug_physics2_showCollisionNormals", new Input(
+						Input.KEYBOARD_EVENT, "F7", KeyInput.KEY_PRESSED));
+		toggleVelocities = new InputEvent("debug_physics2_showVelocities",
+				new Input(Input.KEYBOARD_EVENT, "F8", KeyInput.KEY_PRESSED));
+
+		inputs.addEvent(toggleAABBs);
+		inputs.addEvent(toggleContractPoints);
+		inputs.addEvent(toggleCollisionNormals);
+		inputs.addEvent(toggleVelocities);
 	}
 
 	public void toggleShowAABBs() {

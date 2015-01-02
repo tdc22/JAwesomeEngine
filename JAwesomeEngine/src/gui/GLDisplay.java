@@ -63,6 +63,48 @@ public class GLDisplay extends Display {
 	private int width, height;
 
 	@Override
+	public void bindMouse() {
+		glfwSetInputMode(windowid, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		mousebound = true;
+
+		// HACK (drop 2 inputs to avoid wrong mouse values)
+		this.swap();
+		this.pollInputs();
+		resetMouse();
+		this.swap();
+		this.pollInputs();
+		resetMouse();
+	}
+
+	@Override
+	public void clear() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
+				| GL_STENCIL_BUFFER_BIT);
+	}
+
+	@Override
+	public void close() {
+		glfwDestroyWindow(windowid);
+		glfwTerminate();
+		sizeCallback.release();
+		errorCallback.release();
+	}
+
+	public long getWindowID() {
+		return windowid;
+	}
+
+	@Override
+	public boolean isCloseRequested() {
+		return glfwWindowShouldClose(windowid) == 1;
+	}
+
+	@Override
+	public boolean isMouseBound() {
+		return mousebound;
+	}
+
+	@Override
 	public void open(DisplayMode displaymode, PixelFormat pixelformat) {
 		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
 
@@ -128,17 +170,13 @@ public class GLDisplay extends Display {
 	}
 
 	@Override
-	public void close() {
-		glfwDestroyWindow(windowid);
-		glfwTerminate();
-		sizeCallback.release();
-		errorCallback.release();
+	public void pollInputs() {
+		glfwPollEvents();
 	}
 
 	@Override
-	public void clear() {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
-				| GL_STENCIL_BUFFER_BIT);
+	public void resetMouse() {
+		glfwSetCursorPos(windowid, 0, 0);
 	}
 
 	@Override
@@ -147,38 +185,8 @@ public class GLDisplay extends Display {
 	}
 
 	@Override
-	public boolean isCloseRequested() {
-		return glfwWindowShouldClose(windowid) == 1;
-	}
-
-	public long getWindowID() {
-		return windowid;
-	}
-
-	@Override
-	public void bindMouse() {
-		glfwSetInputMode(windowid, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		mousebound = true;
-	}
-
-	@Override
 	public void unbindMouse() {
 		glfwSetInputMode(windowid, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		mousebound = false;
-	}
-
-	@Override
-	public boolean isMouseBound() {
-		return mousebound;
-	}
-
-	@Override
-	public void pollInputs() {
-		glfwPollEvents();
-	}
-
-	@Override
-	public void resetMouse() {
-		glfwSetCursorPos(windowid, 0, 0);
 	}
 }

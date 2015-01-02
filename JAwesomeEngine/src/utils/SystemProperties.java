@@ -4,11 +4,6 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 public class SystemProperties {
-	private static String OS = System.getProperty("os.name").toLowerCase();
-
-	private static String fileseperator = System.getProperty("file.separator")
-			.toLowerCase();
-
 	public static String getFileSeperator() {
 		return fileseperator;
 	}
@@ -70,4 +65,9 @@ public class SystemProperties {
 	public static boolean isWindows() {
 		return (OS.indexOf("win") >= 0);
 	}
+
+	private static String OS = System.getProperty("os.name").toLowerCase();
+
+	private static String fileseperator = System.getProperty("file.separator")
+			.toLowerCase();
 }

@@ -13,24 +13,8 @@ public class VideoSettings {
 		init(resx, resy, FOVy, zNear, zFar);
 	}
 
-	private void init(int resx, int resy, float FOVy, float zNear, float zFar) {
-		this.resx = resx;
-		this.resy = resy;
-		this.FOVy = FOVy;
-		this.zNear = zNear;
-		this.zFar = zFar;
-	}
-
 	public float getFOVy() {
 		return FOVy;
-	}
-
-	public float getZNear() {
-		return zNear;
-	}
-
-	public float getZFar() {
-		return zFar;
 	}
 
 	public int getResolutionX() {
@@ -39,5 +23,21 @@ public class VideoSettings {
 
 	public int getResolutionY() {
 		return resy;
+	}
+
+	public float getZFar() {
+		return zFar;
+	}
+
+	public float getZNear() {
+		return zNear;
+	}
+
+	private void init(int resx, int resy, float FOVy, float zNear, float zFar) {
+		this.resx = resx;
+		this.resy = resy;
+		this.FOVy = FOVy;
+		this.zNear = zNear;
+		this.zFar = zFar;
 	}
 }

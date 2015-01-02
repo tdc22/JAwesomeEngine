@@ -1,4 +1,4 @@
-package tutorialp3;
+package tutorialp4;
 
 import game.StandardGame;
 import gui.DisplayMode;
@@ -9,6 +9,7 @@ import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
+import loader.ShaderLoader;
 import manifold.PersistentManifoldManager;
 import math.QuatMath;
 import math.VecMath;
@@ -21,7 +22,10 @@ import positionalcorrection.ProjectionCorrection;
 import resolution.LinearImpulseResolution;
 import shape.Box;
 import shape.Cylinder;
+import utils.GLConstants;
+import utils.Shader;
 import vector.Vector3f;
+import vector.Vector4f;
 import broadphase.SAP;
 
 public class Tutorial extends StandardGame {
@@ -32,6 +36,7 @@ public class Tutorial extends StandardGame {
 	float playerheight = 1.7f;
 	float playerspeed = 10;
 	float mousesensitivity = 0.2f;
+	Shader edgeshader;
 
 	@Override
 	public void init() {
@@ -42,6 +47,7 @@ public class Tutorial extends StandardGame {
 
 		Cylinder player = new Cylinder(0, 0, 0, playerradius,
 				playerheight / 2f, 50);
+		player.setRenderHints(false, false, true);
 		this.addObject(player);
 
 		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT,
@@ -78,14 +84,29 @@ public class Tutorial extends StandardGame {
 		space.addRigidBody(player, playerbody);
 
 		Box ground = new Box(0, -5, 0, 10, 1, 10);
+		ground.setRenderHints(false, false, true);
 		RigidBody3 rb = PhysicsShapeCreator.create(ground);
 		space.addRigidBody(ground, rb);
 		addObject(ground);
+
+		Shader colorshader = new Shader(ShaderLoader.loadShaderPair(
+				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		colorshader.addArgumentName("color");
+		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
+
+		// player.setShader(colorshader);
+
+		edgeshader = new Shader(ShaderLoader.loadShaderPair(
+				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.geo",
+				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 	}
 
 	@Override
 	public void render() {
 		renderScene();
+		edgeshader.bind();
+		renderScene();
+		edgeshader.unbind();
 	}
 
 	@Override
@@ -133,7 +154,7 @@ public class Tutorial extends StandardGame {
 
 		Vector3f offset = QuatMath.transform(playerbody.getRotation(),
 				new Vector3f(0, 0, -1));
-		offset.setY(playerheight * 2 / 3f);
+		offset.setY(playerheight * 2 / 3f + 2);
 		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
 	}
 

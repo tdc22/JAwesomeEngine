@@ -47,9 +47,6 @@ public class GLFWInputReader extends InputReader {
 
 		tmpMousePosX = BufferUtils.createDoubleBuffer(1);
 		tmpMousePosY = BufferUtils.createDoubleBuffer(1);
-		updateMouseData();
-		mousedx = 0;
-		mousedy = 0;
 
 		keys = new HashMap<String, Integer>();
 		setupKeys();
@@ -64,52 +61,23 @@ public class GLFWInputReader extends InputReader {
 	}
 
 	@Override
-	public void update() {
-		updateMouseData();
-		updateGamepadData();
+	public int getGamepadCount() {
+		return gamepads.size();
 	}
 
-	private void updateMouseData() {
-		double tmpmx, tmpmy;
-		mousedx = 0;
-		mousedy = 0;
-		for (Long id : windowids) {
-			glfwGetCursorPos(id, tmpMousePosX, tmpMousePosY);
-			tmpMousePosX.rewind();
-			tmpMousePosY.rewind();
-			tmpmx = tmpMousePosX.get(0);
-			tmpmy = tmpMousePosY.get(0);
-			if (tmpmx != 0 || tmpmy != 0) {
-				mousedx += tmpmx;
-				mousedy += tmpmy;
-			}
-		}
+	@Override
+	public float getGamepadStickValue(int gamepad, int sticknum, String axis) {
+		if (getGamepadCount() == 0)
+			return 0;
+		int offset = axis.toLowerCase().equals("x") ? 0 : 1;
+		return gamepadaxes.get(gamepad).get(sticknum + offset);
 	}
 
-	private void updateGamepadData() {
-		gamepadaxes.clear();
-		gamepadbuttons.clear();
-		int a = 0;
-		for (int i = GLFW_JOYSTICK_1; i < GLFW_JOYSTICK_LAST; i++) {
-			if (glfwJoystickPresent(i) == GL_TRUE) {
-				gamepadaxes.put(a, glfwGetJoystickAxes(i));
-				gamepadbuttons.put(a, glfwGetJoystickButtons(i));
-				if (a < gamepads.size()) {
-					if (gamepads.get(a) != i)
-						gamepads.set(a, i);
-				} else {
-					gamepads.add(a, i);
-					System.out.println("Gamepad added (" + i + ")");
-				}
-				a++;
-			}
-		}
-		if (gamepads.size() > a) {
-			for (int i = a; i < gamepads.size(); i++) {
-				gamepads.remove(i);
-				System.out.println("Gamepad removed (" + i + ")");
-			}
-		}
+	@Override
+	public boolean isGamepadButtonDown(int gamepad, String button) {
+		if (getGamepadCount() == 0)
+			return false;
+		return gamepadbuttons.get(gamepad).get(Integer.parseInt(button)) == 1;
 	}
 
 	@Override
@@ -299,22 +267,51 @@ public class GLFWInputReader extends InputReader {
 	}
 
 	@Override
-	public int getGamepadCount() {
-		return gamepads.size();
+	public void update() {
+		updateMouseData();
+		updateGamepadData();
 	}
 
-	@Override
-	public boolean isGamepadButtonDown(int gamepad, String button) {
-		if (getGamepadCount() == 0)
-			return false;
-		return gamepadbuttons.get(gamepad).get(Integer.parseInt(button)) == 1;
+	private void updateGamepadData() {
+		gamepadaxes.clear();
+		gamepadbuttons.clear();
+		int a = 0;
+		for (int i = GLFW_JOYSTICK_1; i < GLFW_JOYSTICK_LAST; i++) {
+			if (glfwJoystickPresent(i) == GL_TRUE) {
+				gamepadaxes.put(a, glfwGetJoystickAxes(i));
+				gamepadbuttons.put(a, glfwGetJoystickButtons(i));
+				if (a < gamepads.size()) {
+					if (gamepads.get(a) != i)
+						gamepads.set(a, i);
+				} else {
+					gamepads.add(a, i);
+					System.out.println("Gamepad added (" + i + ")");
+				}
+				a++;
+			}
+		}
+		if (gamepads.size() > a) {
+			for (int i = a; i < gamepads.size(); i++) {
+				gamepads.remove(i);
+				System.out.println("Gamepad removed (" + i + ")");
+			}
+		}
 	}
 
-	@Override
-	public float getGamepadStickValue(int gamepad, int sticknum, String axis) {
-		if (getGamepadCount() == 0)
-			return 0;
-		int offset = axis.toLowerCase().equals("x") ? 0 : 1;
-		return gamepadaxes.get(gamepad).get(sticknum + offset);
+	private void updateMouseData() {
+		double tmpmx, tmpmy;
+		mousedx = 0;
+		mousedy = 0;
+		for (Long id : windowids) {
+			glfwGetCursorPos(id, tmpMousePosX, tmpMousePosY);
+			tmpMousePosX.rewind();
+			tmpMousePosY.rewind();
+			tmpmx = tmpMousePosX.get(0);
+			tmpmy = tmpMousePosY.get(0);
+			if (tmpmx != 0 || tmpmy != 0) {
+				mousedx += tmpmx;
+				mousedy += tmpmy;
+			}
+		}
 	}
 }

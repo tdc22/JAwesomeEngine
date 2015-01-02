@@ -43,6 +43,16 @@ public class Tutorial extends StandardGame {
 	}
 
 	@Override
+	public void render() {
+		renderScene();
+	}
+
+	@Override
+	public void render2d() {
+
+	}
+
+	@Override
 	public void update(int delta) {
 		if (inputs.isMouseMoved()) {
 			System.out.println("mouse moved (" + inputs.getMouseDX() + "; "
@@ -62,16 +72,6 @@ public class Tutorial extends StandardGame {
 		}
 
 		cam.update(delta);
-	}
-
-	@Override
-	public void render() {
-		renderScene();
-	}
-
-	@Override
-	public void render2d() {
-
 	}
 
 }
