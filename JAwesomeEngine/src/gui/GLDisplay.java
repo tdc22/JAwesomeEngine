@@ -28,6 +28,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
@@ -143,7 +144,6 @@ public class GLDisplay extends Display {
 	@Override
 	public void swap() {
 		glfwSwapBuffers(windowid);
-		glfwPollEvents();
 	}
 
 	@Override
@@ -170,5 +170,15 @@ public class GLDisplay extends Display {
 	@Override
 	public boolean isMouseBound() {
 		return mousebound;
+	}
+
+	@Override
+	public void pollInputs() {
+		glfwPollEvents();
+	}
+
+	@Override
+	public void resetMouse() {
+		glfwSetCursorPos(windowid, 0, 0);
 	}
 }

@@ -16,7 +16,6 @@ import vector.Vector3d;
 import vector.Vector3f;
 
 public class Camera extends RenderedObject {
-	Vector3f position;
 	Vector3f direction;
 	float hrot, vrot;
 	boolean flycam, invertX, invertY;
@@ -75,10 +74,6 @@ public class Camera extends RenderedObject {
 
 	public float getFlySpeed() {
 		return speed;
-	}
-
-	public Vector3f getPosition() {
-		return position;
 	}
 
 	public boolean isInvertedX() {
@@ -187,12 +182,14 @@ public class Camera extends RenderedObject {
 
 	@Override
 	public void updateBuffer() {
-		position = getTranslation();
 		direction = QuatMath.transform(rotation, new Vector3f(0, 0, -1));
+
+		// Vector3f test = QuatMath.transform(rotation,
+		// VecMath.addition(getTranslation(), rotcenter))
 
 		Matrix4f mat = new Matrix4f();
 		mat.setSubMatrix(rotation.toMatrixf());
-		mat.translate(position);
+		mat.translate(getTranslation());
 		mat.invert();
 		mat.store(buf);
 		buf.rewind();

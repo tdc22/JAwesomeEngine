@@ -36,7 +36,6 @@ public class GLFWInputReader extends InputReader {
 	List<Long> windowids;
 	HashMap<String, Integer> keys;
 	private DoubleBuffer tmpMousePosX, tmpMousePosY;
-	private int lastMousePosX, lastMousePosY;
 	private List<Integer> gamepads;
 	private HashMap<Integer, FloatBuffer> gamepadaxes;
 	private HashMap<Integer, ByteBuffer> gamepadbuttons;
@@ -48,8 +47,6 @@ public class GLFWInputReader extends InputReader {
 
 		tmpMousePosX = BufferUtils.createDoubleBuffer(1);
 		tmpMousePosY = BufferUtils.createDoubleBuffer(1);
-		lastMousePosX = 0;
-		lastMousePosY = 0;
 		updateMouseData();
 		mousedx = 0;
 		mousedy = 0;
@@ -74,8 +71,8 @@ public class GLFWInputReader extends InputReader {
 
 	private void updateMouseData() {
 		double tmpmx, tmpmy;
-		int currx = 0;
-		int curry = 0;
+		mousedx = 0;
+		mousedy = 0;
 		for (Long id : windowids) {
 			glfwGetCursorPos(id, tmpMousePosX, tmpMousePosY);
 			tmpMousePosX.rewind();
@@ -83,14 +80,10 @@ public class GLFWInputReader extends InputReader {
 			tmpmx = tmpMousePosX.get(0);
 			tmpmy = tmpMousePosY.get(0);
 			if (tmpmx != 0 || tmpmy != 0) {
-				currx += tmpmx;
-				curry += tmpmy;
+				mousedx += tmpmx;
+				mousedy += tmpmy;
 			}
 		}
-		mousedx = currx - lastMousePosX;
-		mousedy = curry - lastMousePosY;
-		lastMousePosX = currx;
-		lastMousePosY = curry;
 	}
 
 	private void updateGamepadData() {

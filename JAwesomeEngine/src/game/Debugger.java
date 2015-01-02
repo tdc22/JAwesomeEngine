@@ -90,19 +90,19 @@ public class Debugger {
 		return wireframe;
 	}
 
-	public void render2d(int fps, int objects) {
+	public void render2d(int fps, int objects, int objects2d) {
 		if (showdata) {
-			Vector3f campos = cam.getPosition();
+			Vector3f campos = cam.getTranslation();
 			text.setText("FPS: " + fps + "\nObjects: " + objects
-					+ "\nPolygons:\nCamera: " + campos.x + "; " + campos.y
-					+ "; " + campos.z);
+					+ "\n2d Objects: " + objects2d + "\nPolygons:\nCamera: "
+					+ campos.x + "; " + campos.y + "; " + campos.z);
 			text.render();
 		}
 	}
 
 	public void render3d() {
 		if (showaxis) {
-			Vector3f campos = cam.getPosition();
+			Vector3f campos = cam.getTranslation();
 			if (campos.x >= range.x)
 				xaxis.translateTo(campos.x, 0, 0);
 			else

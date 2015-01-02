@@ -21,6 +21,7 @@ import physics.PhysicsSpace;
 import positionalcorrection.ProjectionCorrection;
 import resolution.LinearImpulseResolution;
 import shape.Box;
+import shape.Cylinder;
 import vector.Vector3f;
 import broadphase.SAP;
 
@@ -28,8 +29,9 @@ public class Tutorial extends StandardGame {
 	InputEvent forward, backward, left, right, jump;
 	PhysicsSpace space;
 	RigidBody3 playerbody;
+	float playerradius = 0.5f;
+	float playerheight = 1.7f;
 	float playerspeed = 10;
-	Vector3f playersize = new Vector3f(1, 1.7f, 1);
 	float mousesensitivity = 0.2f;
 	Debugger debugmanager;
 
@@ -38,16 +40,15 @@ public class Tutorial extends StandardGame {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
 		display.bindMouse();
-		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
-		cam.setRotationCenter(new Vector3f(1,1,1));
-//		cam.setRotationCenter(new Vector3f(2,0,2));
-		
+		cam.setRotationCenter(new Vector3f(0, 0, playerradius + 0.1f));
+
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		this.setRendering2d(true);
 
-		Box player = new Box(new Vector3f(), playersize);
+		Cylinder player = new Cylinder(0, 0, 0, playerradius,
+				playerheight / 2f, 50);
 		this.addObject(player);
 
 		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT,
@@ -78,7 +79,7 @@ public class Tutorial extends StandardGame {
 
 		playerbody = PhysicsShapeCreator.create(player);
 		playerbody.setMass(1f);
-		playerbody.setLinearFactor(new Vector3f(0, 1, 0));
+		playerbody.setLinearFactor(new Vector3f(1, 1, 1));
 		playerbody.setAngularFactor(new Vector3f());
 		playerbody.setRestitution(0);
 		space.addRigidBody(player, playerbody);
@@ -128,10 +129,9 @@ public class Tutorial extends StandardGame {
 		space.update(delta);
 		debugmanager.update();
 
-		cam.translateTo(VecMath.addition(playerbody.getTranslation(), new Vector3f(0, 4, 0)));
-//		cam.translateTo(VecMath.addition(playerbody.getTranslation(),
-//				new Vector3f(playersize.x * 0.5f, playersize.y * 0.8f+2,
-//						playersize.z)));
+		cam.translateTo(VecMath.addition(playerbody.getTranslation(),
+				new Vector3f(0, playerheight * 5 / 6f + 0.3f,
+						-playerradius - 0.1f)));
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class Tutorial extends StandardGame {
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size());
+		debugmanager.render2d(fps, objects.size(), objects2d.size());
 	}
 
 }

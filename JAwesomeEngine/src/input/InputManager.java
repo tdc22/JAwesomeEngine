@@ -64,11 +64,11 @@ public class InputManager {
 		return inputreader.getGamepadStickValue(gamepad, sticknum);
 	}
 
-	public int getMouseDX() {
+	public float getMouseDX() {
 		return inputreader.getMouseDX();
 	}
 
-	public int getMouseDY() {
+	public float getMouseDY() {
 		return inputreader.getMouseDY();
 	}
 

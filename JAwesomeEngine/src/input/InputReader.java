@@ -20,13 +20,13 @@ public abstract class InputReader {
 				+ Math.pow(getGamepadStickValue(gamepad, sticknum, "y"), 2));
 	}
 
-	protected int mousedx, mousedy;
+	protected float mousedx, mousedy;
 
-	public int getMouseDX() {
+	public float getMouseDX() {
 		return mousedx;
 	}
 
-	public int getMouseDY() {
+	public float getMouseDY() {
 		return mousedy;
 	}
 

@@ -102,7 +102,7 @@ public class SupportFunctionTest extends StandardGame {
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size());
+		debugmanager.render2d(fps, objects.size(), objects2d.size());
 		render2dScene();
 	}
 

@@ -189,14 +189,22 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	protected void updateEngine() {
+		display.pollInputs();
 		inputs.update();
+		if (display.isMouseBound())
+			display.resetMouse();
 		if (closeEvent.isActive())
 			running = false;
 	}
 
-	protected void updateEngine2() {
-		cam.begin();
+	protected void prepareRender() {
 		display.clear();
+		cam.begin();
+	}
+
+	protected void endRender() {
+		cam.end();
+		display.swap();
 	}
 
 	public abstract void render();
@@ -232,15 +240,14 @@ public abstract class StandardGame extends AbstractGame {
 			updateFPS();
 			updateEngine();
 			update(delta);
-			updateEngine2();
+			prepareRender();
 			render();
 			if (render2d) {
 				mode2d();
 				render2d();
 				mode3d();
 			}
-			cam.end();
-			display.swap();
+			endRender();
 		}
 		System.out.println("EXIT LOOP");
 		destroyEngine();

@@ -9,6 +9,10 @@ public abstract class Display {
 
 	public abstract void swap();
 
+	public abstract void pollInputs();
+
+	public abstract void resetMouse();
+
 	public abstract boolean isCloseRequested();
 
 	public abstract void bindMouse();
