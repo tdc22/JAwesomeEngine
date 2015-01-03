@@ -12,8 +12,8 @@ public class PersistentManifoldManager2 extends ManifoldManager<Vector2f> {
 	protected class StoredManifold extends PersistentCollisionManifold2 {
 		boolean modified;
 
-		public StoredManifold(PersistentCollisionManifold2 manifold) {
-			super(manifold);
+		public StoredManifold(int maxstoretime, float distthreshold, CollisionManifold<Vector2f> manifold) {
+			super(maxstoretime, distthreshold, manifold);
 			modified = true;
 		}
 
@@ -25,12 +25,25 @@ public class PersistentManifoldManager2 extends ManifoldManager<Vector2f> {
 			modified = m;
 		}
 	}
+	
+	int maxstoretime;
+	float distthreshold;
 
 	HashMap<Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>>, Integer> manifoldids;
 
 	List<StoredManifold> manifolds;
 
 	public PersistentManifoldManager2() {
+		init(6, 5);
+	}
+	
+	public PersistentManifoldManager2(int maxstoretime, float distthreshold) {
+		init(maxstoretime, distthreshold);
+	}
+	
+	private void init(int maxstoretime, float distthreshold) {
+		this.maxstoretime = maxstoretime;
+		this.distthreshold = distthreshold;
 		manifoldids = new HashMap<Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>>, Integer>();
 		manifolds = new ArrayList<StoredManifold>();
 	}
@@ -43,8 +56,7 @@ public class PersistentManifoldManager2 extends ManifoldManager<Vector2f> {
 			s.setModified(true);
 		} else {
 			manifoldids.put(cm.getObjects(), manifolds.size());
-			manifolds.add(new StoredManifold(new PersistentCollisionManifold2(
-					cm)));
+			manifolds.add(new StoredManifold(maxstoretime, distthreshold, cm));
 		}
 	}
 

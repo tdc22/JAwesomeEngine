@@ -94,7 +94,7 @@ public class Tutorial extends StandardGame {
 		colorshader.addArgumentName("color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 
-		// player.setShader(colorshader);
+		player.setShader(colorshader);
 
 		edgeshader = new Shader(ShaderLoader.loadShaderPair(
 				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.geo",
@@ -104,9 +104,11 @@ public class Tutorial extends StandardGame {
 	@Override
 	public void render() {
 		renderScene();
+		setShadersActive(false);
 		edgeshader.bind();
 		renderScene();
 		edgeshader.unbind();
+		setShadersActive(true);
 	}
 
 	@Override
@@ -154,7 +156,7 @@ public class Tutorial extends StandardGame {
 
 		Vector3f offset = QuatMath.transform(playerbody.getRotation(),
 				new Vector3f(0, 0, -1));
-		offset.setY(playerheight * 2 / 3f + 2);
+		offset.setY(playerheight * 2 / 3f);
 		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
 	}
 

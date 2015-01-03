@@ -36,7 +36,6 @@ import math.VecMath;
 
 import org.lwjgl.BufferUtils;
 
-import utils.Shader;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -63,9 +62,6 @@ public class ShapedObject extends RenderedObject {
 	protected int polysize = 3;
 	protected int colorsize = 3;
 	protected int texsize = 2;
-
-	protected Shader shader;
-	protected boolean shadered = false;
 
 	public ShapedObject() {
 		super();
@@ -176,7 +172,7 @@ public class ShapedObject extends RenderedObject {
 	}
 
 	protected void endRender() {
-		if (shadered)
+		if (shadered && shaderactive)
 			shader.unbind();
 
 		glPopMatrix();
@@ -199,10 +195,6 @@ public class ShapedObject extends RenderedObject {
 		return normals.get(normalid);
 	}
 
-	public Shader getShader() {
-		return shader;
-	}
-
 	public Vector3f getVertex(int vertexid) {
 		return vertices.get(vertexid);
 	}
@@ -216,7 +208,7 @@ public class ShapedObject extends RenderedObject {
 	}
 
 	protected void initRender() {
-		if (shadered)
+		if (shadered && shaderactive)
 			shader.bind();
 
 		// if(isAttached()) {
@@ -374,15 +366,6 @@ public class ShapedObject extends RenderedObject {
 
 	public void setRenderMode(int mode) {
 		rendermode = mode;
-	}
-
-	public void setShader(Shader shader) {
-		this.shader = shader;
-		shadered = true;
-	}
-
-	public void setShaderActive(boolean active) {
-		shadered = active;
 	}
 
 	public void setVertices(List<Vector3f> verts) {

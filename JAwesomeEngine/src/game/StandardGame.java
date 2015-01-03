@@ -213,6 +213,16 @@ public abstract class StandardGame extends AbstractGame {
 	public void setRendering2d(boolean r) {
 		render2d = r;
 	}
+	
+	public void setShadersActive(boolean active) {
+		for(RenderedObject o : objects)
+			o.setShaderActive(active);
+	}
+	
+	public void setShadersActive2d(boolean active) {
+		for(RenderedObject o : objects2d)
+			o.setShaderActive(active);
+	}
 
 	@Override
 	public void start() {
