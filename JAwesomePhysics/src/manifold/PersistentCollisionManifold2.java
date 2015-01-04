@@ -10,6 +10,7 @@ import vector.Vector2f;
 
 public class PersistentCollisionManifold2 extends CollisionManifold<Vector2f> {
 	List<Vector2f> storedpointsA, storedpointsB;
+	List<Integer> pointagesA, pointagesB;
 	float lastdistA = 0, lastdistB = 0;
 	int maxstoretime;
 	float distthreshold;
@@ -18,10 +19,9 @@ public class PersistentCollisionManifold2 extends CollisionManifold<Vector2f> {
 		super(cm);
 		this.maxstoretime = maxstoretime;
 		this.distthreshold = distthreshold;
-		storedpointsA = new ArrayList<Vector2f>();
-		storedpointsB = new ArrayList<Vector2f>();
-		addPoint(storedpointsA, cm.getContactPointA(), lastdistA);
-		addPoint(storedpointsB, cm.getContactPointB(), lastdistB);
+		init();
+		addPoint(storedpointsA, pointagesA, cm.getContactPointA(), lastdistA);
+		addPoint(storedpointsB, pointagesB, cm.getContactPointB(), lastdistB);
 	}
 
 	public PersistentCollisionManifold2(int maxstoretime, float distthreshold, 
@@ -30,10 +30,9 @@ public class PersistentCollisionManifold2 extends CollisionManifold<Vector2f> {
 		super(objs, manifold);
 		this.maxstoretime = maxstoretime;
 		this.distthreshold = distthreshold;
-		storedpointsA = new ArrayList<Vector2f>();
-		storedpointsB = new ArrayList<Vector2f>();
-		addPoint(storedpointsA, manifold.getContactPointA(), lastdistA);
-		addPoint(storedpointsB, manifold.getContactPointB(), lastdistB);
+		init();
+		addPoint(storedpointsA, pointagesA, manifold.getContactPointA(), lastdistA);
+		addPoint(storedpointsB, pointagesB, manifold.getContactPointB(), lastdistB);
 	}
 
 	public PersistentCollisionManifold2(int maxstoretime, float distthreshold, RigidBody<Vector2f, ?, ?, ?> obj1,
@@ -42,10 +41,9 @@ public class PersistentCollisionManifold2 extends CollisionManifold<Vector2f> {
 		super(obj1, obj2, manifold);
 		this.maxstoretime = maxstoretime;
 		this.distthreshold = distthreshold;
-		storedpointsA = new ArrayList<Vector2f>();
-		storedpointsB = new ArrayList<Vector2f>();
-		addPoint(storedpointsA, manifold.getContactPointA(), lastdistA);
-		addPoint(storedpointsB, manifold.getContactPointB(), lastdistB);
+		init();
+		addPoint(storedpointsA, pointagesA, manifold.getContactPointA(), lastdistA);
+		addPoint(storedpointsB, pointagesB, manifold.getContactPointB(), lastdistB);
 	}
 
 	// TODO: Threshold for the dist so that spheres only have 1 contact point
@@ -60,16 +58,22 @@ public class PersistentCollisionManifold2 extends CollisionManifold<Vector2f> {
 				localcontactB, tangentA, tangentB);
 		this.maxstoretime = maxstoretime;
 		this.distthreshold = distthreshold;
+		init();
+		addPoint(storedpointsA, pointagesA, contactA, lastdistA);
+		addPoint(storedpointsB, pointagesB, contactB, lastdistB);
+	}
+	
+	private void init() {
 		storedpointsA = new ArrayList<Vector2f>();
 		storedpointsB = new ArrayList<Vector2f>();
-		addPoint(storedpointsA, contactA, lastdistA);
-		addPoint(storedpointsB, contactB, lastdistB);
+		pointagesA = new ArrayList<Integer>();
+		pointagesB = new ArrayList<Integer>();
 	}
 
 	public void add(ContactManifold<Vector2f> cm) {
 		penetrationdepth = cm.getPenetrationDepth();
-		lastdistA = addPoint(storedpointsA, cm.getContactPointA(), lastdistA);
-		lastdistB = addPoint(storedpointsB, cm.getContactPointB(), lastdistB);
+		lastdistA = addPoint(storedpointsA, pointagesA, cm.getContactPointA(), lastdistA);
+		lastdistB = addPoint(storedpointsB, pointagesB, cm.getContactPointB(), lastdistB);
 		contactA = computeCenter(storedpointsA);
 		contactB = computeCenter(storedpointsB);
 		relativecontactA = VecMath.subtraction(contactA, getObjects()
@@ -78,24 +82,51 @@ public class PersistentCollisionManifold2 extends CollisionManifold<Vector2f> {
 				.getSecond().getTranslation2());
 		collisionnormal = cm.getCollisionNormal();
 	}
+	
+	public void increaseAge() {
+		for(int i = pointagesA.size() - 1; i >= 0; i--) {
+			int a = pointagesA.get(i) + 1;
+			if(a > maxstoretime) {
+				storedpointsA.remove(i);
+				pointagesA.remove(i);
+			}
+			else
+				pointagesA.set(i, a);
+		}
+		for(int i = pointagesB.size() - 1; i >= 0; i--) {
+			int a = pointagesB.get(i) + 1;
+			if(a > maxstoretime) {
+				storedpointsB.remove(i);
+				pointagesB.remove(i);
+			}
+			else
+				pointagesB.set(i, a);
+		}
+	}
 
-	private float addPoint(List<Vector2f> list, Vector2f point, float lastdist) {
+	private float addPoint(List<Vector2f> list, List<Integer> agelist, Vector2f point, float lastdist) {
 		if (list.size() == 2) {
 			float dist = VecMath
 					.length(VecMath.subtraction(point, list.get(1)));
 			if (dist > lastdist) {
 				list.add(point);
+				agelist.add(0);
 				lastdist = dist;
 				list.remove(0);
+				agelist.remove(0);
 			}
 		} else {
 			if (list.size() == 1) {
 				lastdist = VecMath.length(VecMath.subtraction(point,
 						list.get(0)));
-				if(lastdist > distthreshold)
+				if(lastdist > distthreshold) {
 					list.add(point);
-			} else
+					agelist.add(0);
+				}
+			} else {
 				list.add(point);
+				agelist.add(0);
+			}
 		}
 		return lastdist;
 	}
@@ -103,6 +134,8 @@ public class PersistentCollisionManifold2 extends CollisionManifold<Vector2f> {
 	public void clear() {
 		storedpointsA.clear();
 		storedpointsB.clear();
+		pointagesA.clear();
+		pointagesB.clear();
 	}
 
 	private Vector2f computeCenter(List<Vector2f> list) {

@@ -66,6 +66,8 @@ public class PersistentManifoldManager2 extends ManifoldManager<Vector2f> {
 		boolean deleted = false;
 		int minindex = 0;
 		int s = manifolds.size();
+		for(StoredManifold sm : manifolds)
+			sm.increaseAge();
 		for (int i = s - 1; i >= 0; i--) {
 			StoredManifold sm = manifolds.get(i);
 			if (!sm.isModified()) {
