@@ -12,8 +12,8 @@ public class PersistentManifoldManager2 extends ManifoldManager<Vector2f> {
 	protected class StoredManifold extends PersistentCollisionManifold2 {
 		boolean modified;
 
-		public StoredManifold(int maxstoretime, float distthreshold, CollisionManifold<Vector2f> manifold) {
-			super(maxstoretime, distthreshold, manifold);
+		public StoredManifold(float distthreshold, float maxdistance, CollisionManifold<Vector2f> manifold) {
+			super(distthreshold, maxdistance, manifold);
 			modified = true;
 		}
 
@@ -26,24 +26,23 @@ public class PersistentManifoldManager2 extends ManifoldManager<Vector2f> {
 		}
 	}
 	
-	int maxstoretime;
-	float distthreshold;
+	float distthreshold, maxdistance;
 
 	HashMap<Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>>, Integer> manifoldids;
 
 	List<StoredManifold> manifolds;
 
 	public PersistentManifoldManager2() {
-		init(6, 5);
+		init(5, 5);
 	}
 	
-	public PersistentManifoldManager2(int maxstoretime, float distthreshold) {
-		init(maxstoretime, distthreshold);
+	public PersistentManifoldManager2(float distthreshold, float maxdistance) {
+		init(distthreshold, maxdistance);
 	}
 	
-	private void init(int maxstoretime, float distthreshold) {
-		this.maxstoretime = maxstoretime;
+	private void init(float distthreshold, float maxdistance) {
 		this.distthreshold = distthreshold;
+		this.maxdistance = maxdistance;
 		manifoldids = new HashMap<Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>>, Integer>();
 		manifolds = new ArrayList<StoredManifold>();
 	}
@@ -56,7 +55,7 @@ public class PersistentManifoldManager2 extends ManifoldManager<Vector2f> {
 			s.setModified(true);
 		} else {
 			manifoldids.put(cm.getObjects(), manifolds.size());
-			manifolds.add(new StoredManifold(maxstoretime, distthreshold, cm));
+			manifolds.add(new StoredManifold(distthreshold, maxdistance, cm));
 		}
 	}
 
@@ -66,8 +65,6 @@ public class PersistentManifoldManager2 extends ManifoldManager<Vector2f> {
 		boolean deleted = false;
 		int minindex = 0;
 		int s = manifolds.size();
-		for(StoredManifold sm : manifolds)
-			sm.increaseAge();
 		for (int i = s - 1; i >= 0; i--) {
 			StoredManifold sm = manifolds.get(i);
 			if (!sm.isModified()) {
@@ -95,5 +92,9 @@ public class PersistentManifoldManager2 extends ManifoldManager<Vector2f> {
 
 	@Override
 	public void start() {
+		//check maxdistance
+		for(StoredManifold sm : manifolds) {
+			sm.checkDistance();
+		}
 	}
 }
