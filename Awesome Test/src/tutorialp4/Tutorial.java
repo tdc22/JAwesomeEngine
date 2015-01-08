@@ -10,7 +10,6 @@ import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
 import loader.ShaderLoader;
-import manifold.PersistentManifoldManager;
 import math.QuatMath;
 import math.VecMath;
 import narrowphase.EPA;

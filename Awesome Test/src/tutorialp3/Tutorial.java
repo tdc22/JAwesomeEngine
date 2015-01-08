@@ -9,7 +9,6 @@ import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
-import manifold.PersistentManifoldManager;
 import math.QuatMath;
 import math.VecMath;
 import narrowphase.EPA;

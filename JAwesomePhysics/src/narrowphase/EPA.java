@@ -76,9 +76,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		// http://allenchou.net/2013/12/game-physics-contact-generation-epa/
 		Vector3f tangentA, tangentB;
 		if (Math.abs(normal.x) >= 0.57735f)
-			tangentA = new Vector3f(normal.y, -normal.x, 0); // not sure if a is
-																// really normal
-																// here
+			tangentA = new Vector3f(normal.y, -normal.x, 0);
 		else
 			tangentA = new Vector3f(0, normal.z, -normal.y);
 

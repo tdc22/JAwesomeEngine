@@ -9,7 +9,6 @@ import gui.PixelFormat;
 import gui.VideoSettings;
 import integration.VerletIntegration;
 import loader.FontLoader;
-import manifold.PersistentManifoldManager;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import objects.RigidBody3;

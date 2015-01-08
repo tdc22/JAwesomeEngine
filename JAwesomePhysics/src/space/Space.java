@@ -147,7 +147,6 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 						contactManifold));
 			}
 		}
-		manifoldmanager.end();
 		for (int i = 0; i < resolutionIterations; i++)
 			resolve();
 		applyGlobalForce();

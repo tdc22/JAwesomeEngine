@@ -9,7 +9,7 @@ import gui.PixelFormat;
 import gui.VideoSettings;
 import integration.VerletIntegration;
 import loader.FontLoader;
-import manifold.PersistentManifoldManager2;
+import manifold.MultiPointManifoldManager2;
 import matrix.Matrix1f;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
@@ -42,7 +42,7 @@ public class BasicTest2d extends StandardGame {
 
 		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(),
 				new GJK2(new EPA2()), new ImpulseResolution(),
-				new ProjectionCorrection(1), new PersistentManifoldManager2()); // SimpleManifoldManager<Vector2f>());
+				new ProjectionCorrection(1), new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
 		space.setGlobalForce(new Vector2f(0, 100));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");

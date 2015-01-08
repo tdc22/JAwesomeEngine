@@ -18,10 +18,6 @@ public class SimpleManifoldManager<L extends Vector> extends ManifoldManager<L> 
 	}
 
 	@Override
-	public void end() {
-	}
-
-	@Override
 	public List<CollisionManifold<L>> getManifolds() {
 		return collisionmanifolds;
 	}
