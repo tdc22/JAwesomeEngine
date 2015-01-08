@@ -9,6 +9,7 @@ import gui.PixelFormat;
 import gui.VideoSettings;
 import integration.VerletIntegration;
 import loader.FontLoader;
+import manifold.MultiPointManifoldManager;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import objects.RigidBody3;
@@ -44,7 +45,7 @@ public class BasicTest extends StandardGame {
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
 				new EPA()), new LinearImpulseResolution(),
 				new ProjectionCorrection(0.02f, 0.0f),
-				new PersistentManifoldManager());// new
+				new MultiPointManifoldManager());// new
 													// SimpleManifoldManager<Vector3f>());
 		space.setGlobalForce(new Vector3f(0, -5, 0));
 

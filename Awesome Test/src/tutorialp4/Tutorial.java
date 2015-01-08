@@ -10,6 +10,7 @@ import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
 import loader.ShaderLoader;
+import manifold.MultiPointManifoldManager;
 import math.QuatMath;
 import math.VecMath;
 import narrowphase.EPA;
@@ -72,7 +73,7 @@ public class Tutorial extends StandardGame {
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
 				new EPA()), new LinearImpulseResolution(),
 				new ProjectionCorrection(0.02f, 0.0f),
-				new PersistentManifoldManager());
+				new MultiPointManifoldManager());
 		space.setGlobalForce(new Vector3f(0, -8, 0));
 
 		playerbody = PhysicsShapeCreator.create(player);
