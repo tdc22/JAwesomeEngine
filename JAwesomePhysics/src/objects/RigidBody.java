@@ -11,7 +11,7 @@ import vector.Vector;
  */
 
 public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends Rotation, A3 extends Rotation>
-		extends CollisionObject implements SupportMap<L> {
+		extends CollisionObject<L> {
 	float invMass, staticfriction, dynamicfriction, rollingfriction,
 			restitution, lineardamping, angulardamping;
 	L linearfactor, linearvelocity, forceaccumulator;
