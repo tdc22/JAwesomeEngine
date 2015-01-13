@@ -1,8 +1,5 @@
 package tutorialp5;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import game.StandardGame;
 import gui.DisplayMode;
 import gui.GLDisplay;
@@ -12,6 +9,10 @@ import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import loader.ShaderLoader;
 import manifold.MultiPointManifoldManager;
 import math.QuatMath;

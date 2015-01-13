@@ -194,6 +194,10 @@ public abstract class StandardGame extends AbstractGame {
 		cam.begin();
 	}
 
+	public Display getDisplay() {
+		return display;
+	}
+
 	public abstract void render();
 
 	public abstract void render2d();

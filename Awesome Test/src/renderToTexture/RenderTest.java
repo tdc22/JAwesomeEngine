@@ -2,13 +2,16 @@ package renderToTexture;
 
 import game.Debugger;
 import game.StandardGame;
+import gui.DisplayMode;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import shape.Box;
 import utils.RenderToTexture;
 import utils.Shader;
-import vector.Vector3f;
 
 public class RenderTest extends StandardGame {
 	RenderToTexture rtt;
@@ -17,8 +20,9 @@ public class RenderTest extends StandardGame {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		initDisplay(false, 800, 600, false);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
 		cam.rotateTo(0, 0);
@@ -27,8 +31,7 @@ public class RenderTest extends StandardGame {
 		this.setRendering2d(true);
 		addObject(ModelLoader.load("res/models/bunny.mobj"));
 
-		rtt = new RenderToTexture(this, new Vector3f(0, 0, 10), new Vector3f(0,
-				0, -1), new Vector3f(0, 1, 0));
+		rtt = new RenderToTexture(this);
 		rtt.updateTexture();
 
 		screenshader = new Shader(ShaderLoader.loadShaderPair(
