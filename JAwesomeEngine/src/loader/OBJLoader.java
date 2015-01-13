@@ -159,6 +159,7 @@ public class OBJLoader {
 
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		String line;
+		int normalindex = 0;
 		while ((line = reader.readLine()) != null) {
 			if (line.startsWith("v ")) {
 				float x = Float.parseFloat(line.split(" ")[1]);
@@ -168,6 +169,14 @@ public class OBJLoader {
 
 				object.addVertex(vertex, Color.WHITE, new Vector2f(0, 0),
 						new Vector3f(0, 1, 0));
+			}
+			if (line.startsWith("vn")) {
+				float nx = Float.parseFloat(line.split(" ")[1]);
+				float ny = Float.parseFloat(line.split(" ")[2]);
+				float nz = Float.parseFloat(line.split(" ")[3]);
+
+				object.setNormal(normalindex, new Vector3f(nx, ny, nz));
+				normalindex++;
 			}
 			if (line.startsWith("f ")) {
 				int i1 = Integer.parseInt(line.split(" ")[1].split("/")[0]);

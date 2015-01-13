@@ -58,6 +58,7 @@ public class RenderTest extends StandardGame {
 	@Override
 	public void update(int delta) {
 		rtt.updateTexture();
+		screenshader.setArgument(0, rtt.getTextureID());
 		debugmanager.update();
 		cam.update(delta);
 	}

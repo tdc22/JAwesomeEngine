@@ -33,7 +33,6 @@ public class ShaderTest extends StandardGame {
 
 	@Override
 	public void render() {
-		// TODO Auto-generated method stub
 		shader.bind();
 		renderScene();
 		shader.unbind();
@@ -41,13 +40,11 @@ public class ShaderTest extends StandardGame {
 
 	@Override
 	public void render2d() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void update(int delta) {
-		// TODO Auto-generated method stub
 		cam.update(delta);
 	}
 }
