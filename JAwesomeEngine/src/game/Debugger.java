@@ -2,13 +2,22 @@ package game;
 
 import static org.lwjgl.opengl.GL11.GL_FILL;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11.GL_INVALID_ENUM;
+import static org.lwjgl.opengl.GL11.GL_INVALID_OPERATION;
+import static org.lwjgl.opengl.GL11.GL_INVALID_VALUE;
 import static org.lwjgl.opengl.GL11.GL_LINE;
 import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
+import static org.lwjgl.opengl.GL11.GL_OUT_OF_MEMORY;
+import static org.lwjgl.opengl.GL11.GL_STACK_OVERFLOW;
+import static org.lwjgl.opengl.GL11.GL_STACK_UNDERFLOW;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL30.GL_INVALID_FRAMEBUFFER_OPERATION;
 import gui.Font;
 import gui.Text;
 import input.Input;
@@ -77,9 +86,41 @@ public class Debugger {
 	public void render2d(int fps, int objects, int objects2d) {
 		if (showdata) {
 			Vector3f campos = cam.getTranslation();
+
+			String glerror = "no error";
+			int errorflag = glGetError();
+			if (errorflag != GL_NO_ERROR) {
+				switch (errorflag) {
+				case GL_INVALID_ENUM:
+					glerror = "invalid enum";
+					break;
+				case GL_INVALID_VALUE:
+					glerror = "invalid value";
+					break;
+				case GL_INVALID_OPERATION:
+					glerror = "invalid operation";
+					break;
+				case GL_INVALID_FRAMEBUFFER_OPERATION:
+					glerror = "invalid framebuffer operation";
+					break;
+				case GL_OUT_OF_MEMORY:
+					glerror = "out of memory";
+					break;
+				case GL_STACK_UNDERFLOW:
+					glerror = "stack underflow";
+					break;
+				case GL_STACK_OVERFLOW:
+					glerror = "stack overflow";
+					break;
+				default:
+					glerror = "unknown error";
+				}
+			}
+
 			text.setText("FPS: " + fps + "\nObjects: " + objects
 					+ "\n2d Objects: " + objects2d + "\nPolygons:\nCamera: "
-					+ campos.x + "; " + campos.y + "; " + campos.z);
+					+ campos.x + "; " + campos.y + "; " + campos.z
+					+ "\nGL-Error: " + glerror);
 			text.render();
 		}
 	}

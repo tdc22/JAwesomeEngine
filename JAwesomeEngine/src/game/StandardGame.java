@@ -255,6 +255,7 @@ public abstract class StandardGame extends AbstractGame {
 		System.out.println("Destroy Engine");
 		display.close();
 		System.out.println("Destroy Display");
+		System.exit(0);
 	}
 
 	protected void updateEngine() {
