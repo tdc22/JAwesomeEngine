@@ -10,11 +10,11 @@ import gui.VideoSettings;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.FastMath;
+import shader.Shader;
 import shape.Box;
 import shape2d.Circle;
 import shape2d.Ellipse;
 import shape2d.Quad;
-import utils.Shader;
 import vector.Vector4f;
 
 public class Test2d extends StandardGame {
@@ -45,7 +45,7 @@ public class Test2d extends StandardGame {
 		add2dObject(new Circle(600, 180, 30, 36));
 		add2dObject(new Circle(660, 180, 20, 36));
 
-		Shader colorshader = new Shader(ShaderLoader.loadShaderPair(
+		Shader colorshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));

@@ -8,10 +8,10 @@ import gui.VideoSettings;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import objects.ShapedObject;
+import shader.Shader;
 import shape.Box;
 import shape.Sphere;
 import utils.GLConstants;
-import utils.Shader;
 
 public class ShaderTest extends StandardGame {
 	Shader normalshader;
@@ -25,7 +25,7 @@ public class ShaderTest extends StandardGame {
 		cam.translateTo(0.5f, 0.5f, 5);
 		cam.rotateTo(0, 0);
 
-		normalshader = new Shader(ShaderLoader.loadShaderPair(
+		normalshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/normaldebug.vert", "res/shaders/normaldebug.geo",
 				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 		normalshader.addArgumentName("uNormalsLength");

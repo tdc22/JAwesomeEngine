@@ -10,8 +10,8 @@ import input.InputEvent;
 import input.KeyInput;
 import loader.ShaderLoader;
 import loader.TextureLoader;
+import shader.Shader;
 import shape.Box;
-import utils.Shader;
 import utils.Texture;
 import vector.Vector4f;
 
@@ -29,7 +29,7 @@ public class ShaderTest3 extends StandardGame {
 		cam.rotateTo(0, 0);
 
 		// Shader Test 1
-		Shader colorshader = new Shader(ShaderLoader.loadShaderPair(
+		Shader colorshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
@@ -42,7 +42,7 @@ public class ShaderTest3 extends StandardGame {
 		Texture texture = new Texture(
 				TextureLoader.loadTexture("res/textures/cobblestone.png"));
 
-		Shader textureshader = new Shader(ShaderLoader.loadShaderPair(
+		Shader textureshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/textureshader.vert",
 				"res/shaders/textureshader.frag"));
 		textureshader.addArgumentName("colorMap");
@@ -59,7 +59,7 @@ public class ShaderTest3 extends StandardGame {
 		bumpmap = new Texture(
 				TextureLoader.loadTexture("res/textures/normal.jpg"));
 
-		Shader bumpmapshader = new Shader(ShaderLoader.loadShaderPair(
+		Shader bumpmapshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/bumpmapshader.vert",
 				"res/shaders/bumpmapshader.frag"));
 		bumpmapshader.addArgumentNames("diffuseTexture", "normalTexture");

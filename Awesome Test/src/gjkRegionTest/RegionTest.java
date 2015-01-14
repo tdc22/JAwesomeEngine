@@ -226,8 +226,8 @@ public class RegionTest extends StandardGame {
 		simplex = new Simplex(simplices);
 		generated = new HashMap<Vector3f, Integer>();
 
-		pointshader = ShaderLoader.loadShaderPair(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
+		pointshader = ShaderLoader.loadShader("res/shaders/colorshader.vert",
+				"res/shaders/colorshader.frag");
 
 		Thread input = new Thread() {
 			/**
@@ -339,7 +339,7 @@ public class RegionTest extends StandardGame {
 				numregions = 8;
 			}
 			for (int i = 0; i < numregions; i++) {
-				pointbatches.add(new Points(i, ShaderLoader.loadShaderPair(
+				pointbatches.add(new Points(i, ShaderLoader.loadShader(
 						"res/shaders/colorshader.vert",
 						"res/shaders/colorshader.frag")));
 			}

@@ -10,7 +10,7 @@ import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import objects.ShapedObject;
-import utils.Shader;
+import shader.Shader;
 import vector.Vector3f;
 import vector.Vector4f;
 
@@ -29,7 +29,7 @@ public class LightingTest extends StandardGame {
 		cam.translateTo(0, 2, 20);
 		cam.rotateTo(0, 0);
 
-		Shader shader = new Shader(ShaderLoader.loadShaderPair(
+		Shader shader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/pixelphonglighting.vert",
 				"res/shaders/pixelphonglighting.frag"));
 		shader.addArgumentName("lightpos");

@@ -13,7 +13,7 @@ import math.VecMath;
 import objects.RenderedObject;
 import objects.ShapedObject;
 import quaternion.Quaternion;
-import utils.Shader;
+import shader.Shader;
 import vector.Vector2f;
 import vector.Vector3f;
 

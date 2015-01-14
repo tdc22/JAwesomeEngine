@@ -42,20 +42,20 @@ public class ShaderLoader {
 		}
 	}
 
-	public static int loadShaderPair(String vertexShaderLocation,
+	public static int loadShader(String vertexShaderLocation,
 			String fragmentShaderLocation) {
-		return loadShaderPair(vertexShaderLocation, fragmentShaderLocation,
-				null, 0, 0, 0);
+		return loadShader(vertexShaderLocation, fragmentShaderLocation, null,
+				0, 0, 0);
 	}
 
-	public static int loadShaderPair(String vertexShaderLocation,
+	public static int loadShader(String vertexShaderLocation,
 			String geometryShaderLocation, int inputtype, int outputtype,
 			int verticesout) {
-		return loadShaderPair(vertexShaderLocation, null,
-				geometryShaderLocation, inputtype, outputtype, verticesout);
+		return loadShader(vertexShaderLocation, null, geometryShaderLocation,
+				inputtype, outputtype, verticesout);
 	}
 
-	public static int loadShaderPair(String vertexShaderLocation,
+	public static int loadShader(String vertexShaderLocation,
 			String fragmentShaderLocation, String geometryShaderLocation,
 			int inputtype, int outputtype, int verticesout) {
 		boolean includeFragmentShader = fragmentShaderLocation != null;

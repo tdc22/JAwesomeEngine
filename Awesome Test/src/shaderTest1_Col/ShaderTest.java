@@ -6,8 +6,8 @@ import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
 import loader.ShaderLoader;
+import shader.Shader;
 import shape.Box;
-import utils.Shader;
 import vector.Vector4f;
 
 public class ShaderTest extends StandardGame {
@@ -22,7 +22,7 @@ public class ShaderTest extends StandardGame {
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
 
-		shader = new Shader(ShaderLoader.loadShaderPair(
+		shader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		shader.addArgumentName("color");
 		shader.addArgument(new Vector4f(1f, 0f, 0f, 1f));

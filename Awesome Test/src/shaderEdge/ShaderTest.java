@@ -8,9 +8,9 @@ import gui.PixelFormat;
 import gui.VideoSettings;
 import loader.FontLoader;
 import loader.ShaderLoader;
+import shader.Shader;
 import shape.Box;
 import utils.GLConstants;
-import utils.Shader;
 
 public class ShaderTest extends StandardGame {
 	Debugger debugmanager;
@@ -28,7 +28,7 @@ public class ShaderTest extends StandardGame {
 		cam.translateTo(5, 5, 5);
 		cam.rotateTo(45, -35);
 
-		edgeshader = new Shader(ShaderLoader.loadShaderPair(
+		edgeshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.geo",
 				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 

@@ -1,6 +1,6 @@
 package objects;
 
-import utils.Shader;
+import shader.Shader;
 
 public abstract class RenderedObject extends DataGameObject implements
 		Renderable {

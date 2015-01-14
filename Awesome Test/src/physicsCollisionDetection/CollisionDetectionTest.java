@@ -28,11 +28,11 @@ import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import positionalcorrection.NullCorrection;
 import resolution.NullResolution;
+import shader.Shader;
 import shape.Box;
 import shape.Cylinder;
 import shape.Sphere;
 import utils.Pair;
-import utils.Shader;
 import vector.Vector3f;
 import vector.Vector4f;
 import broadphase.SAP;
@@ -58,7 +58,7 @@ public class CollisionDetectionTest extends StandardGame {
 
 		// mouse.setGrabbed(false);
 
-		int shaderprogram = ShaderLoader.loadShaderPair(
+		int shaderprogram = ShaderLoader.loadShader(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
 		s1 = new Shader(shaderprogram);
 		s2 = new Shader(shaderprogram);

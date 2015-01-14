@@ -1,8 +1,8 @@
 package gjkRegionTest;
 
 import objects.ShapedObject;
+import shader.Shader;
 import utils.GLConstants;
-import utils.Shader;
 import vector.Vector3f;
 import vector.Vector4f;
 

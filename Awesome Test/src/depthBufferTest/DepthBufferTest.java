@@ -4,8 +4,8 @@ import game.Debugger;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
+import shader.Shader;
 import shape.Box;
-import utils.Shader;
 import vector.Vector4f;
 
 public class DepthBufferTest extends StandardGame {
@@ -25,14 +25,14 @@ public class DepthBufferTest extends StandardGame {
 		settings.setZNear(znear);
 		settings.setZFar(zfar);
 
-		Shader red = new Shader(ShaderLoader.loadShaderPair(
+		Shader red = new Shader(ShaderLoader.loadShader(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		red.addArgument("color", new Vector4f(1f, 0f, 0f, 1f));
-		Shader green = new Shader(ShaderLoader.loadShaderPair(
+		Shader green = new Shader(ShaderLoader.loadShader(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		green.addArgument("color", new Vector4f(0f, 1f, 0f, 1f));
 
-		Shader red2 = new Shader(ShaderLoader.loadShaderPair(
+		Shader red2 = new Shader(ShaderLoader.loadShader(
 				"res/shaders/zbuffershader.vert",
 				"res/shaders/colorshader.frag"));
 		red2.addArgument("color", new Vector4f(1f, 0f, 0f, 1f));
@@ -40,7 +40,7 @@ public class DepthBufferTest extends StandardGame {
 				.getDepthBits());
 		red2.addArgument("zNear", znear);
 		red2.addArgument("zFar", zfar);
-		Shader green2 = new Shader(ShaderLoader.loadShaderPair(
+		Shader green2 = new Shader(ShaderLoader.loadShader(
 				"res/shaders/zbuffershader.vert",
 				"res/shaders/colorshader.frag"));
 		green2.addArgument("color", new Vector4f(0f, 1f, 0f, 1f));

@@ -1,4 +1,4 @@
-package utils;
+package shader;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -28,6 +28,7 @@ import matrix.Matrix4f;
 
 import org.lwjgl.BufferUtils;
 
+import utils.Texture;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;

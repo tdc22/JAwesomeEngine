@@ -8,9 +8,9 @@ import java.awt.Color;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import objects.ShapedObject;
+import shader.Shader;
 import shape.Box;
 import shape.Sphere;
-import utils.Shader;
 import vector.Vector3f;
 
 public class StencilTest extends StandardGame {
@@ -29,7 +29,7 @@ public class StencilTest extends StandardGame {
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		this.setRendering2d(true);
 
-		shadowvolume = new Shader(ShaderLoader.loadShaderPair(
+		shadowvolume = new Shader(ShaderLoader.loadShader(
 				"res/shaders/shadowvolume.vert", null,
 				"res/shaders/shadowvolume.geo",
 				ARBGeometryShader4.GL_TRIANGLES_ADJACENCY_ARB,

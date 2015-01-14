@@ -9,8 +9,8 @@ import gui.VideoSettings;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
+import shader.Shader;
 import shape.Box;
-import utils.Shader;
 import utils.Texture;
 
 public class MassBoxesTest2 extends StandardGame {
@@ -33,7 +33,7 @@ public class MassBoxesTest2 extends StandardGame {
 		Texture texture = new Texture(
 				TextureLoader.loadTexture("res/textures/cobblestone.png"));
 
-		textureshader = new Shader(ShaderLoader.loadShaderPair(
+		textureshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/textureshader.vert",
 				"res/shaders/textureshader.frag"));
 		textureshader.addArgumentName("colorMap");

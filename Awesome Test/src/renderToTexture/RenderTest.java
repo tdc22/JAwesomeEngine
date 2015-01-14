@@ -9,9 +9,9 @@ import gui.VideoSettings;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
+import shader.Shader;
 import shape.Box;
 import utils.RenderToTexture;
-import utils.Shader;
 
 public class RenderTest extends StandardGame {
 	RenderToTexture rtt;
@@ -34,7 +34,7 @@ public class RenderTest extends StandardGame {
 		rtt = new RenderToTexture(this);
 		rtt.updateTexture();
 
-		screenshader = new Shader(ShaderLoader.loadShaderPair(
+		screenshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/textureshader.vert",
 				"res/shaders/textureshader.frag"));
 		screenshader.addArgumentName("colorMap");

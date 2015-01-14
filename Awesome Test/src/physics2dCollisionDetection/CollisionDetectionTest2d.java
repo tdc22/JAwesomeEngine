@@ -23,11 +23,11 @@ import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
 import positionalcorrection.NullCorrection;
 import resolution.NullResolution;
+import shader.Shader;
 import shape2d.Circle;
 import shape2d.Ellipse;
 import shape2d.Quad;
 import utils.Pair;
-import utils.Shader;
 import vector.Vector2f;
 import vector.Vector4f;
 import broadphase.SAP2;
@@ -50,7 +50,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		int shaderprogram = ShaderLoader.loadShaderPair(
+		int shaderprogram = ShaderLoader.loadShader(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
 		s1 = new Shader(shaderprogram);
 		s2 = new Shader(shaderprogram);

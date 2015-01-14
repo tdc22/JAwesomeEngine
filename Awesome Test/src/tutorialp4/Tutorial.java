@@ -20,10 +20,10 @@ import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import positionalcorrection.ProjectionCorrection;
 import resolution.LinearImpulseResolution;
+import shader.Shader;
 import shape.Box;
 import shape.Cylinder;
 import utils.GLConstants;
-import utils.Shader;
 import vector.Vector3f;
 import vector.Vector4f;
 import broadphase.SAP;
@@ -89,14 +89,14 @@ public class Tutorial extends StandardGame {
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 
-		Shader colorshader = new Shader(ShaderLoader.loadShaderPair(
+		Shader colorshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 
 		player.setShader(colorshader);
 
-		edgeshader = new Shader(ShaderLoader.loadShaderPair(
+		edgeshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.geo",
 				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 	}
