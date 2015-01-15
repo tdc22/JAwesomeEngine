@@ -73,7 +73,7 @@ public class Tutorial extends StandardGame {
 		playerbody = PhysicsShapeCreator.create(player);
 		playerbody.setMass(1f);
 		playerbody.setLinearFactor(new Vector3f(1, 1, 1));
-		playerbody.setAngularFactor(new Vector3f());
+		playerbody.setAngularFactor(new Vector3f(0, 0, 0));
 		playerbody.setRestitution(0);
 		space.addRigidBody(player, playerbody);
 
@@ -133,7 +133,7 @@ public class Tutorial extends StandardGame {
 
 		Vector3f offset = QuatMath.transform(playerbody.getRotation(),
 				new Vector3f(0, 0, -1));
-		offset.setY(playerheight * 2 / 3f);
+		offset.setY((playerheight * (6 / 8f))/2f);
 		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
 	}
 
