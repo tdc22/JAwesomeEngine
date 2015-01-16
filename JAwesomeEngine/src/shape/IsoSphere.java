@@ -49,7 +49,11 @@ public class IsoSphere extends ShapedObject implements SphereStructure {
 				Vector3f b = vertices.get(f[2]);
 				Vector3f c = vertices.get(f[4]);
 				
+				//Triangles werden falsch subdivided, statt point in die mitte zu setzen, point an jede kante setzen
+				//und 4 statt 3 triangles generieren. (in anderer schleife um redundanzen zu vermeiden)
+				//siehe: http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
 				Vector3f d = VecMath.setScale(VecMath.addition(VecMath.addition(a, b), c), radius);
+//				Vector3f d = VecMath.scale(VecMath.addition(VecMath.addition(a, b), c), 1/3f);
 				vertexcount++;
 				vertices.add(d);
 				
@@ -59,6 +63,7 @@ public class IsoSphere extends ShapedObject implements SphereStructure {
 				faces.add(new Integer[] {f[0], f[2], vertexcount, f[2], f[4], f[2]});
 			}
 		}
+		System.out.println(faces.size());
 		
 		for(Vector3f v : vertices)
 			addVertex(v, Color.GRAY, new Vector2f(0, 0), VecMath.normalize(v));
