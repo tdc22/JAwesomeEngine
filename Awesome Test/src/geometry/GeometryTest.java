@@ -44,14 +44,14 @@ public class GeometryTest extends StandardGame {
 		addObject(new Sphere(2, 0, 0, 1, 36, 36));
 		addObject(new Capsule(5, 0, 0, 1, 2, 36, 36));
 		addObject(new Cylinder(8, 0, 0, 1, 2, 36));
-		addObject(new IsoSphere(11, 0, 0, 1, IsoSphere.POINT_SUBDIVISION, 0));
-		addObject(new IsoSphere(14, 0, 0, 1, IsoSphere.POINT_SUBDIVISION, 1));
-		addObject(new IsoSphere(17, 0, 0, 1, IsoSphere.POINT_SUBDIVISION, 2));
-		addObject(new IsoSphere(20, 0, 0, 1, IsoSphere.POINT_SUBDIVISION, 3));
-		addObject(new IsoSphere(23, 0, 0, 1, IsoSphere.POINT_SUBDIVISION, 4));
-		addObject(new IsoSphere(26, 0, 0, 1, IsoSphere.POINT_SUBDIVISION, 5));
-		addObject(new IsoSphere(29, 0, 0, 1, IsoSphere.POINT_SUBDIVISION, 6));
-		addObject(new IsoSphere(32, 0, 0, 1, IsoSphere.POINT_SUBDIVISION, 7));
+		addObject(new IsoSphere(11, 0, 0, 1, 0));
+//		addObject(new IsoSphere(14, 0, 0, 1, 1));
+//		addObject(new IsoSphere(17, 0, 0, 1, 2));
+//		addObject(new IsoSphere(20, 0, 0, 1, 3));
+//		addObject(new IsoSphere(23, 0, 0, 1, 4));
+//		addObject(new IsoSphere(26, 0, 0, 1, 5));
+//		addObject(new IsoSphere(29, 0, 0, 1, 6));
+//		addObject(new IsoSphere(32, 0, 0, 1, 7));
 	}
 
 	@Override
