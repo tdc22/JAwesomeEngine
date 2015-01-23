@@ -45,12 +45,12 @@ public class Tutorial extends StandardGame {
 	final float STARTBOX_SIZE_X = 8f;
 	final float STARTBOX_SIZE_Z = 8f;
 
-	final int NUM_BLOCKS = 5;
+	final int NUM_BLOCKS = 80;
 	final float BLOCK_SIZE_MIN = 1f;
 	final float BLOCK_SIZE_MAX = 5f;
 	final float MIN_Y = -4f;
 	final float MAX_Y = 3f;
-	final float LEVEL_SIZE = 50f;
+	final float LEVEL_SIZE = 100f;
 	List<Vector3f> colors;
 
 	@Override
@@ -116,8 +116,8 @@ public class Tutorial extends StandardGame {
 				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 
 		colors = new ArrayList<Vector3f>();
-		colors.add(new Vector3f());
-		colors.add(new Vector3f());
+		colors.add(new Vector3f(0.92f, 0.92f, 0.92f));
+		colors.add(new Vector3f(0.35f, 0.35f, 0.92f));
 
 		generateLevel();
 	}
@@ -127,7 +127,14 @@ public class Tutorial extends StandardGame {
 		float blocksizerange = BLOCK_SIZE_MAX - BLOCK_SIZE_MIN;
 		float yrange = MAX_Y - MIN_Y;
 		int colornum = colors.size();
-		int blocknum = 0, color;
+		int blocknum = 0, color = 0;
+		
+		List<Shader> colorshaders = new ArrayList<Shader>();
+		for(Vector3f c : colors) {
+			colorshaders.add(new Shader(ShaderLoader.loadShader(
+				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"), "color", new Vector4f(c.x, c.y, c.z, 1)));
+		}
+		
 		while (blocknum < NUM_BLOCKS) {
 			posx = (float) (Math.random() * LEVEL_SIZE);
 			posz = (float) (Math.random() * LEVEL_SIZE);
@@ -137,16 +144,19 @@ public class Tutorial extends StandardGame {
 				posy = MIN_Y + (float) (Math.random() * yrange);
 				sizey = BLOCK_SIZE_MIN
 						+ (float) (Math.random() * blocksizerange);
-				color = (int) Math.random() * colornum;
+				color = (int) (Math.random() * colornum);
 
 				Box box = new Box(posx, posy, posz, sizex, sizey, sizez);
+				box.setRenderHints(false, false, true);
+				box.setShader(colorshaders.get(color));
 				addObject(box);
 				RigidBody3 boxbody = PhysicsShapeCreator.create(box);
-				// space.addRigidBody(boxbody);
+				boxbody.translateTo(box.getTranslation());
+//				space.addRigidBody(box, boxbody);
 
 				blocknum++;
 			}
-			System.out.println(blocknum);
+			System.out.println(blocknum + "; " + this.getObjects().size());
 		}
 	}
 

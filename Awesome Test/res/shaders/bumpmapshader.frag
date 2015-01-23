@@ -1,7 +1,9 @@
 uniform sampler2D diffuseTexture;
 uniform sampler2D normalTexture;
+uniform vec3 lightPosition;
 	
 // New bumpmapping
+varying vec3 lightPos;
 varying vec3 lightVec;
 varying vec3 halfVec;
 varying vec3 eyeVec;
@@ -9,6 +11,7 @@ varying vec3 eyeVec;
 
 void main()
 {
+	lightPos = lightPosition;
 
 	// lookup normal from normal map, move from [0,1] to  [-1, 1] range, normalize
 	vec3 normal = 2.0 * texture2D (normalTexture, gl_TexCoord[0].st).rgb - 1.0;
@@ -25,7 +28,7 @@ void main()
 	float shininess ;
   
 	// compute ambient
-	vec4 ambientLight = gl_LightSource[0].ambient;	
+	vec4 ambientLight = vec4(0.3, 0.3, 0.3, 1);	
 	
 	if (lamberFactor > 0.0)
 	{
