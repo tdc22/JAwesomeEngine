@@ -10,9 +10,14 @@ import vector.Vector3f;
 
 public class MultiPointManifoldManager2 extends ManifoldManager<Vector2f> {
 	List<CollisionManifold<Vector2f>> collisionmanifolds;
-	float offsetscale = 0.05f;
+	float offsetscale = 0.04f;
 
 	public MultiPointManifoldManager2() {
+		collisionmanifolds = new ArrayList<CollisionManifold<Vector2f>>();
+	}
+	
+	public MultiPointManifoldManager2(float offsetscale) {
+		this.offsetscale = offsetscale;
 		collisionmanifolds = new ArrayList<CollisionManifold<Vector2f>>();
 	}
 
