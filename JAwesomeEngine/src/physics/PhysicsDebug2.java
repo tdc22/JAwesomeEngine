@@ -7,11 +7,13 @@ import input.InputManager;
 import input.KeyInput;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 import manifold.CollisionManifold;
 import math.VecMath;
 import matrix.Matrix1f;
+import objects.AABB;
 import objects.RigidBody;
 import objects.RigidBody2;
 import objects.ShapedObject2;
@@ -20,6 +22,7 @@ import org.lwjgl.opengl.GL11;
 
 import quaternion.Complexf;
 import space.Space2;
+import utils.Pair;
 import vector.Vector1f;
 import vector.Vector2f;
 
@@ -32,6 +35,7 @@ public class PhysicsDebug2 {
 	boolean showVelocities = false;
 	private InputEvent toggleAABBs, toggleContractPoints,
 			toggleCollisionNormals, toggleVelocities;
+	private List<Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>>> aabbObjects;
 
 	public PhysicsDebug2(InputManager inputs, Font f, Space2 physics) {
 		font = f;
@@ -61,7 +65,10 @@ public class PhysicsDebug2 {
 
 	public void render2d() {
 		if (showAABBs) {
-
+			for(Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>> aabbobj : aabbObjects) {
+				aabbobj.getFirst().translateTo(aabbobj.getSecond().getTranslation());
+				aabbobj.getFirst().render();
+			}
 		}
 		if (showCollisionNormals) {
 			List<CollisionManifold<Vector2f>> manifolds = physics
@@ -172,8 +179,34 @@ public class PhysicsDebug2 {
 			}
 		}
 	}
+	
+	private void initAABBObjects() {
+		aabbObjects = new ArrayList<Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>>>();
+		Color c = Color.YELLOW;
+		for(RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> rb : physics.getObjects()) {
+			AABB<Vector2f> aabb = rb.getAABB();
+			ShapedObject2 aabbobj = new ShapedObject2();
+			aabbobj.setRenderMode(GL11.GL_LINE_STRIP);
+			aabbobj.addVertex(aabb.getMin(), c);
+			aabbobj.addVertex(new Vector2f(aabb.getMin().x, aabb.getMax().y), c);
+			aabbobj.addVertex(aabb.getMax(), c);
+			aabbobj.addVertex(new Vector2f(aabb.getMax().x, aabb.getMin().y), c);
+			aabbobj.addIndices(0, 1, 2, 3, 0);
+			aabbobj.prerender();
+			aabbObjects.add(new Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>>(aabbobj, rb));
+		}
+	}
+	
+	private void clearAABBObjects() {
+		for(Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>> obj : aabbObjects) {
+			obj.getFirst().delete();
+		}
+		aabbObjects.clear();
+	}
 
 	public void setShowAABBs(boolean s) {
+		if(s) initAABBObjects();
+		if(!s) clearAABBObjects();
 		showAABBs = s;
 	}
 

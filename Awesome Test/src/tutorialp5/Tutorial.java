@@ -1,7 +1,9 @@
 package tutorialp5;
 
+import game.Debugger;
 import game.StandardGame;
 import gui.DisplayMode;
+import gui.Font;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
@@ -13,13 +15,16 @@ import integration.VerletIntegration;
 import java.util.ArrayList;
 import java.util.List;
 
+import loader.FontLoader;
 import loader.ShaderLoader;
 import manifold.MultiPointManifoldManager;
 import math.QuatMath;
 import math.VecMath;
 import narrowphase.EPA;
 import narrowphase.GJK;
+import objects.RenderedObject;
 import objects.RigidBody3;
+import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import positionalcorrection.ProjectionCorrection;
@@ -52,13 +57,17 @@ public class Tutorial extends StandardGame {
 	final float MAX_Y = 3f;
 	final float LEVEL_SIZE = 100f;
 	List<Vector3f> colors;
+	
+	//TODO: REMOVE!!!
+	Debugger debugmanager;
+	PhysicsDebug physicsdebug;
 
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
 		display.bindMouse();
-		cam.rotateTo(0, 0);
+		cam.rotateTo(225, 0);
 
 		Cylinder player = new Cylinder(0, 5, 0, playerradius,
 				playerheight / 2f, 50);
@@ -119,6 +128,11 @@ public class Tutorial extends StandardGame {
 		colors.add(new Vector3f(0.92f, 0.92f, 0.92f));
 		colors.add(new Vector3f(0.35f, 0.35f, 0.92f));
 
+		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
+		debugmanager = new Debugger(inputs, font, cam);
+		setRendering2d(true);
+		physicsdebug = new PhysicsDebug(inputs, font, space);
+		
 		generateLevel();
 	}
 
@@ -152,27 +166,29 @@ public class Tutorial extends StandardGame {
 				addObject(box);
 				RigidBody3 boxbody = PhysicsShapeCreator.create(box);
 				boxbody.translateTo(box.getTranslation());
-//				space.addRigidBody(box, boxbody);
+				space.addRigidBody(box, boxbody);
+				System.out.println(box.getTranslation() + "; " + boxbody.getTranslation());
 
 				blocknum++;
 			}
-			System.out.println(blocknum + "; " + this.getObjects().size());
 		}
 	}
 
 	@Override
 	public void render() {
+		debugmanager.render3d();
 		renderScene();
 		setShadersActive(false);
 		edgeshader.bind();
 		renderScene();
 		edgeshader.unbind();
 		setShadersActive(true);
+		physicsdebug.render3d();
 	}
 
 	@Override
 	public void render2d() {
-
+		debugmanager.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
@@ -211,13 +227,18 @@ public class Tutorial extends StandardGame {
 		playerbody.setLinearVelocity(new Vector3f(move.x, playerbody
 				.getLinearVelocity().y + move.y, move.z));
 
+		debugmanager.update();
 		space.update(delta);
+		physicsdebug.update();
 
 		Vector3f offset = QuatMath.transform(playerbody.getRotation(),
-				new Vector3f(0, 0, -1));
+				new Vector3f(0.70710677, 0, 0.70710677));
 		offset.setY((playerheight * (6 / 8f))/2f);
 		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
-		System.out.println(cam.getTranslation());
+//		System.out.println(cam.getTranslation() + "; " + space.getObjects().size());
+//		for(RenderedObject obj : this.getObjects())
+//			System.out.println(obj.getTranslation());
+//		System.out.println("-------------------------------------------------------------");
 	}
 
 }

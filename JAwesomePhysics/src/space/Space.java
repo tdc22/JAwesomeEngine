@@ -152,13 +152,5 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		applyGlobalForce();
 		integrate(delta);
 		correct();
-
-		// TESTING...
-		// for (RigidBody<?, ?, ?, ?> o : objects) {
-		// System.out.println(o.getRotation().magnitude());
-		// // o.getRotation().setIdentity();
-		// // System.out.println(o.getRotation() + "; "
-		// // + o.getRotation().magnitude());
-		// }
 	}
 }

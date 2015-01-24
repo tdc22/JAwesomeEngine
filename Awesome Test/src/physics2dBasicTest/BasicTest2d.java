@@ -106,8 +106,8 @@ public class BasicTest2d extends StandardGame {
 		}
 
 		debugmanager.update();
-		physicsdebug.update();
 		space.update(delta);
+		physicsdebug.update();
 		cam.update(delta);
 	}
 }

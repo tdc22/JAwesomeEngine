@@ -106,8 +106,8 @@ public class BasicTest extends StandardGame {
 		}
 
 		debugmanager.update();
-		physicsdebug.update();
 		space.update(delta);
+		physicsdebug.update();
 		cam.update(delta);
 	}
 }

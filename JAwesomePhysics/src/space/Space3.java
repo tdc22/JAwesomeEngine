@@ -32,6 +32,7 @@ public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> 
 
 	@Override
 	protected void integrate(float delta) {
+		System.out.println("----------------START---------------------");
 		for (RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> o : objects)
 			integrationsolver.integrate3((RigidBody3) o, delta);
 	}
