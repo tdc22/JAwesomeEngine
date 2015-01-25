@@ -156,7 +156,7 @@ public class Tutorial extends StandardGame {
 
 		Vector3f offset = QuatMath.transform(playerbody.getRotation(),
 				new Vector3f(0, 0, -1));
-		offset.setY((playerheight * (6 / 8f))/2f);
+		offset.setY((playerheight * (6 / 8f)) / 2f);
 		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
 	}
 

@@ -86,7 +86,8 @@ public class GLDisplay extends Display {
 	public void close() {
 		glfwDestroyWindow(windowid);
 		glfwTerminate();
-		sizeCallback.release();
+		if (sizeCallback != null)
+			sizeCallback.release();
 		errorCallback.release();
 	}
 

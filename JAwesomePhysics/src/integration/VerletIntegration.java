@@ -42,9 +42,6 @@ public class VerletIntegration implements IntegrationSolver {
 
 	@Override
 	public void integrate3(RigidBody3 obj, float delta) {
-		System.out.println(obj.getInverseMass() + "; " + VecMath.scale(
-				VecMath.scale(obj.getForceAccumulator(), delta),
-				obj.getInverseMass()));
 		Vector3f oldlinearvel = obj.getLinearVelocity();
 		Vector3f oldangularvel = obj.getAngularVelocity();
 		obj.setLinearVelocity(VecMath.scale(

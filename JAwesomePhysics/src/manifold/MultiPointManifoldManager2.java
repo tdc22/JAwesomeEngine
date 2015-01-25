@@ -15,7 +15,7 @@ public class MultiPointManifoldManager2 extends ManifoldManager<Vector2f> {
 	public MultiPointManifoldManager2() {
 		collisionmanifolds = new ArrayList<CollisionManifold<Vector2f>>();
 	}
-	
+
 	public MultiPointManifoldManager2(float offsetscale) {
 		this.offsetscale = offsetscale;
 		collisionmanifolds = new ArrayList<CollisionManifold<Vector2f>>();

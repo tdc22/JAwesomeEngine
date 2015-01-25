@@ -57,8 +57,9 @@ public class PhysicsDebug {
 
 	public void render3d() {
 		if (showAABBs) {
-			for(Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> aabbobj : aabbObjects) {
-				aabbobj.getFirst().translateTo(aabbobj.getSecond().getTranslation());
+			for (Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> aabbobj : aabbObjects) {
+				aabbobj.getFirst().translateTo(
+						aabbobj.getSecond().getTranslation());
 				aabbobj.getFirst().render();
 			}
 		}
@@ -107,11 +108,12 @@ public class PhysicsDebug {
 			}
 		}
 	}
-	
+
 	private void initAABBObjects() {
 		aabbObjects = new ArrayList<Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>>();
 		Color c = Color.YELLOW;
-		for(RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> rb : physics.getObjects()) {
+		for (RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> rb : physics
+				.getObjects()) {
 			AABB<Vector3f> aabb = rb.getAABB();
 			ShapedObject aabbobj = new ShapedObject();
 			Vector3f min = aabb.getMin();
@@ -125,22 +127,27 @@ public class PhysicsDebug {
 			aabbobj.addVertex(new Vector3f(max.x, min.y, max.z), c);
 			aabbobj.addVertex(new Vector3f(min.x, max.y, max.z), c);
 			aabbobj.addVertex(max, c);
-			aabbobj.addIndices(0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 2, 4, 2, 6, 3, 6, 3, 5, 4, 7, 5, 7, 6, 7);
+			aabbobj.addIndices(0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 2, 4, 2, 6, 3, 6,
+					3, 5, 4, 7, 5, 7, 6, 7);
 			aabbobj.prerender();
-			aabbObjects.add(new Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(aabbobj, rb));
+			aabbObjects
+					.add(new Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(
+							aabbobj, rb));
 		}
 	}
-	
+
 	private void clearAABBObjects() {
-		for(Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> obj : aabbObjects) {
+		for (Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> obj : aabbObjects) {
 			obj.getFirst().delete();
 		}
 		aabbObjects.clear();
 	}
 
 	public void setShowAABBs(boolean s) {
-		if(s) initAABBObjects();
-		if(!s) clearAABBObjects();
+		if (s)
+			initAABBObjects();
+		if (!s)
+			clearAABBObjects();
 		showAABBs = s;
 	}
 

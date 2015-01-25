@@ -1,4 +1,4 @@
-package tutorialp5;
+package tutorialpX;
 
 import game.Debugger;
 import game.StandardGame;
@@ -22,7 +22,6 @@ import math.QuatMath;
 import math.VecMath;
 import narrowphase.EPA;
 import narrowphase.GJK;
-import objects.RenderedObject;
 import objects.RigidBody3;
 import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
@@ -36,19 +35,27 @@ import utils.GLConstants;
 import vector.Vector3f;
 import vector.Vector4f;
 import broadphase.SAP;
+import collisionshape.CylinderShape;
 
 public class Tutorial extends StandardGame {
 	InputEvent forward, backward, left, right, jump;
 	PhysicsSpace space;
-	RigidBody3 playerbody;
-	float playerradius = 0.7f;
-	float playerheight = 1.7f;
+	RigidBody3 playerbody, groundchecker, spacerbody;
 	float playerspeed = 10;
 	float mousesensitivity = 0.2f;
 	Shader edgeshader;
+	boolean onground = false;
+
+	final float PLAYER_RADIUS = 0.7f;
+	final float PLAYER_HEIGHT = 1.7f;
+	final Vector3f PLAYER_START_POSITION = new Vector3f(0, 5, 0);
+	final float GROUNDCHECKER_RADIUS = PLAYER_RADIUS - 0.1f;
+	final float GROUNDCHECKER_HEIGHT = 0.01f;
+	final float TINY_SPACE = 0.001f;
 
 	final float STARTBOX_SIZE_X = 8f;
 	final float STARTBOX_SIZE_Z = 8f;
+	final float VOID_OUT_DEPTH = -100f;
 
 	final int NUM_BLOCKS = 80;
 	final float BLOCK_SIZE_MIN = 1f;
@@ -57,20 +64,20 @@ public class Tutorial extends StandardGame {
 	final float MAX_Y = 3f;
 	final float LEVEL_SIZE = 100f;
 	List<Vector3f> colors;
-	
-	//TODO: REMOVE!!!
+
+	// TODO: REMOVE!!!
 	Debugger debugmanager;
 	PhysicsDebug physicsdebug;
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Tutorial",
+				false), new PixelFormat(), new VideoSettings());
 		display.bindMouse();
 		cam.rotateTo(225, 0);
 
-		Cylinder player = new Cylinder(0, 5, 0, playerradius,
-				playerheight / 2f, 50);
+		Cylinder player = new Cylinder(PLAYER_START_POSITION, PLAYER_RADIUS,
+				PLAYER_HEIGHT / 2f, 50);
 		player.setRenderHints(false, false, true);
 		this.addObject(player);
 
@@ -107,6 +114,24 @@ public class Tutorial extends StandardGame {
 		playerbody.setRestitution(0);
 		space.addRigidBody(player, playerbody);
 
+		groundchecker = new CylinderShape(0, -999, 0, GROUNDCHECKER_RADIUS,
+				GROUNDCHECKER_HEIGHT / 2f);
+		groundchecker.setMass(1f);
+		groundchecker.setLinearFactor(new Vector3f(0, 0, 0));
+		groundchecker.setAngularFactor(new Vector3f(0, 0, 0));
+		groundchecker.setRestitution(0);
+		space.addRigidBody(groundchecker);
+
+		spacerbody = new CylinderShape(PLAYER_START_POSITION, PLAYER_RADIUS
+				+ TINY_SPACE, PLAYER_HEIGHT / 2f);
+		spacerbody.setMass(1f);
+		spacerbody.setLinearFactor(new Vector3f(1, 0, 1));
+		spacerbody.setAngularFactor(new Vector3f(0, 0, 0));
+		spacerbody.setRestitution(0);
+		// TODO: ignore collision between playerbody, groundchecker and
+		// spacerbody, remove TINY_SPACE
+		// space.addRigidBody(spacerbody);
+
 		Box ground = new Box(0, 0, 0, STARTBOX_SIZE_X, 1, STARTBOX_SIZE_Z);
 		ground.setRenderHints(false, false, true);
 		RigidBody3 rb = PhysicsShapeCreator.create(ground);
@@ -132,8 +157,13 @@ public class Tutorial extends StandardGame {
 		debugmanager = new Debugger(inputs, font, cam);
 		setRendering2d(true);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
-		
+
 		generateLevel();
+	}
+
+	public void reset() {
+		playerbody.translateTo(PLAYER_START_POSITION);
+		playerbody.setLinearVelocity(new Vector3f(0, 0, 0));
 	}
 
 	public void generateLevel() {
@@ -142,13 +172,15 @@ public class Tutorial extends StandardGame {
 		float yrange = MAX_Y - MIN_Y;
 		int colornum = colors.size();
 		int blocknum = 0, color = 0;
-		
+
 		List<Shader> colorshaders = new ArrayList<Shader>();
-		for(Vector3f c : colors) {
+		for (Vector3f c : colors) {
 			colorshaders.add(new Shader(ShaderLoader.loadShader(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"), "color", new Vector4f(c.x, c.y, c.z, 1)));
+					"res/shaders/colorshader.vert",
+					"res/shaders/colorshader.frag"), "color", new Vector4f(c.x,
+					c.y, c.z, 1)));
 		}
-		
+
 		while (blocknum < NUM_BLOCKS) {
 			posx = (float) (Math.random() * LEVEL_SIZE);
 			posz = (float) (Math.random() * LEVEL_SIZE);
@@ -167,7 +199,6 @@ public class Tutorial extends StandardGame {
 				RigidBody3 boxbody = PhysicsShapeCreator.create(box);
 				boxbody.translateTo(box.getTranslation());
 				space.addRigidBody(box, boxbody);
-				System.out.println(box.getTranslation() + "; " + boxbody.getTranslation());
 
 				blocknum++;
 			}
@@ -221,24 +252,27 @@ public class Tutorial extends StandardGame {
 			move.normalize();
 			move.scale(playerspeed);
 		}
-		if (jump.isActive()) {
+		if (jump.isActive() && onground) {
 			move = VecMath.addition(move, new Vector3f(0, 8, 0));
 		}
 		playerbody.setLinearVelocity(new Vector3f(move.x, playerbody
 				.getLinearVelocity().y + move.y, move.z));
+		if (playerbody.getTranslation().getY() <= VOID_OUT_DEPTH)
+			reset();
+		groundchecker.setTranslation(VecMath.subtraction(
+				playerbody.getTranslation(), new Vector3f(0, PLAYER_HEIGHT / 2f
+						+ GROUNDCHECKER_HEIGHT / 2f + TINY_SPACE, 0)));
+		spacerbody.setTranslation(playerbody.getTranslation());
 
 		debugmanager.update();
 		space.update(delta);
 		physicsdebug.update();
 
+		onground = space.hasCollision(groundchecker);
+
 		Vector3f offset = QuatMath.transform(playerbody.getRotation(),
 				new Vector3f(0.70710677, 0, 0.70710677));
-		offset.setY((playerheight * (6 / 8f))/2f);
+		offset.setY((PLAYER_HEIGHT * (6 / 8f)) / 2f);
 		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
-//		System.out.println(cam.getTranslation() + "; " + space.getObjects().size());
-//		for(RenderedObject obj : this.getObjects())
-//			System.out.println(obj.getTranslation());
-//		System.out.println("-------------------------------------------------------------");
 	}
-
 }

@@ -1,12 +1,12 @@
 package geometry;
 
-import loader.FontLoader;
 import game.Debugger;
 import game.StandardGame;
 import gui.DisplayMode;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
+import loader.FontLoader;
 import shape.Box;
 import shape.Capsule;
 import shape.Cylinder;
@@ -15,6 +15,7 @@ import shape.Sphere;
 
 public class GeometryTest extends StandardGame {
 	Debugger debugmanager;
+
 	// Shader lineshader;
 
 	@Override
@@ -25,7 +26,7 @@ public class GeometryTest extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
-		
+
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		this.setRendering2d(true);
@@ -45,13 +46,13 @@ public class GeometryTest extends StandardGame {
 		addObject(new Capsule(5, 0, 0, 1, 2, 36, 36));
 		addObject(new Cylinder(8, 0, 0, 1, 2, 36));
 		addObject(new IsoSphere(11, 0, 0, 1, 0));
-//		addObject(new IsoSphere(14, 0, 0, 1, 1));
-//		addObject(new IsoSphere(17, 0, 0, 1, 2));
-//		addObject(new IsoSphere(20, 0, 0, 1, 3));
-//		addObject(new IsoSphere(23, 0, 0, 1, 4));
-//		addObject(new IsoSphere(26, 0, 0, 1, 5));
-//		addObject(new IsoSphere(29, 0, 0, 1, 6));
-//		addObject(new IsoSphere(32, 0, 0, 1, 7));
+		// addObject(new IsoSphere(14, 0, 0, 1, 1));
+		// addObject(new IsoSphere(17, 0, 0, 1, 2));
+		// addObject(new IsoSphere(20, 0, 0, 1, 3));
+		// addObject(new IsoSphere(23, 0, 0, 1, 4));
+		// addObject(new IsoSphere(26, 0, 0, 1, 5));
+		// addObject(new IsoSphere(29, 0, 0, 1, 6));
+		// addObject(new IsoSphere(32, 0, 0, 1, 7));
 	}
 
 	@Override

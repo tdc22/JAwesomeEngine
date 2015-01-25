@@ -65,8 +65,9 @@ public class PhysicsDebug2 {
 
 	public void render2d() {
 		if (showAABBs) {
-			for(Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>> aabbobj : aabbObjects) {
-				aabbobj.getFirst().translateTo(aabbobj.getSecond().getTranslation());
+			for (Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>> aabbobj : aabbObjects) {
+				aabbobj.getFirst().translateTo(
+						aabbobj.getSecond().getTranslation());
 				aabbobj.getFirst().render();
 			}
 		}
@@ -179,11 +180,12 @@ public class PhysicsDebug2 {
 			}
 		}
 	}
-	
+
 	private void initAABBObjects() {
 		aabbObjects = new ArrayList<Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>>>();
 		Color c = Color.YELLOW;
-		for(RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> rb : physics.getObjects()) {
+		for (RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> rb : physics
+				.getObjects()) {
 			AABB<Vector2f> aabb = rb.getAABB();
 			ShapedObject2 aabbobj = new ShapedObject2();
 			aabbobj.setRenderMode(GL11.GL_LINE_STRIP);
@@ -193,20 +195,24 @@ public class PhysicsDebug2 {
 			aabbobj.addVertex(new Vector2f(aabb.getMax().x, aabb.getMin().y), c);
 			aabbobj.addIndices(0, 1, 2, 3, 0);
 			aabbobj.prerender();
-			aabbObjects.add(new Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>>(aabbobj, rb));
+			aabbObjects
+					.add(new Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>>(
+							aabbobj, rb));
 		}
 	}
-	
+
 	private void clearAABBObjects() {
-		for(Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>> obj : aabbObjects) {
+		for (Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>> obj : aabbObjects) {
 			obj.getFirst().delete();
 		}
 		aabbObjects.clear();
 	}
 
 	public void setShowAABBs(boolean s) {
-		if(s) initAABBObjects();
-		if(!s) clearAABBObjects();
+		if (s)
+			initAABBObjects();
+		if (!s)
+			clearAABBObjects();
 		showAABBs = s;
 	}
 

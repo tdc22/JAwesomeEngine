@@ -63,8 +63,9 @@ public class ShaderTest3 extends StandardGame {
 		Shader bumpmapshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/bumpmapshader.vert",
 				"res/shaders/bumpmapshader.frag"));
-		bumpmapshader.addArgumentNames("diffuseTexture", "normalTexture", "lightPosition");
-		bumpmapshader.addArguments(diffuse, bumpmap, new Vector3f(0,1,0));
+		bumpmapshader.addArgumentNames("diffuseTexture", "normalTexture",
+				"lightPosition");
+		bumpmapshader.addArguments(diffuse, bumpmap, new Vector3f(0, 1, 0));
 
 		Box c = new Box(0, 0, 0, 0.5f, 0.5f, 0.5f);
 		c.setRenderHints(false, true, false);

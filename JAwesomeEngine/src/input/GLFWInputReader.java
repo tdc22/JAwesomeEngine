@@ -197,6 +197,7 @@ public class GLFWInputReader extends InputReader {
 		keys.put("Multiply", GLFW.GLFW_KEY_KP_MULTIPLY);
 		keys.put("Left Alt", GLFW.GLFW_KEY_LEFT_ALT);
 		keys.put(" ", GLFW.GLFW_KEY_SPACE);
+		keys.put("Space", GLFW.GLFW_KEY_SPACE);
 		keys.put("Caps Lock", GLFW.GLFW_KEY_CAPS_LOCK);
 		keys.put("F1", GLFW.GLFW_KEY_F1);
 		keys.put("F2", GLFW.GLFW_KEY_F2);
