@@ -79,7 +79,6 @@ public class ShaderTest3 extends StandardGame {
 
 	@Override
 	public void render() {
-		// TODO Auto-generated method stub
 		renderScene();
 	}
 

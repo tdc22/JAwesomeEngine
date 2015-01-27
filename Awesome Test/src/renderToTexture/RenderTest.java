@@ -38,9 +38,11 @@ public class RenderTest extends StandardGame {
 				"res/shaders/textureshader.vert",
 				"res/shaders/textureshader.frag"));
 		screenshader.addArgumentName("colorMap");
-		screenshader.addArgument(rtt.getTextureID());
+		screenshader.addArgument(rtt.getTexture());
 
 		Box screen = new Box(2, 3, 12, 2, 1, 0.1f);
+		screen.setRenderHints(false, true, false);
+		screen.setShader(screenshader);
 		addObject(screen);
 	}
 

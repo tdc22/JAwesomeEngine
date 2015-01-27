@@ -11,25 +11,27 @@ import static org.lwjgl.opengl.EXTFramebufferObject.glFramebufferTexture2DEXT;
 import static org.lwjgl.opengl.EXTFramebufferObject.glGenFramebuffersEXT;
 import static org.lwjgl.opengl.EXTFramebufferObject.glGenRenderbuffersEXT;
 import static org.lwjgl.opengl.EXTFramebufferObject.glRenderbufferStorageEXT;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_INT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_RGBA8;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_VIEWPORT_BIT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glGenTextures;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameterf;
+import static org.lwjgl.opengl.GL11.glViewport;
 import game.StandardGame;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.opengl.EXTFramebufferObject;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
 public class RenderToTexture {
@@ -43,71 +45,80 @@ public class RenderToTexture {
 	public RenderToTexture(StandardGame game) {
 		this.game = game;
 
-		// framebufferID = glGenFramebuffersEXT();
-		// colorTextureID = glGenTextures();
-		// depthRenderBufferID = glGenRenderbuffersEXT();
-		//
-		// glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
-		// glBindTexture(GL_TEXTURE_2D, colorTextureID);
-		// glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		// glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
-		// GL_INT, (java.nio.ByteBuffer) null);
-		// glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
-		// GL_COLOR_ATTACHMENT0_EXT,
-		// GL_TEXTURE_2D, colorTextureID, 0);
-		//
-		// // initialize depth renderbuffer
-		// glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthRenderBufferID);
-		// glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,
-		// GL14.GL_DEPTH_COMPONENT24, width, height);
-		// glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
-		// GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,
-		// depthRenderBufferID);
-		//
-		// glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
-		// glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-		// glBindTexture(GL_TEXTURE_2D, 0);
+		framebufferID = glGenFramebuffersEXT();
+		colorTextureID = glGenTextures();
+		depthRenderBufferID = glGenRenderbuffersEXT();
 
-		framebufferID = glGenFramebuffersEXT(); // create a new framebuffer
-		colorTextureID = glGenTextures(); // and a new texture used as a color
-											// buffer
-		depthRenderBufferID = glGenRenderbuffersEXT(); // And finally a new
-														// depthbuffer
-
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID); // switch to
-																	// the new
-																	// framebuffer
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
 
 		// initialize color texture
-		glBindTexture(GL_TEXTURE_2D, colorTextureID); // Bind the colorbuffer
-														// texture
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // make
-																			// it
-																			// linear
-																			// filterd
+		glBindTexture(GL_TEXTURE_2D, colorTextureID);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 512, 0, GL_RGBA, GL_INT,
-				(java.nio.ByteBuffer) null); // Create the texture data
+				(java.nio.ByteBuffer) null);
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-				GL_TEXTURE_2D, colorTextureID, 0); // attach it to the
-													// framebuffer
+				GL_TEXTURE_2D, colorTextureID, 0);
 
 		// initialize depth renderbuffer
-		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthRenderBufferID); // bind
-																			// the
-																			// depth
-																			// renderbuffer
+		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthRenderBufferID);
 		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,
-				GL14.GL_DEPTH_COMPONENT24, 512, 512); // get the data space for
-														// it
+				GL14.GL_DEPTH_COMPONENT24, 512, 512);
 		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
 				GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,
-				depthRenderBufferID); // bind it to the renderbuffer
+				depthRenderBufferID);
 
+		int framebuffer = EXTFramebufferObject
+				.glCheckFramebufferStatusEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT);
+		switch (framebuffer) {
+		case EXTFramebufferObject.GL_FRAMEBUFFER_COMPLETE_EXT:
+			break;
+		case EXTFramebufferObject.GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
+			throw new RuntimeException(
+					"FrameBuffer: "
+							+ framebufferID
+							+ ", has caused a GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT exception");
+		case EXTFramebufferObject.GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+			throw new RuntimeException(
+					"FrameBuffer: "
+							+ framebufferID
+							+ ", has caused a GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT exception");
+		case EXTFramebufferObject.GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+			throw new RuntimeException(
+					"FrameBuffer: "
+							+ framebufferID
+							+ ", has caused a GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT exception");
+		case EXTFramebufferObject.GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
+			throw new RuntimeException(
+					"FrameBuffer: "
+							+ framebufferID
+							+ ", has caused a GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT exception");
+		case EXTFramebufferObject.GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
+			throw new RuntimeException(
+					"FrameBuffer: "
+							+ framebufferID
+							+ ", has caused a GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT exception");
+		case EXTFramebufferObject.GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
+			throw new RuntimeException(
+					"FrameBuffer: "
+							+ framebufferID
+							+ ", has caused a GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT exception");
+		default:
+			throw new RuntimeException(
+					"Unexpected reply from glCheckFramebufferStatusEXT: "
+							+ framebuffer);
+		}
+
+		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	public IntBuffer getData() {
 		return imageData;
+	}
+
+	public Texture getTexture() {
+		return new Texture(colorTextureID);
 	}
 
 	public int getTextureID() {
@@ -145,23 +156,33 @@ public class RenderToTexture {
 
 		// glViewport (0, 0, 512, 512); // set The Current Viewport to the fbo
 		// size
+		// GL11.glViewport(0, 0, 512, 512);
 
-		glBindTexture(GL_TEXTURE_2D, 0); // unlink textures because if we dont
-											// it all is gonna fail
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID); // switch to
-																	// rendering
-																	// on our
-																	// FBO
+		// GL11.glDisable(GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);
+		glPushAttrib(GL_VIEWPORT_BIT);
+		glViewport(0, 0, 512, 512);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
+		// glBindFramebuffer(GL_FRAMEBUFFER, framebufferID);
+		// glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+		// GL_TEXTURE_2D, colorTextureID, 0);
+		// glPushAttrib(GL_VIEWPORT_BIT);
+		// glViewport( 0, 0, 512, 512 );
+		// glClear(GL_COLOR_BUFFER_BIT);
+		// glLoadIdentity();
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Screen And
-															// Depth Buffer on
-															// the fbo to red
-		glLoadIdentity();
-
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glVertex3f(0, 0, 0);
+		GL11.glVertex3f(2, 0, 0);
+		GL11.glVertex3f(2, 2, 0);
+		GL11.glVertex3f(0, 2, 0);
+		GL11.glEnd();
 		game.render();
 
-		glEnable(GL_TEXTURE_2D); // enable texturing
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); // switch to rendering on
-														// the framebuffer
+		// glEnable(GL_TEXTURE_2D); // enable texturing
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		GL11.glPopAttrib();
+		glEnable(GL_TEXTURE_2D);
 	}
 }

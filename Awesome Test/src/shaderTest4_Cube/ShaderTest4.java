@@ -88,19 +88,16 @@ public class ShaderTest4 extends StandardGame {
 
 	@Override
 	public void render() {
-		// TODO Auto-generated method stub
 		renderScene();
 	}
 
 	@Override
 	public void render2d() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void update(int delta) {
-		// TODO Auto-generated method stub
 		// cubemapper.updateTexture();
 		cam.update(delta);
 	}
