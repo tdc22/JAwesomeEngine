@@ -20,8 +20,7 @@ public class MassBoxesTest2 extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Mass Boxes 2",
-				false), new PixelFormat(),
-				new VideoSettings());
+				false), new PixelFormat(), new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 0);

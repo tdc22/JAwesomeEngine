@@ -40,7 +40,7 @@ import collisionshape.CylinderShape;
 public class Tutorial extends StandardGame {
 	InputEvent forward, backward, left, right, jump;
 	PhysicsSpace space;
-	RigidBody3 playerbody, groundchecker, spacerbody;
+	RigidBody3 playerbody, groundchecker, spacerbody, goal;
 	float playerspeed = 10;
 	float mousesensitivity = 0.2f;
 	Shader edgeshader;
@@ -62,7 +62,8 @@ public class Tutorial extends StandardGame {
 	final float BLOCK_SIZE_MAX = 5f;
 	final float MIN_Y = -4f;
 	final float MAX_Y = 3f;
-	final float LEVEL_SIZE = 100f;
+	final float LEVEL_SIZE_X = 100f;
+	final float LEVEL_SIZE_Z = 100f;
 	List<Vector3f> colors;
 
 	// TODO: REMOVE!!!
@@ -138,12 +139,24 @@ public class Tutorial extends StandardGame {
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 
-		Shader colorshader = new Shader(ShaderLoader.loadShader(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
-		colorshader.addArgumentName("color");
-		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
+		Box goalBox = new Box(LEVEL_SIZE_X - 5, MAX_Y + BLOCK_SIZE_MAX,
+				LEVEL_SIZE_Z - 5, 0.2f, 0.2f, 0.2f);
+		goalBox.setRenderHints(false, false, true);
+		goal = PhysicsShapeCreator.create(goalBox);
+		space.addRigidBody(goalBox, goal);
+		addObject(goalBox);
 
-		player.setShader(colorshader);
+		Shader playershader = new Shader(ShaderLoader.loadShader(
+				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		playershader.addArgumentName("color");
+		playershader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
+
+		player.setShader(playershader);
+
+		Shader goalshader = new Shader(playershader);
+		goalshader.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
+
+		goalBox.setShader(goalshader);
 
 		edgeshader = new Shader(ShaderLoader.loadShader(
 				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.geo",
@@ -151,7 +164,7 @@ public class Tutorial extends StandardGame {
 
 		colors = new ArrayList<Vector3f>();
 		colors.add(new Vector3f(0.92f, 0.92f, 0.92f));
-		colors.add(new Vector3f(0.35f, 0.35f, 0.92f));
+		colors.add(new Vector3f(0.3f, 0.3f, 0.92f));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugmanager = new Debugger(inputs, font, cam);
@@ -182,8 +195,8 @@ public class Tutorial extends StandardGame {
 		}
 
 		while (blocknum < NUM_BLOCKS) {
-			posx = (float) (Math.random() * LEVEL_SIZE);
-			posz = (float) (Math.random() * LEVEL_SIZE);
+			posx = (float) (Math.random() * LEVEL_SIZE_X);
+			posz = (float) (Math.random() * LEVEL_SIZE_Z);
 			sizex = BLOCK_SIZE_MIN + (float) (Math.random() * blocksizerange);
 			sizez = BLOCK_SIZE_MIN + (float) (Math.random() * blocksizerange);
 			if (!((posx - sizex) <= STARTBOX_SIZE_X && (posz - sizez) <= STARTBOX_SIZE_Z)) {
@@ -264,11 +277,16 @@ public class Tutorial extends StandardGame {
 						+ GROUNDCHECKER_HEIGHT / 2f + TINY_SPACE, 0)));
 		spacerbody.setTranslation(playerbody.getTranslation());
 
+		goal.rotate(0.05f * delta, 0.05f * delta, 0.05f * delta);
+
 		debugmanager.update();
 		space.update(delta);
 		physicsdebug.update();
 
 		onground = space.hasCollision(groundchecker);
+
+		if (space.hasCollision(playerbody, goal))
+			System.out.println("Goal!");
 
 		Vector3f offset = QuatMath.transform(playerbody.getRotation(),
 				new Vector3f(0.70710677, 0, 0.70710677));

@@ -31,7 +31,7 @@ public class RenderTest extends StandardGame {
 		this.setRendering2d(true);
 		addObject(ModelLoader.load("res/models/bunny.mobj"));
 
-		rtt = new RenderToTexture(this);
+		rtt = new RenderToTexture(this, cam);
 		rtt.updateTexture();
 
 		screenshader = new Shader(ShaderLoader.loadShader(

@@ -63,6 +63,13 @@ public class Shader {
 		addArgument(argumentname, argument);
 	}
 
+	public Shader(Shader shader) {
+		this.shaderProgram = shader.getShaderProgram();
+		uniformpositions = new ArrayList<Integer>(shader.getUniformPositions());
+		uniformtypes = new ArrayList<Integer>(shader.getArgumentTypes());
+		uniformarguments = new ArrayList<Object>(shader.getArguments());
+	}
+
 	public void addArgument(Object argument) {
 		if (argument instanceof Integer) {
 			uniformtypes.add(1);

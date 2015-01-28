@@ -56,7 +56,7 @@ public abstract class StandardGame extends AbstractGame {
 	protected List<RenderedObject> objects2d;
 	public VideoSettings settings;
 	public Display display;
-	public Camera cam;
+	public GameCamera cam;
 
 	public InputManager inputs;
 	protected InputEvent closeEvent;
@@ -126,7 +126,7 @@ public abstract class StandardGame extends AbstractGame {
 				Input.KEYBOARD_EVENT, "Escape", KeyInput.KEY_DOWN));
 		inputs.addEvent(closeEvent);
 
-		cam = new Camera(inputs);
+		cam = new GameCamera(inputs);
 
 		identity = BufferUtils.createFloatBuffer(16 * 4);
 		VecMath.identityMatrix().store(identity);

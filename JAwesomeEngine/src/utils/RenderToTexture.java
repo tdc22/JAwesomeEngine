@@ -11,7 +11,26 @@ import static org.lwjgl.opengl.EXTFramebufferObject.glFramebufferTexture2DEXT;
 import static org.lwjgl.opengl.EXTFramebufferObject.glGenFramebuffersEXT;
 import static org.lwjgl.opengl.EXTFramebufferObject.glGenRenderbuffersEXT;
 import static org.lwjgl.opengl.EXTFramebufferObject.glRenderbufferStorageEXT;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_INT;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_RGBA;
+import static org.lwjgl.opengl.GL11.GL_RGBA8;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_VIEWPORT_BIT;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glPopAttrib;
+import static org.lwjgl.opengl.GL11.glPushAttrib;
+import static org.lwjgl.opengl.GL11.glTexImage2D;
+import static org.lwjgl.opengl.GL11.glTexParameterf;
+import static org.lwjgl.opengl.GL11.glViewport;
+import game.Camera;
 import game.StandardGame;
 
 import java.nio.IntBuffer;
@@ -21,21 +40,22 @@ import org.lwjgl.opengl.GL14;
 
 public class RenderToTexture {
 	StandardGame game;
-	// boolean usefbo;
+	Camera cam;
 	int framebufferID, colorTextureID, depthRenderBufferID;
 	int width, height;
 	IntBuffer imageData;
 
-	public RenderToTexture(StandardGame game) {
-		init(game, 1024, 1024);
+	public RenderToTexture(StandardGame game, Camera cam) {
+		init(game, cam, 1024, 1024);
 	}
-	
-	public RenderToTexture(StandardGame game, int width, int height) {
-		init(game, width, height);
+
+	public RenderToTexture(StandardGame game, Camera cam, int width, int height) {
+		init(game, cam, width, height);
 	}
-	
-	private void init(StandardGame game, int width, int height) {
+
+	private void init(StandardGame game, Camera cam, int width, int height) {
 		this.game = game;
+		this.cam = cam;
 		this.width = width;
 		this.height = height;
 
@@ -48,8 +68,8 @@ public class RenderToTexture {
 		// initialize color texture
 		glBindTexture(GL_TEXTURE_2D, colorTextureID);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_INT,
-				(java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
+				GL_INT, (java.nio.ByteBuffer) null);
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
 				GL_TEXTURE_2D, colorTextureID, 0);
 
@@ -127,10 +147,10 @@ public class RenderToTexture {
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		game.cam.begin();
+
+		cam.begin();
 		game.render();
-		game.cam.end();
+		cam.end();
 
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 		glPopAttrib();

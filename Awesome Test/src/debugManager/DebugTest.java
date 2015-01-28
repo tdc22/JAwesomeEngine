@@ -22,7 +22,6 @@ public class DebugTest extends StandardGame {
 		this.setRendering2d(true);
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
-		cam.rotate(180, 0);
 		addObject(ModelLoader.load("res/models/bunny.mobj"));
 
 		// inputs.createInputEvent("toggle Mouse grab").addEventTrigger(
