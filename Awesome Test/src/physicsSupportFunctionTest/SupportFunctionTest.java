@@ -42,6 +42,7 @@ public class SupportFunctionTest extends StandardGame {
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
@@ -155,12 +156,12 @@ public class SupportFunctionTest extends StandardGame {
 			moved = true;
 		}
 
-		if (toggleMouseBind.isActive()) {
-			if (!display.isMouseBound())
-				display.bindMouse();
-			else
-				display.unbindMouse();
-		}
+		// if (toggleMouseBind.isActive()) {
+		// if (!display.isMouseBound())
+		// display.bindMouse();
+		// else
+		// display.unbindMouse();
+		// }
 
 		if (moved) {
 			so1.updateShape();
