@@ -19,7 +19,7 @@ public class LoaderTest extends StandardGame {
 		cam.translateTo(0.5f, 0.5f, 5);
 		cam.rotateTo(0, 0);
 
-		ShapedObject obj = ModelLoader.load("res/models/Sintel_Lite_257b.obj");
+		ShapedObject obj = ModelLoader.load("res/models/Bunny.obj");
 		addObject(obj);
 		System.out.println("Finished loading!");
 	}
