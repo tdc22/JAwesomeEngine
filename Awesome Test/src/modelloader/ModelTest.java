@@ -27,7 +27,6 @@ public class ModelTest extends StandardGame {
 
 	@Override
 	public void render2d() {
-		// TODO Auto-generated method stub
 
 	}
 

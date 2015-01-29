@@ -28,7 +28,7 @@ import matrix.Matrix4f;
 
 import org.lwjgl.BufferUtils;
 
-import utils.Texture;
+import texture.Texture;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;

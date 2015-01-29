@@ -1,20 +1,18 @@
-package massBoxes;
+package shader2_Tex;
 
-import game.Debugger;
 import game.StandardGame;
 import gui.DisplayMode;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
-import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
 import shader.Shader;
 import shape.Box;
 import texture.Texture;
+import vector.Vector4f;
 
-public class MassBoxesTest extends StandardGame {
-	Debugger debugmanager;
+public class ShaderTest2 extends StandardGame {
 
 	@Override
 	public void init() {
@@ -22,13 +20,20 @@ public class MassBoxesTest extends StandardGame {
 				new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
-		cam.translateTo(0, 0, 0);
-		cam.rotateTo(180, 0);
+		cam.translateTo(0, 0, 5);
+		cam.rotateTo(0, 0);
 
-		debugmanager = new Debugger(inputs,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
+		// Shader Test 1
+		Shader colorshader = new Shader(ShaderLoader.loadShader(
+				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		colorshader.addArgumentName("color");
+		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 
+		Box a = new Box(-2, 0, 2, 0.5f, 0.5f, 0.5f);
+		a.setShader(colorshader);
+		addObject(a);
+
+		// Shader Test 2
 		Texture texture = new Texture(
 				TextureLoader.loadTexture("res/textures/cobblestone.png"));
 
@@ -38,31 +43,27 @@ public class MassBoxesTest extends StandardGame {
 		textureshader.addArgumentName("colorMap");
 		textureshader.addArgument(texture);
 
-		for (int i = 0; i < 5000; i++) {
-			Box b = new Box((float) Math.random() * 100,
-					(float) Math.random() * 100, (float) Math.random() * 100,
-					0.5f, 0.5f, 0.5f);
-			b.setRenderHints(false, true, false);
-			b.setShader(textureshader);
-			addObject(b);
-		}
+		Box b = new Box(0, 0, 0, 0.5f, 0.5f, 0.5f);
+		b.setRenderHints(false, true, false);
+		b.setShader(textureshader);
+		addObject(b);
 	}
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		// TODO Auto-generated method stub
 		renderScene();
 	}
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
-		render2dScene();
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void update(int delta) {
-		debugmanager.update();
+		// TODO Auto-generated method stub
 		cam.update(delta);
 	}
 }

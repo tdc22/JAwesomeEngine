@@ -1,6 +1,16 @@
 package gui;
 
 public abstract class Display {
+	protected int width, height;
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
 	public abstract void bindMouse();
 
 	public abstract void clear();

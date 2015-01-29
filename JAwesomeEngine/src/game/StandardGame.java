@@ -51,10 +51,13 @@ import objects.RenderedObject;
 
 import org.lwjgl.BufferUtils;
 
+import texture.FrameBufferObject;
+
 public abstract class StandardGame extends AbstractGame {
 	protected List<RenderedObject> objects;
 	protected List<RenderedObject> objects2d;
 	public VideoSettings settings;
+	public FrameBufferObject framebuffer;
 	public Display display;
 	public GameCamera cam;
 
@@ -191,6 +194,7 @@ public abstract class StandardGame extends AbstractGame {
 
 	protected void prepareRender() {
 		display.clear();
+		// framebuffer.begin();
 		cam.begin();
 	}
 
@@ -233,6 +237,7 @@ public abstract class StandardGame extends AbstractGame {
 		initEngine();
 		init();
 		initOpenGL();
+		framebuffer = new FrameBufferObject(this, cam);
 
 		getDelta();
 
@@ -259,6 +264,11 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	protected void updateEngine() {
+		// glBlitFramebuffer(0, 0, framebuffer.getWidth(),
+		// framebuffer.getHeight(), 0, 0, display.getWidth(),
+		// display.getHeight(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
+		// GL_STENCIL_BUFFER_BIT, GL_LINEAR);
+		// framebuffer.end();
 		display.pollInputs();
 		inputs.update();
 		if (display.isMouseBound())

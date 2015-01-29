@@ -11,10 +11,10 @@ import loader.ModelLoader;
 import loader.ShaderLoader;
 import shader.Shader;
 import shape.Box;
-import utils.RenderToTexture;
+import texture.FrameBufferObject;
 
 public class RenderTest extends StandardGame {
-	RenderToTexture rtt;
+	FrameBufferObject rtt;
 	Shader screenshader;
 	Debugger debugmanager;
 
@@ -31,7 +31,7 @@ public class RenderTest extends StandardGame {
 		this.setRendering2d(true);
 		addObject(ModelLoader.load("res/models/bunny.mobj"));
 
-		rtt = new RenderToTexture(this, cam);
+		rtt = new FrameBufferObject(this, cam);
 		rtt.updateTexture();
 
 		screenshader = new Shader(ShaderLoader.loadShader(

@@ -11,7 +11,7 @@ import loader.ShaderLoader;
 import loader.TextureLoader;
 import shader.Shader;
 import shape.Box;
-import utils.Texture;
+import texture.Texture;
 
 public class MassBoxesTest2 extends StandardGame {
 	Debugger debugmanager;

@@ -30,9 +30,9 @@ import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
@@ -45,12 +45,13 @@ import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.ByteBuffer;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWvidmode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
@@ -58,9 +59,8 @@ import org.lwjgl.opengl.GLContext;
 public class GLDisplay extends Display {
 	private long windowid;
 	private GLFWErrorCallback errorCallback;
-	private GLFWWindowSizeCallback sizeCallback;
+	private GLFWFramebufferSizeCallback sizeCallback;
 	private boolean mousebound = false;
-	private int width, height;
 
 	@Override
 	public void bindMouse() {
@@ -147,14 +147,16 @@ public class GLDisplay extends Display {
 			throw new RuntimeException("Failed to create the GLFW window");
 
 		if (displaymode.isResizeable()) {
-			glfwSetWindowSizeCallback(windowid,
-					sizeCallback = new GLFWWindowSizeCallback() {
+			glfwSetFramebufferSizeCallback(windowid,
+					sizeCallback = new GLFWFramebufferSizeCallback() {
 						@Override
-						public void invoke(long arg0, int arg1, int arg2) {
-							width = arg1;
-							height = arg2;
+						public void invoke(long arg0, int w, int h) {
+							width = w;
+							height = h;
+							glViewport(0, 0, width, height);
 						}
 					});
+
 		}
 
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
