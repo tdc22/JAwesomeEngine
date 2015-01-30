@@ -146,19 +146,6 @@ public class GLDisplay extends Display {
 		if (windowid == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 
-		if (displaymode.isResizeable()) {
-			glfwSetFramebufferSizeCallback(windowid,
-					sizeCallback = new GLFWFramebufferSizeCallback() {
-						@Override
-						public void invoke(long arg0, int w, int h) {
-							width = w;
-							height = h;
-							glViewport(0, 0, width, height);
-						}
-					});
-
-		}
-
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		glfwSetWindowPos(windowid, (GLFWvidmode.width(vidmode) - width) / 2,
 				(GLFWvidmode.height(vidmode) - height) / 2);
@@ -169,6 +156,18 @@ public class GLDisplay extends Display {
 		glfwShowWindow(windowid);
 
 		GLContext.createFromCurrent();
+		
+		if (displaymode.isResizeable()) {
+			glfwSetFramebufferSizeCallback(windowid,
+					sizeCallback = new GLFWFramebufferSizeCallback() {
+						@Override
+						public void invoke(long arg0, int w, int h) {
+							width = w;
+							height = h;
+							glViewport(0, 0, width, height);
+						}
+					});
+		}
 	}
 
 	@Override
