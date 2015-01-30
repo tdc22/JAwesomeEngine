@@ -84,9 +84,9 @@ public class SupportDifferenceObject extends ShapedObject2 {
 				if (!result.contains(res))
 					result.add(res);
 
-				mat.rotate(Math.toRadians(36), vy);
+				mat.rotate(36, vy);
 			}
-			mat.rotate(Math.toRadians(36), vx);
+			mat.rotate(36, vx);
 		}
 		// Vector2f res = support(rb1, rb2, new Vector2f(1, 1, 1));
 

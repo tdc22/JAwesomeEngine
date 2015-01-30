@@ -56,10 +56,6 @@ public abstract class RigidBody3 extends
 
 	@Override
 	public void applyTorqueImpulse(Vector3f torque) {
-		// angularvelocity = VecMath.addition(
-		// angularvelocity,
-		// VecMath.transformVector(invinertia,
-		// VecMath.multiplication(torque, angularfactor)));
 		angularvelocity = VecMath.addition(
 				angularvelocity,
 				QuatMath.transform(invinertia,
@@ -79,7 +75,7 @@ public abstract class RigidBody3 extends
 	@Override
 	public Vector3f supportPoint(Vector3f direction) {
 		return VecMath.addition(supportPointRelative(direction),
-				this.getTranslation());
+				getTranslation());
 	}
 
 	@Override

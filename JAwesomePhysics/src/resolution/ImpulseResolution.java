@@ -89,7 +89,7 @@ public class ImpulseResolution implements CollisionResolution {
 				VecMath.normalize(contactA));
 		Vector3f directionB = VecMath.crossproduct(B.getAngularVelocity(),
 				VecMath.normalize(contactB));
-		A.applyImpulse(VecMath.scale(directionA, rollingFriction), contactA);
+		A.applyImpulse(VecMath.scale(directionA, -rollingFriction), contactA);
 		B.applyImpulse(VecMath.scale(directionB, rollingFriction), contactB);
 	}
 

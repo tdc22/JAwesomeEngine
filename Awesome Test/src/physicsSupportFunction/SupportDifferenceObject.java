@@ -84,11 +84,11 @@ public class SupportDifferenceObject extends ShapedObject {
 					if (!result.contains(res))
 						result.add(res);
 
-					mat.rotate(Math.toRadians(36), vz);
+					mat.rotate(36, vz);
 				}
-				mat.rotate(Math.toRadians(36), vy);
+				mat.rotate(36, vy);
 			}
-			mat.rotate(Math.toRadians(36), vx);
+			mat.rotate(36, vx);
 		}
 		// Vector3f res = support(rb1, rb2, new Vector3f(1, 1, 1));
 
