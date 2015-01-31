@@ -20,7 +20,6 @@ import broadphase.SAP2;
 
 public class FrictionTest2d extends StandardGame {
 	PhysicsSpace2 space;
-	RigidBody2 rb1;
 	int tempdelta = 0;
 
 	@Override
@@ -30,7 +29,6 @@ public class FrictionTest2d extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
-		// mouse.setGrabbed(false);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(
 				new EPA2()), new LinearImpulseResolution(),
@@ -44,7 +42,7 @@ public class FrictionTest2d extends StandardGame {
 		add2dObject(ground);
 
 		Quad q = new Quad(100, 450, 10, 10);
-		rb1 = PhysicsShapeCreator.create(q);
+		RigidBody2 rb1 = PhysicsShapeCreator.create(q);
 		rb1.setMass(1f);
 		rb1.applyCentralImpulse(new Vector2f(100f, 0f));
 		space.addRigidBody(q, rb1);
