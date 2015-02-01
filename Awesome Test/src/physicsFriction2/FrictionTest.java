@@ -1,4 +1,4 @@
-package physicsBasicTest;
+package physicsFriction2;
 
 import game.Debugger;
 import game.StandardGame;
@@ -7,37 +7,42 @@ import gui.Font;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
+import integration.EulerIntegration;
 import integration.VerletIntegration;
 import loader.FontLoader;
 import manifold.MultiPointManifoldManager;
-import manifold.SimpleManifoldManager;
-import math.VecMath;
+import manifold.MultiPointManifoldManager2;
+import matrix.Matrix1f;
 import narrowphase.EPA;
+import narrowphase.EPA2;
 import narrowphase.GJK;
+import narrowphase.GJK2;
+import objects.RigidBody;
+import objects.RigidBody2;
 import objects.RigidBody3;
 import physics.PhysicsDebug;
+import physics.PhysicsDebug2;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
+import physics.PhysicsSpace2;
 import positionalcorrection.ProjectionCorrection;
 import quaternion.Quaternionf;
 import resolution.ImpulseResolution;
-import resolution.LinearImpulseResolution;
 import shape.Box;
 import shape.Sphere;
+import shape2d.Circle;
+import shape2d.Quad;
+import vector.Vector2f;
 import vector.Vector3f;
 import broadphase.SAP;
+import broadphase.SAP2;
 
-public class BasicTest extends StandardGame {
+public class FrictionTest extends StandardGame {
 	PhysicsSpace space;
 	RigidBody3 rb1;
 	int tempdelta = 0;
-	boolean impulseapplied = false;
 	Debugger debugmanager;
 	PhysicsDebug physicsdebug;
-	InputEvent step;
 
 	@Override
 	public void init() {
@@ -50,41 +55,35 @@ public class BasicTest extends StandardGame {
 		setRendering2d(true);
 
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
-				new EPA()), new ImpulseResolution(), new ProjectionCorrection(0.01f), new SimpleManifoldManager<Vector3f>()); //new MultiPointManifoldManager();
+				new EPA()), new ImpulseResolution(), new ProjectionCorrection(0.01f), new MultiPointManifoldManager());
 		space.setGlobalForce(new Vector3f(0, -5, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugmanager = new Debugger(inputs, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
 
-		Box ground = new Box(0, -5, 0, 10, 1, 10);
+		Box ground = new Box(0, -5, 0, 20, 1, 20);
 		RigidBody3 rb = PhysicsShapeCreator.create(ground);
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 
-		// Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
-		// rb1 = PhysicsShapeCreator.create(q);
-		// rb1.setMass(1f);
-		// rb1.setInertia(new Quaternionf());
-		// space.addRigidBody(q, rb1);
-		// addObject(q);
-
-		step = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT, " ",
-				KeyInput.KEY_DOWN));
-		inputs.addEvent(step);
+		Box slope = new Box(0, -2f, 0, 3, 1, 3);
+		slope.rotate(20, 0, 20);
+		RigidBody3 rb1 = PhysicsShapeCreator.create(slope);
+		space.addRigidBody(slope, rb1);
+		addObject(slope);
 	}
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
 		renderScene();
-		physicsdebug.render3d();
 	}
 
 	@Override
 	public void render2d() {
 		debugmanager.render2d(fps, objects.size(), objects2d.size());
 		render2dScene();
+		physicsdebug.render2d();
 	}
 
 	@Override
@@ -99,33 +98,23 @@ public class BasicTest extends StandardGame {
 				 space.addRigidBody(q, rb);
 				 addObject(q);
 				 tempdelta = 0;
-//				Box q = new Box(cam.getTranslation(), 0.5f, 0.5f, 0.5f);
-//				RigidBody3 rb = PhysicsShapeCreator.create(q);
-//				rb.setMass(1f);
-//				rb.setInertia(new Quaternionf());
-//				rb.applyCentralImpulse(VecMath.scale(cam.getDirection(), 5));
-//				space.addRigidBody(q, rb);
-//				addObject(q);
-//				tempdelta = 0;
 			}
 			if (inputs.isMouseButtonDown("1")) {
-				Sphere c = new Sphere(cam.getTranslation(), 0.5f, 36, 36);
-				RigidBody3 rb = PhysicsShapeCreator.create(c);
-				rb.setMass(1f);
-				rb.setInertia(new Quaternionf());
-				rb.applyCentralImpulse(VecMath.scale(cam.getDirection(), 5));
-				space.addRigidBody(c, rb);
-				addObject(c);
-				tempdelta = 0;
+				Sphere q = new Sphere(0, 10, 0, 0.5f, 36, 36);
+				 RigidBody3 rb = PhysicsShapeCreator.create(q);
+				 rb.setMass(1f);
+				 rb.setInertia(new Quaternionf());
+				 space.addRigidBody(q, rb);
+				 addObject(q);
+				 tempdelta = 0;
 			}
 		} else {
 			tempdelta += delta;
 		}
 
 		debugmanager.update();
-		if (!step.isActive())
-			space.update(delta);
 		physicsdebug.update();
+		space.update(delta);
 		cam.update(delta);
 	}
 }

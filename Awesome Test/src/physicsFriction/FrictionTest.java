@@ -8,6 +8,7 @@ import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
 import integration.EulerIntegration;
+import integration.VerletIntegration;
 import loader.FontLoader;
 import manifold.SimpleManifoldManager;
 import narrowphase.EPA;
@@ -40,9 +41,9 @@ public class FrictionTest extends StandardGame {
 		cam.rotateTo(0, 0);
 		setRendering2d(true);
 
-		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(
+		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
 				new EPA()), new LinearImpulseResolution(),
-				new ProjectionCorrection(),
+				new ProjectionCorrection(0.01f),
 				new SimpleManifoldManager<Vector3f>());
 		space.setGlobalForce(new Vector3f(0, -5, 0));
 

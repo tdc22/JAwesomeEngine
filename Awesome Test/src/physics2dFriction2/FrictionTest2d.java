@@ -38,7 +38,6 @@ public class FrictionTest2d extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
-		// mouse.setGrabbed(false);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(
 				new EPA2()), new ImpulseResolution(), new ProjectionCorrection(
