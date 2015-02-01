@@ -63,7 +63,7 @@ public class ImpulseTest2d extends StandardGame {
 			tempdelta += delta;
 		else if (!impulseapplied) {
 			System.out.println("Impulse!");
-			rb.applyImpulse(new Vector2f(10f, 0), new Vector2f(0, 1));
+			rb.applyImpulse(new Vector2f(10f, 0), new Vector2f(0, -1));
 			// rb.applyCentralImpulse(new Vector2f(0.2f,0));
 			impulseapplied = true;
 		}

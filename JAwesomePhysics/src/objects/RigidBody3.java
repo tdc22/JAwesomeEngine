@@ -89,8 +89,5 @@ public abstract class RigidBody3 extends
 		Quaternionf q = new Quaternionf(this.getRotation());
 		q.invert();
 		invrotation = q;
-		// Matrix3f m = new Matrix3f(matrix.getSubMatrix());
-		// m.invert();
-		// invrotation = m;
 	}
 }

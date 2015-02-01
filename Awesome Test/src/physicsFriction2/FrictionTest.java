@@ -7,35 +7,22 @@ import gui.Font;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
-import integration.EulerIntegration;
 import integration.VerletIntegration;
 import loader.FontLoader;
 import manifold.MultiPointManifoldManager;
-import manifold.MultiPointManifoldManager2;
-import matrix.Matrix1f;
 import narrowphase.EPA;
-import narrowphase.EPA2;
 import narrowphase.GJK;
-import narrowphase.GJK2;
-import objects.RigidBody;
-import objects.RigidBody2;
 import objects.RigidBody3;
 import physics.PhysicsDebug;
-import physics.PhysicsDebug2;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
-import physics.PhysicsSpace2;
 import positionalcorrection.ProjectionCorrection;
 import quaternion.Quaternionf;
 import resolution.ImpulseResolution;
 import shape.Box;
 import shape.Sphere;
-import shape2d.Circle;
-import shape2d.Quad;
-import vector.Vector2f;
 import vector.Vector3f;
 import broadphase.SAP;
-import broadphase.SAP2;
 
 public class FrictionTest extends StandardGame {
 	PhysicsSpace space;
@@ -55,7 +42,8 @@ public class FrictionTest extends StandardGame {
 		setRendering2d(true);
 
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
-				new EPA()), new ImpulseResolution(), new ProjectionCorrection(0.01f), new MultiPointManifoldManager());
+				new EPA()), new ImpulseResolution(), new ProjectionCorrection(
+				0.01f), new MultiPointManifoldManager());
 		space.setGlobalForce(new Vector3f(0, -5, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
@@ -91,22 +79,22 @@ public class FrictionTest extends StandardGame {
 		// System.out.println(rb1.getLinearVelocity());
 		if (tempdelta > 200) {
 			if (inputs.isMouseButtonDown("0")) {
-				 Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
-				 RigidBody3 rb = PhysicsShapeCreator.create(q);
-				 rb.setMass(1f);
-				 rb.setInertia(new Quaternionf());
-				 space.addRigidBody(q, rb);
-				 addObject(q);
-				 tempdelta = 0;
+				Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
+				RigidBody3 rb = PhysicsShapeCreator.create(q);
+				rb.setMass(1f);
+				rb.setInertia(new Quaternionf());
+				space.addRigidBody(q, rb);
+				addObject(q);
+				tempdelta = 0;
 			}
 			if (inputs.isMouseButtonDown("1")) {
 				Sphere q = new Sphere(0, 10, 0, 0.5f, 36, 36);
-				 RigidBody3 rb = PhysicsShapeCreator.create(q);
-				 rb.setMass(1f);
-				 rb.setInertia(new Quaternionf());
-				 space.addRigidBody(q, rb);
-				 addObject(q);
-				 tempdelta = 0;
+				RigidBody3 rb = PhysicsShapeCreator.create(q);
+				rb.setMass(1f);
+				rb.setInertia(new Quaternionf());
+				space.addRigidBody(q, rb);
+				addObject(q);
+				tempdelta = 0;
 			}
 		} else {
 			tempdelta += delta;

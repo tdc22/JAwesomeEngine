@@ -25,8 +25,6 @@ public class VerletIntegration implements IntegrationSolver {
 						VecMath.scale(obj.getTorqueAccumulator(), delta))),
 				1 / (1 + obj.getAngularDamping() * delta)));
 
-		// System.out.println(obj.getLinearVelocity() + "; " +
-		// obj.getAngularVelocity());
 		obj.clearForces();
 
 		obj.translate(VecMath.scale(
@@ -35,9 +33,6 @@ public class VerletIntegration implements IntegrationSolver {
 		obj.rotate(VecMath.scale(
 				VecMath.addition(oldangularvel, obj.getAngularVelocity()),
 				delta * 0.5f));
-
-		// System.out.println(oldlinearvel + "; " + oldangularvel + "; " +
-		// obj.getLinearVelocity() + "; " + obj.getAngularVelocity());
 	}
 
 	@Override

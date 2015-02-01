@@ -96,8 +96,5 @@ public abstract class RigidBody2 extends
 		Complexf c = new Complexf(getRotation().get2dRotation());
 		c.invert();
 		invrotation = c;
-		// Matrix2f m = new Matrix2f(matrix.getSubMatrix2());
-		// m.invert();
-		// invrotation = m;
 	}
 }

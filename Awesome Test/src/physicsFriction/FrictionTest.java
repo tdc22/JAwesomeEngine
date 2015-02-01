@@ -7,7 +7,6 @@ import gui.Font;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
-import integration.EulerIntegration;
 import integration.VerletIntegration;
 import loader.FontLoader;
 import manifold.SimpleManifoldManager;
