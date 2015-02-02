@@ -50,6 +50,7 @@ public class VerletIntegration implements IntegrationSolver {
 						VecMath.scale(obj.getTorqueAccumulator(), delta))),
 				1 / (1 + obj.getAngularDamping() * delta)));
 
+//		if(obj.getLinearVelocity().length() != 0) System.out.println(obj.getLinearVelocity() + "; " + obj.getForceAccumulator());
 		obj.clearForces();
 
 		obj.translate(VecMath.scale(

@@ -62,12 +62,19 @@ public class BasicTest extends StandardGame {
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 
-		// Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
-		// rb1 = PhysicsShapeCreator.create(q);
-		// rb1.setMass(1f);
-		// rb1.setInertia(new Quaternionf());
-		// space.addRigidBody(q, rb1);
-		// addObject(q);
+//		 Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
+//		 rb1 = PhysicsShapeCreator.create(q);
+//		 rb1.setMass(1f);
+//		 rb1.setInertia(new Quaternionf());
+//		 space.addRigidBody(q, rb1);
+//		 addObject(q);
+		
+		Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
+		rb1 = PhysicsShapeCreator.create(c);
+		rb1.setMass(1f);
+		rb1.setInertia(new Quaternionf());
+		space.addRigidBody(c, rb1);
+		addObject(c);
 
 		step = new InputEvent("Step", new Input(Input.KEYBOARD_EVENT, " ",
 				KeyInput.KEY_PRESSED));
@@ -113,11 +120,10 @@ public class BasicTest extends StandardGame {
 				// tempdelta = 0;
 			}
 			if (inputs.isMouseButtonDown("1")) {
-				Sphere c = new Sphere(cam.getTranslation(), 0.5f, 36, 36);
+				Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
 				RigidBody3 rb = PhysicsShapeCreator.create(c);
 				rb.setMass(1f);
 				rb.setInertia(new Quaternionf());
-				rb.applyCentralImpulse(VecMath.scale(cam.getDirection(), 5));
 				space.addRigidBody(c, rb);
 				addObject(c);
 				tempdelta = 0;

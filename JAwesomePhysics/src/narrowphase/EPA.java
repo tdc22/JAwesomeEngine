@@ -71,7 +71,8 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 			if (faces.size() == 0)
 				break;
 		}
-
+		System.out.println(normal);
+		
 		// source:
 		// http://allenchou.net/2013/12/game-physics-contact-generation-epa/
 		Vector3f tangentA, tangentB;
@@ -84,8 +85,8 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 			tangentA.normalize();
 		tangentB = VecMath.crossproduct(normal, tangentA);
 
-		// System.out.println(depth + "; " + normal);
 		Vector3f negnormal = VecMath.negate(normal);
+		System.out.println(depth + "; " + normal);
 		return new ContactManifold<Vector3f>(depth, normal,
 				Sa.supportPoint(normal), Sb.supportPoint(negnormal),
 				Sa.supportPointRelative(normal),

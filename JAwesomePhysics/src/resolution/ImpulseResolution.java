@@ -32,6 +32,7 @@ public class ImpulseResolution implements CollisionResolution {
 				A.getLinearVelocity());
 
 		float velAlongNormal = VecMath.dotproduct(rv, normal);
+		System.out.println("Vel along normal: " + velAlongNormal + "; " + normal);
 
 		if (velAlongNormal > 0)
 			return;
@@ -51,6 +52,7 @@ public class ImpulseResolution implements CollisionResolution {
 						.dotproduct(VecMath.addition(ca, cb), normal));
 
 		Vector3f impulse = VecMath.scale(normal, j);
+		System.out.println(impulse);
 		A.applyImpulse(VecMath.negate(impulse), contactA);
 		B.applyImpulse(impulse, contactB);
 
