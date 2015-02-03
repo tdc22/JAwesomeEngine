@@ -105,7 +105,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 
 	@Override
 	public void render() {
-		
+
 	}
 
 	@Override

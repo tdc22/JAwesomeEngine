@@ -2,9 +2,11 @@ package game;
 
 import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_LEQUAL;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH_HINT;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_NICEST;
@@ -30,8 +32,11 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL11.glShadeModel;
+import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.GL_READ_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
+import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 import gui.Display;
 import gui.DisplayMode;
 import gui.GLDisplay;
@@ -51,7 +56,6 @@ import math.VecMath;
 import objects.RenderedObject;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL30;
 
 import texture.FrameBufferObject;
 
@@ -88,6 +92,8 @@ public abstract class StandardGame extends AbstractGame {
 		for (int i = 0; i < objects2d.size(); i++) {
 			objects2d.get(i).delete();
 		}
+		if (framebuffer != null)
+			framebuffer.delete();
 	}
 
 	protected void endRender() {
@@ -166,6 +172,8 @@ public abstract class StandardGame extends AbstractGame {
 
 		glMatrixMode(GL_MODELVIEW); // Select The Modelview Matrix
 
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
 		// Really Nice Perspective Calculations
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -179,19 +187,20 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	private void end3d() {
-		if(useFBO) {
+		if (useFBO) {
 			framebuffer.end();
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer.getFramebufferID());
+			glBindFramebuffer(GL_READ_FRAMEBUFFER,
+					framebuffer.getFramebufferID());
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-			glBlitFramebuffer(0, 0, framebuffer.getWidth(), framebuffer.getHeight(), 0, 0, framebuffer.getWidth(), framebuffer.getHeight(), 
-			                  GL_COLOR_BUFFER_BIT, GL_LINEAR);
+			glBlitFramebuffer(0, 0, framebuffer.getWidth(),
+					framebuffer.getHeight(), 0, 0, framebuffer.getWidth(),
+					framebuffer.getHeight(), GL_COLOR_BUFFER_BIT, GL_LINEAR);
 			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-		}
-		else {
+		} else {
 			cam.end();
 		}
 	}
-	
+
 	private void start2d() {
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
@@ -210,10 +219,9 @@ public abstract class StandardGame extends AbstractGame {
 
 	protected void prepareRender() {
 		display.clear();
-		if(useFBO) {
+		if (useFBO) {
 			framebuffer.begin();
-		}
-		else {
+		} else {
 			cam.begin();
 		}
 	}
@@ -257,7 +265,8 @@ public abstract class StandardGame extends AbstractGame {
 		initEngine();
 		init();
 		initOpenGL();
-		framebuffer = new FrameBufferObject(this, cam);
+		framebuffer = new FrameBufferObject(this, cam, display.getWidth(),
+				display.getHeight(), 4);
 
 		getDelta();
 

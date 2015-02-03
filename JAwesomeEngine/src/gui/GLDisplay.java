@@ -156,7 +156,7 @@ public class GLDisplay extends Display {
 		glfwShowWindow(windowid);
 
 		GLContext.createFromCurrent();
-		
+
 		if (displaymode.isResizeable()) {
 			glfwSetFramebufferSizeCallback(windowid,
 					sizeCallback = new GLFWFramebufferSizeCallback() {

@@ -13,7 +13,6 @@ import input.KeyInput;
 import integration.VerletIntegration;
 import loader.FontLoader;
 import manifold.SimpleManifoldManager;
-import math.VecMath;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import objects.RigidBody3;
@@ -62,13 +61,13 @@ public class BasicTest extends StandardGame {
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 
-//		 Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
-//		 rb1 = PhysicsShapeCreator.create(q);
-//		 rb1.setMass(1f);
-//		 rb1.setInertia(new Quaternionf());
-//		 space.addRigidBody(q, rb1);
-//		 addObject(q);
-		
+		// Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
+		// rb1 = PhysicsShapeCreator.create(q);
+		// rb1.setMass(1f);
+		// rb1.setInertia(new Quaternionf());
+		// space.addRigidBody(q, rb1);
+		// addObject(q);
+
 		Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
 		rb1 = PhysicsShapeCreator.create(c);
 		rb1.setMass(1f);
