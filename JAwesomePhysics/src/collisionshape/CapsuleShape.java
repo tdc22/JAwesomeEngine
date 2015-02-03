@@ -43,7 +43,7 @@ public class CapsuleShape extends RigidBody3 implements CapsuleStructure {
 	@Override
 	public Vector3f supportPointLocal(Vector3f direction) {
 		if (direction.length() == 0)
-			direction.set(0, 1, 0);
+			direction = new Vector3f(0, 1, 0);
 		direction.normalize();
 		Vector3f v = QuatMath.transform(this.getInverseRotation(), direction);
 		return new Vector3f(v.x * radius, v.y * height, v.z * radius);

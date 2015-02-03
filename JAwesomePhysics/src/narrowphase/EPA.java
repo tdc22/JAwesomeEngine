@@ -26,7 +26,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 	// Source 2:
 	// http://allenchou.net/2013/12/game-physics-contact-generation-epa/
 
-	private final float TOLERANCE = 0.001f;
+	private final float TOLERANCE = 0.01f;
 
 	@Override
 	public ContactManifold<Vector3f> computeCollision(SupportMap<Vector3f> Sa,
@@ -55,11 +55,11 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 				Vector3f p = support(Sa, Sb, t.normal);
 				// System.out.println(t.normal);
 				double d = VecMath.dotproduct(p, t.normal);
-				// System.out.println(d - t.distance);
+				System.out.println(d - t.distance);
 				if (d - t.distance < TOLERANCE) {
 					normal = t.normal;
 					depth = (float) d;
-					// System.out.println("res: " + normal + "; " + depth);
+					System.out.println("res: " + normal + "; " + depth + "; " + t.a + "; " + t.b + "; " + t.c);
 					break;
 				} else {
 					faces.add(new Triangle(t.a, t.b, p));
