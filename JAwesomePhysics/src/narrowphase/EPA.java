@@ -42,20 +42,20 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		faces.add(new Triangle(A, C, D));
 		faces.add(new Triangle(D, C, B));
 
-		// System.out.println(A + "; " + B + "; " + C + "; " + D);
+		System.out.println(A + "; " + B + "; " + C + "; " + D);
 
 		Vector3f normal = new Vector3f();
 		float depth = 0;
 		for (int i = 0; i < 50; i++) {
 			Triangle t = findClosestTriangle(faces);
-			// System.out.println(faces.size());
+			System.out.println(faces.size() + "; " + t.normal + "; " + VecMath.dotproduct(t.normal, VecMath.negate(t.a)));
 			// System.out.println(t.normal);
 
 			if (isOriginInsideTriangleArea(t)) {
 				Vector3f p = support(Sa, Sb, t.normal);
 				// System.out.println(t.normal);
 				double d = VecMath.dotproduct(p, t.normal);
-				System.out.println(d - t.distance);
+//				System.out.println(d - t.distance + "; " + p);
 				if (d - t.distance < TOLERANCE) {
 					normal = t.normal;
 					depth = (float) d;
@@ -68,8 +68,10 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 				}
 			}
 			faces.remove(t);
-			if (faces.size() == 0)
+			if (faces.size() == 0) {
+				System.out.println("ERROR");
 				break;
+			}
 		}
 		System.out.println(normal);
 		

@@ -136,7 +136,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		broadphase.update();
 		overlaps = broadphase.getOverlaps();
 
-		manifoldmanager.start();
+		manifoldmanager.clear();
 		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps) {
 			if (overlap.getFirst().getMass() != 0
 					|| overlap.getSecond().getMass() != 0) // TODO: check if
@@ -150,6 +150,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 									overlap.getSecond());
 					manifoldmanager.add(new CollisionManifold<L>(overlap,
 							contactManifold));
+					System.out.println("COLLision");
 				}
 		}
 		for (int i = 0; i < resolutionIterations; i++)

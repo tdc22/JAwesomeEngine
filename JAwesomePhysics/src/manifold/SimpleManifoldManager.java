@@ -23,7 +23,7 @@ public class SimpleManifoldManager<L extends Vector> extends ManifoldManager<L> 
 	}
 
 	@Override
-	public void start() {
+	public void clear() {
 		collisionmanifolds.clear();
 	}
 }

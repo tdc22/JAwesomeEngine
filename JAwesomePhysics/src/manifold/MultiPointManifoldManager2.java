@@ -73,7 +73,7 @@ public class MultiPointManifoldManager2 extends ManifoldManager<Vector2f> {
 	}
 
 	@Override
-	public void start() {
+	public void clear() {
 		collisionmanifolds.clear();
 	}
 }

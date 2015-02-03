@@ -9,5 +9,5 @@ public abstract class ManifoldManager<L extends Vector> {
 
 	public abstract List<CollisionManifold<L>> getManifolds();
 
-	public abstract void start();
+	public abstract void clear();
 }
