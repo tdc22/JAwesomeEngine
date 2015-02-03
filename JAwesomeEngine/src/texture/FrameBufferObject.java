@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.GL_INT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_RGBA8;
+import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
@@ -128,7 +129,11 @@ public class FrameBufferObject {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-
+	
+	public int getFramebufferID() {
+		return framebufferID;
+	}
+	
 	public IntBuffer getData() {
 		return imageData;
 	}
@@ -156,18 +161,19 @@ public class FrameBufferObject {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, framebufferID);
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
+				| GL_STENCIL_BUFFER_BIT);
+		cam.begin();
 	}
 
 	public void updateTexture() {
 		begin();
-		cam.begin();
 		game.render();
-		cam.end();
 		end();
 	}
 
 	public void end() {
+		cam.end();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glPopAttrib();
 		glEnable(GL_TEXTURE_2D);

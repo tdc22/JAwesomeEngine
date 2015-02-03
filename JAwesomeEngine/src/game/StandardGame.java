@@ -30,7 +30,8 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glShadeModel;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
 import gui.Display;
 import gui.DisplayMode;
 import gui.GLDisplay;
@@ -50,6 +51,7 @@ import math.VecMath;
 import objects.RenderedObject;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL30;
 
 import texture.FrameBufferObject;
 
@@ -66,6 +68,7 @@ public abstract class StandardGame extends AbstractGame {
 
 	private FloatBuffer identity;
 	boolean render2d = false;
+	boolean useFBO = true;
 
 	public void add2dObject(RenderedObject element) {
 		if (!render2d)
@@ -88,7 +91,6 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	protected void endRender() {
-		cam.end();
 		display.swap();
 	}
 
@@ -176,7 +178,21 @@ public abstract class StandardGame extends AbstractGame {
 		return !display.isCloseRequested() && running;
 	}
 
-	public void mode2d() {
+	private void end3d() {
+		if(useFBO) {
+			framebuffer.end();
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer.getFramebufferID());
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+			glBlitFramebuffer(0, 0, framebuffer.getWidth(), framebuffer.getHeight(), 0, 0, framebuffer.getWidth(), framebuffer.getHeight(), 
+			                  GL_COLOR_BUFFER_BIT, GL_LINEAR);
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+		}
+		else {
+			cam.end();
+		}
+	}
+	
+	private void start2d() {
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadMatrix(identity);
@@ -186,7 +202,7 @@ public abstract class StandardGame extends AbstractGame {
 		glLoadMatrix(identity);
 	}
 
-	public void mode3d() {
+	private void end2d() {
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
@@ -194,8 +210,12 @@ public abstract class StandardGame extends AbstractGame {
 
 	protected void prepareRender() {
 		display.clear();
-		// framebuffer.begin();
-		cam.begin();
+		if(useFBO) {
+			framebuffer.begin();
+		}
+		else {
+			cam.begin();
+		}
 	}
 
 	public Display getDisplay() {
@@ -248,10 +268,11 @@ public abstract class StandardGame extends AbstractGame {
 			update(delta);
 			prepareRender();
 			render();
+			end3d();
 			if (render2d) {
-				mode2d();
+				start2d();
 				render2d();
-				mode3d();
+				end2d();
 			}
 			endRender();
 		}
@@ -264,11 +285,6 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	protected void updateEngine() {
-		// glBlitFramebuffer(0, 0, framebuffer.getWidth(),
-		// framebuffer.getHeight(), 0, 0, display.getWidth(),
-		// display.getHeight(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
-		// GL_STENCIL_BUFFER_BIT, GL_LINEAR);
-		// framebuffer.end();
 		display.pollInputs();
 		inputs.update();
 		if (display.isMouseBound())
