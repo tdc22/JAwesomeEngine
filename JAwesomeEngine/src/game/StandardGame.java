@@ -72,7 +72,7 @@ public abstract class StandardGame extends AbstractGame {
 
 	private FloatBuffer identity;
 	boolean render2d = false;
-	boolean useFBO = true;
+	boolean useFBO = false;
 
 	public void add2dObject(RenderedObject element) {
 		if (!render2d)
