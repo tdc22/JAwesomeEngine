@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_INT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_RGBA8;
 import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
@@ -29,15 +30,18 @@ import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
+import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER;
+import static org.lwjgl.opengl.GL30.GL_READ_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
+import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
 import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
 import static org.lwjgl.opengl.GL30.glDeleteRenderbuffers;
@@ -51,6 +55,7 @@ import static org.lwjgl.opengl.GL32.GL_TEXTURE_2D_MULTISAMPLE;
 import static org.lwjgl.opengl.GL32.glTexImage2DMultisample;
 import game.Camera;
 import game.StandardGame;
+import gui.Display;
 
 import java.nio.IntBuffer;
 
@@ -160,6 +165,22 @@ public class FrameBufferObject {
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(textureType, 0);
+	}
+	
+	public void copyTo(FrameBufferObject target) {
+		copyTo(target.getFramebufferID(), target.getWidth(), target.getHeight());
+	}
+	
+	public void copyTo(int framebufferID, int w, int h) {
+		glBindFramebuffer(GL_READ_FRAMEBUFFER,
+				frameBufferID);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER,
+				framebufferID);
+		glBlitFramebuffer(0, 0, width,
+				height, 0, 0, w,
+				h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER,
+				framebufferID);
 	}
 
 	public int getFramebufferID() {
