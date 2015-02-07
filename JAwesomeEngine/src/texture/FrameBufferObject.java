@@ -53,38 +53,32 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.opengl.GL32.GL_TEXTURE_2D_MULTISAMPLE;
 import static org.lwjgl.opengl.GL32.glTexImage2DMultisample;
-import game.Camera;
 import game.StandardGame;
-import gui.Display;
 
 import java.nio.IntBuffer;
 
 public class FrameBufferObject {
 	StandardGame game;
-	Camera cam;
 	int frameBufferID, colorBufferID, depthBufferID, samples;
 	int width, height;
 	IntBuffer imageData;
 	boolean multisampled;
 
-	public FrameBufferObject(StandardGame game, Camera cam) {
-		init(game, cam, 1024, 1024, 0);
+	public FrameBufferObject(StandardGame game) {
+		init(game, 1024, 1024, 0);
 	}
 
-	public FrameBufferObject(StandardGame game, Camera cam, int width,
-			int height) {
-		init(game, cam, width, height, 0);
+	public FrameBufferObject(StandardGame game, int width, int height) {
+		init(game, width, height, 0);
 	}
 
-	public FrameBufferObject(StandardGame game, Camera cam, int width,
-			int height, int samples) {
-		init(game, cam, width, height, samples);
-	}
-
-	private void init(StandardGame game, Camera cam, int width, int height,
+	public FrameBufferObject(StandardGame game, int width, int height,
 			int samples) {
+		init(game, width, height, samples);
+	}
+
+	private void init(StandardGame game, int width, int height, int samples) {
 		this.game = game;
-		this.cam = cam;
 		this.width = width;
 		this.height = height;
 		this.samples = samples;
@@ -166,21 +160,17 @@ public class FrameBufferObject {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(textureType, 0);
 	}
-	
+
 	public void copyTo(FrameBufferObject target) {
 		copyTo(target.getFramebufferID(), target.getWidth(), target.getHeight());
 	}
-	
+
 	public void copyTo(int framebufferID, int w, int h) {
-		glBindFramebuffer(GL_READ_FRAMEBUFFER,
-				frameBufferID);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER,
-				framebufferID);
-		glBlitFramebuffer(0, 0, width,
-				height, 0, 0, w,
-				h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-		glBindFramebuffer(GL_READ_FRAMEBUFFER,
-				framebufferID);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBufferID);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferID);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, w, h, GL_COLOR_BUFFER_BIT,
+				(w == width && h == height) ? GL_NEAREST : GL_LINEAR);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferID);
 	}
 
 	public int getFramebufferID() {
@@ -229,7 +219,6 @@ public class FrameBufferObject {
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
 
 		clear();
-		cam.begin();
 	}
 
 	public void updateTexture() {
@@ -239,8 +228,6 @@ public class FrameBufferObject {
 	}
 
 	public void end() {
-		cam.end();
-
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glPopAttrib();
 		glEnable(GL_TEXTURE_2D);

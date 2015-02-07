@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL20.glDeleteProgram;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniform1f;
 import static org.lwjgl.opengl.GL20.glUniform1i;
@@ -29,6 +30,7 @@ import matrix.Matrix4f;
 import org.lwjgl.BufferUtils;
 
 import texture.Texture;
+import utils.Pair;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
@@ -61,6 +63,16 @@ public class Shader {
 		uniformtypes = new ArrayList<Integer>();
 		uniformarguments = new ArrayList<Object>();
 		addArgument(argumentname, argument);
+	}
+
+	@SafeVarargs
+	public Shader(int shaderProgram, Pair<String, Object>... arguments) {
+		this.shaderProgram = shaderProgram;
+		uniformpositions = new ArrayList<Integer>();
+		uniformtypes = new ArrayList<Integer>();
+		uniformarguments = new ArrayList<Object>();
+		for (Pair<String, Object> a : arguments)
+			addArgument(a.getFirst(), a.getSecond());
 	}
 
 	public Shader(Shader shader) {
@@ -268,5 +280,9 @@ public class Shader {
 			}
 		}
 		glUseProgram(0);
+	}
+
+	public void delete() {
+		glDeleteProgram(shaderProgram);
 	}
 }

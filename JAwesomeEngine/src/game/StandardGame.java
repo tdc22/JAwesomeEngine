@@ -2,14 +2,11 @@ package game;
 
 import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_LEQUAL;
 import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH_HINT;
-import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_NICEST;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
@@ -34,10 +31,6 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glShadeModel;
-import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.GL_READ_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.glBindFramebuffer;
-import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 import gui.Display;
 import gui.DisplayMode;
 import gui.GLDisplay;
@@ -53,11 +46,13 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import loader.ShaderLoader;
 import math.VecMath;
 import objects.RenderedObject;
 
 import org.lwjgl.BufferUtils;
 
+import shader.Shader;
 import texture.FrameBufferObject;
 
 public abstract class StandardGame extends AbstractGame {
@@ -66,6 +61,7 @@ public abstract class StandardGame extends AbstractGame {
 	public VideoSettings settings;
 	protected FrameBufferObject framebufferMS, framebuffer;
 	protected FrameBufferObject framebuffer2MS, framebuffer2;
+	protected Shader fboCombinationShader;
 	public Display display;
 	public GameCamera cam;
 
@@ -94,6 +90,8 @@ public abstract class StandardGame extends AbstractGame {
 		for (int i = 0; i < objects2d.size(); i++) {
 			objects2d.get(i).delete();
 		}
+		if (fboCombinationShader != null)
+			fboCombinationShader.delete();
 		if (framebufferMS != null)
 			framebufferMS.delete();
 		if (framebuffer != null)
@@ -105,6 +103,7 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	protected void endRender() {
+		framebuffer.copyTo(0, display.getWidth(), display.getHeight());
 		display.swap();
 	}
 
@@ -127,14 +126,22 @@ public abstract class StandardGame extends AbstractGame {
 					.addWindowID(((GLDisplay) display).getWindowID());
 
 		if (useFBO) {
-			framebufferMS = new FrameBufferObject(this, cam,
-					videosettings.getResolutionX(), videosettings.getResolutionY(), pixelformat.getSamples());
-			framebuffer = new FrameBufferObject(this, cam, videosettings.getResolutionX(),
+			framebufferMS = new FrameBufferObject(this,
+					videosettings.getResolutionX(),
+					videosettings.getResolutionY(), pixelformat.getSamples());
+			framebuffer = new FrameBufferObject(this,
+					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), 0);
-			framebuffer2MS = new FrameBufferObject(this, cam,
-					videosettings.getResolutionX(), videosettings.getResolutionY(), pixelformat.getSamples());
-			framebuffer2 = new FrameBufferObject(this, cam, videosettings.getResolutionX(),
+			framebuffer2MS = new FrameBufferObject(this,
+					videosettings.getResolutionX(),
+					videosettings.getResolutionY(), pixelformat.getSamples());
+			framebuffer2 = new FrameBufferObject(this,
+					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), 0);
+
+			fboCombinationShader = new Shader(ShaderLoader.loadShader(
+					"defaultCombinationShader.vert",
+					"defaultCombinationShader.frag"));
 		}
 	}
 
@@ -165,11 +172,11 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	protected void initOpenGL() {
-		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glClearStencil(0);
+
+		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
 		glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
 		glEnable(GL_TEXTURE_2D);
@@ -203,27 +210,11 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	private void end3d() {
+		cam.end();
 		if (useFBO) {
 			framebufferMS.end();
 			framebuffer.clear();
 			framebufferMS.copyTo(framebuffer);
-			framebuffer.copyTo(0, display.getWidth(), display.getHeight());
-//			glBindFramebuffer(GL_READ_FRAMEBUFFER,
-//					framebufferMS.getFramebufferID());
-//			glBindFramebuffer(GL_DRAW_FRAMEBUFFER,
-//					framebuffer.getFramebufferID());
-//			glBlitFramebuffer(0, 0, framebufferMS.getWidth(),
-//					framebufferMS.getHeight(), 0, 0, framebuffer.getWidth(),
-//					framebuffer.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
-//			glBindFramebuffer(GL_READ_FRAMEBUFFER,
-//					framebuffer.getFramebufferID());
-//			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-//			glBlitFramebuffer(0, 0, framebuffer.getWidth(),
-//					framebuffer.getHeight(), 0, 0, display.getWidth(),
-//					display.getHeight(), GL_COLOR_BUFFER_BIT, GL_LINEAR);
-//			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-		} else {
-			cam.end();
 		}
 	}
 
@@ -235,20 +226,19 @@ public abstract class StandardGame extends AbstractGame {
 				1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadMatrix(identity);
-		
-		if(useFBO) {
-//			framebuffer2MS.begin();
+
+		if (useFBO) {
+			framebuffer2MS.begin();
 		}
 	}
 
 	private void end2d() {
-		if(useFBO) {
-//			framebuffer2MS.end();
-//			framebuffer2.clear();
-//			framebuffer2MS.copyTo(framebuffer2);
-//			framebuffer2.copyTo(0, display.getWidth(), display.getHeight());
+		if (useFBO) {
+			framebuffer2MS.end();
+			framebuffer2.clear();
+			framebuffer2MS.copyTo(framebuffer2);
 		}
-		
+
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
@@ -258,9 +248,8 @@ public abstract class StandardGame extends AbstractGame {
 		display.clear();
 		if (useFBO) {
 			framebufferMS.begin();
-		} else {
-			cam.begin();
 		}
+		cam.begin();
 	}
 
 	public Display getDisplay() {

@@ -119,6 +119,7 @@ public class ShaderLoader {
 			}
 			reader.close();
 		} catch (IOException e) {
+			System.err.println(e);
 			if (type == 1)
 				System.err.println("Vertex shader wasn't loaded properly.");
 			if (type == 2)

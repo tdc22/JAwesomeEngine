@@ -48,18 +48,20 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		float depth = 0;
 		for (int i = 0; i < 50; i++) {
 			Triangle t = findClosestTriangle(faces);
-			System.out.println(faces.size() + "; " + t.normal + "; " + VecMath.dotproduct(t.normal, VecMath.negate(t.a)));
+			System.out.println(faces.size() + "; " + t.normal + "; "
+					+ VecMath.dotproduct(t.normal, VecMath.negate(t.a)));
 			// System.out.println(t.normal);
 
 			if (isOriginInsideTriangleArea(t)) {
 				Vector3f p = support(Sa, Sb, t.normal);
 				// System.out.println(t.normal);
 				double d = VecMath.dotproduct(p, t.normal);
-//				System.out.println(d - t.distance + "; " + p);
+				// System.out.println(d - t.distance + "; " + p);
 				if (d - t.distance < TOLERANCE) {
 					normal = t.normal;
 					depth = (float) d;
-					System.out.println("res: " + normal + "; " + depth + "; " + t.a + "; " + t.b + "; " + t.c);
+					System.out.println("res: " + normal + "; " + depth + "; "
+							+ t.a + "; " + t.b + "; " + t.c);
 					break;
 				} else {
 					faces.add(new Triangle(t.a, t.b, p));
@@ -74,7 +76,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 			}
 		}
 		System.out.println(normal);
-		
+
 		// source:
 		// http://allenchou.net/2013/12/game-physics-contact-generation-epa/
 		Vector3f tangentA, tangentB;
