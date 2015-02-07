@@ -58,7 +58,7 @@ public class CollisionDetectionTest extends StandardGame {
 
 		// mouse.setGrabbed(false);
 
-		int shaderprogram = ShaderLoader.loadShader(
+		int shaderprogram = ShaderLoader.loadShaderFromFile(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
 		s1 = new Shader(shaderprogram);
 		s2 = new Shader(shaderprogram);
@@ -204,7 +204,6 @@ public class CollisionDetectionTest extends StandardGame {
 				s4.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
 			if (o.contains(rb5))
 				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
-			// GL11.glDisable(GL_DEPTH_TEST);
 		}
 
 		debugmanager.update();

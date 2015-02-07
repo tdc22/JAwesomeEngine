@@ -21,15 +21,14 @@ public class LightingTest extends StandardGame {
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
-		display.bindMouse();
+		// display.bindMouse();
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
 		cam.rotateTo(0, 0);
 
-		Shader shader = new Shader(ShaderLoader.loadShader(
+		Shader shader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/pixelphonglighting.vert",
 				"res/shaders/pixelphonglighting.frag"));
 		shader.addArgumentName("lightpos");

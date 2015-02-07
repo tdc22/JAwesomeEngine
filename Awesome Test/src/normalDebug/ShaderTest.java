@@ -25,7 +25,7 @@ public class ShaderTest extends StandardGame {
 		cam.translateTo(0.5f, 0.5f, 5);
 		cam.rotateTo(0, 0);
 
-		normalshader = new Shader(ShaderLoader.loadShader(
+		normalshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/normaldebug.vert", "res/shaders/normaldebug.geo",
 				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 		normalshader.addArgumentName("uNormalsLength");
@@ -52,7 +52,6 @@ public class ShaderTest extends StandardGame {
 
 	@Override
 	public void render() {
-		// TODO Auto-generated method stub
 		renderScene();
 		normalshader.bind();
 		renderScene();
@@ -67,7 +66,6 @@ public class ShaderTest extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		// TODO Auto-generated method stub
 		cam.update(delta);
 	}
 }

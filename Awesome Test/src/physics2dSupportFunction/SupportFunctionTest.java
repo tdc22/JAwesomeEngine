@@ -48,7 +48,6 @@ public class SupportFunctionTest extends StandardGame {
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(
 				new EPA2()), new NullResolution(), new NullCorrection(),

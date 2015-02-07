@@ -19,7 +19,6 @@ public class DebugTest extends StandardGame {
 		display.bindMouse();
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
 		addObject(ModelLoader.load("res/models/bunny.mobj"));

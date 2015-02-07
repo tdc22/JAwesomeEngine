@@ -42,7 +42,7 @@ public class Tutorial extends StandardGame {
 
 		Cylinder player = new Cylinder(0, 0, 0, playerradius,
 				playerheight / 2f, 50);
-		this.addObject(player);
+		addObject(player);
 
 		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT,
 				"W", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT, "Up",

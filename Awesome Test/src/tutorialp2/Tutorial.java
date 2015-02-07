@@ -22,7 +22,7 @@ public class Tutorial extends StandardGame {
 		cam.rotateTo(0, 0);
 
 		Box player = new Box(0, 0, 0, 1, 1.7f, 1);
-		this.addObject(player);
+		addObject(player);
 
 		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT,
 				"W", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT, "Up",

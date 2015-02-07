@@ -9,12 +9,14 @@ import gui.Text;
 import gui.VideoSettings;
 import loader.FontLoader;
 import loader.ShaderLoader;
+import loader.TextureLoader;
 import math.FastMath;
 import shader.Shader;
 import shape.Box;
 import shape2d.Circle;
 import shape2d.Ellipse;
 import shape2d.Quad;
+import texture.Texture;
 import vector.Vector4f;
 
 public class Test2d extends StandardGame {
@@ -45,7 +47,7 @@ public class Test2d extends StandardGame {
 		add2dObject(new Circle(600, 180, 30, 36));
 		add2dObject(new Circle(660, 180, 20, 36));
 
-		Shader colorshader = new Shader(ShaderLoader.loadShader(
+		Shader colorshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
@@ -54,6 +56,20 @@ public class Test2d extends StandardGame {
 				font);
 		coloredjumptext.setShader(colorshader);
 		add2dObject(coloredjumptext);
+
+		Texture texture = new Texture(
+				TextureLoader
+						.loadTexture("res/textures/textureCoordinateTest.png"));
+		Shader textureshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/textureshader.vert",
+				"res/shaders/textureshader.frag"));
+		textureshader.addArgumentName("texture");
+		textureshader.addArgument(texture);
+
+		Quad texquad = new Quad(500, 300, 25, 25);
+		texquad.setRenderHints(false, true, false);
+		texquad.setShader(textureshader);
+		add2dObject(texquad);
 	}
 
 	@Override

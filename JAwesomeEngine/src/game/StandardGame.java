@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.GL_SMOOTH;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glClearDepth;
@@ -46,13 +47,12 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import loader.ShaderLoader;
 import math.VecMath;
 import objects.RenderedObject;
 
 import org.lwjgl.BufferUtils;
 
-import shader.Shader;
+import shape2d.Quad;
 import texture.FrameBufferObject;
 
 public abstract class StandardGame extends AbstractGame {
@@ -61,7 +61,7 @@ public abstract class StandardGame extends AbstractGame {
 	public VideoSettings settings;
 	protected FrameBufferObject framebufferMS, framebuffer;
 	protected FrameBufferObject framebuffer2MS, framebuffer2;
-	protected Shader fboCombinationShader;
+	protected Quad screen, screen2d;
 	public Display display;
 	public GameCamera cam;
 
@@ -69,12 +69,10 @@ public abstract class StandardGame extends AbstractGame {
 	protected InputEvent closeEvent;
 
 	private FloatBuffer identity;
-	boolean render2d = false;
+	boolean render2d = true;
 	boolean useFBO = true;
 
 	public void add2dObject(RenderedObject element) {
-		if (!render2d)
-			render2d = true;
 		objects2d.add(element);
 	}
 
@@ -90,8 +88,10 @@ public abstract class StandardGame extends AbstractGame {
 		for (int i = 0; i < objects2d.size(); i++) {
 			objects2d.get(i).delete();
 		}
-		if (fboCombinationShader != null)
-			fboCombinationShader.delete();
+		if (screen != null)
+			screen.delete();
+		if (screen2d != null)
+			screen2d.delete();
 		if (framebufferMS != null)
 			framebufferMS.delete();
 		if (framebuffer != null)
@@ -103,7 +103,18 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	protected void endRender() {
-		framebuffer.copyTo(0, display.getWidth(), display.getHeight());
+		if (useFBO) {
+			if (!render2d)
+				mode2d();
+			glBindTexture(GL_TEXTURE_2D, framebuffer.getTextureID());
+			screen.render();
+			if (render2d) {
+				glBindTexture(GL_TEXTURE_2D, framebuffer2.getTextureID());
+				screen2d.render();
+			}
+			glBindTexture(GL_TEXTURE_2D, 0);
+			mode3d();
+		}
 		display.swap();
 	}
 
@@ -139,9 +150,14 @@ public abstract class StandardGame extends AbstractGame {
 					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), 0);
 
-			fboCombinationShader = new Shader(ShaderLoader.loadShader(
-					"defaultCombinationShader.vert",
-					"defaultCombinationShader.frag"));
+			float halfResX = videosettings.getResolutionX() / 2f;
+			float halfResY = videosettings.getResolutionY() / 2f;
+			screen = new Quad(halfResX, halfResY, halfResX, -halfResY);
+			screen2d = new Quad(halfResX, halfResY, halfResX, -halfResY);
+			screen.invertAllTriangles();
+			screen2d.invertAllTriangles();
+			screen.setRenderHints(false, true, false);
+			screen2d.setRenderHints(false, true, false);
 		}
 	}
 
@@ -172,7 +188,7 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	protected void initOpenGL() {
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glClearStencil(0);
 
@@ -219,6 +235,13 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	private void start2d() {
+		mode2d();
+		if (useFBO) {
+			framebuffer2MS.begin();
+		}
+	}
+
+	protected void mode2d() {
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadMatrix(identity);
@@ -226,10 +249,12 @@ public abstract class StandardGame extends AbstractGame {
 				1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadMatrix(identity);
+	}
 
-		if (useFBO) {
-			framebuffer2MS.begin();
-		}
+	protected void mode3d() {
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
 	}
 
 	private void end2d() {
@@ -237,11 +262,9 @@ public abstract class StandardGame extends AbstractGame {
 			framebuffer2MS.end();
 			framebuffer2.clear();
 			framebuffer2MS.copyTo(framebuffer2);
+		} else {
+			mode3d();
 		}
-
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
-		glMatrixMode(GL_MODELVIEW);
 	}
 
 	protected void prepareRender() {

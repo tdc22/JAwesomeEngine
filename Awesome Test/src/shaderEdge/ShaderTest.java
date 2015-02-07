@@ -22,13 +22,13 @@ public class ShaderTest extends StandardGame {
 				new VideoSettings());
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
+
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(5, 5, 5);
 		cam.rotateTo(45, -35);
 
-		edgeshader = new Shader(ShaderLoader.loadShader(
+		edgeshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.geo",
 				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 

@@ -24,7 +24,7 @@ public class ShaderTest2 extends StandardGame {
 		cam.rotateTo(0, 0);
 
 		// Shader Test 1
-		Shader colorshader = new Shader(ShaderLoader.loadShader(
+		Shader colorshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
@@ -37,10 +37,10 @@ public class ShaderTest2 extends StandardGame {
 		Texture texture = new Texture(
 				TextureLoader.loadTexture("res/textures/cobblestone.png"));
 
-		Shader textureshader = new Shader(ShaderLoader.loadShader(
+		Shader textureshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/textureshader.vert",
 				"res/shaders/textureshader.frag"));
-		textureshader.addArgumentName("colorMap");
+		textureshader.addArgumentName("texture");
 		textureshader.addArgument(texture);
 
 		Box b = new Box(0, 0, 0, 0.5f, 0.5f, 0.5f);
@@ -51,7 +51,6 @@ public class ShaderTest2 extends StandardGame {
 
 	@Override
 	public void render() {
-		// TODO Auto-generated method stub
 		renderScene();
 	}
 
@@ -63,7 +62,6 @@ public class ShaderTest2 extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		// TODO Auto-generated method stub
 		cam.update(delta);
 	}
 }

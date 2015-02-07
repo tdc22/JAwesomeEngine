@@ -28,17 +28,16 @@ public class RenderTest extends StandardGame {
 		cam.rotateTo(0, 0);
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
 		addObject(ModelLoader.load("res/models/bunny.mobj"));
 
-		rtt = new FrameBufferObject(this, cam);
+		rtt = new FrameBufferObject(this);
 		rtt.updateTexture();
 
-		screenshader = new Shader(ShaderLoader.loadShader(
+		screenshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/textureshader.vert",
 				"res/shaders/textureshader.frag"));
-		screenshader.addArgumentName("colorMap");
-		screenshader.addArgument(rtt.getTexture());
+		screenshader.addArgumentName("texture");
+		screenshader.addArgument(framebuffer.getTexture());
 
 		Box screen = new Box(2, 3, 12, 2, 1, 0.1f);
 		screen.setRenderHints(false, true, false);
@@ -60,7 +59,6 @@ public class RenderTest extends StandardGame {
 	@Override
 	public void update(int delta) {
 		rtt.updateTexture();
-		screenshader.setArgument(0, framebuffer.getTextureID());// rtt.getTextureID());
 		debugmanager.update();
 		cam.update(delta);
 	}

@@ -213,7 +213,6 @@ public class RegionTest extends StandardGame {
 				new VideoSettings());
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		setRendering2d(true); // for debugmanager
 		display.bindMouse();
 		cam.setFlyCam(true);
 
@@ -226,8 +225,8 @@ public class RegionTest extends StandardGame {
 		simplex = new Simplex(simplices);
 		generated = new HashMap<Vector3f, Integer>();
 
-		pointshader = ShaderLoader.loadShader("res/shaders/colorshader.vert",
-				"res/shaders/colorshader.frag");
+		pointshader = ShaderLoader.loadShaderFromFile(
+				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
 
 		Thread input = new Thread() {
 			/**
@@ -339,7 +338,7 @@ public class RegionTest extends StandardGame {
 				numregions = 8;
 			}
 			for (int i = 0; i < numregions; i++) {
-				pointbatches.add(new Points(i, ShaderLoader.loadShader(
+				pointbatches.add(new Points(i, ShaderLoader.loadShaderFromFile(
 						"res/shaders/colorshader.vert",
 						"res/shaders/colorshader.frag")));
 			}

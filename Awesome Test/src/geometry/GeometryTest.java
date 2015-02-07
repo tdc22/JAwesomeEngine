@@ -29,7 +29,6 @@ public class GeometryTest extends StandardGame {
 
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
 
 		// inputs.setInputReader(new GLFWInputReader(((GLDisplay) display)
 		// .getWindowID()));

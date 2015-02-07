@@ -18,7 +18,6 @@ public class PyramidTest extends StandardGame {
 				new VideoSettings());
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(-1, 1, -1);

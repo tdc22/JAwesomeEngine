@@ -19,7 +19,7 @@ public class Tutorial extends StandardGame {
 		cam.rotateTo(0, 0);
 
 		Box player = new Box(0, 0, 0, 1, 1.7f, 1);
-		this.addObject(player);
+		addObject(player);
 	}
 
 	@Override

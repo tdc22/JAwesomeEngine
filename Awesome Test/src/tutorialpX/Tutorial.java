@@ -80,7 +80,7 @@ public class Tutorial extends StandardGame {
 		Cylinder player = new Cylinder(PLAYER_START_POSITION, PLAYER_RADIUS,
 				PLAYER_HEIGHT / 2f, 50);
 		player.setRenderHints(false, false, true);
-		this.addObject(player);
+		addObject(player);
 
 		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT,
 				"W", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT, "Up",
@@ -146,7 +146,7 @@ public class Tutorial extends StandardGame {
 		space.addRigidBody(goalBox, goal);
 		addObject(goalBox);
 
-		Shader playershader = new Shader(ShaderLoader.loadShader(
+		Shader playershader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		playershader.addArgumentName("color");
 		playershader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
@@ -154,11 +154,11 @@ public class Tutorial extends StandardGame {
 		player.setShader(playershader);
 
 		Shader goalshader = new Shader(playershader);
-		goalshader.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
+		goalshader.setArgument(0, new Vector4f(1f, 0f, 0f, 0.8f));
 
 		goalBox.setShader(goalshader);
 
-		edgeshader = new Shader(ShaderLoader.loadShader(
+		edgeshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.geo",
 				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 
@@ -168,7 +168,6 @@ public class Tutorial extends StandardGame {
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugmanager = new Debugger(inputs, font, cam);
-		setRendering2d(true);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
 
 		generateLevel();
@@ -188,7 +187,7 @@ public class Tutorial extends StandardGame {
 
 		List<Shader> colorshaders = new ArrayList<Shader>();
 		for (Vector3f c : colors) {
-			colorshaders.add(new Shader(ShaderLoader.loadShader(
+			colorshaders.add(new Shader(ShaderLoader.loadShaderFromFile(
 					"res/shaders/colorshader.vert",
 					"res/shaders/colorshader.frag"), "color", new Vector4f(c.x,
 					c.y, c.z, 1)));

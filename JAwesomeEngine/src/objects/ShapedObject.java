@@ -357,6 +357,21 @@ public class ShapedObject extends RenderedObject {
 		normals.set(normalid, normal);
 	}
 
+	public void invertAllTriangles() {
+		List<Integer> newIndices = new ArrayList<Integer>();
+		for (int i = 0; i < indices.size(); i += 6) {
+			newIndices.add(indices.get(i + 5));
+			newIndices.add(indices.get(i + 4));
+			newIndices.add(indices.get(i + 3));
+			newIndices.add(indices.get(i + 2));
+			newIndices.add(indices.get(i + 1));
+			newIndices.add(indices.get(i));
+		}
+		indices.clear();
+		indices = newIndices;
+		prerender();
+	}
+
 	public void setRenderHints(boolean rendercolors,
 			boolean rendertexturecoords, boolean rendernormals) {
 		renderColor = rendercolors;

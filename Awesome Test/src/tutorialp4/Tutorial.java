@@ -48,7 +48,7 @@ public class Tutorial extends StandardGame {
 		Cylinder player = new Cylinder(0, 0, 0, playerradius,
 				playerheight / 2f, 50);
 		player.setRenderHints(false, false, true);
-		this.addObject(player);
+		addObject(player);
 
 		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT,
 				"W", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT, "Up",
@@ -89,14 +89,14 @@ public class Tutorial extends StandardGame {
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 
-		Shader colorshader = new Shader(ShaderLoader.loadShader(
+		Shader colorshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 
 		player.setShader(colorshader);
 
-		edgeshader = new Shader(ShaderLoader.loadShader(
+		edgeshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.geo",
 				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 	}

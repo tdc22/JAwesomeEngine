@@ -22,7 +22,7 @@ public class ShaderTest extends StandardGame {
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
 
-		shader = new Shader(ShaderLoader.loadShader(
+		shader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		shader.addArgumentName("color");
 		shader.addArgument(new Vector4f(1f, 0f, 0f, 1f));

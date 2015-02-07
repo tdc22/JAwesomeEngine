@@ -13,7 +13,6 @@ public class PyramidVoxelTest extends StandardGame {
 		display.bindMouse();
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
 		cam.setFlyCam(true);
 		cam.translateTo(-1, 1, -1);
 		cam.rotateTo(225, 30);

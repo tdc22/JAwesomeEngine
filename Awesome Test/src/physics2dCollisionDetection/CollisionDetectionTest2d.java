@@ -50,7 +50,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		int shaderprogram = ShaderLoader.loadShader(
+		int shaderprogram = ShaderLoader.loadShaderFromFile(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
 		s1 = new Shader(shaderprogram);
 		s2 = new Shader(shaderprogram);

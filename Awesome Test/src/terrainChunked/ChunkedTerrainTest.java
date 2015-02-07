@@ -32,7 +32,6 @@ public class ChunkedTerrainTest extends StandardGame {
 
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
 
 		BufferedImage heightmap = null;
 		try {

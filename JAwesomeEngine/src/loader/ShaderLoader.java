@@ -25,7 +25,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class ShaderLoader {
-	private static void compileShader(int shader, StringBuilder source, int type) {
+	private static void compileShader(int shader, String source, int type) {
 		glShaderSource(shader, source);
 		glCompileShader(shader);
 		if (glGetShaderi(shader, GL_COMPILE_STATUS) == GL_FALSE) {
@@ -42,24 +42,53 @@ public class ShaderLoader {
 		}
 	}
 
-	public static int loadShader(String vertexShaderLocation,
+	public static int loadShaderFromFile(String vertexShaderLocation,
 			String fragmentShaderLocation) {
-		return loadShader(vertexShaderLocation, fragmentShaderLocation, null,
-				0, 0, 0);
+		return loadShaderFromFile(vertexShaderLocation, fragmentShaderLocation,
+				null, 0, 0, 0);
 	}
 
-	public static int loadShader(String vertexShaderLocation,
+	public static int loadShaderFromFile(String vertexShaderLocation,
 			String geometryShaderLocation, int inputtype, int outputtype,
 			int verticesout) {
-		return loadShader(vertexShaderLocation, null, geometryShaderLocation,
+		return loadShaderFromFile(vertexShaderLocation, null,
+				geometryShaderLocation, inputtype, outputtype, verticesout);
+	}
+
+	public static int loadShaderFromFile(String vertexShaderLocation,
+			String fragmentShaderLocation, String geometryShaderLocation,
+			int inputtype, int outputtype, int verticesout) {
+		String vertexShaderSource = readSourceFile(vertexShaderLocation, 1);
+
+		String fragmentShaderSource = null;
+		if (fragmentShaderLocation != null)
+			fragmentShaderSource = readSourceFile(fragmentShaderLocation, 2);
+		String geometryShaderSource = null;
+		if (geometryShaderLocation != null)
+			geometryShaderSource = readSourceFile(geometryShaderLocation, 3);
+
+		return loadShader(vertexShaderSource, fragmentShaderSource,
+				geometryShaderSource, inputtype, outputtype, verticesout);
+	}
+
+	public static int loadShader(String vertexShaderSource,
+			String fragmentShaderSource) {
+		return loadShader(vertexShaderSource, fragmentShaderSource, null, 0, 0,
+				0);
+	}
+
+	public static int loadShader(String vertexShaderSource,
+			String geometryShaderSource, int inputtype, int outputtype,
+			int verticesout) {
+		return loadShader(vertexShaderSource, null, geometryShaderSource,
 				inputtype, outputtype, verticesout);
 	}
 
-	public static int loadShader(String vertexShaderLocation,
-			String fragmentShaderLocation, String geometryShaderLocation,
+	public static int loadShader(String vertexShaderSource,
+			String fragmentShaderSource, String geometryShaderSource,
 			int inputtype, int outputtype, int verticesout) {
-		boolean includeFragmentShader = fragmentShaderLocation != null;
-		boolean includeGeometryShader = geometryShaderLocation != null;
+		boolean includeFragmentShader = fragmentShaderSource != null;
+		boolean includeGeometryShader = geometryShaderSource != null;
 
 		int shaderProgram = glCreateProgram();
 		int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -69,15 +98,6 @@ public class ShaderLoader {
 		int geometryShader = 0;
 		if (includeGeometryShader)
 			geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
-
-		StringBuilder vertexShaderSource = readSourceFile(vertexShaderLocation,
-				1);
-		StringBuilder fragmentShaderSource = null;
-		if (includeFragmentShader)
-			fragmentShaderSource = readSourceFile(fragmentShaderLocation, 2);
-		StringBuilder geometryShaderSource = null;
-		if (includeGeometryShader)
-			geometryShaderSource = readSourceFile(geometryShaderLocation, 3);
 
 		compileShader(vertexShader, vertexShaderSource, 1);
 		if (includeFragmentShader)
@@ -109,7 +129,7 @@ public class ShaderLoader {
 		return shaderProgram;
 	}
 
-	private static StringBuilder readSourceFile(String location, int type) {
+	private static String readSourceFile(String location, int type) {
 		StringBuilder result = new StringBuilder();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(location));
@@ -127,6 +147,6 @@ public class ShaderLoader {
 			if (type == 3)
 				System.err.println("Geometry shader wasn't loaded properly.");
 		}
-		return result;
+		return result.toString();
 	}
 }

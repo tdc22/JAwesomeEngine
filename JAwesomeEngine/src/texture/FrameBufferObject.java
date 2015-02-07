@@ -170,7 +170,8 @@ public class FrameBufferObject {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferID);
 		glBlitFramebuffer(0, 0, width, height, 0, 0, w, h, GL_COLOR_BUFFER_BIT,
 				(w == width && h == height) ? GL_NEAREST : GL_LINEAR);
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferID);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
 
 	public int getFramebufferID() {
@@ -216,8 +217,7 @@ public class FrameBufferObject {
 		glViewport(0, 0, width, height);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
-
+		bind();
 		clear();
 	}
 
@@ -227,8 +227,16 @@ public class FrameBufferObject {
 		end();
 	}
 
-	public void end() {
+	public void bind() {
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+	}
+
+	public void unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	public void end() {
+		unbind();
 		glPopAttrib();
 		glEnable(GL_TEXTURE_2D);
 	}

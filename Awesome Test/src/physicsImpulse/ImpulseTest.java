@@ -39,7 +39,6 @@ public class ImpulseTest extends StandardGame {
 
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
 		// mouse.setGrabbed(false);
 
 		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(

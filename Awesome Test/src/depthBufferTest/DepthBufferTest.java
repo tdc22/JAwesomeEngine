@@ -16,7 +16,6 @@ public class DepthBufferTest extends StandardGame {
 		initDisplay(false, 800, 600, true);
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 5f, 0f);
 
@@ -25,14 +24,14 @@ public class DepthBufferTest extends StandardGame {
 		settings.setZNear(znear);
 		settings.setZFar(zfar);
 
-		Shader red = new Shader(ShaderLoader.loadShader(
+		Shader red = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		red.addArgument("color", new Vector4f(1f, 0f, 0f, 1f));
-		Shader green = new Shader(ShaderLoader.loadShader(
+		Shader green = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		green.addArgument("color", new Vector4f(0f, 1f, 0f, 1f));
 
-		Shader red2 = new Shader(ShaderLoader.loadShader(
+		Shader red2 = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/zbuffershader.vert",
 				"res/shaders/colorshader.frag"));
 		red2.addArgument("color", new Vector4f(1f, 0f, 0f, 1f));
@@ -40,7 +39,7 @@ public class DepthBufferTest extends StandardGame {
 				.getDepthBits());
 		red2.addArgument("zNear", znear);
 		red2.addArgument("zFar", zfar);
-		Shader green2 = new Shader(ShaderLoader.loadShader(
+		Shader green2 = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/zbuffershader.vert",
 				"res/shaders/colorshader.frag"));
 		green2.addArgument("color", new Vector4f(0f, 1f, 0f, 1f));
