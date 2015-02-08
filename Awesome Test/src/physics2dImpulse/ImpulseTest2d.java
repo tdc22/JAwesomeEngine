@@ -40,7 +40,7 @@ public class ImpulseTest2d extends StandardGame {
 				new SimpleManifoldManager<Vector2f>());
 
 		q = new Quad(400, 200, 25, 25);
-		rb = PhysicsShapeCreator.create(q);
+		rb = new RigidBody2(PhysicsShapeCreator.create(q));
 		rb.setMass(1);
 		rb.setInertia(new Matrix1f(1));
 		space.addRigidBody(q, rb);

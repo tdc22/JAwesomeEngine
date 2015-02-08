@@ -37,12 +37,12 @@ public class FrictionTest2d extends StandardGame {
 		space.setGlobalForce(new Vector2f(0, 100));
 
 		Quad ground = new Quad(400, 550, 300, 20);
-		RigidBody2 rb = PhysicsShapeCreator.create(ground);
+		RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(ground));
 		space.addRigidBody(ground, rb);
 		add2dObject(ground);
 
 		Quad q = new Quad(100, 450, 10, 10);
-		RigidBody2 rb1 = PhysicsShapeCreator.create(q);
+		RigidBody2 rb1 = new RigidBody2(PhysicsShapeCreator.create(q));
 		rb1.setMass(1f);
 		rb1.applyCentralImpulse(new Vector2f(100f, 0f));
 		space.addRigidBody(q, rb1);
@@ -65,7 +65,7 @@ public class FrictionTest2d extends StandardGame {
 		if (tempdelta > 200) {
 			if (inputs.isMouseButtonDown("0")) {
 				Quad q = new Quad(100, 450, 10, 10);
-				RigidBody2 rb = PhysicsShapeCreator.create(q);
+				RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(q));
 				rb.setMass(1f);
 				rb.applyCentralImpulse(new Vector2f(100f, 0f));
 				space.addRigidBody(q, rb);
@@ -74,7 +74,7 @@ public class FrictionTest2d extends StandardGame {
 			}
 			if (inputs.isMouseButtonDown("1")) {
 				Quad q = new Quad(700, 450, 10, 10);
-				RigidBody2 rb = PhysicsShapeCreator.create(q);
+				RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(q));
 				rb.setMass(1f);
 				rb.applyCentralImpulse(new Vector2f(-100f, 0f));
 				space.addRigidBody(q, rb);

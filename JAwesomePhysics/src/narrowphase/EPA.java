@@ -26,7 +26,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 	// Source 2:
 	// http://allenchou.net/2013/12/game-physics-contact-generation-epa/
 
-	private final float TOLERANCE = 0.01f;
+	private final float TOLERANCE = 0.001f;
 
 	@Override
 	public ContactManifold<Vector3f> computeCollision(SupportMap<Vector3f> Sa,

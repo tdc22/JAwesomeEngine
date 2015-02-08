@@ -57,23 +57,23 @@ public class SupportFunctionTest extends StandardGame {
 
 		// b1 = new Box(-1, 0, 0, 1, 1, 1);
 		b1 = new Box(0, 0, 0, 1, 1, 1); // new Sphere(0, 0, 0, 1, 36, 36);
-		rb1 = PhysicsShapeCreator.create(b1);
+		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
 		space.addRigidBody(b1, rb1);
 		// addObject(b1);
 
 		// b2 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
 		b2 = new Box(0, 0, 0, 1, 1, 1);
-		rb2 = PhysicsShapeCreator.create(b2);
+		rb2 = new RigidBody3(PhysicsShapeCreator.create(b2));
 		space.addRigidBody(b2, rb2);
 		// addObject(b2);
 
 		s1 = new Sphere(-10, 10, 0, 1, 36, 36);
-		rb3 = PhysicsShapeCreator.create(s1);
+		rb3 = new RigidBody3(PhysicsShapeCreator.create(s1));
 		space.addRigidBody(s1, rb3);
 		// addObject(s1);
 
 		c1 = new Cylinder(-10, -10, 0, 1, 2, 36);
-		rb4 = PhysicsShapeCreator.create(c1);
+		rb4 = new RigidBody3(PhysicsShapeCreator.create(c1));
 		space.addRigidBody(c1, rb4);
 		addObject(c1);
 

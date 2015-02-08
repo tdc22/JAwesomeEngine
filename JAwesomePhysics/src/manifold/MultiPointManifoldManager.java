@@ -75,6 +75,11 @@ public class MultiPointManifoldManager extends ManifoldManager<Vector3f> {
 								.getContactTangentA(), cm.getContactTangentB()));
 	}
 
+	@Override
+	public void clear() {
+		collisionmanifolds.clear();
+	}
+
 	private Vector3f computeCenter(Vector3f a, Vector3f b, Vector3f c,
 			Vector3f d) {
 		return VecMath.scale(VecMath.addition(
@@ -84,10 +89,5 @@ public class MultiPointManifoldManager extends ManifoldManager<Vector3f> {
 	@Override
 	public List<CollisionManifold<Vector3f>> getManifolds() {
 		return collisionmanifolds;
-	}
-
-	@Override
-	public void clear() {
-		collisionmanifolds.clear();
 	}
 }

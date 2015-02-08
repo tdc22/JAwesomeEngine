@@ -2,11 +2,14 @@ package collisionshape;
 
 import math.QuatMath;
 import math.VecMath;
-import objects.RigidBody3;
+import objects.CollisionShape;
+import objects.CollisionShape3;
+import objects.SupportCalculator;
+import quaternion.Quaternionf;
 import shapedata.BoxStructure;
 import vector.Vector3f;
 
-public class BoxShape extends RigidBody3 implements BoxStructure {
+public class BoxShape extends CollisionShape3 implements BoxStructure {
 	Vector3f halfsize;
 
 	public BoxShape(float x, float y, float z, float halfsizex,
@@ -54,12 +57,28 @@ public class BoxShape extends RigidBody3 implements BoxStructure {
 				* halfsize.y + halfsize.z * halfsize.z);
 		setAABB(new Vector3f(-diag, -diag, -diag), new Vector3f(diag, diag,
 				diag));
+		supportcalculator = createSupportCalculator(this);
 	}
 
 	@Override
-	public Vector3f supportPointLocal(Vector3f direction) {
-		Vector3f v = QuatMath.transform(this.getInverseRotation(), direction);
-		return VecMath.multiplication(new Vector3f(v.x < 0 ? -1 : 1,
-				v.y < 0 ? -1 : 1, v.z < 0 ? -1 : 1), halfsize);
+	public SupportCalculator<Vector3f> createSupportCalculator(
+			CollisionShape<Vector3f, Quaternionf> cs) {
+		return new BoxSupport(cs);
+	}
+
+	protected class BoxSupport implements SupportCalculator<Vector3f> {
+		private CollisionShape<Vector3f, Quaternionf> collisionshape;
+
+		public BoxSupport(CollisionShape<Vector3f, Quaternionf> cs) {
+			collisionshape = cs;
+		}
+
+		@Override
+		public Vector3f supportPointLocal(Vector3f direction) {
+			Vector3f v = QuatMath.transform(
+					collisionshape.getInverseRotation(), direction);
+			return VecMath.multiplication(new Vector3f(v.x < 0 ? -1 : 1,
+					v.y < 0 ? -1 : 1, v.z < 0 ? -1 : 1), halfsize);
+		}
 	}
 }

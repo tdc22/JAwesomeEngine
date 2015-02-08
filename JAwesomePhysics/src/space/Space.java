@@ -32,6 +32,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> overlaps;
 	protected L globalForce;
 	protected int resolutionIterations = 25;
+	protected boolean cullStaticOverlaps = true;
 
 	public Space(IntegrationSolver integrationsolver, Broadphase<L> broadphase,
 			Narrowphase<L> narrowphase,
@@ -105,6 +106,37 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		return resolutionIterations;
 	}
 
+	public boolean hasCollision(RigidBody<L, ?, ?, ?> object) {
+		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
+			if (manifold.getObjects().contains(object))
+				return true;
+		return false;
+	}
+
+	public boolean hasCollision(RigidBody<L, ?, ?, ?> objectA,
+			RigidBody<L, ?, ?, ?> objectB) {
+		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
+			if (manifold.getObjects().contains(objectA)
+					&& manifold.getObjects().contains(objectB))
+				return true;
+		return false;
+	}
+
+	public boolean hasOverlap(RigidBody<L, ?, ?, ?> object) {
+		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps)
+			if (overlap.contains(object))
+				return true;
+		return false;
+	}
+
+	public boolean hasOverlap(RigidBody<L, ?, ?, ?> objectA,
+			RigidBody<L, ?, ?, ?> objectB) {
+		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps)
+			if (overlap.contains(objectA) && overlap.contains(objectB))
+				return true;
+		return false;
+	}
+
 	protected abstract void integrate(float delta);
 
 	public void removeRigidBody(RigidBody<L, A1, A2, A3> body) {
@@ -127,6 +159,14 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		updateTimestep(delta / 1000f);
 	}
 
+	public void setCullStaticOverlaps(boolean cull) {
+		cullStaticOverlaps = cull;
+	}
+
+	public boolean isCullStaticOverlaps() {
+		return cullStaticOverlaps;
+	}
+
 	public void updateTimestep(float delta) {
 		for (RigidBody<?, ?, ?, ?> o : objects)
 			o.updateInverseRotation();
@@ -139,10 +179,11 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		manifoldmanager.clear();
 		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps) {
 			if (overlap.getFirst().getMass() != 0
-					|| overlap.getSecond().getMass() != 0) // TODO: check if
-															// there's a better
-															// way or make this
-															// optional
+					|| overlap.getSecond().getMass() != 0
+					|| !cullStaticOverlaps) // TODO: check if
+				// there's a better
+				// way or make this
+				// optional
 				if (narrowphase.isColliding(overlap.getFirst(),
 						overlap.getSecond())) {
 					ContactManifold<L> contactManifold = narrowphase
@@ -158,36 +199,5 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		applyGlobalForce();
 		integrate(delta);
 		correct();
-	}
-
-	public boolean hasOverlap(RigidBody<L, ?, ?, ?> object) {
-		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps)
-			if (overlap.contains(object))
-				return true;
-		return false;
-	}
-
-	public boolean hasOverlap(RigidBody<L, ?, ?, ?> objectA,
-			RigidBody<L, ?, ?, ?> objectB) {
-		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps)
-			if (overlap.contains(objectA) && overlap.contains(objectB))
-				return true;
-		return false;
-	}
-
-	public boolean hasCollision(RigidBody<L, ?, ?, ?> object) {
-		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
-			if (manifold.getObjects().contains(object))
-				return true;
-		return false;
-	}
-
-	public boolean hasCollision(RigidBody<L, ?, ?, ?> objectA,
-			RigidBody<L, ?, ?, ?> objectB) {
-		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
-			if (manifold.getObjects().contains(objectA)
-					&& manifold.getObjects().contains(objectB))
-				return true;
-		return false;
 	}
 }

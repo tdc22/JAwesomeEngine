@@ -50,13 +50,13 @@ public class FrictionTest extends StandardGame {
 		physicsdebug = new PhysicsDebug(inputs, font, space);
 
 		Box ground = new Box(0, -5, 0, 20, 1, 20);
-		RigidBody3 rb = PhysicsShapeCreator.create(ground);
+		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 
 		Box slope = new Box(0, -2f, 0, 3, 1, 3);
 		slope.rotate(20, 0, 20);
-		RigidBody3 rb1 = PhysicsShapeCreator.create(slope);
+		RigidBody3 rb1 = new RigidBody3(PhysicsShapeCreator.create(slope));
 		space.addRigidBody(slope, rb1);
 		addObject(slope);
 	}
@@ -79,7 +79,7 @@ public class FrictionTest extends StandardGame {
 		if (tempdelta > 200) {
 			if (inputs.isMouseButtonDown("0")) {
 				Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
-				RigidBody3 rb = PhysicsShapeCreator.create(q);
+				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(q));
 				rb.setMass(1f);
 				rb.setInertia(new Quaternionf());
 				space.addRigidBody(q, rb);
@@ -88,7 +88,7 @@ public class FrictionTest extends StandardGame {
 			}
 			if (inputs.isMouseButtonDown("1")) {
 				Sphere q = new Sphere(0, 10, 0, 0.5f, 36, 36);
-				RigidBody3 rb = PhysicsShapeCreator.create(q);
+				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(q));
 				rb.setMass(1f);
 				rb.setInertia(new Quaternionf());
 				space.addRigidBody(q, rb);

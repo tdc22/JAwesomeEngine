@@ -56,7 +56,7 @@ public class BasicTest extends StandardGame {
 		physicsdebug = new PhysicsDebug(inputs, font, space);
 
 		Box ground = new Box(0, -5, 0, 10, 1, 10);
-		RigidBody3 rb = PhysicsShapeCreator.create(ground);
+		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 
@@ -68,7 +68,7 @@ public class BasicTest extends StandardGame {
 		// addObject(q);
 
 		Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
-		rb1 = PhysicsShapeCreator.create(c);
+		rb1 = new RigidBody3(PhysicsShapeCreator.create(c));
 		rb1.setMass(1f);
 		rb1.setInertia(new Quaternionf());
 		space.addRigidBody(c, rb1);
@@ -101,7 +101,7 @@ public class BasicTest extends StandardGame {
 		if (tempdelta > 200) {
 			if (inputs.isMouseButtonDown("0")) {
 				Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
-				RigidBody3 rb = PhysicsShapeCreator.create(q);
+				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(q));
 				rb.setMass(1f);
 				rb.setInertia(new Quaternionf());
 				space.addRigidBody(q, rb);
@@ -119,7 +119,7 @@ public class BasicTest extends StandardGame {
 			}
 			if (inputs.isMouseButtonDown("1")) {
 				Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
-				RigidBody3 rb = PhysicsShapeCreator.create(c);
+				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(c));
 				rb.setMass(1f);
 				rb.setInertia(new Quaternionf());
 				space.addRigidBody(c, rb);

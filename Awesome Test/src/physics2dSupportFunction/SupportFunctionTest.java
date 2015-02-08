@@ -54,17 +54,17 @@ public class SupportFunctionTest extends StandardGame {
 				new SimpleManifoldManager<Vector2f>());
 
 		q1 = new Quad(400, 200, 25, 25);
-		rb1 = PhysicsShapeCreator.create(q1);
+		rb1 = new RigidBody2(PhysicsShapeCreator.create(q1));
 		space.addRigidBody(q1, rb1);
 		// addObject(b1);
 
 		q2 = new Quad(400, 200, 25, 25);
-		rb2 = PhysicsShapeCreator.create(q2);
+		rb2 = new RigidBody2(PhysicsShapeCreator.create(q2));
 		space.addRigidBody(q2, rb2);
 		// addObject(b2);
 
 		c1 = new Circle(80, 80, 25, 50);
-		rb3 = PhysicsShapeCreator.create(c1);
+		rb3 = new RigidBody2(PhysicsShapeCreator.create(c1));
 		space.addRigidBody(c1, rb3);
 		// addObject(s1);
 

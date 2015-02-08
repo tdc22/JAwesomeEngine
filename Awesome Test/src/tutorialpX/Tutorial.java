@@ -108,23 +108,23 @@ public class Tutorial extends StandardGame {
 				new MultiPointManifoldManager());
 		space.setGlobalForce(new Vector3f(0, -8, 0));
 
-		playerbody = PhysicsShapeCreator.create(player);
+		playerbody = new RigidBody3(PhysicsShapeCreator.create(player));
 		playerbody.setMass(1f);
 		playerbody.setLinearFactor(new Vector3f(1, 1, 1));
 		playerbody.setAngularFactor(new Vector3f(0, 0, 0));
 		playerbody.setRestitution(0);
 		space.addRigidBody(player, playerbody);
 
-		groundchecker = new CylinderShape(0, -999, 0, GROUNDCHECKER_RADIUS,
-				GROUNDCHECKER_HEIGHT / 2f);
+		groundchecker = new RigidBody3(new CylinderShape(0, -999, 0,
+				GROUNDCHECKER_RADIUS, GROUNDCHECKER_HEIGHT / 2f));
 		groundchecker.setMass(1f);
 		groundchecker.setLinearFactor(new Vector3f(0, 0, 0));
 		groundchecker.setAngularFactor(new Vector3f(0, 0, 0));
 		groundchecker.setRestitution(0);
 		space.addRigidBody(groundchecker);
 
-		spacerbody = new CylinderShape(PLAYER_START_POSITION, PLAYER_RADIUS
-				+ TINY_SPACE, PLAYER_HEIGHT / 2f);
+		spacerbody = new RigidBody3(new CylinderShape(PLAYER_START_POSITION,
+				PLAYER_RADIUS + TINY_SPACE, PLAYER_HEIGHT / 2f));
 		spacerbody.setMass(1f);
 		spacerbody.setLinearFactor(new Vector3f(1, 0, 1));
 		spacerbody.setAngularFactor(new Vector3f(0, 0, 0));
@@ -135,14 +135,14 @@ public class Tutorial extends StandardGame {
 
 		Box ground = new Box(0, 0, 0, STARTBOX_SIZE_X, 1, STARTBOX_SIZE_Z);
 		ground.setRenderHints(false, false, true);
-		RigidBody3 rb = PhysicsShapeCreator.create(ground);
+		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 
 		Box goalBox = new Box(LEVEL_SIZE_X - 5, MAX_Y + BLOCK_SIZE_MAX,
 				LEVEL_SIZE_Z - 5, 0.2f, 0.2f, 0.2f);
 		goalBox.setRenderHints(false, false, true);
-		goal = PhysicsShapeCreator.create(goalBox);
+		goal = new RigidBody3(PhysicsShapeCreator.create(goalBox));
 		space.addRigidBody(goalBox, goal);
 		addObject(goalBox);
 
@@ -208,7 +208,8 @@ public class Tutorial extends StandardGame {
 				box.setRenderHints(false, false, true);
 				box.setShader(colorshaders.get(color));
 				addObject(box);
-				RigidBody3 boxbody = PhysicsShapeCreator.create(box);
+				RigidBody3 boxbody = new RigidBody3(
+						PhysicsShapeCreator.create(box));
 				boxbody.translateTo(box.getTranslation());
 				space.addRigidBody(box, boxbody);
 

@@ -39,65 +39,65 @@ public class ImpulseTest2d extends StandardGame {
 
 		// Column 1
 		Quad q1 = new Quad(250, 100, 25, 25);
-		rb1 = PhysicsShapeCreator.create(q1);
+		rb1 = new RigidBody2(PhysicsShapeCreator.create(q1));
 		rb1.setMass(1);
 		space.addRigidBody(q1, rb1);
 		add2dObject(q1);
 
 		Quad q2 = new Quad(400, 100, 25, 25);
-		RigidBody2 rb2 = PhysicsShapeCreator.create(q2);
+		RigidBody2 rb2 = new RigidBody2(PhysicsShapeCreator.create(q2));
 		rb2.setMass(1);
 		space.addRigidBody(q2, rb2);
 		add2dObject(q2);
 
 		// Column 2
 		Quad q3 = new Quad(250, 200, 25, 25);
-		rb3 = PhysicsShapeCreator.create(q3);
+		rb3 = new RigidBody2(PhysicsShapeCreator.create(q3));
 		rb3.setMass(3);
 		space.addRigidBody(q3, rb3);
 		add2dObject(q3);
 
 		Quad q4 = new Quad(400, 200, 25, 25);
-		RigidBody2 rb4 = PhysicsShapeCreator.create(q4);
+		RigidBody2 rb4 = new RigidBody2(PhysicsShapeCreator.create(q4));
 		rb4.setMass(1);
 		space.addRigidBody(q4, rb4);
 		add2dObject(q4);
 
 		// Column 3
 		Quad q5 = new Quad(250, 300, 25, 25);
-		rb5 = PhysicsShapeCreator.create(q5);
+		rb5 = new RigidBody2(PhysicsShapeCreator.create(q5));
 		rb5.setMass(1);
 		space.addRigidBody(q5, rb5);
 		add2dObject(q5);
 
 		Quad q6 = new Quad(400, 300, 25, 25);
-		RigidBody2 rb6 = PhysicsShapeCreator.create(q6);
+		RigidBody2 rb6 = new RigidBody2(PhysicsShapeCreator.create(q6));
 		rb6.setMass(3);
 		space.addRigidBody(q6, rb6);
 		add2dObject(q6);
 
 		// Column 4
 		Quad q7 = new Quad(250, 400, 25, 25);
-		rb7 = PhysicsShapeCreator.create(q7);
+		rb7 = new RigidBody2(PhysicsShapeCreator.create(q7));
 		rb7.setMass(1);
 		space.addRigidBody(q7, rb7);
 		add2dObject(q7);
 
 		Quad q8 = new Quad(400, 400, 25, 25);
-		RigidBody2 rb8 = PhysicsShapeCreator.create(q8);
+		RigidBody2 rb8 = new RigidBody2(PhysicsShapeCreator.create(q8));
 		rb8.setMass(0);
 		space.addRigidBody(q8, rb8);
 		add2dObject(q8);
 
 		// Column 5
 		Quad q9 = new Quad(250, 500, 25, 25);
-		rb9 = PhysicsShapeCreator.create(q9);
+		rb9 = new RigidBody2(PhysicsShapeCreator.create(q9));
 		rb9.setMass(1);
 		space.addRigidBody(q9, rb9);
 		add2dObject(q9);
 
 		Quad q10 = new Quad(400, 460, 25, 25);
-		RigidBody2 rb10 = PhysicsShapeCreator.create(q10);
+		RigidBody2 rb10 = new RigidBody2(PhysicsShapeCreator.create(q10));
 		rb10.setMass(1);
 		space.addRigidBody(q10, rb10);
 		add2dObject(q10);

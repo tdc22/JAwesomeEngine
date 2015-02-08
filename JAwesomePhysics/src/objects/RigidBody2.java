@@ -8,10 +8,21 @@ import vector.Vector1f;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public abstract class RigidBody2 extends
+public class RigidBody2 extends
 		RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> {
 	public RigidBody2() {
 		super();
+		aabb = new AABB<Vector2f>(new Vector2f(), new Vector2f());
+		invrotation = new Complexf();
+		init();
+	}
+
+	public RigidBody2(CollisionShape2 cs) {
+		super(cs);
+		init();
+	}
+
+	private void init() {
 		linearfactor = new Vector2f(1, 1);
 		linearvelocity = new Vector2f();
 		forceaccumulator = new Vector2f();
@@ -19,8 +30,6 @@ public abstract class RigidBody2 extends
 		angularvelocity = new Vector1f();
 		torqueaccumulator = new Vector1f();
 		invinertia = new Matrix1f(0);
-		invrotation = new Complexf();
-		aabb = new AABB<Vector2f>(new Vector2f(), new Vector2f());
 	}
 
 	@Override
@@ -88,13 +97,22 @@ public abstract class RigidBody2 extends
 	@Override
 	public Vector2f supportPointRelative(Vector2f direction) {
 		return ComplexMath.transform(this.getRotation().get2dRotationf(),
-				supportPointLocal(direction));
+				supportcalculator.supportPointLocal(direction));
 	}
 
 	@Override
 	public void updateInverseRotation() {
+		System.out.println("updated" + "; " + this.getRotation() + "; "
+				+ invrotation);
 		Complexf c = new Complexf(getRotation().get2dRotation());
 		c.invert();
 		invrotation = c;
+		System.out.println("a " + invrotation);
+	}
+
+	@Override
+	public SupportCalculator<Vector2f> createSupportCalculator(
+			CollisionShape<Vector2f, Complexf> cs) {
+		return null;
 	}
 }

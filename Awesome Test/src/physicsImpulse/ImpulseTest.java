@@ -46,7 +46,7 @@ public class ImpulseTest extends StandardGame {
 				new SimpleManifoldManager<Vector3f>());
 
 		b = new Box(0, 0, 0, 1, 1, 1);
-		rb = PhysicsShapeCreator.create(b);
+		rb = new RigidBody3(PhysicsShapeCreator.create(b));
 		rb.setMass(1);
 		rb.setInertia(new Quaternionf());
 		space.addRigidBody(b, rb);

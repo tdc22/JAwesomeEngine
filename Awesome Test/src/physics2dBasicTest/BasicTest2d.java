@@ -50,16 +50,16 @@ public class BasicTest2d extends StandardGame {
 		physicsdebug = new PhysicsDebug2(inputs, font, space);
 
 		Quad ground = new Quad(400, 550, 300, 20);
-		RigidBody2 rb = PhysicsShapeCreator.create(ground);
+		RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(ground));
 		space.addRigidBody(ground, rb);
 		add2dObject(ground);
 
 		// Quad q = new Quad(400, 80, 20, 20);
-		// rb1 = PhysicsShapeCreator.create(q);
+		// rb1 = new RigidBody2(PhysicsShapeCreator.create(q));
 		// rb1.setMass(1f);
 		// rb1.setInertia(new Matrix1f(1));
 		// space.addRigidBody(q, rb1);
-		// addOverlayElement(q);
+		// add2dObject(q);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class BasicTest2d extends StandardGame {
 		if (tempdelta > 200) {
 			if (inputs.isMouseButtonDown("0")) {
 				Quad q = new Quad(400, 80, 20, 20);
-				RigidBody2 rb = PhysicsShapeCreator.create(q);
+				RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(q));
 				rb.setMass(1f);
 				rb.setInertia(new Matrix1f(1));
 				space.addRigidBody(q, rb);
@@ -92,7 +92,7 @@ public class BasicTest2d extends StandardGame {
 			}
 			if (inputs.isMouseButtonDown("1")) {
 				Circle c = new Circle(400, 80, 20, 10);
-				RigidBody2 rb = PhysicsShapeCreator.create(c);
+				RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(c));
 				rb.setMass(1f);
 				rb.setInertia(new Matrix1f(1));
 				space.addRigidBody(c, rb);

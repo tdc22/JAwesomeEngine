@@ -70,7 +70,7 @@ public class Tutorial extends StandardGame {
 				new MultiPointManifoldManager());
 		space.setGlobalForce(new Vector3f(0, -8, 0));
 
-		playerbody = PhysicsShapeCreator.create(player);
+		playerbody = new RigidBody3(PhysicsShapeCreator.create(player));
 		playerbody.setMass(1f);
 		playerbody.setLinearFactor(new Vector3f(1, 1, 1));
 		playerbody.setAngularFactor(new Vector3f(0, 0, 0));
@@ -78,7 +78,7 @@ public class Tutorial extends StandardGame {
 		space.addRigidBody(player, playerbody);
 
 		Box ground = new Box(0, -5, 0, 10, 1, 10);
-		RigidBody3 rb = PhysicsShapeCreator.create(ground);
+		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 	}

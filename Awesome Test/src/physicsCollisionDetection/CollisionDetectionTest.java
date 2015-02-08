@@ -80,31 +80,31 @@ public class CollisionDetectionTest extends StandardGame {
 
 		b1 = new Box(-1, 0, 0, 1, 1, 1);
 		b1.setShader(s1);
-		rb1 = PhysicsShapeCreator.create(b1);
+		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
 		space.addRigidBody(b1, rb1);
 		addObject(b1);
 
 		b2 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
 		b2.setShader(s2);
-		rb2 = PhysicsShapeCreator.create(b2);
+		rb2 = new RigidBody3(PhysicsShapeCreator.create(b2));
 		space.addRigidBody(b2, rb2);
 		addObject(b2);
 
 		b3 = new Box(-10, -10, 0, 1.5f, 1.5f, 1.5f);
 		b3.setShader(s3);
-		rb3 = PhysicsShapeCreator.create(b3);
+		rb3 = new RigidBody3(PhysicsShapeCreator.create(b3));
 		space.addRigidBody(b3, rb3);
 		addObject(b3);
 
 		sp1 = new Sphere(-10, 10, 0, 1, 36, 36);
 		sp1.setShader(s4);
-		rb4 = PhysicsShapeCreator.create(sp1);
+		rb4 = new RigidBody3(PhysicsShapeCreator.create(sp1));
 		space.addRigidBody(sp1, rb4);
 		addObject(sp1);
 
 		c1 = new Cylinder(10, 10, 0, 1, 1, 36);
 		c1.setShader(s5);
-		rb5 = PhysicsShapeCreator.create(c1);
+		rb5 = new RigidBody3(PhysicsShapeCreator.create(c1));
 		space.addRigidBody(c1, rb5);
 		addObject(c1);
 

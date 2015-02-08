@@ -11,16 +11,24 @@ import vector.Vector;
  */
 
 public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends Rotation, A3 extends Rotation>
-		extends CollisionObject<L> {
+		extends CollisionShape<L, A2> {
 	float invMass, staticfriction, dynamicfriction, rollingfriction,
 			restitution, lineardamping, angulardamping;
 	L linearfactor, linearvelocity, forceaccumulator;
 	A1 angularfactor, angularvelocity, torqueaccumulator;
-	A2 invrotation;
 	A3 invinertia;
-	AABB<L> aabb;
 
 	public RigidBody() {
+		super();
+		init();
+	}
+
+	public RigidBody(CollisionShape<L, A2> cs) {
+		super(cs);
+		init();
+	}
+
+	private void init() {
 		invMass = 0;
 		restitution = 0.5f;
 		staticfriction = 0.3f;
@@ -47,10 +55,6 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 		torqueaccumulator.setAll(0);
 	}
 
-	public AABB<L> getAABB() {
-		return aabb;
-	}
-
 	public float getAngularDamping() {
 		return angulardamping;
 	}
@@ -71,20 +75,12 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 		return forceaccumulator;
 	}
 
-	public abstract L getGlobalMaxAABB();
-
-	public abstract L getGlobalMinAABB();
-
 	public A3 getInverseInertia() {
 		return invinertia;
 	}
 
 	public float getInverseMass() {
 		return invMass;
-	}
-
-	public A2 getInverseRotation() {
-		return invrotation;
 	}
 
 	public float getLinearDamping() {
@@ -105,14 +101,6 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 		return 0;
 	}
 
-	public L getMaxAABB() {
-		return aabb.getMax();
-	}
-
-	public L getMinAABB() {
-		return aabb.getMin();
-	}
-
 	public float getRestitution() {
 		return restitution;
 	}
@@ -127,14 +115,6 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 
 	public A1 getTorqueAccumulator() {
 		return torqueaccumulator;
-	}
-
-	public void setAABB(AABB<L> aabb) {
-		this.aabb = aabb;
-	}
-
-	public void setAABB(L minAABB, L maxAABB) {
-		aabb.set(minAABB, maxAABB);
 	}
 
 	public void setAngularDamping(float angulardamping) {
@@ -185,14 +165,6 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 			invMass = 0;
 	}
 
-	public void setMaxAABB(L maxAABB) {
-		aabb.setMax(maxAABB);
-	}
-
-	public void setMinAABB(L minAABB) {
-		aabb.setMin(minAABB);
-	}
-
 	public void setRestitution(float restitution) {
 		this.restitution = restitution;
 	}
@@ -204,6 +176,4 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 	public void setStaticFriction(float staticfriction) {
 		this.staticfriction = staticfriction;
 	}
-
-	public abstract void updateInverseRotation();
 }

@@ -5,10 +5,21 @@ import math.VecMath;
 import quaternion.Quaternionf;
 import vector.Vector3f;
 
-public abstract class RigidBody3 extends
+public class RigidBody3 extends
 		RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> {
 	public RigidBody3() {
 		super();
+		aabb = new AABB<Vector3f>(new Vector3f(), new Vector3f());
+		invrotation = new Quaternionf();
+		init();
+	}
+
+	public RigidBody3(CollisionShape3 cs) {
+		super(cs);
+		init();
+	}
+
+	private void init() {
 		linearfactor = new Vector3f(1, 1, 1);
 		linearvelocity = new Vector3f();
 		forceaccumulator = new Vector3f();
@@ -16,8 +27,6 @@ public abstract class RigidBody3 extends
 		angularvelocity = new Vector3f();
 		torqueaccumulator = new Vector3f();
 		invinertia = new Quaternionf(0);
-		invrotation = new Quaternionf();
-		aabb = new AABB<Vector3f>(new Vector3f(), new Vector3f());
 	}
 
 	@Override
@@ -81,7 +90,7 @@ public abstract class RigidBody3 extends
 	@Override
 	public Vector3f supportPointRelative(Vector3f direction) {
 		return QuatMath.transform(this.getRotation(),
-				supportPointLocal(direction));
+				supportcalculator.supportPointLocal(direction));
 	}
 
 	@Override
@@ -89,5 +98,11 @@ public abstract class RigidBody3 extends
 		Quaternionf q = new Quaternionf(this.getRotation());
 		q.invert();
 		invrotation = q;
+	}
+
+	@Override
+	public SupportCalculator<Vector3f> createSupportCalculator(
+			CollisionShape<Vector3f, Quaternionf> cs) {
+		return null;
 	}
 }

@@ -72,31 +72,31 @@ public class CollisionDetectionTest2d extends StandardGame {
 
 		q1 = new Quad(400, 200, 25, 25);
 		q1.setShader(s1);
-		rb1 = PhysicsShapeCreator.create(q1);
+		rb1 = new RigidBody2(PhysicsShapeCreator.create(q1));
 		space.addRigidBody(q1, rb1);
 		add2dObject(q1);
 
 		q2 = new Quad(500, 200, 35, 35);
 		q2.setShader(s2);
-		rb2 = PhysicsShapeCreator.create(q2);
+		rb2 = new RigidBody2(PhysicsShapeCreator.create(q2));
 		space.addRigidBody(q2, rb2);
 		add2dObject(q2);
 
 		q3 = new Quad(100, 500, 25, 25);
 		q3.setShader(s3);
-		rb3 = PhysicsShapeCreator.create(q3);
+		rb3 = new RigidBody2(PhysicsShapeCreator.create(q3));
 		space.addRigidBody(q3, rb3);
 		add2dObject(q3);
 
 		c1 = new Circle(80, 80, 25, 40);
 		c1.setShader(s4);
-		rb4 = PhysicsShapeCreator.create(c1);
+		rb4 = new RigidBody2(PhysicsShapeCreator.create(c1));
 		space.addRigidBody(c1, rb4);
 		add2dObject(c1);
 
 		e1 = new Ellipse(500, 50, 50, 25, 40);
 		e1.setShader(s5);
-		rb5 = PhysicsShapeCreator.create(e1);
+		rb5 = new RigidBody2(PhysicsShapeCreator.create(e1));
 		space.addRigidBody(e1, rb5);
 		add2dObject(e1);
 

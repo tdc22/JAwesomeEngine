@@ -12,10 +12,6 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 		super(manifoldgeneration);
 	}
 
-	private void checkSimplex() {
-
-	}
-
 	private boolean doSimplex() {
 		int simplexsize = simplex.size();
 		// Line
@@ -249,7 +245,6 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 			simplex.add(a);
 			// if DoSimplex([], D) Intersection
 			if (doSimplex()) {
-				checkSimplex();
 				return true;
 			}
 		}
