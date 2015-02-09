@@ -77,6 +77,7 @@ public class CollisionDetectionTest extends StandardGame {
 		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(
 				new EPA()), new NullResolution(), new NullCorrection(),
 				new SimpleManifoldManager<Vector3f>());
+		space.setCullStaticOverlaps(false);
 
 		b1 = new Box(-1, 0, 0, 1, 1, 1);
 		b1.setShader(s1);
@@ -112,7 +113,7 @@ public class CollisionDetectionTest extends StandardGame {
 		debugmanager = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+				Input.KEYBOARD_EVENT, "R", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 

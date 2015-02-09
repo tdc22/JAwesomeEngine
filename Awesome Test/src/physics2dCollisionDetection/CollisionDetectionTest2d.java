@@ -69,6 +69,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(
 				new EPA2()), new NullResolution(), new NullCorrection(),
 				new SimpleManifoldManager<Vector2f>());
+		space.setCullStaticOverlaps(false);
 
 		q1 = new Quad(400, 200, 25, 25);
 		q1.setShader(s1);
