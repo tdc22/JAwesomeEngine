@@ -11,6 +11,7 @@ import manifold.CollisionManifold;
 import manifold.ContactManifold;
 import manifold.ManifoldManager;
 import narrowphase.Narrowphase;
+import objects.Constraint;
 import objects.RigidBody;
 import objects.Updateable;
 import positionalcorrection.PositionalCorrection;
@@ -30,8 +31,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	final ManifoldManager<L> manifoldmanager;
 	protected List<RigidBody<L, A1, A2, A3>> objects;
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> overlaps;
+	protected List<Constraint<L>> constraints;
 	protected L globalForce;
 	protected int resolutionIterations = 25;
+	protected int constraintResolutionIterations = 25;
 	protected boolean cullStaticOverlaps = true;
 
 	public Space(IntegrationSolver integrationsolver, Broadphase<L> broadphase,
@@ -47,6 +50,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		this.manifoldmanager = manifoldmanager;
 		objects = new ArrayList<RigidBody<L, A1, A2, A3>>();
 		overlaps = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
+		constraints = new ArrayList<Constraint<L>>();
 	}
 
 	public void addRigidBody(RigidBody<L, A1, A2, A3> body) {
@@ -146,6 +150,11 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	protected abstract void resolve();
 
+	protected void resolveConstraints() {
+		for (Constraint<L> c : constraints)
+			c.solve();
+	}
+
 	public void setGlobalForce(L force) {
 		globalForce = force;
 	}
@@ -197,6 +206,8 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		for (int i = 0; i < resolutionIterations; i++)
 			resolve();
 		applyGlobalForce();
+		for (int i = 0; i < constraintResolutionIterations; i++)
+			resolveConstraints();
 		integrate(delta);
 		correct();
 	}
