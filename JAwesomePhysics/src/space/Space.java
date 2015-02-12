@@ -109,6 +109,14 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public int getResolutionIterations() {
 		return resolutionIterations;
 	}
+	
+	public void addConstraint(Constraint<L> constraint) {
+		constraints.add(constraint);
+	}
+	
+	public List<Constraint<L>> getConstraints() {
+		return constraints;
+	}
 
 	public boolean hasCollision(RigidBody<L, ?, ?, ?> object) {
 		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
@@ -150,9 +158,9 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	protected abstract void resolve();
 
-	protected void resolveConstraints() {
+	protected void resolveConstraints(float delta) {
 		for (Constraint<L> c : constraints)
-			c.solve();
+			c.solve(delta);
 	}
 
 	public void setGlobalForce(L force) {
@@ -207,7 +215,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 			resolve();
 		applyGlobalForce();
 		for (int i = 0; i < constraintResolutionIterations; i++)
-			resolveConstraints();
+			resolveConstraints(delta);
 		integrate(delta);
 		correct();
 	}
