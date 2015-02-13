@@ -102,12 +102,9 @@ public class RigidBody2 extends
 
 	@Override
 	public void updateInverseRotation() {
-		System.out.println("updated" + "; " + this.getRotation() + "; "
-				+ invrotation);
 		Complexf c = new Complexf(getRotation().get2dRotation());
 		c.invert();
 		invrotation = c;
-		System.out.println("a " + invrotation);
 	}
 
 	@Override

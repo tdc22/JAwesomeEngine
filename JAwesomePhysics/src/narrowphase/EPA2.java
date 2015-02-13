@@ -20,13 +20,14 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 	}
 
 	private final float TOLERANCE = 0.001f;
+	private final int MAX_ITERATIONS = 50;
 
 	@Override
 	public ContactManifold<Vector2f> computeCollision(SupportMap<Vector2f> Sa,
 			SupportMap<Vector2f> Sb, List<Vector2f> simplex) {
 		Vector2f normal = new Vector2f();
 		float depth = 0;
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < MAX_ITERATIONS; i++) {
 			Edge e = findClosestEdge(simplex);
 			Vector2f p = support(Sa, Sb, e.normal);
 			double d = VecMath.dotproduct(p, e.normal);

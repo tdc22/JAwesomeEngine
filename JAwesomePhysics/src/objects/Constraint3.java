@@ -5,8 +5,7 @@ import vector.Vector3f;
 
 public abstract class Constraint3 extends Constraint<Vector3f> {
 
-	public Constraint3(RigidBody3 bodyA,
-			RigidBody3 bodyB) {
+	public Constraint3(RigidBody3 bodyA, RigidBody3 bodyB) {
 		super(bodyA, bodyB);
 	}
 

@@ -109,11 +109,11 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public int getResolutionIterations() {
 		return resolutionIterations;
 	}
-	
+
 	public void addConstraint(Constraint<L> constraint) {
 		constraints.add(constraint);
 	}
-	
+
 	public List<Constraint<L>> getConstraints() {
 		return constraints;
 	}
@@ -208,7 +208,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 									overlap.getSecond());
 					manifoldmanager.add(new CollisionManifold<L>(overlap,
 							contactManifold));
-					System.out.println("COLLision");
+					// System.out.println("COLLision");
 				}
 		}
 		for (int i = 0; i < resolutionIterations; i++)

@@ -60,7 +60,7 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 		@Override
 		public Vector2f supportPointLocal(Vector2f direction) {
 			if (direction.length() == 0)
-				direction.set(0, 1);
+				direction = new Vector2f(0, 1);
 			direction.normalize();
 			Vector2f v = ComplexMath.transform(
 					collisionshape.getInverseRotation(), direction);

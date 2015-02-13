@@ -27,6 +27,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 	// http://allenchou.net/2013/12/game-physics-contact-generation-epa/
 
 	private final float TOLERANCE = 0.001f;
+	private final int MAX_ITERATIONS = 50;
 
 	@Override
 	public ContactManifold<Vector3f> computeCollision(SupportMap<Vector3f> Sa,
@@ -42,14 +43,14 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		faces.add(new Triangle(A, C, D));
 		faces.add(new Triangle(D, C, B));
 
-		System.out.println(A + "; " + B + "; " + C + "; " + D);
+		// System.out.println(A + "; " + B + "; " + C + "; " + D);
 
 		Vector3f normal = new Vector3f();
 		float depth = 0;
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < MAX_ITERATIONS; i++) {
 			Triangle t = findClosestTriangle(faces);
-			System.out.println(faces.size() + "; " + t.normal + "; "
-					+ VecMath.dotproduct(t.normal, VecMath.negate(t.a)));
+			// System.out.println(faces.size() + "; " + t.normal + "; "
+			// + VecMath.dotproduct(t.normal, VecMath.negate(t.a)));
 			// System.out.println(t.normal);
 
 			if (isOriginInsideTriangleArea(t)) {
@@ -60,8 +61,8 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 				if (d - t.distance < TOLERANCE) {
 					normal = t.normal;
 					depth = (float) d;
-					System.out.println("res: " + normal + "; " + depth + "; "
-							+ t.a + "; " + t.b + "; " + t.c);
+					// System.out.println("res: " + normal + "; " + depth + "; "
+					// + t.a + "; " + t.b + "; " + t.c);
 					break;
 				} else {
 					faces.add(new Triangle(t.a, t.b, p));
@@ -75,7 +76,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 				break;
 			}
 		}
-		System.out.println(normal);
+		// System.out.println(normal);
 
 		// source:
 		// http://allenchou.net/2013/12/game-physics-contact-generation-epa/
@@ -90,7 +91,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		tangentB = VecMath.crossproduct(normal, tangentA);
 
 		Vector3f negnormal = VecMath.negate(normal);
-		System.out.println(depth + "; " + normal);
+		// System.out.println(depth + "; " + normal);
 		return new ContactManifold<Vector3f>(depth, normal,
 				Sa.supportPoint(normal), Sb.supportPoint(negnormal),
 				Sa.supportPointRelative(normal),
