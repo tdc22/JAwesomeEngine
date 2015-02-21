@@ -6,18 +6,6 @@ import quaternion.Quaternionf;
 import vector.Vector3f;
 
 public class CompoundObject extends RigidBody3 {
-	List<SupportCalculator<Vector3f>> supportcalculators;
-
-	public void addCollisionShape(CollisionShape3 collisionshape) {
-		supportcalculators.add(collisionshape.createSupportCalculator(this));
-	}
-
-	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(
-			CollisionShape<Vector3f, Quaternionf> cs) {
-		return new CompoundSupport(cs);
-	}
-
 	protected class CompoundSupport implements SupportCalculator<Vector3f> {
 		private CollisionShape<Vector3f, Quaternionf> collisionshape;
 
@@ -34,5 +22,17 @@ public class CompoundObject extends RigidBody3 {
 			}
 			return closest;
 		}
+	}
+
+	List<SupportCalculator<Vector3f>> supportcalculators;
+
+	public void addCollisionShape(CollisionShape3 collisionshape) {
+		supportcalculators.add(collisionshape.createSupportCalculator(this));
+	}
+
+	@Override
+	public SupportCalculator<Vector3f> createSupportCalculator(
+			CollisionShape<Vector3f, Quaternionf> cs) {
+		return new CompoundSupport(cs);
 	}
 }

@@ -10,7 +10,7 @@ public abstract class CollisionShape3 extends
 
 	public CollisionShape3() {
 		super();
-		aabb = new AABB<Vector3f>(new Vector3f(), new Vector3f());
+		aabb = new AABB3(new Vector3f(), new Vector3f());
 		invrotation = new Quaternionf();
 	}
 

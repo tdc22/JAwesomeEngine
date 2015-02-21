@@ -57,14 +57,6 @@ public class Shader {
 		addArguments(argumentnames, arguments);
 	}
 
-	public Shader(int shaderProgram, String argumentname, Object argument) {
-		this.shaderProgram = shaderProgram;
-		uniformpositions = new ArrayList<Integer>();
-		uniformtypes = new ArrayList<Integer>();
-		uniformarguments = new ArrayList<Object>();
-		addArgument(argumentname, argument);
-	}
-
 	@SafeVarargs
 	public Shader(int shaderProgram, Pair<String, Object>... arguments) {
 		this.shaderProgram = shaderProgram;
@@ -73,6 +65,14 @@ public class Shader {
 		uniformarguments = new ArrayList<Object>();
 		for (Pair<String, Object> a : arguments)
 			addArgument(a.getFirst(), a.getSecond());
+	}
+
+	public Shader(int shaderProgram, String argumentname, Object argument) {
+		this.shaderProgram = shaderProgram;
+		uniformpositions = new ArrayList<Integer>();
+		uniformtypes = new ArrayList<Integer>();
+		uniformarguments = new ArrayList<Object>();
+		addArgument(argumentname, argument);
 	}
 
 	public Shader(Shader shader) {
@@ -236,6 +236,10 @@ public class Shader {
 		}
 	}
 
+	public void delete() {
+		glDeleteProgram(shaderProgram);
+	}
+
 	public List<Object> getArguments() {
 		return uniformarguments;
 	}
@@ -280,9 +284,5 @@ public class Shader {
 			}
 		}
 		glUseProgram(0);
-	}
-
-	public void delete() {
-		glDeleteProgram(shaderProgram);
 	}
 }

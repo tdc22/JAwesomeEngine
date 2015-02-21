@@ -9,7 +9,7 @@ public class RigidBody3 extends
 		RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> {
 	public RigidBody3() {
 		super();
-		aabb = new AABB<Vector3f>(new Vector3f(), new Vector3f());
+		aabb = new AABB3(new Vector3f(), new Vector3f());
 		invrotation = new Quaternionf();
 		init();
 	}
@@ -17,16 +17,6 @@ public class RigidBody3 extends
 	public RigidBody3(CollisionShape3 cs) {
 		super(cs);
 		init();
-	}
-
-	private void init() {
-		linearfactor = new Vector3f(1, 1, 1);
-		linearvelocity = new Vector3f();
-		forceaccumulator = new Vector3f();
-		angularfactor = new Vector3f(1, 1, 1);
-		angularvelocity = new Vector3f();
-		torqueaccumulator = new Vector3f();
-		invinertia = new Quaternionf(0);
 	}
 
 	@Override
@@ -72,6 +62,12 @@ public class RigidBody3 extends
 	}
 
 	@Override
+	public SupportCalculator<Vector3f> createSupportCalculator(
+			CollisionShape<Vector3f, Quaternionf> cs) {
+		return null;
+	}
+
+	@Override
 	public Vector3f getGlobalMaxAABB() {
 		return VecMath.addition(aabb.getMax(), getTranslation());
 	}
@@ -79,6 +75,16 @@ public class RigidBody3 extends
 	@Override
 	public Vector3f getGlobalMinAABB() {
 		return VecMath.addition(aabb.getMin(), getTranslation());
+	}
+
+	private void init() {
+		linearfactor = new Vector3f(1, 1, 1);
+		linearvelocity = new Vector3f();
+		forceaccumulator = new Vector3f();
+		angularfactor = new Vector3f(1, 1, 1);
+		angularvelocity = new Vector3f();
+		torqueaccumulator = new Vector3f();
+		invinertia = new Quaternionf(0);
 	}
 
 	@Override
@@ -98,11 +104,5 @@ public class RigidBody3 extends
 		Quaternionf q = new Quaternionf(this.getRotation());
 		q.invert();
 		invrotation = q;
-	}
-
-	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(
-			CollisionShape<Vector3f, Quaternionf> cs) {
-		return null;
 	}
 }

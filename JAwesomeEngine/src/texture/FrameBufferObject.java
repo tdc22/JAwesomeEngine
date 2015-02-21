@@ -77,6 +77,78 @@ public class FrameBufferObject {
 		init(game, width, height, samples);
 	}
 
+	public void begin() {
+		glDisable(GL_TEXTURE_2D);
+		glPushAttrib(GL_VIEWPORT_BIT);
+		glViewport(0, 0, width, height);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		bind();
+		clear();
+	}
+
+	public void bind() {
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+	}
+
+	public void clear() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
+				| GL_STENCIL_BUFFER_BIT);
+	}
+
+	public void copyTo(FrameBufferObject target) {
+		copyTo(target.getFramebufferID(), target.getWidth(), target.getHeight());
+	}
+
+	public void copyTo(int framebufferID, int w, int h) {
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBufferID);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferID);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, w, h, GL_COLOR_BUFFER_BIT,
+				(w == width && h == height) ? GL_NEAREST : GL_LINEAR);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	}
+
+	public void delete() {
+		glDeleteRenderbuffers(depthBufferID);
+		glDeleteTextures(colorBufferID);
+		glDeleteFramebuffers(frameBufferID);
+	}
+
+	public void end() {
+		unbind();
+		glPopAttrib();
+		glEnable(GL_TEXTURE_2D);
+	}
+
+	public IntBuffer getData() {
+		return imageData;
+	}
+
+	public int getFramebufferID() {
+		return frameBufferID;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getSamples() {
+		return samples;
+	}
+
+	public Texture getTexture() {
+		return new Texture(colorBufferID);
+	}
+
+	public int getTextureID() {
+		return colorBufferID;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
 	private void init(StandardGame game, int width, int height, int samples) {
 		this.game = game;
 		this.width = width;
@@ -161,89 +233,17 @@ public class FrameBufferObject {
 		glBindTexture(textureType, 0);
 	}
 
-	public void copyTo(FrameBufferObject target) {
-		copyTo(target.getFramebufferID(), target.getWidth(), target.getHeight());
-	}
-
-	public void copyTo(int framebufferID, int w, int h) {
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBufferID);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferID);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, w, h, GL_COLOR_BUFFER_BIT,
-				(w == width && h == height) ? GL_NEAREST : GL_LINEAR);
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-	}
-
-	public int getFramebufferID() {
-		return frameBufferID;
-	}
-
-	public IntBuffer getData() {
-		return imageData;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public Texture getTexture() {
-		return new Texture(colorBufferID);
-	}
-
-	public int getTextureID() {
-		return colorBufferID;
-	}
-
-	public int getSamples() {
-		return samples;
-	}
-
 	public boolean isMultisampled() {
 		return multisampled;
-	}
-
-	public void clear() {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
-				| GL_STENCIL_BUFFER_BIT);
-	}
-
-	public void begin() {
-		glDisable(GL_TEXTURE_2D);
-		glPushAttrib(GL_VIEWPORT_BIT);
-		glViewport(0, 0, width, height);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		bind();
-		clear();
-	}
-
-	public void updateTexture() {
-		begin();
-		game.render();
-		end();
-	}
-
-	public void bind() {
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
 	}
 
 	public void unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	public void end() {
-		unbind();
-		glPopAttrib();
-		glEnable(GL_TEXTURE_2D);
-	}
-
-	public void delete() {
-		glDeleteRenderbuffers(depthBufferID);
-		glDeleteTextures(colorBufferID);
-		glDeleteFramebuffers(frameBufferID);
+	public void updateTexture() {
+		begin();
+		game.render();
+		end();
 	}
 }

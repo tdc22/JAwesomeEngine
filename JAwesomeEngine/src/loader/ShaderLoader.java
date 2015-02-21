@@ -42,35 +42,6 @@ public class ShaderLoader {
 		}
 	}
 
-	public static int loadShaderFromFile(String vertexShaderLocation,
-			String fragmentShaderLocation) {
-		return loadShaderFromFile(vertexShaderLocation, fragmentShaderLocation,
-				null, 0, 0, 0);
-	}
-
-	public static int loadShaderFromFile(String vertexShaderLocation,
-			String geometryShaderLocation, int inputtype, int outputtype,
-			int verticesout) {
-		return loadShaderFromFile(vertexShaderLocation, null,
-				geometryShaderLocation, inputtype, outputtype, verticesout);
-	}
-
-	public static int loadShaderFromFile(String vertexShaderLocation,
-			String fragmentShaderLocation, String geometryShaderLocation,
-			int inputtype, int outputtype, int verticesout) {
-		String vertexShaderSource = readSourceFile(vertexShaderLocation, 1);
-
-		String fragmentShaderSource = null;
-		if (fragmentShaderLocation != null)
-			fragmentShaderSource = readSourceFile(fragmentShaderLocation, 2);
-		String geometryShaderSource = null;
-		if (geometryShaderLocation != null)
-			geometryShaderSource = readSourceFile(geometryShaderLocation, 3);
-
-		return loadShader(vertexShaderSource, fragmentShaderSource,
-				geometryShaderSource, inputtype, outputtype, verticesout);
-	}
-
 	public static int loadShader(String vertexShaderSource,
 			String fragmentShaderSource) {
 		return loadShader(vertexShaderSource, fragmentShaderSource, null, 0, 0,
@@ -127,6 +98,35 @@ public class ShaderLoader {
 		if (includeGeometryShader)
 			glDeleteShader(geometryShader);
 		return shaderProgram;
+	}
+
+	public static int loadShaderFromFile(String vertexShaderLocation,
+			String fragmentShaderLocation) {
+		return loadShaderFromFile(vertexShaderLocation, fragmentShaderLocation,
+				null, 0, 0, 0);
+	}
+
+	public static int loadShaderFromFile(String vertexShaderLocation,
+			String geometryShaderLocation, int inputtype, int outputtype,
+			int verticesout) {
+		return loadShaderFromFile(vertexShaderLocation, null,
+				geometryShaderLocation, inputtype, outputtype, verticesout);
+	}
+
+	public static int loadShaderFromFile(String vertexShaderLocation,
+			String fragmentShaderLocation, String geometryShaderLocation,
+			int inputtype, int outputtype, int verticesout) {
+		String vertexShaderSource = readSourceFile(vertexShaderLocation, 1);
+
+		String fragmentShaderSource = null;
+		if (fragmentShaderLocation != null)
+			fragmentShaderSource = readSourceFile(fragmentShaderLocation, 2);
+		String geometryShaderSource = null;
+		if (geometryShaderLocation != null)
+			geometryShaderSource = readSourceFile(geometryShaderLocation, 3);
+
+		return loadShader(vertexShaderSource, fragmentShaderSource,
+				geometryShaderSource, inputtype, outputtype, verticesout);
 	}
 
 	private static String readSourceFile(String location, int type) {

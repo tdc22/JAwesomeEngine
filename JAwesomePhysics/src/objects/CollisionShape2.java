@@ -10,7 +10,7 @@ public abstract class CollisionShape2 extends
 
 	public CollisionShape2() {
 		super();
-		aabb = new AABB<Vector2f>(new Vector2f(), new Vector2f());
+		aabb = new AABB2(new Vector2f(), new Vector2f());
 		invrotation = new Complexf();
 	}
 

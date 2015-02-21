@@ -10,6 +10,22 @@ import shapedata.BoxStructure;
 import vector.Vector3f;
 
 public class BoxShape extends CollisionShape3 implements BoxStructure {
+	protected class BoxSupport implements SupportCalculator<Vector3f> {
+		private CollisionShape<Vector3f, Quaternionf> collisionshape;
+
+		public BoxSupport(CollisionShape<Vector3f, Quaternionf> cs) {
+			collisionshape = cs;
+		}
+
+		@Override
+		public Vector3f supportPointLocal(Vector3f direction) {
+			Vector3f v = QuatMath.transform(
+					collisionshape.getInverseRotation(), direction);
+			return VecMath.multiplication(new Vector3f(v.x < 0 ? -1 : 1,
+					v.y < 0 ? -1 : 1, v.z < 0 ? -1 : 1), halfsize);
+		}
+	}
+
 	Vector3f halfsize;
 
 	public BoxShape(float x, float y, float z, float halfsizex,
@@ -43,6 +59,12 @@ public class BoxShape extends CollisionShape3 implements BoxStructure {
 	}
 
 	@Override
+	public SupportCalculator<Vector3f> createSupportCalculator(
+			CollisionShape<Vector3f, Quaternionf> cs) {
+		return new BoxSupport(cs);
+	}
+
+	@Override
 	public Vector3f getHalfSize() {
 		return halfsize;
 	}
@@ -58,27 +80,5 @@ public class BoxShape extends CollisionShape3 implements BoxStructure {
 		setAABB(new Vector3f(-diag, -diag, -diag), new Vector3f(diag, diag,
 				diag));
 		supportcalculator = createSupportCalculator(this);
-	}
-
-	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(
-			CollisionShape<Vector3f, Quaternionf> cs) {
-		return new BoxSupport(cs);
-	}
-
-	protected class BoxSupport implements SupportCalculator<Vector3f> {
-		private CollisionShape<Vector3f, Quaternionf> collisionshape;
-
-		public BoxSupport(CollisionShape<Vector3f, Quaternionf> cs) {
-			collisionshape = cs;
-		}
-
-		@Override
-		public Vector3f supportPointLocal(Vector3f direction) {
-			Vector3f v = QuatMath.transform(
-					collisionshape.getInverseRotation(), direction);
-			return VecMath.multiplication(new Vector3f(v.x < 0 ? -1 : 1,
-					v.y < 0 ? -1 : 1, v.z < 0 ? -1 : 1), halfsize);
-		}
 	}
 }

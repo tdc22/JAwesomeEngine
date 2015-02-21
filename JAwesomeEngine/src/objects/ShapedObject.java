@@ -227,6 +227,21 @@ public class ShapedObject extends RenderedObject {
 		glTranslatef(-rotcenter.x, -rotcenter.y, -rotcenter.z);
 	}
 
+	public void invertAllTriangles() {
+		List<Integer> newIndices = new ArrayList<Integer>();
+		for (int i = 0; i < indices.size(); i += 6) {
+			newIndices.add(indices.get(i + 5));
+			newIndices.add(indices.get(i + 4));
+			newIndices.add(indices.get(i + 3));
+			newIndices.add(indices.get(i + 2));
+			newIndices.add(indices.get(i + 1));
+			newIndices.add(indices.get(i));
+		}
+		indices.clear();
+		indices = newIndices;
+		prerender();
+	}
+
 	public void prerender() {
 		if (vboIndexHandle != 0)
 			glDeleteBuffers(vboIndexHandle);
@@ -355,21 +370,6 @@ public class ShapedObject extends RenderedObject {
 
 	public void setNormal(int normalid, Vector3f normal) {
 		normals.set(normalid, normal);
-	}
-
-	public void invertAllTriangles() {
-		List<Integer> newIndices = new ArrayList<Integer>();
-		for (int i = 0; i < indices.size(); i += 6) {
-			newIndices.add(indices.get(i + 5));
-			newIndices.add(indices.get(i + 4));
-			newIndices.add(indices.get(i + 3));
-			newIndices.add(indices.get(i + 2));
-			newIndices.add(indices.get(i + 1));
-			newIndices.add(indices.get(i));
-		}
-		indices.clear();
-		indices = newIndices;
-		prerender();
 	}
 
 	public void setRenderHints(boolean rendercolors,

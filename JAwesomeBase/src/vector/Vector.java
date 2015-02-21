@@ -20,6 +20,13 @@ public abstract class Vector {
 	public abstract double get(int i);
 
 	/**
+	 * Returns the number of dimensions of the vector.
+	 * 
+	 * @return number of dimension of the vector
+	 */
+	public abstract int getDimensions();
+
+	/**
 	 * @see Vector#get(int)
 	 */
 	public abstract float getf(int i);

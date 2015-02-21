@@ -10,6 +10,22 @@ import shapedata2d.QuadStructure;
 import vector.Vector2f;
 
 public class QuadShape extends CollisionShape2 implements QuadStructure {
+	protected class QuadSupport implements SupportCalculator<Vector2f> {
+		private CollisionShape<Vector2f, Complexf> collisionshape;
+
+		public QuadSupport(CollisionShape<Vector2f, Complexf> cs) {
+			collisionshape = cs;
+		}
+
+		@Override
+		public Vector2f supportPointLocal(Vector2f direction) {
+			Vector2f v = ComplexMath.transform(
+					collisionshape.getInverseRotation(), direction);
+			return new Vector2f((v.x < 0 ? -1 : 1) * halfsize.x, (v.y < 0 ? -1
+					: 1) * halfsize.y);
+		}
+	}
+
 	Vector2f halfsize;
 
 	public QuadShape(float x, float y, float halfsizex, float halfsizey) {
@@ -41,6 +57,12 @@ public class QuadShape extends CollisionShape2 implements QuadStructure {
 	}
 
 	@Override
+	public SupportCalculator<Vector2f> createSupportCalculator(
+			CollisionShape<Vector2f, Complexf> cs) {
+		return new QuadSupport(cs);
+	}
+
+	@Override
 	public Vector2f getHalfSize() {
 		return halfsize;
 	}
@@ -55,27 +77,5 @@ public class QuadShape extends CollisionShape2 implements QuadStructure {
 				* halfsize.y);
 		setAABB(new Vector2f(-diag, -diag), new Vector2f(diag, diag));
 		supportcalculator = createSupportCalculator(this);
-	}
-
-	@Override
-	public SupportCalculator<Vector2f> createSupportCalculator(
-			CollisionShape<Vector2f, Complexf> cs) {
-		return new QuadSupport(cs);
-	}
-
-	protected class QuadSupport implements SupportCalculator<Vector2f> {
-		private CollisionShape<Vector2f, Complexf> collisionshape;
-
-		public QuadSupport(CollisionShape<Vector2f, Complexf> cs) {
-			collisionshape = cs;
-		}
-
-		@Override
-		public Vector2f supportPointLocal(Vector2f direction) {
-			Vector2f v = ComplexMath.transform(
-					collisionshape.getInverseRotation(), direction);
-			return new Vector2f((v.x < 0 ? -1 : 1) * halfsize.x, (v.y < 0 ? -1
-					: 1) * halfsize.y);
-		}
 	}
 }

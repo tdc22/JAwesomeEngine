@@ -26,6 +26,13 @@ public abstract class Vector1 extends Vector {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public final int getDimensions() {
+		return 1;
+	}
+
+	/**
 	 * Gets the x-value.
 	 * 
 	 * @return x-value

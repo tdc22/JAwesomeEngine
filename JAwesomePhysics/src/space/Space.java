@@ -53,6 +53,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		constraints = new ArrayList<Constraint<L>>();
 	}
 
+	public void addConstraint(Constraint<L> constraint) {
+		constraints.add(constraint);
+	}
+
 	public void addRigidBody(RigidBody<L, A1, A2, A3> body) {
 		broadphase.add(body);
 		objects.add(body);
@@ -74,16 +78,20 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		return broadphase;
 	}
 
-	public List<CollisionManifold<L>> getCollisionManifolds() {
-		return manifoldmanager.getManifolds();
-	}
-
 	// public void addObject(CollisionObject obj) {
 	// objects.add(obj);
 	// }
 
+	public List<CollisionManifold<L>> getCollisionManifolds() {
+		return manifoldmanager.getManifolds();
+	}
+
 	public CollisionResolution getCollsionResolution() {
 		return collisionresolution;
+	}
+
+	public List<Constraint<L>> getConstraints() {
+		return constraints;
 	}
 
 	public IntegrationSolver getIntegrationSolver() {
@@ -108,14 +116,6 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	public int getResolutionIterations() {
 		return resolutionIterations;
-	}
-
-	public void addConstraint(Constraint<L> constraint) {
-		constraints.add(constraint);
-	}
-
-	public List<Constraint<L>> getConstraints() {
-		return constraints;
 	}
 
 	public boolean hasCollision(RigidBody<L, ?, ?, ?> object) {
@@ -151,6 +151,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	protected abstract void integrate(float delta);
 
+	public boolean isCullStaticOverlaps() {
+		return cullStaticOverlaps;
+	}
+
 	public void removeRigidBody(RigidBody<L, A1, A2, A3> body) {
 		objects.remove(body);
 		broadphase.remove(body);
@@ -161,6 +165,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected void resolveConstraints(float delta) {
 		for (Constraint<L> c : constraints)
 			c.solve(delta);
+	}
+
+	public void setCullStaticOverlaps(boolean cull) {
+		cullStaticOverlaps = cull;
 	}
 
 	public void setGlobalForce(L force) {
@@ -174,14 +182,6 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	@Override
 	public void update(int delta) {
 		updateTimestep(delta / 1000f);
-	}
-
-	public void setCullStaticOverlaps(boolean cull) {
-		cullStaticOverlaps = cull;
-	}
-
-	public boolean isCullStaticOverlaps() {
-		return cullStaticOverlaps;
 	}
 
 	public void updateTimestep(float delta) {

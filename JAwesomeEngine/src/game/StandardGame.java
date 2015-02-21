@@ -102,6 +102,25 @@ public abstract class StandardGame extends AbstractGame {
 			framebuffer2.delete();
 	}
 
+	private void end2d() {
+		if (useFBO) {
+			framebuffer2MS.end();
+			framebuffer2.clear();
+			framebuffer2MS.copyTo(framebuffer2);
+		} else {
+			mode3d();
+		}
+	}
+
+	private void end3d() {
+		cam.end();
+		if (useFBO) {
+			framebufferMS.end();
+			framebuffer.clear();
+			framebufferMS.copyTo(framebuffer);
+		}
+	}
+
 	protected void endRender() {
 		if (useFBO) {
 			if (!render2d)
@@ -120,6 +139,10 @@ public abstract class StandardGame extends AbstractGame {
 
 	public List<RenderedObject> get2dObjects() {
 		return objects2d;
+	}
+
+	public Display getDisplay() {
+		return display;
 	}
 
 	public List<RenderedObject> getObjects() {
@@ -225,22 +248,6 @@ public abstract class StandardGame extends AbstractGame {
 		return !display.isCloseRequested() && running;
 	}
 
-	private void end3d() {
-		cam.end();
-		if (useFBO) {
-			framebufferMS.end();
-			framebuffer.clear();
-			framebufferMS.copyTo(framebuffer);
-		}
-	}
-
-	private void start2d() {
-		mode2d();
-		if (useFBO) {
-			framebuffer2MS.begin();
-		}
-	}
-
 	protected void mode2d() {
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
@@ -257,26 +264,12 @@ public abstract class StandardGame extends AbstractGame {
 		glMatrixMode(GL_MODELVIEW);
 	}
 
-	private void end2d() {
-		if (useFBO) {
-			framebuffer2MS.end();
-			framebuffer2.clear();
-			framebuffer2MS.copyTo(framebuffer2);
-		} else {
-			mode3d();
-		}
-	}
-
 	protected void prepareRender() {
 		display.clear();
 		if (useFBO) {
 			framebufferMS.begin();
 		}
 		cam.begin();
-	}
-
-	public Display getDisplay() {
-		return display;
 	}
 
 	public abstract void render();
@@ -337,6 +330,13 @@ public abstract class StandardGame extends AbstractGame {
 		display.close();
 		System.out.println("Destroy Display");
 		System.exit(0);
+	}
+
+	private void start2d() {
+		mode2d();
+		if (useFBO) {
+			framebuffer2MS.begin();
+		}
 	}
 
 	protected void updateEngine() {

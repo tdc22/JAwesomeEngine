@@ -27,6 +27,13 @@ public abstract class Vector2 extends Vector {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public final int getDimensions() {
+		return 2;
+	}
+
+	/**
 	 * @see Vector1#getX()
 	 */
 	public abstract double getX();

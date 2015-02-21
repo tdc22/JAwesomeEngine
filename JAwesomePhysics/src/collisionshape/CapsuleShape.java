@@ -9,6 +9,24 @@ import shapedata.CapsuleStructure;
 import vector.Vector3f;
 
 public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
+	protected class CapsuleSupport implements SupportCalculator<Vector3f> {
+		private CollisionShape<Vector3f, Quaternionf> collisionshape;
+
+		public CapsuleSupport(CollisionShape<Vector3f, Quaternionf> cs) {
+			collisionshape = cs;
+		}
+
+		@Override
+		public Vector3f supportPointLocal(Vector3f direction) {
+			if (direction.length() == 0)
+				direction = new Vector3f(0, 1, 0);
+			direction.normalize();
+			Vector3f v = QuatMath.transform(
+					collisionshape.getInverseRotation(), direction);
+			return new Vector3f(v.x * radius, v.y * height, v.z * radius);
+		}
+	}
+
 	float radius, height;
 
 	public CapsuleShape(float x, float y, float z, float radius, float height) {
@@ -28,6 +46,12 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 	}
 
 	@Override
+	public SupportCalculator<Vector3f> createSupportCalculator(
+			CollisionShape<Vector3f, Quaternionf> cs) {
+		return new CapsuleSupport(cs);
+	}
+
+	@Override
 	public float getHeight() {
 		return height;
 	}
@@ -42,29 +66,5 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 		setAABB(new Vector3f(-longest, -longest, -longest), new Vector3f(
 				longest, longest, longest));
 		supportcalculator = createSupportCalculator(this);
-	}
-
-	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(
-			CollisionShape<Vector3f, Quaternionf> cs) {
-		return new CapsuleSupport(cs);
-	}
-
-	protected class CapsuleSupport implements SupportCalculator<Vector3f> {
-		private CollisionShape<Vector3f, Quaternionf> collisionshape;
-
-		public CapsuleSupport(CollisionShape<Vector3f, Quaternionf> cs) {
-			collisionshape = cs;
-		}
-
-		@Override
-		public Vector3f supportPointLocal(Vector3f direction) {
-			if (direction.length() == 0)
-				direction = new Vector3f(0, 1, 0);
-			direction.normalize();
-			Vector3f v = QuatMath.transform(
-					collisionshape.getInverseRotation(), direction);
-			return new Vector3f(v.x * radius, v.y * height, v.z * radius);
-		}
 	}
 }

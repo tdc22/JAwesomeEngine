@@ -29,6 +29,13 @@ public abstract class Vector4 extends Vector {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public final int getDimensions() {
+		return 4;
+	}
+
+	/**
 	 * Gets the w-value.
 	 * 
 	 * @return w-value

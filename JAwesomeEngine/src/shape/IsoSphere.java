@@ -28,6 +28,15 @@ public class IsoSphere extends ShapedObject implements SphereStructure {
 		init(radius, subdivisions);
 	}
 
+	private Vector3f getCenter(Vector3f a, Vector3f b) {
+		return VecMath.setScale(VecMath.addition(a, b), radius);
+	}
+
+	@Override
+	public float getRadius() {
+		return radius;
+	}
+
 	private void init(float radius, int subdivisions) {
 		this.radius = radius;
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
@@ -159,14 +168,5 @@ public class IsoSphere extends ShapedObject implements SphereStructure {
 		faces.clear();
 
 		this.prerender();
-	}
-
-	private Vector3f getCenter(Vector3f a, Vector3f b) {
-		return VecMath.setScale(VecMath.addition(a, b), radius);
-	}
-
-	@Override
-	public float getRadius() {
-		return radius;
 	}
 }

@@ -2,13 +2,15 @@ package objects;
 
 import vector.Vector;
 
-public class AABB<L extends Vector> {
+public abstract class AABB<L extends Vector> {
 	L min, max;
 
 	public AABB(L min, L max) {
 		this.min = min;
 		this.max = max;
 	}
+
+	public abstract boolean contains(L point);
 
 	public L getMax() {
 		return max;
@@ -17,6 +19,8 @@ public class AABB<L extends Vector> {
 	public L getMin() {
 		return min;
 	}
+
+	public abstract boolean intersects(AABB<L> aabb);
 
 	public void set(L min, L max) {
 		this.min = min;
@@ -41,4 +45,6 @@ public class AABB<L extends Vector> {
 		sb.append("]");
 		return sb.toString();
 	}
+
+	public abstract AABB<L> union(AABB<L> aabb);
 }

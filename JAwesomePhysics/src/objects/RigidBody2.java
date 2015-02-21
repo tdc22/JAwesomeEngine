@@ -12,7 +12,7 @@ public class RigidBody2 extends
 		RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> {
 	public RigidBody2() {
 		super();
-		aabb = new AABB<Vector2f>(new Vector2f(), new Vector2f());
+		aabb = new AABB2(new Vector2f(), new Vector2f());
 		invrotation = new Complexf();
 		init();
 	}
@@ -20,16 +20,6 @@ public class RigidBody2 extends
 	public RigidBody2(CollisionShape2 cs) {
 		super(cs);
 		init();
-	}
-
-	private void init() {
-		linearfactor = new Vector2f(1, 1);
-		linearvelocity = new Vector2f();
-		forceaccumulator = new Vector2f();
-		angularfactor = new Vector1f(1);
-		angularvelocity = new Vector1f();
-		torqueaccumulator = new Vector1f();
-		invinertia = new Matrix1f(0);
 	}
 
 	@Override
@@ -79,6 +69,12 @@ public class RigidBody2 extends
 	}
 
 	@Override
+	public SupportCalculator<Vector2f> createSupportCalculator(
+			CollisionShape<Vector2f, Complexf> cs) {
+		return null;
+	}
+
+	@Override
 	public Vector2f getGlobalMaxAABB() {
 		return VecMath.addition(aabb.getMax(), getTranslation2());
 	}
@@ -86,6 +82,16 @@ public class RigidBody2 extends
 	@Override
 	public Vector2f getGlobalMinAABB() {
 		return VecMath.addition(aabb.getMin(), getTranslation2());
+	}
+
+	private void init() {
+		linearfactor = new Vector2f(1, 1);
+		linearvelocity = new Vector2f();
+		forceaccumulator = new Vector2f();
+		angularfactor = new Vector1f(1);
+		angularvelocity = new Vector1f();
+		torqueaccumulator = new Vector1f();
+		invinertia = new Matrix1f(0);
 	}
 
 	@Override
@@ -105,11 +111,5 @@ public class RigidBody2 extends
 		Complexf c = new Complexf(getRotation().get2dRotation());
 		c.invert();
 		invrotation = c;
-	}
-
-	@Override
-	public SupportCalculator<Vector2f> createSupportCalculator(
-			CollisionShape<Vector2f, Complexf> cs) {
-		return null;
 	}
 }

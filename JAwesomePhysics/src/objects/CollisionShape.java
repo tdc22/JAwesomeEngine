@@ -26,24 +26,16 @@ public abstract class CollisionShape<L extends Vector, A extends Rotation>
 		supportcalculator = cs.createSupportCalculator(this);
 	}
 
+	public abstract SupportCalculator<L> createSupportCalculator(
+			CollisionShape<L, A> cs);
+
 	public AABB<L> getAABB() {
 		return aabb;
-	}
-
-	public SupportCalculator<L> getSupportCalculator() {
-		return supportcalculator;
-	}
-
-	public L supportPointLocal(L direction) {
-		return supportcalculator.supportPointLocal(direction);
 	}
 
 	public abstract L getGlobalMaxAABB();
 
 	public abstract L getGlobalMinAABB();
-
-	public abstract SupportCalculator<L> createSupportCalculator(
-			CollisionShape<L, A> cs);
 
 	public A getInverseRotation() {
 		return invrotation;
@@ -55,6 +47,10 @@ public abstract class CollisionShape<L extends Vector, A extends Rotation>
 
 	public L getMinAABB() {
 		return aabb.getMin();
+	}
+
+	public SupportCalculator<L> getSupportCalculator() {
+		return supportcalculator;
 	}
 
 	public void setAABB(AABB<L> aabb) {
@@ -71,6 +67,10 @@ public abstract class CollisionShape<L extends Vector, A extends Rotation>
 
 	public void setMinAABB(L minAABB) {
 		aabb.setMin(minAABB);
+	}
+
+	public L supportPointLocal(L direction) {
+		return supportcalculator.supportPointLocal(direction);
 	}
 
 	public abstract void updateInverseRotation();

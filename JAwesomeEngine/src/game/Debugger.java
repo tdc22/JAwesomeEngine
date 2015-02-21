@@ -46,7 +46,7 @@ public class Debugger {
 		font = f;
 		this.cam = cam;
 
-		text = new Text("FPS:\nObjects:\nPolygons:\nCamera:", 10, 10, font);
+		text = new Text("", 10, 10, font);
 
 		xaxis = new ShapedObject();
 		yaxis = new ShapedObject();
@@ -117,10 +117,11 @@ public class Debugger {
 				}
 			}
 
-			text.setText("FPS: " + fps + "\nObjects: " + objects
-					+ "\n2d Objects: " + objects2d + "\nPolygons:\nCamera: "
-					+ campos.x + "; " + campos.y + "; " + campos.z
-					+ "\nGL-Error: " + glerror);
+			text.setText("FPS: " + fps + " ("
+					+ String.format("%.2f", 1000 / (float) fps)
+					+ " ms)\nObjects: " + objects + "\n2d Objects: "
+					+ objects2d + "\nPolygons:\nCamera: " + campos.x + "; "
+					+ campos.y + "; " + campos.z + "\nGL-Error: " + glerror);
 			text.render();
 		}
 	}
@@ -238,7 +239,7 @@ public class Debugger {
 	}
 
 	public void toggleWireframe() {
-		setRenderWireframe(!wireframe);
+		// setRenderWireframe(!wireframe);
 	}
 
 	public void update() {
