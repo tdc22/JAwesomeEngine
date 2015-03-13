@@ -12,6 +12,12 @@ public abstract class AABB<L extends Vector> {
 
 	public abstract boolean contains(L point);
 
+	public boolean contains(AABB<L> aabb) {
+		return contains(aabb.getMin()) && contains(aabb.getMax());
+	}
+
+	public abstract float volume();
+
 	public L getMax() {
 		return max;
 	}

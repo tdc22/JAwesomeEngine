@@ -105,4 +105,9 @@ public class RigidBody3 extends
 		q.invert();
 		invrotation = q;
 	}
+
+	@Override
+	public AABB<Vector3f> getGlobalAABB() {
+		return new AABB3(getGlobalMinAABB(), getGlobalMaxAABB());
+	}
 }

@@ -35,7 +35,7 @@ import shape.Sphere;
 import utils.Pair;
 import vector.Vector3f;
 import vector.Vector4f;
-import broadphase.SAP;
+import broadphase.DynamicAABBTree;
 
 public class CollisionDetectionTest extends StandardGame {
 	PhysicsSpace space;
@@ -74,8 +74,8 @@ public class CollisionDetectionTest extends StandardGame {
 
 		manifolds = new ArrayList<ManifoldVisualization>();
 
-		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(
-				new EPA()), new NullResolution(), new NullCorrection(),
+		space = new PhysicsSpace(new EulerIntegration(), new DynamicAABBTree(),
+				new GJK(new EPA()), new NullResolution(), new NullCorrection(),
 				new SimpleManifoldManager<Vector3f>());
 		space.setCullStaticOverlaps(false);
 

@@ -1,8 +1,13 @@
 package objects;
 
+import math.VecMath;
 import vector.Vector3f;
 
 public class AABB3 extends AABB<Vector3f> {
+
+	public AABB3() {
+		super(new Vector3f(), new Vector3f());
+	}
 
 	public AABB3(Vector3f min, Vector3f max) {
 		super(min, max);
@@ -33,6 +38,12 @@ public class AABB3 extends AABB<Vector3f> {
 		max.z = Math.max(max.z, aabb.max.z);
 
 		return new AABB3(min, max);
+	}
+
+	@Override
+	public float volume() {
+		Vector3f size = VecMath.subtraction(max, min);
+		return size.x * size.y * size.z;
 	}
 
 }

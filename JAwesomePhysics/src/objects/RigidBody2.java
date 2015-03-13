@@ -112,4 +112,9 @@ public class RigidBody2 extends
 		c.invert();
 		invrotation = c;
 	}
+
+	@Override
+	public AABB<Vector2f> getGlobalAABB() {
+		return new AABB2(getGlobalMinAABB(), getGlobalMaxAABB());
+	}
 }

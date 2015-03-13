@@ -1,8 +1,13 @@
 package objects;
 
+import math.VecMath;
 import vector.Vector2f;
 
 public class AABB2 extends AABB<Vector2f> {
+
+	public AABB2() {
+		super(new Vector2f(), new Vector2f());
+	}
 
 	public AABB2(Vector2f min, Vector2f max) {
 		super(min, max);
@@ -29,6 +34,12 @@ public class AABB2 extends AABB<Vector2f> {
 		max.y = Math.max(max.y, aabb.max.y);
 
 		return new AABB2(min, max);
+	}
+
+	@Override
+	public float volume() {
+		Vector2f size = VecMath.subtraction(max, min);
+		return size.x * size.y;
 	}
 
 }

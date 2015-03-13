@@ -33,6 +33,8 @@ public abstract class CollisionShape<L extends Vector, A extends Rotation>
 		return aabb;
 	}
 
+	public abstract AABB<L> getGlobalAABB();
+
 	public abstract L getGlobalMaxAABB();
 
 	public abstract L getGlobalMinAABB();

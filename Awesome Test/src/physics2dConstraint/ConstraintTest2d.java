@@ -1,9 +1,5 @@
 package physics2dConstraint;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import constraints.DistanceConstraint2;
 import game.Debugger;
 import game.StandardGame;
 import gui.DisplayMode;
@@ -12,6 +8,10 @@ import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
 import integration.VerletIntegration;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import loader.FontLoader;
 import manifold.MultiPointManifoldManager2;
 import matrix.Matrix1f;
@@ -28,6 +28,7 @@ import shape2d.Circle;
 import shape2d.Quad;
 import vector.Vector2f;
 import broadphase.SAP2;
+import constraints.DistanceConstraint2;
 
 public class ConstraintTest2d extends StandardGame {
 	PhysicsSpace2 space;
@@ -59,10 +60,10 @@ public class ConstraintTest2d extends StandardGame {
 		RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(ground));
 		space.addRigidBody(ground, rb);
 		add2dObject(ground);
-		
+
 		bodies = new ArrayList<RigidBody2>();
-		
-		//Distance constraint
+
+		// Distance constraint
 		Circle leftCircle = new Circle(370, 50, 20, 10);
 		RigidBody2 rbL = new RigidBody2(PhysicsShapeCreator.create(leftCircle));
 		rbL.setMass(1f);
@@ -70,7 +71,7 @@ public class ConstraintTest2d extends StandardGame {
 		bodies.add(rbL);
 		space.addRigidBody(leftCircle, rbL);
 		add2dObject(leftCircle);
-		
+
 		Circle rightCircle = new Circle(430, 50, 20, 10);
 		RigidBody2 rbR = new RigidBody2(PhysicsShapeCreator.create(rightCircle));
 		rbR.setMass(1f);
@@ -78,7 +79,7 @@ public class ConstraintTest2d extends StandardGame {
 		bodies.add(rbR);
 		space.addRigidBody(rightCircle, rbR);
 		add2dObject(rightCircle);
-		
+
 		Constraint2 constraint = new DistanceConstraint2(rbL, rbR, 60);
 		space.addConstraint(constraint);
 	}
@@ -97,11 +98,11 @@ public class ConstraintTest2d extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		if(inputs.isKeyDown("1"))
+		if (inputs.isKeyDown("1"))
 			bodies.get(0).applyCentralImpulse(new Vector2f(0, -20));
-		if(inputs.isKeyDown("2"))
+		if (inputs.isKeyDown("2"))
 			bodies.get(1).applyCentralImpulse(new Vector2f(0, -20));
-		
+
 		debugmanager.update();
 		space.update(delta);
 		physicsdebug.update();
