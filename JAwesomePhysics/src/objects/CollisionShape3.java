@@ -19,6 +19,11 @@ public abstract class CollisionShape3 extends
 	}
 
 	@Override
+	public AABB3 getGlobalAABB() {
+		return new AABB3(getGlobalMinAABB(), getGlobalMaxAABB());
+	}
+
+	@Override
 	public Vector3f getGlobalMaxAABB() {
 		return VecMath.addition(aabb.getMax(), getTranslation());
 	}

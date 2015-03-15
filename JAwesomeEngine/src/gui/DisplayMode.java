@@ -4,7 +4,7 @@ public class DisplayMode {
 	int width, height;
 	boolean resizeable, vsync;
 	String title;
-	private final String DEFAULT_TITLE = "JAwesomeEngine Display";
+	private final String DEFAULT_TITLE = "JAwesomeEngine";
 
 	public DisplayMode() {
 		init(800, 600, DEFAULT_TITLE, true, true);

@@ -8,6 +8,10 @@ public class VideoSettings {
 		init(800, 600, 90f, 0.1f, 200);
 	}
 
+	public VideoSettings(int resx, int resy) {
+		init(resx, resy, 90f, 0.1f, 200);
+	}
+
 	public VideoSettings(int resx, int resy, float FOVy, float zNear,
 			float zFar, boolean vsync, int aaSamples) {
 		init(resx, resy, FOVy, zNear, zFar);

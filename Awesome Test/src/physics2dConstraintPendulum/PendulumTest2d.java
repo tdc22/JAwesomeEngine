@@ -1,0 +1,149 @@
+package physics2dConstraintPendulum;
+
+import game.Debugger;
+import game.StandardGame;
+import gui.DisplayMode;
+import gui.Font;
+import gui.GLDisplay;
+import gui.PixelFormat;
+import gui.VideoSettings;
+import integration.VerletIntegration;
+import loader.FontLoader;
+import manifold.MultiPointManifoldManager2;
+import matrix.Matrix1f;
+import narrowphase.EPA2;
+import narrowphase.GJK2;
+import objects.Constraint2;
+import objects.RigidBody2;
+import physics.PhysicsDebug2;
+import physics.PhysicsShapeCreator;
+import physics.PhysicsSpace2;
+import positionalcorrection.ProjectionCorrection;
+import resolution.ImpulseResolution;
+import shape2d.Circle;
+import shape2d.Quad;
+import vector.Vector2f;
+import broadphase.SAP2;
+import constraints.DistanceConstraint2;
+
+public class PendulumTest2d extends StandardGame {
+	PhysicsSpace2 space;
+	RigidBody2 rb1;
+	int tempdelta = 0;
+	Debugger debugmanager;
+	PhysicsDebug2 physicsdebug;
+
+	@Override
+	public void init() {
+		initDisplay(new GLDisplay(), new DisplayMode(1400, 600),
+				new PixelFormat(), new VideoSettings(1400, 600));
+		// display.bindMouse();
+		cam.setFlyCam(true);
+		cam.translateTo(0f, 0f, 5);
+		cam.rotateTo(0, 0);
+
+		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(),
+				new GJK2(new EPA2()), new ImpulseResolution(),
+				new ProjectionCorrection(1), new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
+		space.setGlobalForce(new Vector2f(0, 100));
+
+		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
+		debugmanager = new Debugger(inputs, font, cam);
+		physicsdebug = new PhysicsDebug2(inputs, font, space);
+
+		Quad base1 = new Quad(200, 20, 5, 5);
+		RigidBody2 rb1 = new RigidBody2(PhysicsShapeCreator.create(base1));
+		space.addRigidBody(base1, rb1);
+		add2dObject(base1);
+
+		Quad base2 = new Quad(600, 20, 5, 5);
+		RigidBody2 rb2 = new RigidBody2(PhysicsShapeCreator.create(base2));
+		space.addRigidBody(base2, rb2);
+		add2dObject(base2);
+
+		Quad base3 = new Quad(1000, 20, 5, 5);
+		RigidBody2 rb3 = new RigidBody2(PhysicsShapeCreator.create(base2));
+		space.addRigidBody(base3, rb3);
+		add2dObject(base3);
+
+		// Pendulum 1
+		Circle body1 = new Circle(0, 0, 20, 100);
+		RigidBody2 rbB1 = new RigidBody2(PhysicsShapeCreator.create(body1));
+		rbB1.setMass(1f);
+		rbB1.setInertia(new Matrix1f(1));
+		space.addRigidBody(body1, rbB1);
+		add2dObject(body1);
+
+		Constraint2 constraint = new DistanceConstraint2(rb1, rbB1, 180);
+		space.addConstraint(constraint);
+
+		// Pendulum 2
+		Circle body21 = new Circle(400, 0, 20, 100);
+		RigidBody2 rbB21 = new RigidBody2(PhysicsShapeCreator.create(body21));
+		rbB21.setMass(1f);
+		rbB21.setInertia(new Matrix1f(1));
+		space.addRigidBody(body21, rbB21);
+		add2dObject(body21);
+
+		Circle body22 = new Circle(400, 180, 20, 100);
+		RigidBody2 rbB22 = new RigidBody2(PhysicsShapeCreator.create(body22));
+		rbB22.setMass(1f);
+		rbB22.setInertia(new Matrix1f(1));
+		space.addRigidBody(body22, rbB22);
+		add2dObject(body22);
+
+		Constraint2 constraint21 = new DistanceConstraint2(rb2, rbB21, 180);
+		Constraint2 constraint22 = new DistanceConstraint2(rbB21, rbB22, 180);
+		space.addConstraint(constraint21);
+		space.addConstraint(constraint22);
+
+		// Pendulum 3
+		Circle body31 = new Circle(800, 0, 20, 100);
+		RigidBody2 rbB31 = new RigidBody2(PhysicsShapeCreator.create(body31));
+		rbB31.setMass(1f);
+		rbB31.setInertia(new Matrix1f(1));
+		space.addRigidBody(body31, rbB31);
+		add2dObject(body31);
+
+		Circle body32 = new Circle(800, 180, 20, 100);
+		RigidBody2 rbB32 = new RigidBody2(PhysicsShapeCreator.create(body32));
+		rbB32.setMass(1f);
+		rbB32.setInertia(new Matrix1f(1));
+		space.addRigidBody(body32, rbB32);
+		add2dObject(body32);
+
+		Circle body33 = new Circle(980, 180, 20, 100);
+		RigidBody2 rbB33 = new RigidBody2(PhysicsShapeCreator.create(body33));
+		rbB33.setMass(1f);
+		rbB33.setInertia(new Matrix1f(1));
+		space.addRigidBody(body33, rbB33);
+		add2dObject(body33);
+
+		Constraint2 constraint31 = new DistanceConstraint2(rb3, rbB31, 180);
+		Constraint2 constraint32 = new DistanceConstraint2(rbB31, rbB32, 180);
+		Constraint2 constraint33 = new DistanceConstraint2(rbB32, rbB33, 180);
+		space.addConstraint(constraint31);
+		space.addConstraint(constraint32);
+		space.addConstraint(constraint33);
+	}
+
+	@Override
+	public void render() {
+
+	}
+
+	@Override
+	public void render2d() {
+		debugmanager.render2d(fps, objects.size(), objects2d.size());
+		render2dScene();
+		physicsdebug.render2d();
+	}
+
+	@Override
+	public void update(int delta) {
+		debugmanager.update();
+		space.update(delta);
+		physicsdebug.update();
+		cam.update(delta);
+	}
+}
