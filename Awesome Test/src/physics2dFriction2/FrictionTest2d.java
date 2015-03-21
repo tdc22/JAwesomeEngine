@@ -28,7 +28,7 @@ public class FrictionTest2d extends StandardGame {
 	PhysicsSpace2 space;
 	RigidBody2 rb1;
 	int tempdelta = 0;
-	Debugger debugmanager;
+	Debugger debugger;
 	PhysicsDebug2 physicsdebug;
 
 	@Override
@@ -45,7 +45,7 @@ public class FrictionTest2d extends StandardGame {
 		space.setGlobalForce(new Vector2f(0, 100));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugmanager = new Debugger(inputs, font, cam);
+		debugger = new Debugger(inputs, font, cam);
 		physicsdebug = new PhysicsDebug2(inputs, font, space);
 
 		Quad ground = new Quad(400, 550, 300, 20);
@@ -67,8 +67,10 @@ public class FrictionTest2d extends StandardGame {
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
+		debugger.render2d(fps, objects.size(), objects2d.size());
+		debugger.begin();
 		render2dScene();
+		debugger.end();
 		physicsdebug.render2d();
 	}
 
@@ -98,7 +100,7 @@ public class FrictionTest2d extends StandardGame {
 			tempdelta += delta;
 		}
 
-		debugmanager.update();
+		debugger.update();
 		physicsdebug.update();
 		space.update(delta);
 		cam.update(delta);

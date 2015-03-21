@@ -32,7 +32,7 @@ public class BasicTest extends StandardGame {
 	RigidBody3 rb1;
 	int tempdelta = 0;
 	boolean impulseapplied = false;
-	Debugger debugmanager;
+	Debugger debugger;
 	PhysicsDebug physicsdebug;
 	InputEvent run, step;
 
@@ -52,7 +52,7 @@ public class BasicTest extends StandardGame {
 		space.setGlobalForce(new Vector3f(0, -5, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugmanager = new Debugger(inputs, font, cam);
+		debugger = new Debugger(inputs, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
 
 		Box ground = new Box(0, -5, 0, 10, 1, 10);
@@ -84,15 +84,17 @@ public class BasicTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
 		physicsdebug.render3d();
 	}
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
 		render2dScene();
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
@@ -130,7 +132,7 @@ public class BasicTest extends StandardGame {
 			tempdelta += delta;
 		}
 
-		debugmanager.update();
+		debugger.update();
 		if (run.isActive() || step.isActive())
 			space.update(delta);
 		physicsdebug.update();

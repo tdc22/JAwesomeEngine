@@ -27,7 +27,7 @@ public class FrictionTest2d extends StandardGame {
 	PhysicsSpace2 space;
 	RigidBody2 rb1, rb2;
 	int tempdelta = 0;
-	Debugger debugmanager;
+	Debugger debugger;
 	PhysicsDebug2 physicsdebug;
 
 	@Override
@@ -45,7 +45,7 @@ public class FrictionTest2d extends StandardGame {
 		space.setGlobalForce(new Vector2f(0, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugmanager = new Debugger(inputs, font, cam);
+		debugger = new Debugger(inputs, font, cam);
 		physicsdebug = new PhysicsDebug2(inputs, font, space);
 
 		Circle c1 = new Circle(100, 200, 20, 6);
@@ -74,8 +74,10 @@ public class FrictionTest2d extends StandardGame {
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
+		debugger.render2d(fps, objects.size(), objects2d.size());
+		debugger.begin();
 		render2dScene();
+		debugger.end();
 		physicsdebug.render2d();
 	}
 
@@ -83,7 +85,7 @@ public class FrictionTest2d extends StandardGame {
 	public void update(int delta) {
 		System.out.println(rb1.getAngularVelocity() + "; "
 				+ rb2.getAngularVelocity());
-		debugmanager.update();
+		debugger.update();
 		physicsdebug.update();
 		space.update(delta);
 		cam.update(delta);

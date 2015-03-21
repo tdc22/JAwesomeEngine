@@ -14,7 +14,7 @@ import shape.IsoSphere;
 import shape.Sphere;
 
 public class GeometryTest extends StandardGame {
-	Debugger debugmanager;
+	Debugger debugger;
 
 	// Shader lineshader;
 
@@ -27,7 +27,7 @@ public class GeometryTest extends StandardGame {
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		debugmanager = new Debugger(inputs,
+		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		// inputs.setInputReader(new GLFWInputReader(((GLDisplay) display)
@@ -56,7 +56,8 @@ public class GeometryTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		// lineshader.bind();
 		renderScene();
 		// lineshader.unbind();
@@ -64,14 +65,15 @@ public class GeometryTest extends StandardGame {
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
 		render2dScene();
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
 		// System.out.println("------------------------------------");
-		debugmanager.update();
+		debugger.update();
 		cam.update(delta);
 		// System.out.println(cam.getPosition().toString());
 	}

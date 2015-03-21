@@ -6,7 +6,6 @@ import static org.lwjgl.opengl.GL11.GL_INVALID_ENUM;
 import static org.lwjgl.opengl.GL11.GL_INVALID_OPERATION;
 import static org.lwjgl.opengl.GL11.GL_INVALID_VALUE;
 import static org.lwjgl.opengl.GL11.GL_LINE;
-import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.GL_OUT_OF_MEMORY;
 import static org.lwjgl.opengl.GL11.GL_STACK_OVERFLOW;
@@ -28,6 +27,7 @@ import input.KeyInput;
 import java.awt.Color;
 
 import objects.ShapedObject;
+import utils.GLConstants;
 import vector.Vector3f;
 
 public class Debugger {
@@ -51,9 +51,9 @@ public class Debugger {
 		xaxis = new ShapedObject();
 		yaxis = new ShapedObject();
 		zaxis = new ShapedObject();
-		xaxis.setRenderMode(GL_LINES);
-		yaxis.setRenderMode(GL_LINES);
-		zaxis.setRenderMode(GL_LINES);
+		xaxis.setRenderMode(GLConstants.LINES);
+		yaxis.setRenderMode(GLConstants.LINES);
+		zaxis.setRenderMode(GLConstants.LINES);
 
 		setRange(new Vector3f(1000, 1000, 1000));
 		setupControls(i);
@@ -84,6 +84,7 @@ public class Debugger {
 	}
 
 	public void render2d(int fps, int objects, int objects2d) {
+		// if(wireframe) wireframeshader.unbind();
 		if (showdata) {
 			Vector3f campos = cam.getTranslation();
 
@@ -148,7 +149,7 @@ public class Debugger {
 
 		if (showgrid) {
 			glColor3f(1f, 1f, 1f);
-			glBegin(GL_LINES);
+			glBegin(GLConstants.LINES);
 			for (int x = (int) -range.x; x < range.x; x++) {
 				if (x != 0) {
 					glVertex3f(x, 0, -range.z);
@@ -171,6 +172,16 @@ public class Debugger {
 		}
 	}
 
+	public void begin() {
+		if (wireframe)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+
+	public void end() {
+		if (wireframe)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
 	public void setRange(Vector3f range) {
 		this.range = range;
 		xaxis.deleteData();
@@ -191,10 +202,6 @@ public class Debugger {
 	}
 
 	public void setRenderWireframe(boolean w) {
-		if (w)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		else
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		wireframe = w;
 	}
 
@@ -239,7 +246,7 @@ public class Debugger {
 	}
 
 	public void toggleWireframe() {
-		// setRenderWireframe(!wireframe);
+		setRenderWireframe(!wireframe);
 	}
 
 	public void update() {

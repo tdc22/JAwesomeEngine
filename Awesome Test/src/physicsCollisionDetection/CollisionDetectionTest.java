@@ -44,7 +44,7 @@ public class CollisionDetectionTest extends StandardGame {
 	Cylinder c1;
 	Shader s1, s2, s3, s4, s5;
 	RigidBody3 rb1, rb2, rb3, rb4, rb5;
-	Debugger debugmanager;
+	Debugger debugger;
 	List<ManifoldVisualization> manifolds;
 	InputEvent toggleMouseBind;
 
@@ -110,7 +110,7 @@ public class CollisionDetectionTest extends StandardGame {
 		addObject(c1);
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
-		debugmanager = new Debugger(inputs,
+		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
 				Input.KEYBOARD_EVENT, "R", KeyInput.KEY_PRESSED));
@@ -119,7 +119,8 @@ public class CollisionDetectionTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
 		for (ManifoldVisualization mv : manifolds) {
 			mv.render();
@@ -130,7 +131,8 @@ public class CollisionDetectionTest extends StandardGame {
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
@@ -207,7 +209,7 @@ public class CollisionDetectionTest extends StandardGame {
 				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
 		}
 
-		debugmanager.update();
+		debugger.update();
 		cam.update(delta);
 	}
 }

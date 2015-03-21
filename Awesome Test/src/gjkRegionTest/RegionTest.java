@@ -34,7 +34,7 @@ public class RegionTest extends StandardGame {
 	Vector3f minbounds = new Vector3f(0, 0, 0), maxbounds = new Vector3f(10,
 			10, 10);
 	HashMap<Vector3f, Integer> generated;
-	Debugger debugmanager;
+	Debugger debugger;
 	boolean runthreads = true;
 	boolean adding = false;
 
@@ -211,7 +211,7 @@ public class RegionTest extends StandardGame {
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
-		debugmanager = new Debugger(inputs,
+		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		display.bindMouse();
 		cam.setFlyCam(true);
@@ -303,7 +303,8 @@ public class RegionTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
 		simplex.render();
 		for (Points p : pointbatches)
@@ -312,8 +313,9 @@ public class RegionTest extends StandardGame {
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
 		render2dScene();
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
@@ -369,7 +371,7 @@ public class RegionTest extends StandardGame {
 			else
 				display.unbindMouse();
 		}
-		debugmanager.update();
+		debugger.update();
 		cam.update(delta);
 	}
 }

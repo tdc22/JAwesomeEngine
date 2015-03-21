@@ -20,14 +20,14 @@ import loader.FontLoader;
 import terrain.Terrain;
 
 public class SimpleTerrainTest extends StandardGame {
-	Debugger debugmanager;
+	Debugger debugger;
 	InputEvent toggleMouseBind;
 
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
-		debugmanager = new Debugger(inputs,
+		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		display.bindMouse();
@@ -52,19 +52,21 @@ public class SimpleTerrainTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
 	}
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
 		render2dScene();
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
-		debugmanager.update();
+		debugger.update();
 		cam.update(delta);
 		if (toggleMouseBind.isActive()) {
 			if (!display.isMouseBound())

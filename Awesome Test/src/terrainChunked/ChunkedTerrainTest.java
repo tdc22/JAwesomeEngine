@@ -19,7 +19,7 @@ import vector.Vector3f;
 
 public class ChunkedTerrainTest extends StandardGame {
 	ChunkedTerrain terrain;
-	Debugger debugmanager;
+	Debugger debugger;
 
 	@Override
 	public void init() {
@@ -30,7 +30,7 @@ public class ChunkedTerrainTest extends StandardGame {
 		cam.translateTo(0, 3, 0);
 		cam.rotateTo(225, 0);
 
-		debugmanager = new Debugger(inputs,
+		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		BufferedImage heightmap = null;
@@ -50,18 +50,20 @@ public class ChunkedTerrainTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
 	}
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
-		debugmanager.update();
+		debugger.update();
 		cam.update(delta);
 		terrain.updateLOD(cam.getTranslation());
 	}

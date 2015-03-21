@@ -67,7 +67,7 @@ public class Tutorial extends StandardGame {
 	List<Vector3f> colors;
 
 	// TODO: REMOVE!!!
-	Debugger debugmanager;
+	Debugger debugger;
 	PhysicsDebug physicsdebug;
 
 	@Override
@@ -167,7 +167,7 @@ public class Tutorial extends StandardGame {
 		colors.add(new Vector3f(0.3f, 0.3f, 0.92f));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugmanager = new Debugger(inputs, font, cam);
+		debugger = new Debugger(inputs, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
 
 		generateLevel();
@@ -220,19 +220,23 @@ public class Tutorial extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
 		setShadersActive(false);
-		edgeshader.bind();
-		renderScene();
-		edgeshader.unbind();
+		if (!debugger.isWireframeRendered()) {
+			edgeshader.bind();
+			renderScene();
+			edgeshader.unbind();
+		}
 		setShadersActive(true);
 		physicsdebug.render3d();
 	}
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
@@ -279,7 +283,7 @@ public class Tutorial extends StandardGame {
 
 		goal.rotate(0.05f * delta, 0.05f * delta, 0.05f * delta);
 
-		debugmanager.update();
+		debugger.update();
 		space.update(delta);
 		physicsdebug.update();
 

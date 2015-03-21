@@ -1,6 +1,5 @@
 package objects;
 
-import static org.lwjgl.opengl.ARBGeometryShader4.GL_TRIANGLES_ADJACENCY_ARB;
 import static org.lwjgl.opengl.GL11.GL_COLOR_ARRAY;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_NORMAL_ARRAY;
@@ -36,6 +35,7 @@ import math.VecMath;
 
 import org.lwjgl.BufferUtils;
 
+import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -72,7 +72,7 @@ public class ShapedObject extends RenderedObject {
 		vertcolors = new ArrayList<Color>();
 		texturecoords = new ArrayList<Vector2f>();
 
-		rendermode = GL_TRIANGLES_ADJACENCY_ARB;
+		rendermode = GLConstants.TRIANGLE_ADJACENCY;
 	}
 
 	public void addIndex(int index) {

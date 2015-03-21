@@ -14,7 +14,7 @@ import shape.Box;
 import texture.Texture;
 
 public class MassBoxesTest2 extends StandardGame {
-	Debugger debugmanager;
+	Debugger debugger;
 	Shader textureshader;
 
 	@Override
@@ -26,7 +26,7 @@ public class MassBoxesTest2 extends StandardGame {
 		cam.translateTo(0, 0, 0);
 		cam.rotateTo(180, 0);
 
-		debugmanager = new Debugger(inputs,
+		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		Texture texture = new Texture(
@@ -50,7 +50,8 @@ public class MassBoxesTest2 extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		textureshader.bind();
 		renderScene();
 		textureshader.unbind();
@@ -58,13 +59,14 @@ public class MassBoxesTest2 extends StandardGame {
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
 		render2dScene();
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
-		debugmanager.update();
+		debugger.update();
 		cam.update(delta);
 	}
 }

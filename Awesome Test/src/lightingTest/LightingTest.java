@@ -15,14 +15,14 @@ import vector.Vector3f;
 import vector.Vector4f;
 
 public class LightingTest extends StandardGame {
-	Debugger debugmanager;
+	Debugger debugger;
 
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
-		// display.bindMouse();
-		debugmanager = new Debugger(inputs,
+		display.bindMouse();
+		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
@@ -48,18 +48,20 @@ public class LightingTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
 	}
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
-		debugmanager.update();
+		debugger.update();
 		cam.update(delta);
 	}
 

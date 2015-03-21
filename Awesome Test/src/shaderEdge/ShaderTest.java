@@ -13,14 +13,14 @@ import shape.Box;
 import utils.GLConstants;
 
 public class ShaderTest extends StandardGame {
-	Debugger debugmanager;
+	Debugger debugger;
 	Shader edgeshader;
 
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
-		debugmanager = new Debugger(inputs,
+		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		display.bindMouse();
@@ -39,9 +39,10 @@ public class ShaderTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
-		if (!debugmanager.isWireframeRendered()) {
+		if (!debugger.isWireframeRendered()) {
 			edgeshader.bind();
 			renderScene();
 			edgeshader.unbind();
@@ -50,12 +51,13 @@ public class ShaderTest extends StandardGame {
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
-		debugmanager.update();
+		debugger.update();
 		cam.update(delta);
 	}
 }

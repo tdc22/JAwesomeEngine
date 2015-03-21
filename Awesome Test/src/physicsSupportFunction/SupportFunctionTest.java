@@ -35,7 +35,7 @@ public class SupportFunctionTest extends StandardGame {
 	SupportDifferenceObject support1, support2, support3;
 	DirectionRenderer dirrenderer;
 	RigidBody3 rb1, rb2, rb3, rb4;
-	Debugger debugmanager;
+	Debugger debugger;
 	InputEvent toggleMouseBind;
 
 	@Override
@@ -48,7 +48,7 @@ public class SupportFunctionTest extends StandardGame {
 		cam.rotateTo(0, 0);
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
-		debugmanager = new Debugger(inputs,
+		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(
@@ -109,13 +109,15 @@ public class SupportFunctionTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
 	}
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
@@ -185,7 +187,7 @@ public class SupportFunctionTest extends StandardGame {
 		// }
 		// }
 
-		debugmanager.update();
+		debugger.update();
 		cam.update(delta);
 		space.update(delta);
 	}

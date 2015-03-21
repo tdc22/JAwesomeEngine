@@ -25,7 +25,7 @@ public class ImpulseTest extends StandardGame {
 	PhysicsSpace space;
 	Box b;
 	RigidBody3 rb;
-	Debugger debugmanager;
+	Debugger debugger;
 	int tempdelta = 0;
 	boolean impulseapplied = false;
 
@@ -37,7 +37,7 @@ public class ImpulseTest extends StandardGame {
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		debugmanager = new Debugger(inputs,
+		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		// mouse.setGrabbed(false);
 
@@ -55,14 +55,16 @@ public class ImpulseTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugmanager.render3d();
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
 	}
 
 	@Override
 	public void render2d() {
-		debugmanager.render2d(fps, objects.size(), objects2d.size());
 		render2dScene();
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
@@ -76,7 +78,7 @@ public class ImpulseTest extends StandardGame {
 			impulseapplied = true;
 		}
 
-		debugmanager.update();
+		debugger.update();
 		space.update(delta);
 		cam.update(delta);
 	}
