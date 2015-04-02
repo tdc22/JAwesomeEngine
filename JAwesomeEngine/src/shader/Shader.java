@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import matrix.Matrix2f;
@@ -40,12 +41,14 @@ public class Shader {
 	private List<Integer> uniformpositions;
 	private List<Integer> uniformtypes;
 	private List<Object> uniformarguments;
+	private HashMap<String, Integer> uniformnames;
 
 	public Shader(int shaderProgram) {
 		this.shaderProgram = shaderProgram;
 		uniformpositions = new ArrayList<Integer>();
 		uniformtypes = new ArrayList<Integer>();
 		uniformarguments = new ArrayList<Object>();
+		uniformnames = new HashMap<String, Integer>();
 	}
 
 	public Shader(int shaderProgram, List<String> argumentnames,
@@ -54,6 +57,7 @@ public class Shader {
 		uniformpositions = new ArrayList<Integer>();
 		uniformtypes = new ArrayList<Integer>();
 		uniformarguments = new ArrayList<Object>();
+		uniformnames = new HashMap<String, Integer>();
 		addArguments(argumentnames, arguments);
 	}
 
@@ -63,6 +67,7 @@ public class Shader {
 		uniformpositions = new ArrayList<Integer>();
 		uniformtypes = new ArrayList<Integer>();
 		uniformarguments = new ArrayList<Object>();
+		uniformnames = new HashMap<String, Integer>();
 		for (Pair<String, Object> a : arguments)
 			addArgument(a.getFirst(), a.getSecond());
 	}
@@ -72,6 +77,7 @@ public class Shader {
 		uniformpositions = new ArrayList<Integer>();
 		uniformtypes = new ArrayList<Integer>();
 		uniformarguments = new ArrayList<Object>();
+		uniformnames = new HashMap<String, Integer>();
 		addArgument(argumentname, argument);
 	}
 
@@ -80,6 +86,7 @@ public class Shader {
 		uniformpositions = new ArrayList<Integer>(shader.getUniformPositions());
 		uniformtypes = new ArrayList<Integer>(shader.getArgumentTypes());
 		uniformarguments = new ArrayList<Object>(shader.getArguments());
+		uniformnames = new HashMap<String, Integer>();
 	}
 
 	public void addArgument(Object argument) {
@@ -145,6 +152,7 @@ public class Shader {
 	}
 
 	public void addArgumentName(String argumentname) {
+		uniformnames.put(argumentname, uniformpositions.size());
 		uniformpositions.add(glGetUniformLocation(shaderProgram, argumentname));
 	}
 
@@ -171,7 +179,7 @@ public class Shader {
 	public void addTextureID(String argumentname, int argument) {
 		uniformtypes.add(9);
 		uniformarguments.add(argument);
-		uniformpositions.add(glGetUniformLocation(shaderProgram, argumentname));
+		addArgumentName(argumentname);
 		System.out.println("Argument type is Texture");
 	}
 
@@ -183,7 +191,6 @@ public class Shader {
 			int argumenttype = uniformtypes.get(e);
 			int uniformlocation = uniformpositions.get(e);
 
-			// glUniform1f(uniformlocation, 0.5f);
 			switch (argumenttype) {
 			case 1:
 				glUniform1i(uniformlocation, (Integer) argument);
@@ -234,10 +241,16 @@ public class Shader {
 				break;
 			}
 		}
+		if (texturenumber > 0)
+			glActiveTexture(GL_TEXTURE0);
 	}
 
 	public void delete() {
 		glDeleteProgram(shaderProgram);
+		uniformpositions.clear();
+		uniformtypes.clear();
+		uniformarguments.clear();
+		uniformnames.clear();
 	}
 
 	public List<Object> getArguments() {
@@ -256,8 +269,20 @@ public class Shader {
 		return uniformpositions;
 	}
 
+	public HashMap<String, Integer> getUniformNames() {
+		return uniformnames;
+	}
+
 	public void setArgument(int id, Object argument) {
 		uniformarguments.set(id, argument);
+	}
+
+	public void setArgument(String argumentname, Object argument) {
+		uniformarguments.set(getArgumentID(argumentname), argument);
+	}
+
+	public int getArgumentID(String argumentname) {
+		return uniformnames.get(argumentname);
 	}
 
 	public void unbind() {
@@ -283,6 +308,8 @@ public class Shader {
 				texturenumber++;
 			}
 		}
+		if (texturenumber > 0)
+			glActiveTexture(GL_TEXTURE0);
 		glUseProgram(0);
 	}
 }

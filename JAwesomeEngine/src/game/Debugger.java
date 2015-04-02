@@ -36,6 +36,8 @@ public class Debugger {
 	boolean showaxis = false;
 	boolean showgrid = false;
 	boolean wireframe = false;
+	boolean isFirstError = true;
+	String firsterror;
 	Text text;
 	Camera cam;
 	Vector3f range;
@@ -88,43 +90,51 @@ public class Debugger {
 		if (showdata) {
 			Vector3f campos = cam.getTranslation();
 
-			String glerror = "no error";
-			int errorflag = glGetError();
-			if (errorflag != GL_NO_ERROR) {
-				switch (errorflag) {
-				case GL_INVALID_ENUM:
-					glerror = "invalid enum";
-					break;
-				case GL_INVALID_VALUE:
-					glerror = "invalid value";
-					break;
-				case GL_INVALID_OPERATION:
-					glerror = "invalid operation";
-					break;
-				case GL_INVALID_FRAMEBUFFER_OPERATION:
-					glerror = "invalid framebuffer operation";
-					break;
-				case GL_OUT_OF_MEMORY:
-					glerror = "out of memory";
-					break;
-				case GL_STACK_UNDERFLOW:
-					glerror = "stack underflow";
-					break;
-				case GL_STACK_OVERFLOW:
-					glerror = "stack overflow";
-					break;
-				default:
-					glerror = "unknown error";
-				}
+			if (isFirstError) {
+				firsterror = getGLErrorName(glGetError());
+				isFirstError = false;
 			}
 
 			text.setText("FPS: " + fps + " ("
 					+ String.format("%.2f", 1000 / (float) fps)
 					+ " ms)\nObjects: " + objects + "\n2d Objects: "
 					+ objects2d + "\nPolygons:\nCamera: " + campos.x + "; "
-					+ campos.y + "; " + campos.z + "\nGL-Error: " + glerror);
+					+ campos.y + "; " + campos.z + "\nGL-Error: "
+					+ getGLErrorName(glGetError()) + " (" + firsterror + ")");
 			text.render();
 		}
+	}
+
+	public String getGLErrorName(int glErrorID) {
+		String glerror = "no error";
+		if (glErrorID != GL_NO_ERROR) {
+			switch (glErrorID) {
+			case GL_INVALID_ENUM:
+				glerror = "invalid enum";
+				break;
+			case GL_INVALID_VALUE:
+				glerror = "invalid value";
+				break;
+			case GL_INVALID_OPERATION:
+				glerror = "invalid operation";
+				break;
+			case GL_INVALID_FRAMEBUFFER_OPERATION:
+				glerror = "invalid framebuffer operation";
+				break;
+			case GL_OUT_OF_MEMORY:
+				glerror = "out of memory";
+				break;
+			case GL_STACK_UNDERFLOW:
+				glerror = "stack underflow";
+				break;
+			case GL_STACK_OVERFLOW:
+				glerror = "stack overflow";
+				break;
+			default:
+				glerror = "unknown error";
+			}
+		}
+		return glerror;
 	}
 
 	public void render3d() {

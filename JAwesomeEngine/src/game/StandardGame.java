@@ -52,6 +52,7 @@ import objects.RenderedObject;
 
 import org.lwjgl.BufferUtils;
 
+import shader.Shader;
 import shape2d.Quad;
 import texture.FrameBufferObject;
 
@@ -59,9 +60,11 @@ public abstract class StandardGame extends AbstractGame {
 	protected List<RenderedObject> objects;
 	protected List<RenderedObject> objects2d;
 	public VideoSettings settings;
-	protected FrameBufferObject framebufferMS, framebuffer;
-	protected FrameBufferObject framebuffer2MS, framebuffer2;
-	protected Quad screen, screen2d;
+	protected FrameBufferObject framebufferMultisample, framebuffer,
+			framebufferPostProcessing;
+	protected FrameBufferObject framebuffer2Multisample, framebuffer2,
+			framebuffer2PostProcessing;
+	protected Quad screen;
 	public Display display;
 	public GameCamera cam;
 
@@ -71,6 +74,8 @@ public abstract class StandardGame extends AbstractGame {
 	private FloatBuffer identity;
 	boolean render2d = true;
 	boolean useFBO = true;
+	protected List<Shader> postProcessing, postProcessing2;
+	protected int postProcessingIterations = 20; // TODO: Rethink that
 
 	public void add2dObject(RenderedObject element) {
 		objects2d.add(element);
@@ -78,6 +83,14 @@ public abstract class StandardGame extends AbstractGame {
 
 	public void addObject(RenderedObject obj) {
 		objects.add(obj);
+	}
+
+	public void addPostProcessingShader2(Shader shader) {
+		postProcessing2.add(shader);
+	}
+
+	public void addPostProcessingShader(Shader shader) {
+		postProcessing.add(shader);
 	}
 
 	@Override
@@ -90,23 +103,25 @@ public abstract class StandardGame extends AbstractGame {
 		}
 		if (screen != null)
 			screen.delete();
-		if (screen2d != null)
-			screen2d.delete();
-		if (framebufferMS != null)
-			framebufferMS.delete();
+		if (framebufferMultisample != null)
+			framebufferMultisample.delete();
 		if (framebuffer != null)
 			framebuffer.delete();
-		if (framebuffer2MS != null)
-			framebuffer2MS.delete();
+		if (framebuffer2Multisample != null)
+			framebuffer2Multisample.delete();
 		if (framebuffer2 != null)
 			framebuffer2.delete();
+		if (framebufferPostProcessing != null)
+			framebufferPostProcessing.delete();
+		if (framebuffer2PostProcessing != null)
+			framebuffer2PostProcessing.delete();
 	}
 
 	private void end2d() {
 		if (useFBO) {
-			framebuffer2MS.end();
+			framebuffer2Multisample.end();
 			framebuffer2.clear();
-			framebuffer2MS.copyTo(framebuffer2);
+			framebuffer2Multisample.copyTo(framebuffer2);
 		} else {
 			mode3d();
 		}
@@ -115,9 +130,9 @@ public abstract class StandardGame extends AbstractGame {
 	private void end3d() {
 		cam.end();
 		if (useFBO) {
-			framebufferMS.end();
+			framebufferMultisample.end();
 			framebuffer.clear();
-			framebufferMS.copyTo(framebuffer);
+			framebufferMultisample.copyTo(framebuffer);
 		}
 	}
 
@@ -125,16 +140,40 @@ public abstract class StandardGame extends AbstractGame {
 		if (useFBO) {
 			if (!render2d)
 				mode2d();
-			glBindTexture(GL_TEXTURE_2D, framebuffer.getTextureID());
-			screen.render();
+			applyPostProcessing(postProcessing, framebuffer,
+					framebufferPostProcessing);
 			if (render2d) {
-				glBindTexture(GL_TEXTURE_2D, framebuffer2.getTextureID());
-				screen2d.render();
+				applyPostProcessing(postProcessing2, framebuffer2,
+						framebuffer2PostProcessing);
 			}
 			glBindTexture(GL_TEXTURE_2D, 0);
 			mode3d();
 		}
 		display.swap();
+	}
+
+	private void applyPostProcessing(List<Shader> ppshaders,
+			FrameBufferObject fbo1, FrameBufferObject fbo2) {
+		boolean p = true;
+		int tex0 = fbo1.getTextureID();
+		int tex1 = fbo2.getTextureID();
+		for (Shader s : ppshaders) {
+			// TODO: Create Multipass shader-class with integer for number of
+			// iterations.... + try to put this in there?
+			for (int i = 0; i < postProcessingIterations; i++) {
+				FrameBufferObject current = p ? fbo2 : fbo1;
+				current.bind();
+				current.clear();
+				s.setArgument("texture", p ? tex0 : tex1);
+				s.bind();
+				screen.render();
+				s.unbind();
+				current.unbind();
+				p = !p;
+			}
+		}
+		glBindTexture(GL_TEXTURE_2D, p ? tex0 : tex1);
+		screen.render();
 	}
 
 	public List<RenderedObject> get2dObjects() {
@@ -160,27 +199,30 @@ public abstract class StandardGame extends AbstractGame {
 					.addWindowID(((GLDisplay) display).getWindowID());
 
 		if (useFBO) {
-			framebufferMS = new FrameBufferObject(this,
+			framebufferMultisample = new FrameBufferObject(this,
 					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), pixelformat.getSamples());
 			framebuffer = new FrameBufferObject(this,
 					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), 0);
-			framebuffer2MS = new FrameBufferObject(this,
+			framebufferPostProcessing = new FrameBufferObject(this,
+					videosettings.getResolutionX(),
+					videosettings.getResolutionY(), 0);
+			framebuffer2Multisample = new FrameBufferObject(this,
 					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), pixelformat.getSamples());
 			framebuffer2 = new FrameBufferObject(this,
+					videosettings.getResolutionX(),
+					videosettings.getResolutionY(), 0);
+			framebuffer2PostProcessing = new FrameBufferObject(this,
 					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), 0);
 
 			float halfResX = videosettings.getResolutionX() / 2f;
 			float halfResY = videosettings.getResolutionY() / 2f;
 			screen = new Quad(halfResX, halfResY, halfResX, -halfResY);
-			screen2d = new Quad(halfResX, halfResY, halfResX, -halfResY);
 			screen.invertAllTriangles();
-			screen2d.invertAllTriangles();
 			screen.setRenderHints(false, true, false);
-			screen2d.setRenderHints(false, true, false);
 		}
 	}
 
@@ -202,6 +244,9 @@ public abstract class StandardGame extends AbstractGame {
 		inputs.addEvent(closeEvent);
 
 		cam = new GameCamera(inputs);
+
+		postProcessing2 = new ArrayList<Shader>();
+		postProcessing = new ArrayList<Shader>();
 
 		identity = BufferUtils.createFloatBuffer(16 * 4);
 		VecMath.identityMatrix().store(identity);
@@ -267,7 +312,7 @@ public abstract class StandardGame extends AbstractGame {
 	protected void prepareRender() {
 		display.clear();
 		if (useFBO) {
-			framebufferMS.begin();
+			framebufferMultisample.begin();
 		}
 		cam.begin();
 	}
@@ -335,7 +380,7 @@ public abstract class StandardGame extends AbstractGame {
 	private void start2d() {
 		mode2d();
 		if (useFBO) {
-			framebuffer2MS.begin();
+			framebuffer2Multisample.begin();
 		}
 	}
 

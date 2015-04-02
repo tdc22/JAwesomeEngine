@@ -58,11 +58,14 @@ public class ShaderLoader {
 	public static int loadShader(String vertexShaderSource,
 			String fragmentShaderSource, String geometryShaderSource,
 			int inputtype, int outputtype, int verticesout) {
+		boolean includeVertexShader = vertexShaderSource != null;
 		boolean includeFragmentShader = fragmentShaderSource != null;
 		boolean includeGeometryShader = geometryShaderSource != null;
 
 		int shaderProgram = glCreateProgram();
-		int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+		int vertexShader = 0;
+		if (includeVertexShader)
+			vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		int fragmentShader = 0;
 		if (includeFragmentShader)
 			fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -70,13 +73,15 @@ public class ShaderLoader {
 		if (includeGeometryShader)
 			geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
 
-		compileShader(vertexShader, vertexShaderSource, 1);
+		if (includeVertexShader)
+			compileShader(vertexShader, vertexShaderSource, 1);
 		if (includeFragmentShader)
 			compileShader(fragmentShader, fragmentShaderSource, 2);
 		if (includeGeometryShader)
 			compileShader(geometryShader, geometryShaderSource, 3);
 
-		glAttachShader(shaderProgram, vertexShader);
+		if (includeVertexShader)
+			glAttachShader(shaderProgram, vertexShader);
 		if (includeFragmentShader)
 			glAttachShader(shaderProgram, fragmentShader);
 		if (includeGeometryShader) {
@@ -92,7 +97,8 @@ public class ShaderLoader {
 
 		glLinkProgram(shaderProgram);
 		glValidateProgram(shaderProgram);
-		glDeleteShader(vertexShader);
+		if (includeVertexShader)
+			glDeleteShader(vertexShader);
 		if (includeFragmentShader)
 			glDeleteShader(fragmentShader);
 		if (includeGeometryShader)
@@ -116,8 +122,9 @@ public class ShaderLoader {
 	public static int loadShaderFromFile(String vertexShaderLocation,
 			String fragmentShaderLocation, String geometryShaderLocation,
 			int inputtype, int outputtype, int verticesout) {
-		String vertexShaderSource = readSourceFile(vertexShaderLocation, 1);
-
+		String vertexShaderSource = null;
+		if (vertexShaderLocation != null)
+			vertexShaderSource = readSourceFile(vertexShaderLocation, 1);
 		String fragmentShaderSource = null;
 		if (fragmentShaderLocation != null)
 			fragmentShaderSource = readSourceFile(fragmentShaderLocation, 2);
