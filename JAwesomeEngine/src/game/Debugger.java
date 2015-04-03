@@ -61,6 +61,48 @@ public class Debugger {
 		setupControls(i);
 	}
 
+	public void begin() {
+		if (wireframe)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+
+	public void end() {
+		if (wireframe)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
+	public String getGLErrorName(int glErrorID) {
+		String glerror = "no error";
+		if (glErrorID != GL_NO_ERROR) {
+			switch (glErrorID) {
+			case GL_INVALID_ENUM:
+				glerror = "invalid enum";
+				break;
+			case GL_INVALID_VALUE:
+				glerror = "invalid value";
+				break;
+			case GL_INVALID_OPERATION:
+				glerror = "invalid operation";
+				break;
+			case GL_INVALID_FRAMEBUFFER_OPERATION:
+				glerror = "invalid framebuffer operation";
+				break;
+			case GL_OUT_OF_MEMORY:
+				glerror = "out of memory";
+				break;
+			case GL_STACK_UNDERFLOW:
+				glerror = "stack underflow";
+				break;
+			case GL_STACK_OVERFLOW:
+				glerror = "stack overflow";
+				break;
+			default:
+				glerror = "unknown error";
+			}
+		}
+		return glerror;
+	}
+
 	public boolean isAxisShown() {
 		return showaxis;
 	}
@@ -103,38 +145,6 @@ public class Debugger {
 					+ getGLErrorName(glGetError()) + " (" + firsterror + ")");
 			text.render();
 		}
-	}
-
-	public String getGLErrorName(int glErrorID) {
-		String glerror = "no error";
-		if (glErrorID != GL_NO_ERROR) {
-			switch (glErrorID) {
-			case GL_INVALID_ENUM:
-				glerror = "invalid enum";
-				break;
-			case GL_INVALID_VALUE:
-				glerror = "invalid value";
-				break;
-			case GL_INVALID_OPERATION:
-				glerror = "invalid operation";
-				break;
-			case GL_INVALID_FRAMEBUFFER_OPERATION:
-				glerror = "invalid framebuffer operation";
-				break;
-			case GL_OUT_OF_MEMORY:
-				glerror = "out of memory";
-				break;
-			case GL_STACK_UNDERFLOW:
-				glerror = "stack underflow";
-				break;
-			case GL_STACK_OVERFLOW:
-				glerror = "stack overflow";
-				break;
-			default:
-				glerror = "unknown error";
-			}
-		}
-		return glerror;
 	}
 
 	public void render3d() {
@@ -182,16 +192,6 @@ public class Debugger {
 		}
 	}
 
-	public void begin() {
-		if (wireframe)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-
-	public void end() {
-		if (wireframe)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-
 	public void setRange(Vector3f range) {
 		this.range = range;
 		xaxis.deleteData();
@@ -213,6 +213,8 @@ public class Debugger {
 
 	public void setRenderWireframe(boolean w) {
 		wireframe = w;
+		if (!w)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
 	public void setShowAxis(boolean a) {

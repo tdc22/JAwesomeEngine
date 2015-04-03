@@ -10,13 +10,13 @@ import loader.TextureLoader;
 import shader.Shader;
 import shape.Box;
 import shape.Sphere;
-import texture.CubeEnvMapper;
+import texture.CubeEnvironmentMap;
 import texture.Texture;
 import vector.Vector4f;
 
 public class ShaderTest4 extends StandardGame {
 	Texture texture, diffuse, bumpmap;
-	CubeEnvMapper cubemapper;
+	CubeEnvironmentMap cubemapper;
 
 	@Override
 	public void init() {
@@ -73,8 +73,16 @@ public class ShaderTest4 extends StandardGame {
 		Sphere s = new Sphere(0, 0, 0, 0.5f, 32, 32);
 		addObject(s);
 
-		cubemapper = new CubeEnvMapper(this, s.getTranslation());
+		cubemapper = new CubeEnvironmentMap(this, s.getTranslation());
 		cubemapper.updateTexture();
+
+		// textureshader = new Shader(ShaderLoader.loadShaderFromFile(
+		// "res/shaders/textureshader.vert",
+		// "res/shaders/textureshader.frag"));
+		// textureshader.addArgumentName("texture");
+		// textureshader.addArgument(new Texture(cubemapper.getTextureID()));
+		// s.setShader(textureshader);
+
 		// /*Shader textureshader2 = new Shader(ShaderLoader.loadShaderPair(
 		// "res/shaders/textureshader.vert",
 		// "res/shaders/textureshader.frag"));

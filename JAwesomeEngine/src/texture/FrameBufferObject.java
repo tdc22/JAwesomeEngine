@@ -53,6 +53,7 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.opengl.GL32.GL_TEXTURE_2D_MULTISAMPLE;
 import static org.lwjgl.opengl.GL32.glTexImage2DMultisample;
+import game.Camera;
 import game.StandardGame;
 
 import java.nio.IntBuffer;
@@ -62,19 +63,25 @@ public class FrameBufferObject {
 	int frameBufferID, colorBufferID, depthBufferID, samples;
 	int width, height;
 	IntBuffer imageData;
-	boolean multisampled;
+	boolean multisampled, useCam;
+	Camera cam;
 
 	public FrameBufferObject(StandardGame game) {
-		init(game, 1024, 1024, 0);
+		init(game, 1024, 1024, 0, null);
 	}
 
 	public FrameBufferObject(StandardGame game, int width, int height) {
-		init(game, width, height, 0);
+		init(game, width, height, 0, null);
 	}
 
 	public FrameBufferObject(StandardGame game, int width, int height,
 			int samples) {
-		init(game, width, height, samples);
+		init(game, width, height, samples, null);
+	}
+
+	public FrameBufferObject(StandardGame game, int width, int height,
+			int samples, Camera cam) {
+		init(game, width, height, samples, cam);
 	}
 
 	public void begin() {
@@ -149,11 +156,17 @@ public class FrameBufferObject {
 		return width;
 	}
 
-	private void init(StandardGame game, int width, int height, int samples) {
+	private void init(StandardGame game, int width, int height, int samples,
+			Camera camera) {
 		this.game = game;
 		this.width = width;
 		this.height = height;
 		this.samples = samples;
+
+		if (camera != null) {
+			this.cam = camera;
+			useCam = true;
+		}
 
 		multisampled = samples > 0;
 

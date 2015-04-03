@@ -70,6 +70,46 @@ public class Tutorial extends StandardGame {
 	Debugger debugger;
 	PhysicsDebug physicsdebug;
 
+	public void generateLevel() {
+		float posx, posy, posz, sizex, sizey, sizez;
+		float blocksizerange = BLOCK_SIZE_MAX - BLOCK_SIZE_MIN;
+		float yrange = MAX_Y - MIN_Y;
+		int colornum = colors.size();
+		int blocknum = 0, color = 0;
+
+		List<Shader> colorshaders = new ArrayList<Shader>();
+		for (Vector3f c : colors) {
+			colorshaders.add(new Shader(ShaderLoader.loadShaderFromFile(
+					"res/shaders/colorshader.vert",
+					"res/shaders/colorshader.frag"), "color", new Vector4f(c.x,
+					c.y, c.z, 1)));
+		}
+
+		while (blocknum < NUM_BLOCKS) {
+			posx = (float) (Math.random() * LEVEL_SIZE_X);
+			posz = (float) (Math.random() * LEVEL_SIZE_Z);
+			sizex = BLOCK_SIZE_MIN + (float) (Math.random() * blocksizerange);
+			sizez = BLOCK_SIZE_MIN + (float) (Math.random() * blocksizerange);
+			if (!((posx - sizex) <= STARTBOX_SIZE_X && (posz - sizez) <= STARTBOX_SIZE_Z)) {
+				posy = MIN_Y + (float) (Math.random() * yrange);
+				sizey = BLOCK_SIZE_MIN
+						+ (float) (Math.random() * blocksizerange);
+				color = (int) (Math.random() * colornum);
+
+				Box box = new Box(posx, posy, posz, sizex, sizey, sizez);
+				box.setRenderHints(false, false, true);
+				box.setShader(colorshaders.get(color));
+				addObject(box);
+				RigidBody3 boxbody = new RigidBody3(
+						PhysicsShapeCreator.create(box));
+				boxbody.translateTo(box.getTranslation());
+				space.addRigidBody(box, boxbody);
+
+				blocknum++;
+			}
+		}
+	}
+
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Tutorial",
@@ -173,51 +213,6 @@ public class Tutorial extends StandardGame {
 		generateLevel();
 	}
 
-	public void reset() {
-		playerbody.translateTo(PLAYER_START_POSITION);
-		playerbody.setLinearVelocity(new Vector3f(0, 0, 0));
-	}
-
-	public void generateLevel() {
-		float posx, posy, posz, sizex, sizey, sizez;
-		float blocksizerange = BLOCK_SIZE_MAX - BLOCK_SIZE_MIN;
-		float yrange = MAX_Y - MIN_Y;
-		int colornum = colors.size();
-		int blocknum = 0, color = 0;
-
-		List<Shader> colorshaders = new ArrayList<Shader>();
-		for (Vector3f c : colors) {
-			colorshaders.add(new Shader(ShaderLoader.loadShaderFromFile(
-					"res/shaders/colorshader.vert",
-					"res/shaders/colorshader.frag"), "color", new Vector4f(c.x,
-					c.y, c.z, 1)));
-		}
-
-		while (blocknum < NUM_BLOCKS) {
-			posx = (float) (Math.random() * LEVEL_SIZE_X);
-			posz = (float) (Math.random() * LEVEL_SIZE_Z);
-			sizex = BLOCK_SIZE_MIN + (float) (Math.random() * blocksizerange);
-			sizez = BLOCK_SIZE_MIN + (float) (Math.random() * blocksizerange);
-			if (!((posx - sizex) <= STARTBOX_SIZE_X && (posz - sizez) <= STARTBOX_SIZE_Z)) {
-				posy = MIN_Y + (float) (Math.random() * yrange);
-				sizey = BLOCK_SIZE_MIN
-						+ (float) (Math.random() * blocksizerange);
-				color = (int) (Math.random() * colornum);
-
-				Box box = new Box(posx, posy, posz, sizex, sizey, sizez);
-				box.setRenderHints(false, false, true);
-				box.setShader(colorshaders.get(color));
-				addObject(box);
-				RigidBody3 boxbody = new RigidBody3(
-						PhysicsShapeCreator.create(box));
-				boxbody.translateTo(box.getTranslation());
-				space.addRigidBody(box, boxbody);
-
-				blocknum++;
-			}
-		}
-	}
-
 	@Override
 	public void render() {
 		debugger.render3d();
@@ -237,6 +232,11 @@ public class Tutorial extends StandardGame {
 	public void render2d() {
 		debugger.end();
 		debugger.render2d(fps, objects.size(), objects2d.size());
+	}
+
+	public void reset() {
+		playerbody.translateTo(PLAYER_START_POSITION);
+		playerbody.setLinearVelocity(new Vector3f(0, 0, 0));
 	}
 
 	@Override

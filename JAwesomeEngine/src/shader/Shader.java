@@ -253,6 +253,10 @@ public class Shader {
 		uniformnames.clear();
 	}
 
+	public int getArgumentID(String argumentname) {
+		return uniformnames.get(argumentname);
+	}
+
 	public List<Object> getArguments() {
 		return uniformarguments;
 	}
@@ -265,12 +269,12 @@ public class Shader {
 		return shaderProgram;
 	}
 
-	public List<Integer> getUniformPositions() {
-		return uniformpositions;
-	}
-
 	public HashMap<String, Integer> getUniformNames() {
 		return uniformnames;
+	}
+
+	public List<Integer> getUniformPositions() {
+		return uniformpositions;
 	}
 
 	public void setArgument(int id, Object argument) {
@@ -279,10 +283,6 @@ public class Shader {
 
 	public void setArgument(String argumentname, Object argument) {
 		uniformarguments.set(getArgumentID(argumentname), argument);
-	}
-
-	public int getArgumentID(String argumentname) {
-		return uniformnames.get(argumentname);
 	}
 
 	public void unbind() {

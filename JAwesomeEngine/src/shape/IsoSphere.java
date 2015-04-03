@@ -11,10 +11,10 @@ import vector.Vector2f;
 import vector.Vector3f;
 
 public class IsoSphere extends ShapedObject implements SphereStructure {
-	float radius;
-
 	public final static int POINT_SUBDIVISION = 0;
+
 	public final static int TRIANGLE_SUBDIVISION = 1;
+	float radius;
 
 	public IsoSphere(float x, float y, float z, float radius, int subdivisions) {
 		super();

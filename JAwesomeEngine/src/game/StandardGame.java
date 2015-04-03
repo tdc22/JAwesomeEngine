@@ -85,12 +85,36 @@ public abstract class StandardGame extends AbstractGame {
 		objects.add(obj);
 	}
 
+	public void addPostProcessingShader(Shader shader) {
+		postProcessing.add(shader);
+	}
+
 	public void addPostProcessingShader2(Shader shader) {
 		postProcessing2.add(shader);
 	}
 
-	public void addPostProcessingShader(Shader shader) {
-		postProcessing.add(shader);
+	private void applyPostProcessing(List<Shader> ppshaders,
+			FrameBufferObject fbo1, FrameBufferObject fbo2) {
+		boolean p = true;
+		int tex0 = fbo1.getTextureID();
+		int tex1 = fbo2.getTextureID();
+		for (Shader s : ppshaders) {
+			// TODO: Create Multipass shader-class with integer for number of
+			// iterations.... + try to put this in there?
+			for (int i = 0; i < postProcessingIterations; i++) {
+				FrameBufferObject current = p ? fbo2 : fbo1;
+				current.bind();
+				current.clear();
+				s.setArgument("texture", p ? tex0 : tex1);
+				s.bind();
+				screen.render();
+				s.unbind();
+				current.unbind();
+				p = !p;
+			}
+		}
+		glBindTexture(GL_TEXTURE_2D, p ? tex0 : tex1);
+		screen.render();
 	}
 
 	@Override
@@ -152,32 +176,12 @@ public abstract class StandardGame extends AbstractGame {
 		display.swap();
 	}
 
-	private void applyPostProcessing(List<Shader> ppshaders,
-			FrameBufferObject fbo1, FrameBufferObject fbo2) {
-		boolean p = true;
-		int tex0 = fbo1.getTextureID();
-		int tex1 = fbo2.getTextureID();
-		for (Shader s : ppshaders) {
-			// TODO: Create Multipass shader-class with integer for number of
-			// iterations.... + try to put this in there?
-			for (int i = 0; i < postProcessingIterations; i++) {
-				FrameBufferObject current = p ? fbo2 : fbo1;
-				current.bind();
-				current.clear();
-				s.setArgument("texture", p ? tex0 : tex1);
-				s.bind();
-				screen.render();
-				s.unbind();
-				current.unbind();
-				p = !p;
-			}
-		}
-		glBindTexture(GL_TEXTURE_2D, p ? tex0 : tex1);
-		screen.render();
-	}
-
 	public List<RenderedObject> get2dObjects() {
 		return objects2d;
+	}
+
+	public GameCamera getCamera() {
+		return cam;
 	}
 
 	public Display getDisplay() {
@@ -186,6 +190,10 @@ public abstract class StandardGame extends AbstractGame {
 
 	public List<RenderedObject> getObjects() {
 		return objects;
+	}
+
+	public VideoSettings getVideoSettings() {
+		return settings;
 	}
 
 	public void initDisplay(Display display, DisplayMode displaymode,

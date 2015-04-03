@@ -20,15 +20,15 @@ public class Texture {
 		glBindTexture(GL_TEXTURE_2D, textureid);
 	}
 
+	public void delete() {
+		glDeleteTextures(textureid);
+	}
+
 	public int getTextureID() {
 		return textureid;
 	}
 
 	public void unbind() {
 		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
-	public void delete() {
-		glDeleteTextures(textureid);
 	}
 }

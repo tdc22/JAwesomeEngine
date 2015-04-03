@@ -6,18 +6,24 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import math.QuatMath;
 import matrix.Matrix4f;
-import objects.RenderedObject;
+import objects.GameObject;
 import vector.Vector3f;
 
-public class Camera extends RenderedObject {
+public class Camera extends GameObject {
 	Vector3f direction;
 	float hrot, vrot;
 
 	public Camera() {
 		super();
-		hrot = 0;
-		vrot = 0;
-		rotateTo(0, 0);
+		init(new Vector3f(), 0, 0);
+	}
+
+	public Camera(Vector3f pos) {
+		init(pos, 0, 0);
+	}
+
+	public Camera(Vector3f pos, float hRotation, float vRotation) {
+		init(pos, hRotation, vRotation);
 	}
 
 	public void begin() {
@@ -43,9 +49,11 @@ public class Camera extends RenderedObject {
 		return vrot;
 	}
 
-	@Override
-	public void render() {
-
+	private void init(Vector3f position, float hRotation, float vRotation) {
+		hrot = 0;
+		vrot = 0;
+		translateTo(position);
+		rotateTo(hRotation, vRotation);
 	}
 
 	public void rotate(float rotH, float rotV) {
