@@ -61,7 +61,7 @@ public class ShaderTest4 extends StandardGame {
 		Shader bumpmapshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/bumpmapshader.vert",
 				"res/shaders/bumpmapshader.frag"));
-		bumpmapshader.addArgumentNames("diffuseTexture", "normalTexture");
+		bumpmapshader.addArgumentNames("colorTexture", "normalTexture");
 		bumpmapshader.addArguments(diffuse, bumpmap);
 
 		Box c = new Box(0, -2, 2, 0.5f, 0.5f, 0.5f);

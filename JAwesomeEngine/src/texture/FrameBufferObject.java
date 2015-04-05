@@ -90,6 +90,9 @@ public class FrameBufferObject {
 		glViewport(0, 0, width, height);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+		if (useCam)
+			cam.begin();
+
 		bind();
 		clear();
 	}
@@ -124,6 +127,10 @@ public class FrameBufferObject {
 
 	public void end() {
 		unbind();
+
+		if (useCam)
+			cam.end();
+
 		glPopAttrib();
 		glEnable(GL_TEXTURE_2D);
 	}

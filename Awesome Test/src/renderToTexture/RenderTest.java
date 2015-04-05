@@ -1,5 +1,6 @@
 package renderToTexture;
 
+import game.Camera;
 import game.Debugger;
 import game.StandardGame;
 import gui.DisplayMode;
@@ -12,6 +13,7 @@ import loader.ShaderLoader;
 import shader.Shader;
 import shape.Box;
 import texture.FrameBufferObject;
+import vector.Vector3f;
 
 public class RenderTest extends StandardGame {
 	FrameBufferObject rtt;
@@ -30,14 +32,15 @@ public class RenderTest extends StandardGame {
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		addObject(ModelLoader.load("res/models/bunny.mobj"));
 
-		rtt = new FrameBufferObject(this);
+		rtt = new FrameBufferObject(this, 1024, 1024, 0, new Camera(
+				new Vector3f(), 90, 0));
 		rtt.updateTexture();
 
 		screenshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/textureshader.vert",
 				"res/shaders/textureshader.frag"));
 		screenshader.addArgumentName("texture");
-		screenshader.addArgument(framebuffer.getTexture());
+		screenshader.addArgument(rtt);
 
 		Box screen = new Box(2, 3, 12, 2, 1, 0.1f);
 		screen.setRenderHints(false, true, false);
