@@ -54,15 +54,15 @@ import org.lwjgl.BufferUtils;
 
 import shader.Shader;
 import shape2d.Quad;
-import texture.FrameBufferObject;
+import texture.FramebufferObject;
 
 public abstract class StandardGame extends AbstractGame {
 	protected List<RenderedObject> objects;
 	protected List<RenderedObject> objects2d;
 	public VideoSettings settings;
-	protected FrameBufferObject framebufferMultisample, framebuffer,
+	protected FramebufferObject framebufferMultisample, framebuffer,
 			framebufferPostProcessing;
-	protected FrameBufferObject framebuffer2Multisample, framebuffer2,
+	protected FramebufferObject framebuffer2Multisample, framebuffer2,
 			framebuffer2PostProcessing;
 	protected Quad screen;
 	public Display display;
@@ -94,7 +94,7 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	private void applyPostProcessing(List<Shader> ppshaders,
-			FrameBufferObject fbo1, FrameBufferObject fbo2) {
+			FramebufferObject fbo1, FramebufferObject fbo2) {
 		boolean p = true;
 		int tex0 = fbo1.getTextureID();
 		int tex1 = fbo2.getTextureID();
@@ -102,7 +102,7 @@ public abstract class StandardGame extends AbstractGame {
 			// TODO: Create Multipass shader-class with integer for number of
 			// iterations.... + try to put this in there?
 			for (int i = 0; i < postProcessingIterations; i++) {
-				FrameBufferObject current = p ? fbo2 : fbo1;
+				FramebufferObject current = p ? fbo2 : fbo1;
 				current.bind();
 				current.clear();
 				s.setArgument("texture", p ? tex0 : tex1);
@@ -207,22 +207,22 @@ public abstract class StandardGame extends AbstractGame {
 					.addWindowID(((GLDisplay) display).getWindowID());
 
 		if (useFBO) {
-			framebufferMultisample = new FrameBufferObject(this,
+			framebufferMultisample = new FramebufferObject(this,
 					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), pixelformat.getSamples());
-			framebuffer = new FrameBufferObject(this,
+			framebuffer = new FramebufferObject(this,
 					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), 0);
-			framebufferPostProcessing = new FrameBufferObject(this,
+			framebufferPostProcessing = new FramebufferObject(this,
 					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), 0);
-			framebuffer2Multisample = new FrameBufferObject(this,
+			framebuffer2Multisample = new FramebufferObject(this,
 					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), pixelformat.getSamples());
-			framebuffer2 = new FrameBufferObject(this,
+			framebuffer2 = new FramebufferObject(this,
 					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), 0);
-			framebuffer2PostProcessing = new FrameBufferObject(this,
+			framebuffer2PostProcessing = new FramebufferObject(this,
 					videosettings.getResolutionX(),
 					videosettings.getResolutionY(), 0);
 

@@ -49,7 +49,7 @@ public class ShaderTest4 extends StandardGame {
 
 		Box b = new Box(2, 0, 2, 0.5f, 0.5f, 0.5f);
 		b.setRenderHints(false, true, false);
-		b.setShader(textureshader);
+		// b.setShader(textureshader);
 		addObject(b);
 
 		// Shader Test 3
@@ -76,12 +76,14 @@ public class ShaderTest4 extends StandardGame {
 		cubemapper = new CubeEnvironmentMap(this, s.getTranslation());
 		cubemapper.updateTexture();
 
-		// textureshader = new Shader(ShaderLoader.loadShaderFromFile(
-		// "res/shaders/textureshader.vert",
-		// "res/shaders/textureshader.frag"));
-		// textureshader.addArgumentName("texture");
-		// textureshader.addArgument(new Texture(cubemapper.getTextureID()));
-		// s.setShader(textureshader);
+		textureshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/textureshader.vert",
+				"res/shaders/textureshader.frag"));
+		textureshader.addArgumentName("texture");
+		textureshader.addArgument(new Texture(cubemapper.getFramebufferFront()
+				.getTextureID()));
+		s.setShader(textureshader);
+		b.setShader(textureshader);
 
 		// /*Shader textureshader2 = new Shader(ShaderLoader.loadShaderPair(
 		// "res/shaders/textureshader.vert",
@@ -106,7 +108,7 @@ public class ShaderTest4 extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		// cubemapper.updateTexture();
+		cubemapper.updateTexture();
 		cam.update(delta);
 	}
 }

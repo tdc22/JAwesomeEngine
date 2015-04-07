@@ -58,7 +58,7 @@ import game.StandardGame;
 
 import java.nio.IntBuffer;
 
-public class FrameBufferObject {
+public class FramebufferObject {
 	StandardGame game;
 	int frameBufferID, colorBufferID, depthBufferID, samples;
 	int width, height;
@@ -66,20 +66,20 @@ public class FrameBufferObject {
 	boolean multisampled, useCam;
 	Camera cam;
 
-	public FrameBufferObject(StandardGame game) {
+	public FramebufferObject(StandardGame game) {
 		init(game, 1024, 1024, 0, null);
 	}
 
-	public FrameBufferObject(StandardGame game, int width, int height) {
+	public FramebufferObject(StandardGame game, int width, int height) {
 		init(game, width, height, 0, null);
 	}
 
-	public FrameBufferObject(StandardGame game, int width, int height,
+	public FramebufferObject(StandardGame game, int width, int height,
 			int samples) {
 		init(game, width, height, samples, null);
 	}
 
-	public FrameBufferObject(StandardGame game, int width, int height,
+	public FramebufferObject(StandardGame game, int width, int height,
 			int samples, Camera cam) {
 		init(game, width, height, samples, cam);
 	}
@@ -106,7 +106,7 @@ public class FrameBufferObject {
 				| GL_STENCIL_BUFFER_BIT);
 	}
 
-	public void copyTo(FrameBufferObject target) {
+	public void copyTo(FramebufferObject target) {
 		copyTo(target.getFramebufferID(), target.getWidth(), target.getHeight());
 	}
 
@@ -149,10 +149,6 @@ public class FrameBufferObject {
 
 	public int getSamples() {
 		return samples;
-	}
-
-	public Texture getTexture() {
-		return new Texture(colorBufferID);
 	}
 
 	public int getTextureID() {
