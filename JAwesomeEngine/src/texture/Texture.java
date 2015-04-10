@@ -6,29 +6,44 @@ import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 
 public class Texture {
-	int textureid;
+	int textureID, textureType;
 
 	public Texture() {
-		this.textureid = glGenTextures();
+		this.textureID = glGenTextures();
+		this.textureType = GL_TEXTURE_2D;
 	}
 
 	public Texture(int textureid) {
-		this.textureid = textureid;
+		this.textureID = textureid;
+		this.textureType = GL_TEXTURE_2D;
+	}
+
+	public Texture(int textureid, int texturetype) {
+		this.textureID = textureid;
+		this.textureType = texturetype;
+	}
+
+	public void setTextureType(int texturetype) {
+		this.textureType = texturetype;
 	}
 
 	public void bind() {
-		glBindTexture(GL_TEXTURE_2D, textureid);
+		glBindTexture(textureType, textureID);
 	}
 
 	public void delete() {
-		glDeleteTextures(textureid);
+		glDeleteTextures(textureID);
 	}
 
 	public int getTextureID() {
-		return textureid;
+		return textureID;
+	}
+
+	public int getTextureType() {
+		return textureType;
 	}
 
 	public void unbind() {
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(textureType, 0);
 	}
 }

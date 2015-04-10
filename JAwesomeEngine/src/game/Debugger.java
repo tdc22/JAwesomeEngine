@@ -71,7 +71,7 @@ public class Debugger {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	public String getGLErrorName(int glErrorID) {
+	public static String getGLErrorName(int glErrorID) {
 		String glerror = "no error";
 		if (glErrorID != GL_NO_ERROR) {
 			switch (glErrorID) {

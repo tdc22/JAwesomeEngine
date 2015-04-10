@@ -201,6 +201,7 @@ public abstract class StandardGame extends AbstractGame {
 		this.display = display;
 		display.open(displaymode, pixelformat);
 		this.settings = videosettings;
+
 		// GLFW input fix
 		if (inputs.getInputReader() instanceof GLFWInputReader)
 			((GLFWInputReader) inputs.getInputReader())
@@ -264,13 +265,13 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	protected void initOpenGL() {
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClearDepth(1.0f); // Depth Buffer Setup
+		glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
+		glClearDepth(1.0f);
 		glClearStencil(0);
 
-		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
-		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
-		glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
+		glShadeModel(GL_SMOOTH);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -278,7 +279,7 @@ public abstract class StandardGame extends AbstractGame {
 		glCullFace(GL_BACK);
 
 		glMatrixMode(GL_PROJECTION);
-		glLoadMatrix(identity); // Reset The Projection Matrix
+		glLoadMatrix(identity);
 
 		// Calculate The Aspect Ratio Of The Window
 		float fH = (float) (Math.tan(settings.getFOVy() / 360f * Math.PI) * settings
@@ -287,9 +288,8 @@ public abstract class StandardGame extends AbstractGame {
 				/ (float) settings.getResolutionY();
 		glFrustum(-fW, fW, -fH, fH, settings.getZNear(), settings.getZFar());
 
-		glMatrixMode(GL_MODELVIEW); // Select The Modelview Matrix
+		glMatrixMode(GL_MODELVIEW);
 
-		// Really Nice Perspective Calculations
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);

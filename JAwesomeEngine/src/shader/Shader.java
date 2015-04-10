@@ -1,11 +1,16 @@
 package shader;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE5;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE7;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE9;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDeleteProgram;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
@@ -138,10 +143,9 @@ public class Shader {
 			buf.rewind();
 			uniformarguments.add(buf);
 			System.out.println("Argument type is Matrix4f");
-		}
-		if (argument instanceof Texture) {
+		} else if (argument instanceof Texture) {
 			uniformtypes.add(9);
-			uniformarguments.add(((Texture) argument).getTextureID());
+			uniformarguments.add((Texture) argument);
 			System.out.println("Argument type is Texture");
 		}
 	}
@@ -234,8 +238,27 @@ public class Shader {
 				case 3:
 					glActiveTexture(GL_TEXTURE3);
 					break;
+				case 4:
+					glActiveTexture(GL_TEXTURE4);
+					break;
+				case 5:
+					glActiveTexture(GL_TEXTURE5);
+					break;
+				case 6:
+					glActiveTexture(GL_TEXTURE6);
+					break;
+				case 7:
+					glActiveTexture(GL_TEXTURE7);
+					break;
+				case 8:
+					glActiveTexture(GL_TEXTURE8);
+					break;
+				case 9:
+					glActiveTexture(GL_TEXTURE9);
+					break;
 				}
-				glBindTexture(GL_TEXTURE_2D, (Integer) argument);
+				glBindTexture(((Texture) argument).getTextureType(),
+						((Texture) argument).getTextureID());
 				glUniform1i(uniformlocation, texturenumber);
 				texturenumber++;
 				break;
@@ -303,8 +326,27 @@ public class Shader {
 				case 3:
 					glActiveTexture(GL_TEXTURE3);
 					break;
+				case 4:
+					glActiveTexture(GL_TEXTURE4);
+					break;
+				case 5:
+					glActiveTexture(GL_TEXTURE5);
+					break;
+				case 6:
+					glActiveTexture(GL_TEXTURE6);
+					break;
+				case 7:
+					glActiveTexture(GL_TEXTURE7);
+					break;
+				case 8:
+					glActiveTexture(GL_TEXTURE8);
+					break;
+				case 9:
+					glActiveTexture(GL_TEXTURE9);
+					break;
 				}
-				glBindTexture(GL_TEXTURE_2D, 0);
+				glBindTexture(
+						((Texture) uniformarguments.get(e)).getTextureType(), 0);
 				texturenumber++;
 			}
 		}

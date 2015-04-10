@@ -3,24 +3,21 @@ package texture;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_INT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
-import static org.lwjgl.opengl.GL11.GL_RGBA8;
 import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.GL_VIEWPORT_BIT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glPopAttrib;
 import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
@@ -60,28 +57,34 @@ import java.nio.IntBuffer;
 
 public class FramebufferObject {
 	StandardGame game;
-	int frameBufferID, colorBufferID, depthBufferID, samples;
+	int frameBufferID, depthBufferID, samples;
+	Texture colorBuffer;
 	int width, height;
 	IntBuffer imageData;
 	boolean multisampled, useCam;
 	Camera cam;
 
 	public FramebufferObject(StandardGame game) {
-		init(game, 1024, 1024, 0, null);
+		init(game, 1024, 1024, 0, null, null);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height) {
-		init(game, width, height, 0, null);
+		init(game, width, height, 0, null, null);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height,
 			int samples) {
-		init(game, width, height, samples, null);
+		init(game, width, height, samples, null, null);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height,
 			int samples, Camera cam) {
-		init(game, width, height, samples, cam);
+		init(game, width, height, samples, cam, null);
+	}
+
+	public FramebufferObject(StandardGame game, int width, int height,
+			int samples, Camera cam, Texture colorbuffer) {
+		init(game, width, height, samples, cam, colorbuffer);
 	}
 
 	public void begin() {
@@ -121,7 +124,7 @@ public class FramebufferObject {
 
 	public void delete() {
 		glDeleteRenderbuffers(depthBufferID);
-		glDeleteTextures(colorBufferID);
+		colorBuffer.delete();
 		glDeleteFramebuffers(frameBufferID);
 	}
 
@@ -152,7 +155,7 @@ public class FramebufferObject {
 	}
 
 	public int getTextureID() {
-		return colorBufferID;
+		return colorBuffer.getTextureID();
 	}
 
 	public int getWidth() {
@@ -160,7 +163,7 @@ public class FramebufferObject {
 	}
 
 	private void init(StandardGame game, int width, int height, int samples,
-			Camera camera) {
+			Camera camera, Texture colorbuffer) {
 		this.game = game;
 		this.width = width;
 		this.height = height;
@@ -174,7 +177,13 @@ public class FramebufferObject {
 		multisampled = samples > 0;
 
 		frameBufferID = glGenFramebuffers();
-		colorBufferID = glGenTextures();
+		if (colorbuffer == null) {
+			colorBuffer = new Texture();
+			colorBuffer.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE
+					: GL_TEXTURE_2D);
+		} else {
+			colorBuffer = colorbuffer;
+		}
 		depthBufferID = glGenRenderbuffers();
 
 		if (multisampled)
@@ -183,19 +192,18 @@ public class FramebufferObject {
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
 
 		// Colorbuffer
-		int textureType = multisampled ? GL_TEXTURE_2D_MULTISAMPLE
-				: GL_TEXTURE_2D;
-		glBindTexture(textureType, colorBufferID);
+		int textureType = colorBuffer.getTextureType();
+		colorBuffer.bind();
 		glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		if (multisampled) {
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples,
-					GL_RGBA8, width, height, true);
+					GL_RGBA, width, height, true);
 		} else {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
-					GL_INT, (java.nio.ByteBuffer) null);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+					GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
 		}
 
 		// Depthbuffer
@@ -210,7 +218,7 @@ public class FramebufferObject {
 
 		// Attach to Framebuffer
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-				textureType, colorBufferID, 0);
+				textureType, colorBuffer.getTextureID(), 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
 				GL_RENDERBUFFER, depthBufferID);
 
@@ -246,7 +254,7 @@ public class FramebufferObject {
 
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glBindTexture(textureType, 0);
+		colorBuffer.unbind();
 	}
 
 	public boolean isMultisampled() {

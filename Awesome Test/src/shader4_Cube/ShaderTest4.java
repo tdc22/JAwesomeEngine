@@ -1,22 +1,26 @@
 package shader4_Cube;
 
+import game.Debugger;
 import game.StandardGame;
 import gui.DisplayMode;
 import gui.GLDisplay;
 import gui.PixelFormat;
 import gui.VideoSettings;
+import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
 import shader.Shader;
 import shape.Box;
 import shape.Sphere;
 import texture.CubeEnvironmentMap;
+import texture.CubeMap;
 import texture.Texture;
 import vector.Vector4f;
 
 public class ShaderTest4 extends StandardGame {
 	Texture texture, diffuse, bumpmap;
 	CubeEnvironmentMap cubemapper;
+	Debugger debugger;
 
 	@Override
 	public void init() {
@@ -26,6 +30,8 @@ public class ShaderTest4 extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
+		debugger = new Debugger(inputs,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		// Shader Test 1
 		Shader colorshader = new Shader(ShaderLoader.loadShaderFromFile(
@@ -75,13 +81,17 @@ public class ShaderTest4 extends StandardGame {
 
 		cubemapper = new CubeEnvironmentMap(this, s.getTranslation());
 		cubemapper.updateTexture();
+		CubeMap testmap = new CubeMap(TextureLoader.loadCubeMap(
+				"res/textures/diffuse.jpg", "res/textures/diffuse.jpg",
+				"res/textures/diffuse.jpg", "res/textures/diffuse.jpg",
+				"res/textures/diffuse.jpg", "res/textures/diffuse.jpg"));
 
 		textureshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/textureshader.vert",
-				"res/shaders/textureshader.frag"));
-		textureshader.addArgumentName("texture");
-		textureshader.addArgument(new Texture(cubemapper.getFramebufferFront()
-				.getTextureID()));
+				"res/shaders/cubemapshader.vert",
+				"res/shaders/cubemapshader.frag"));
+		textureshader.addArgumentNames("cubeMap");
+		textureshader.addArguments(testmap);// new
+											// CubeMap(cubemapper.getTextureID()));
 		s.setShader(textureshader);
 		b.setShader(textureshader);
 
@@ -98,17 +108,21 @@ public class ShaderTest4 extends StandardGame {
 
 	@Override
 	public void render() {
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
 	}
 
 	@Override
 	public void render2d() {
-
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
 		cubemapper.updateTexture();
+		debugger.update();
 		cam.update(delta);
 	}
 }

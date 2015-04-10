@@ -1,22 +1,20 @@
 package texture;
 
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_RGBA;
-import static org.lwjgl.opengl.GL11.GL_RGBA8;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDeleteTextures;
+import static org.lwjgl.opengl.GL11.GL_UNPACK_ALIGNMENT;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glGenTextures;
-import static org.lwjgl.opengl.GL11.glTexImage2D;
+import static org.lwjgl.opengl.GL11.glGetError;
+import static org.lwjgl.opengl.GL11.glPixelStorei;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_BASE_LEVEL;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_MAX_LEVEL;
 import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
@@ -26,13 +24,14 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
 import game.Camera;
+import game.Debugger;
 import game.StandardGame;
 import vector.Vector3f;
 
 public class CubeEnvironmentMap {
 	Vector3f pos;
 	FramebufferObject top, bottom, front, back, right, left;
-	int cubemapID;
+	Texture cubemap;
 	int width, height;
 
 	public CubeEnvironmentMap(StandardGame game, Vector3f pos) {
@@ -49,7 +48,7 @@ public class CubeEnvironmentMap {
 	}
 
 	public int getTextureID() {
-		return cubemapID;
+		return cubemap.getTextureID();
 	}
 
 	public int getTextureWidth() {
@@ -60,58 +59,86 @@ public class CubeEnvironmentMap {
 		this.width = resX;
 		this.height = resY;
 
-		top = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 0, 90));
+		cubemap = new CubeMap();
+
+		top = new FramebufferObject(game, resX, resY, 0,
+				new Camera(pos, 0, 90), new Texture(cubemap.getTextureID(),
+						GL_TEXTURE_CUBE_MAP_POSITIVE_Y));
 		bottom = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 0,
-				-90));
+				-90), new Texture(cubemap.getTextureID(),
+				GL_TEXTURE_CUBE_MAP_NEGATIVE_Y));
 		front = new FramebufferObject(game, resX, resY, 0,
-				new Camera(pos, 0, 0));
+				new Camera(pos, 0, 0), new Texture(cubemap.getTextureID(),
+						GL_TEXTURE_CUBE_MAP_POSITIVE_X));
 		back = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 180,
-				0));
+				0), new Texture(cubemap.getTextureID(),
+				GL_TEXTURE_CUBE_MAP_NEGATIVE_X));
 		left = new FramebufferObject(game, resX, resY, 0,
-				new Camera(pos, 90, 0));
+				new Camera(pos, 90, 0), new Texture(cubemap.getTextureID(),
+						GL_TEXTURE_CUBE_MAP_POSITIVE_Z));
 		right = new FramebufferObject(game, resX, resY, 0, new Camera(pos, -90,
-				0));
-
-		cubemapID = glGenTextures();
-
-		glDisable(GL_TEXTURE_2D);
-		glEnable(GL_TEXTURE_CUBE_MAP);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapID);
-
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, width, height,
-				0, GL_RGBA8, GL_UNSIGNED_BYTE, front.getTextureID());
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, width, height,
-				0, GL_RGBA8, GL_UNSIGNED_BYTE, back.getTextureID());
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, width, height,
-				0, GL_RGBA8, GL_UNSIGNED_BYTE, top.getTextureID());
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, width, height,
-				0, GL_RGBA8, GL_UNSIGNED_BYTE, bottom.getTextureID());
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, width, height,
-				0, GL_RGBA8, GL_UNSIGNED_BYTE, right.getTextureID());
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, width, height,
-				0, GL_RGBA8, GL_UNSIGNED_BYTE, left.getTextureID());
-
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
-				GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
-				GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
-				GL_CLAMP_TO_EDGE);
-
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		glDisable(GL_TEXTURE_CUBE_MAP);
-		glEnable(GL_TEXTURE_2D);
+				0), new Texture(cubemap.getTextureID(),
+				GL_TEXTURE_CUBE_MAP_NEGATIVE_Z));
 	}
 
 	public void updateTexture() {
+		glGetError(); // TODO: REMOVE ALL
 		top.updateTexture();
 		bottom.updateTexture();
 		front.updateTexture();
 		back.updateTexture();
 		left.updateTexture();
 		right.updateTexture();
+
+		if (glGetError() != GL_NO_ERROR)
+			System.out.println("a");
+		glEnable(GL_TEXTURE_CUBE_MAP); // TODO: Delete
+		cubemap.bind();
+		if (glGetError() != GL_NO_ERROR)
+			System.out.println("b");
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
+				GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
+				GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
+				GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		if (glGetError() != GL_NO_ERROR)
+			System.out.println("c");
+
+		// TODO: check formats GL_RGBA and GL_RGBA8 etc.
+		// glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, width,
+		// height,
+		// 0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+		// glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGB8, width,
+		// height,
+		// 0, GL_RGB8, GL_UNSIGNED_BYTE, back.getTextureID());
+		// glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGB8, width,
+		// height,
+		// 0, GL_RGB8, GL_UNSIGNED_BYTE, top.getTextureID());
+		// glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGB8, width,
+		// height,
+		// 0, GL_RGB8, GL_UNSIGNED_BYTE, bottom.getTextureID());
+		// glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGB8, width,
+		// height,
+		// 0, GL_RGB8, GL_UNSIGNED_BYTE, right.getTextureID());
+		// glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGB8, width,
+		// height,
+		// 0, GL_RGB8, GL_UNSIGNED_BYTE, left.getTextureID());
+		int a = 0;
+		if ((a = glGetError()) != GL_NO_ERROR)
+			System.out.println("d " + Debugger.getGLErrorName(a) + "; " + width
+					+ "; " + height);
+
+		cubemap.unbind();
+		glDisable(GL_TEXTURE_CUBE_MAP);
+		if (glGetError() != GL_NO_ERROR)
+			System.out.println("e");
 	}
 
 	public FramebufferObject getFramebufferFront() {
@@ -119,7 +146,7 @@ public class CubeEnvironmentMap {
 	}
 
 	public void delete() {
-		glDeleteTextures(cubemapID);
+		cubemap.delete();
 		top.delete();
 		bottom.delete();
 		front.delete();
