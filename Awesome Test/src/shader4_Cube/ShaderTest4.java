@@ -90,8 +90,7 @@ public class ShaderTest4 extends StandardGame {
 				"res/shaders/cubemapshader.vert",
 				"res/shaders/cubemapshader.frag"));
 		textureshader.addArgumentNames("cubeMap");
-		textureshader.addArguments(testmap);// new
-											// CubeMap(cubemapper.getTextureID()));
+		textureshader.addArguments(new CubeMap(cubemapper.getTextureID()));
 		s.setShader(textureshader);
 		b.setShader(textureshader);
 

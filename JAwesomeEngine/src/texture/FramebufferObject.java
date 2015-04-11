@@ -177,7 +177,9 @@ public class FramebufferObject {
 		multisampled = samples > 0;
 
 		frameBufferID = glGenFramebuffers();
+		boolean newColorBuffer = false;
 		if (colorbuffer == null) {
+			newColorBuffer = true;
 			colorBuffer = new Texture();
 			colorBuffer.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE
 					: GL_TEXTURE_2D);
@@ -193,17 +195,19 @@ public class FramebufferObject {
 
 		// Colorbuffer
 		int textureType = colorBuffer.getTextureType();
-		colorBuffer.bind();
-		glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		if (multisampled) {
-			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples,
-					GL_RGBA, width, height, true);
-		} else {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-					GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+		if (newColorBuffer) {
+			colorBuffer.bind();
+			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			if (multisampled) {
+				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples,
+						GL_RGBA, width, height, true);
+			} else {
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
+						GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+			}
 		}
 
 		// Depthbuffer
@@ -254,7 +258,8 @@ public class FramebufferObject {
 
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		colorBuffer.unbind();
+		if (newColorBuffer)
+			colorBuffer.unbind();
 	}
 
 	public boolean isMultisampled() {
