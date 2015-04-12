@@ -39,28 +39,19 @@ public class CubeEnvironmentMap {
 		init(game, pos, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_X,
 				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_Y,
 				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
-				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR,
-				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_FOVY);
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR);
 	}
 
 	public CubeEnvironmentMap(StandardGame game, Vector3f pos, int resX,
 			int resY) {
 		init(game, pos, resX, resY,
 				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
-				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR,
-				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_FOVY);
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR);
 	}
 
 	public CubeEnvironmentMap(StandardGame game, Vector3f pos, int resX,
-			int resY, float fovY) {
-		init(game, pos, resX, resY,
-				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
-				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR, fovY);
-	}
-
-	public CubeEnvironmentMap(StandardGame game, Vector3f pos, int resX,
-			int resY, float fovY, float zNear, float zFar) {
-		init(game, pos, resX, resY, zNear, zFar, fovY);
+			int resY, float zNear, float zFar) {
+		init(game, pos, resX, resY, zNear, zFar);
 	}
 
 	public int getTextureHeight() {
@@ -76,10 +67,10 @@ public class CubeEnvironmentMap {
 	}
 
 	private void init(StandardGame game, Vector3f pos, int resX, int resY,
-			float zNear, float zFar, float fov) {
+			float zNear, float zFar) {
 		this.width = resX;
 		this.height = resY;
-		frustum = new ViewFrustum(resX, resY, zNear, zFar, fov);
+		frustum = new ViewFrustum(resX, resY, zNear, zFar, 90);
 
 		cubemap = new CubeMap();
 		cubemap.bind();
@@ -117,10 +108,10 @@ public class CubeEnvironmentMap {
 				GL_TEXTURE_CUBE_MAP_NEGATIVE_Y));
 		left = new FramebufferObject(game, resX, resY, 0, new Camera(pos, -90,
 				0), new Texture(cubemap.getTextureID(),
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X));
+				GL_TEXTURE_CUBE_MAP_NEGATIVE_X));
 		right = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 90,
 				0), new Texture(cubemap.getTextureID(),
-				GL_TEXTURE_CUBE_MAP_NEGATIVE_X));
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X));
 		front = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 180,
 				0), new Texture(cubemap.getTextureID(),
 				GL_TEXTURE_CUBE_MAP_POSITIVE_Z));

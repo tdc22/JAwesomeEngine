@@ -40,7 +40,6 @@ public class DefaultValues {
 	// CubeEnvironmentMap values
 	public static final int DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_X = 1024;
 	public static final int DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_Y = 1024;
-	public static final float DEFAULT_ENVIRONMENT_CUBEMAP_FOVY = 90;
 	public static final float DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR = 0.1f;
 	public static final float DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR = 200;
 	// FramebufferObject values

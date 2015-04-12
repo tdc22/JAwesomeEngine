@@ -21,6 +21,7 @@ public class ShaderTest4 extends StandardGame {
 	Texture texture, diffuse, bumpmap;
 	CubeEnvironmentMap cubemapper;
 	Debugger debugger;
+	Sphere camball;
 
 	@Override
 	public void init() {
@@ -103,6 +104,10 @@ public class ShaderTest4 extends StandardGame {
 		// d.setRenderHints(false, true, false);
 		// //d.setShader(textureshader2);
 		// addObject(d);
+
+		camball = new Sphere(0, 0, 0, 0.2f, 32, 32);
+		camball.setShader(colorshader);
+		addObject(camball);
 	}
 
 	@Override
@@ -120,8 +125,9 @@ public class ShaderTest4 extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		cubemapper.updateTexture();
 		debugger.update();
 		cam.update(delta);
+		camball.translateTo(cam.getTranslation());
+		cubemapper.updateTexture();
 	}
 }
