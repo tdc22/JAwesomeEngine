@@ -9,10 +9,10 @@ public class DefaultValues {
 	public static final int DEFAULT_DISPLAY_RESOLUTION_Y = 600;
 	public static final String DEFAULT_DISPLAY_TITLE = "JAwesomeEngine";
 	// PixelFormat values
-	public static final int DEFAULT_PIXELFORMAT_BPP = 0;
-	public static final int DEFAULT_PIXELFORMAT_ALPHA = 0;
-	public static final int DEFAULT_PIXELFORMAT_DEPTH = 16;
-	public static final int DEFAULT_PIXELFORMAT_STENCIL = 0;
+	public static final int DEFAULT_PIXELFORMAT_BPP = 8;
+	public static final int DEFAULT_PIXELFORMAT_ALPHA = 8;
+	public static final int DEFAULT_PIXELFORMAT_DEPTH = 24;
+	public static final int DEFAULT_PIXELFORMAT_STENCIL = 8;
 	public static final int DEFAULT_PIXELFORMAT_SAMPLES = 4;
 	public static final int DEFAULT_PIXELFORMAT_NUM_AUX_BUFFERS = 0;
 	public static final int DEFAULT_PIXELFORMAT_ACCUM_BPP = 0;

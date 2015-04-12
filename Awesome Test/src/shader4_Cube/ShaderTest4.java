@@ -56,7 +56,7 @@ public class ShaderTest4 extends StandardGame {
 
 		Box b = new Box(2, 0, 2, 0.5f, 0.5f, 0.5f);
 		b.setRenderHints(false, true, false);
-		// b.setShader(textureshader);
+		b.setShader(textureshader);
 		addObject(b);
 
 		// Shader Test 3
@@ -93,17 +93,6 @@ public class ShaderTest4 extends StandardGame {
 		textureshader.addArgumentNames("cubeMap");
 		textureshader.addArguments(new CubeMap(cubemapper.getTextureID()));
 		s.setShader(textureshader);
-		// b.setShader(textureshader);
-
-		// /*Shader textureshader2 = new Shader(ShaderLoader.loadShaderPair(
-		// "res/shaders/textureshader.vert",
-		// "res/shaders/textureshader.frag"));
-		// textureshader2.addTextureID(cubemapper.getTextureID(), "colorMap");*/
-		//
-		// Box d = new Box(0, 1, 3, 0.5f, 0.5f, 0.5f);
-		// d.setRenderHints(false, true, false);
-		// //d.setShader(textureshader2);
-		// addObject(d);
 
 		camball = new Sphere(0, 0, 0, 0.2f, 32, 32);
 		camball.setShader(colorshader);
