@@ -36,6 +36,8 @@ public class DefaultValues {
 	public static final float DEFAULT_CAMERA_HORIZONTAL_ROTATION = 0;
 	public static final float DEFAULT_CAMERA_VERTICAL_ROTATION = 0;
 	// GameCamera values
+	public static final float DEFAULT_GAMECAMERA_MIN_V_ANGLE = -85;
+	public static final float DEFAULT_GAMECAMERA_MAX_V_ANGLE = 85;
 	public static final float DEFAULT_GAMECAMERA_SPEED = 0.012f;
 	// CubeEnvironmentMap values
 	public static final int DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_X = 1024;

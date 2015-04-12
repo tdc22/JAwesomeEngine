@@ -69,13 +69,13 @@ public class Camera extends GameObject {
 
 	public void rotation(float deltah, float deltav) {
 		hrot += deltah;
-		float dV = deltav;
-		if ((deltav > 0 && vrot + dV < 85) || (deltav < 0 && vrot + dV > -85)) {
-			vrot += dV;
-		}
+		vrot += deltav;
 
 		if (hrot > 360 || hrot < -360) {
 			hrot %= 360;
+		}
+		if (vrot > 360 || vrot < -360) {
+			vrot %= 360;
 		}
 		rotateTo(vrot, hrot, 0);
 	}

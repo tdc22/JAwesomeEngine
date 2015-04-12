@@ -11,22 +11,40 @@ import vector.Vector3f;
 
 public class GameCamera extends Camera implements Updateable {
 	boolean flycam, invertX, invertY;
-	float speed;
+	float minVAngle, maxVAngle, speed;
 
 	InputManager inputs;
 	InputEvent forwards, backwards, left, right;
 
 	public GameCamera(InputManager inputs) {
 		super();
-		init(inputs, DefaultValues.DEFAULT_GAMECAMERA_SPEED);
+		init(inputs, DefaultValues.DEFAULT_GAMECAMERA_MIN_V_ANGLE,
+				DefaultValues.DEFAULT_GAMECAMERA_MAX_V_ANGLE,
+				DefaultValues.DEFAULT_GAMECAMERA_SPEED);
 	}
 
 	public GameCamera(InputManager inputs, float speed) {
 		super();
-		init(inputs, speed);
+		init(inputs, DefaultValues.DEFAULT_GAMECAMERA_MIN_V_ANGLE,
+				DefaultValues.DEFAULT_GAMECAMERA_MAX_V_ANGLE, speed);
 	}
 
-	private void init(InputManager inputs, float speed) {
+	public GameCamera(InputManager inputs, float minVAngle, float maxVAngle) {
+		super();
+		init(inputs, minVAngle, maxVAngle,
+				DefaultValues.DEFAULT_GAMECAMERA_SPEED);
+	}
+
+	public GameCamera(InputManager inputs, float minVAngle, float maxVAngle,
+			float speed) {
+		super();
+		init(inputs, minVAngle, maxVAngle, speed);
+	}
+
+	private void init(InputManager inputs, float minVAngle, float maxVAngle,
+			float speed) {
+		this.minVAngle = minVAngle;
+		this.maxVAngle = maxVAngle;
 		this.speed = speed;
 		flycam = false;
 		invertX = false;
@@ -71,6 +89,44 @@ public class GameCamera extends Camera implements Updateable {
 
 	public void setInvertedY(boolean inverted) {
 		invertY = inverted;
+	}
+
+	public void setMinVAngle(float angle) {
+		minVAngle = angle;
+	}
+
+	public void setMaxVAngle(float angle) {
+		maxVAngle = angle;
+	}
+
+	public float getMinVAngle() {
+		return minVAngle;
+	}
+
+	public float getMaxVAngle() {
+		return maxVAngle;
+	}
+
+	public void rotation(float deltah, float deltav) {
+		hrot += deltah;
+		if (deltav > 0) {
+			if (vrot + deltav < maxVAngle) {
+				vrot += deltav;
+			} else {
+				vrot = maxVAngle;
+			}
+		} else {
+			if (vrot + deltav > minVAngle) {
+				vrot += deltav;
+			} else {
+				vrot = minVAngle;
+			}
+		}
+
+		if (hrot > 360 || hrot < -360) {
+			hrot %= 360;
+		}
+		rotateTo(vrot, hrot, 0);
 	}
 
 	private void setupControls(InputManager inputs) {

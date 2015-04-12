@@ -29,6 +29,7 @@ public class ShaderTest4 extends StandardGame {
 				new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
+		cam.setFlySpeed(0.002f);
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
 		debugger = new Debugger(inputs,
@@ -54,7 +55,8 @@ public class ShaderTest4 extends StandardGame {
 		textureshader.addArgumentName("texture");
 		textureshader.addArgument(texture);
 
-		Box b = new Box(2, 0, 2, 0.5f, 0.5f, 0.5f);
+		Box b = new Box(0, -2, 0, 0.5f, 0.5f, 0.5f);// new Box(2, 0, 2, 0.5f,
+													// 0.5f, 0.5f);
 		b.setRenderHints(false, true, false);
 		b.setShader(textureshader);
 		addObject(b);

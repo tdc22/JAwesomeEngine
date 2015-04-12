@@ -193,9 +193,8 @@ public class FramebufferObject {
 		multisampled = samples > 0;
 
 		frameBufferID = glGenFramebuffers();
-		boolean newColorBuffer = false;
-		if (colorbuffer == null) {
-			newColorBuffer = true;
+		boolean newColorBuffer;
+		if (newColorBuffer = (colorbuffer == null)) {
 			colorBuffer = new Texture();
 			colorBuffer.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE
 					: GL_TEXTURE_2D);

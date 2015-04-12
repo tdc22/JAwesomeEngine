@@ -108,10 +108,10 @@ public class CubeEnvironmentMap {
 				GL_TEXTURE_CUBE_MAP_NEGATIVE_Y));
 		left = new FramebufferObject(game, resX, resY, 0, new Camera(pos, -90,
 				0), new Texture(cubemap.getTextureID(),
-				GL_TEXTURE_CUBE_MAP_NEGATIVE_X));
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X));
 		right = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 90,
 				0), new Texture(cubemap.getTextureID(),
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X));
+				GL_TEXTURE_CUBE_MAP_NEGATIVE_X));
 		front = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 180,
 				0), new Texture(cubemap.getTextureID(),
 				GL_TEXTURE_CUBE_MAP_POSITIVE_Z));
@@ -135,8 +135,28 @@ public class CubeEnvironmentMap {
 		frustum.end();
 	}
 
+	public FramebufferObject getFramebufferTop() {
+		return top;
+	}
+
+	public FramebufferObject getFramebufferBottom() {
+		return bottom;
+	}
+
 	public FramebufferObject getFramebufferFront() {
-		return back; // TODO: correct and add others
+		return front;
+	}
+
+	public FramebufferObject getFramebufferBack() {
+		return back;
+	}
+
+	public FramebufferObject getFramebufferLeft() {
+		return left;
+	}
+
+	public FramebufferObject getFramebufferRight() {
+		return right;
 	}
 
 	public void delete() {
