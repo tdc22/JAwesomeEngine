@@ -1,7 +1,6 @@
 package texture;
 
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
@@ -9,7 +8,6 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL11.GL_UNPACK_ALIGNMENT;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL11.glPixelStorei;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
@@ -24,8 +22,10 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-import game.Camera;
 import game.StandardGame;
+import objects.Camera;
+import utils.DefaultValues;
+import utils.ViewFrustum;
 import vector.Vector3f;
 
 public class CubeEnvironmentMap {
@@ -33,14 +33,34 @@ public class CubeEnvironmentMap {
 	FramebufferObject top, bottom, front, back, right, left;
 	Texture cubemap;
 	int width, height;
+	ViewFrustum frustum;
 
 	public CubeEnvironmentMap(StandardGame game, Vector3f pos) {
-		init(game, pos, 1024, 1024);
+		init(game, pos, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_X,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_Y,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_FOVY);
 	}
 
 	public CubeEnvironmentMap(StandardGame game, Vector3f pos, int resX,
 			int resY) {
-		init(game, pos, resX, resY);
+		init(game, pos, resX, resY,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_FOVY);
+	}
+
+	public CubeEnvironmentMap(StandardGame game, Vector3f pos, int resX,
+			int resY, float fovY) {
+		init(game, pos, resX, resY,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR, fovY);
+	}
+
+	public CubeEnvironmentMap(StandardGame game, Vector3f pos, int resX,
+			int resY, float fovY, float zNear, float zFar) {
+		init(game, pos, resX, resY, zNear, zFar, fovY);
 	}
 
 	public int getTextureHeight() {
@@ -55,9 +75,11 @@ public class CubeEnvironmentMap {
 		return width;
 	}
 
-	private void init(StandardGame game, Vector3f pos, int resX, int resY) {
+	private void init(StandardGame game, Vector3f pos, int resX, int resY,
+			float zNear, float zFar, float fov) {
 		this.width = resX;
 		this.height = resY;
+		frustum = new ViewFrustum(resX, resY, zNear, zFar, fov);
 
 		cubemap = new CubeMap();
 		cubemap.bind();
@@ -93,29 +115,24 @@ public class CubeEnvironmentMap {
 		bottom = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 0,
 				-90), new Texture(cubemap.getTextureID(),
 				GL_TEXTURE_CUBE_MAP_NEGATIVE_Y));
-		front = new FramebufferObject(game, resX, resY, 0,
-				new Camera(pos, 0, 0), new Texture(cubemap.getTextureID(),
-						GL_TEXTURE_CUBE_MAP_POSITIVE_X));
-		back = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 180,
+		left = new FramebufferObject(game, resX, resY, 0, new Camera(pos, -90,
+				0), new Texture(cubemap.getTextureID(),
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X));
+		right = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 90,
 				0), new Texture(cubemap.getTextureID(),
 				GL_TEXTURE_CUBE_MAP_NEGATIVE_X));
-		left = new FramebufferObject(game, resX, resY, 0,
-				new Camera(pos, 90, 0), new Texture(cubemap.getTextureID(),
-						GL_TEXTURE_CUBE_MAP_POSITIVE_Z));
-		right = new FramebufferObject(game, resX, resY, 0, new Camera(pos, -90,
+		front = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 180,
 				0), new Texture(cubemap.getTextureID(),
-				GL_TEXTURE_CUBE_MAP_NEGATIVE_Z));
+				GL_TEXTURE_CUBE_MAP_POSITIVE_Z));
+		back = new FramebufferObject(game, resX, resY, 0,
+				new Camera(pos, 0, 0), new Texture(cubemap.getTextureID(),
+						GL_TEXTURE_CUBE_MAP_NEGATIVE_Z));
 
 		cubemap.unbind();
 	}
 
 	public void updateTexture() {
-		glGetError(); // TODO: REMOVE ALL
-
-		// glEnable(GL_TEXTURE_CUBE_MAP); // TODO: Delete
-		// cubemap.bind();
-		if (glGetError() != GL_NO_ERROR)
-			System.out.println("a");
+		frustum.begin();
 
 		top.updateTexture();
 		bottom.updateTexture();
@@ -124,10 +141,7 @@ public class CubeEnvironmentMap {
 		left.updateTexture();
 		right.updateTexture();
 
-		// cubemap.unbind();
-		// glDisable(GL_TEXTURE_CUBE_MAP);
-		if (glGetError() != GL_NO_ERROR)
-			System.out.println("e");
+		frustum.end();
 	}
 
 	public FramebufferObject getFramebufferFront() {

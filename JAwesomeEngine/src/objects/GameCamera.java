@@ -1,23 +1,33 @@
-package game;
+package objects;
 
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
 import math.VecMath;
-import objects.Updateable;
+import utils.DefaultValues;
 import vector.Vector3d;
 import vector.Vector3f;
 
 public class GameCamera extends Camera implements Updateable {
 	boolean flycam, invertX, invertY;
-	float speed = 0.012f;
+	float speed;
 
 	InputManager inputs;
 	InputEvent forwards, backwards, left, right;
 
 	public GameCamera(InputManager inputs) {
 		super();
+		init(inputs, DefaultValues.DEFAULT_GAMECAMERA_SPEED);
+	}
+
+	public GameCamera(InputManager inputs, float speed) {
+		super();
+		init(inputs, speed);
+	}
+
+	private void init(InputManager inputs, float speed) {
+		this.speed = speed;
 		flycam = false;
 		invertX = false;
 		invertY = false;

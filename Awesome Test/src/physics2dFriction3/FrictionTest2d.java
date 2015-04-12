@@ -1,12 +1,7 @@
 package physics2dFriction3;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
 import gui.Font;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import manifold.SimpleManifoldManager;
@@ -20,8 +15,13 @@ import physics.PhysicsSpace2;
 import positionalcorrection.ProjectionCorrection;
 import resolution.ImpulseResolution;
 import shape2d.Circle;
+import utils.Debugger;
 import vector.Vector2f;
 import broadphase.SAP2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class FrictionTest2d extends StandardGame {
 	PhysicsSpace2 space;

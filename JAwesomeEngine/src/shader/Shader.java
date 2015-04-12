@@ -280,6 +280,10 @@ public class Shader {
 		return uniformnames.get(argumentname);
 	}
 
+	public Object getArgument(String argumentname) {
+		return uniformarguments.get(getArgumentID(argumentname));
+	}
+
 	public List<Object> getArguments() {
 		return uniformarguments;
 	}

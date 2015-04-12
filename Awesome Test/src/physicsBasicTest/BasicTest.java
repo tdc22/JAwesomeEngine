@@ -1,12 +1,7 @@
 package physicsBasicTest;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
 import gui.Font;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
@@ -24,8 +19,13 @@ import quaternion.Quaternionf;
 import resolution.ImpulseResolution;
 import shape.Box;
 import shape.Sphere;
+import utils.Debugger;
 import vector.Vector3f;
 import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class BasicTest extends StandardGame {
 	PhysicsSpace space;

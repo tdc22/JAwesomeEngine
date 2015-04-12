@@ -1,11 +1,11 @@
 package tutorialp1;
 
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import shape.Box;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class Tutorial extends StandardGame {
 

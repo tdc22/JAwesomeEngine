@@ -8,10 +8,6 @@ import vector.Vector3f;
 public class SimpleBoxVoxelObject extends ShapedObject {
 	int[][][] data;
 
-	public SimpleBoxVoxelObject() {
-		data = new int[0][0][0];
-	}
-
 	public SimpleBoxVoxelObject(int sizex, int sizey, int sizez) {
 		data = new int[sizex][sizey][sizez];
 	}

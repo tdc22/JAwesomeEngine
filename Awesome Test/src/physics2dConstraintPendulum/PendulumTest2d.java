@@ -1,12 +1,7 @@
 package physics2dConstraintPendulum;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
 import gui.Font;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import integration.VerletIntegration;
 import loader.FontLoader;
 import manifold.MultiPointManifoldManager2;
@@ -22,9 +17,14 @@ import positionalcorrection.ProjectionCorrection;
 import resolution.ImpulseResolution;
 import shape2d.Circle;
 import shape2d.Quad;
+import utils.Debugger;
 import vector.Vector2f;
 import broadphase.SAP2;
 import constraints.DistanceConstraint2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class PendulumTest2d extends StandardGame {
 	PhysicsSpace2 space;

@@ -1,11 +1,11 @@
 package modelloader;
 
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import loader.ModelLoader;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ModelTest extends StandardGame {
 

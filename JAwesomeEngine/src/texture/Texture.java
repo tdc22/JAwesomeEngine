@@ -1,26 +1,30 @@
 package texture;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glGenTextures;
+import utils.DefaultValues;
 
 public class Texture {
 	int textureID, textureType;
 
 	public Texture() {
 		this.textureID = glGenTextures();
-		this.textureType = GL_TEXTURE_2D;
+		this.textureType = DefaultValues.DEFAULT_TEXTURE_TYPE;
 	}
 
 	public Texture(int textureid) {
 		this.textureID = textureid;
-		this.textureType = GL_TEXTURE_2D;
+		this.textureType = DefaultValues.DEFAULT_TEXTURE_TYPE;
 	}
 
 	public Texture(int textureid, int texturetype) {
 		this.textureID = textureid;
 		this.textureType = texturetype;
+	}
+
+	public void setTextureID(int textureid) {
+		this.textureID = textureid;
 	}
 
 	public void setTextureType(int texturetype) {

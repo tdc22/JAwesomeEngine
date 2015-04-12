@@ -8,6 +8,8 @@ import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
+import utils.DefaultValues;
+
 public abstract class UDPServer extends UDPConnecter {
 	HashMap<InetAddress, Long> clients, clientqueue;
 	HashMap<InetAddress, Integer> portlist, portqueue;
@@ -15,7 +17,7 @@ public abstract class UDPServer extends UDPConnecter {
 
 	public UDPServer(int port) {
 		super();
-		init(port, 10000);
+		init(port, DefaultValues.DEFAULT_UDP_SERVER_TIMEOUT);
 	}
 
 	public UDPServer(int port, long timeout) {

@@ -1,12 +1,12 @@
 package OGLRotationTest;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import loader.FontLoader;
+import utils.Debugger;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class RotationTest extends StandardGame {
 	RotationObject b;

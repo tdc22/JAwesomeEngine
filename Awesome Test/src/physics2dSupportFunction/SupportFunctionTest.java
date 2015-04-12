@@ -1,11 +1,6 @@
 package physics2dSupportFunction;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
@@ -22,8 +17,13 @@ import positionalcorrection.NullCorrection;
 import resolution.NullResolution;
 import shape2d.Circle;
 import shape2d.Quad;
+import utils.Debugger;
 import vector.Vector2f;
 import broadphase.SAP2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class SupportFunctionTest extends StandardGame {
 	PhysicsSpace2 space;

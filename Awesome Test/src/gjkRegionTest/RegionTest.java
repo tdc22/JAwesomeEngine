@@ -1,11 +1,6 @@
 package gjkRegionTest;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
@@ -22,8 +17,13 @@ import java.util.Scanner;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
+import utils.Debugger;
 import vector.Vector2f;
 import vector.Vector3f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class RegionTest extends StandardGame {
 	List<Vector3f> simplices;

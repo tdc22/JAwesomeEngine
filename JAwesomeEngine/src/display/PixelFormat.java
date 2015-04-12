@@ -1,4 +1,6 @@
-package gui;
+package display;
+
+import utils.DefaultValues;
 
 public class PixelFormat {
 	private int bpp, alpha, depth, stencil, samples, num_aux_buffers,
@@ -6,16 +8,33 @@ public class PixelFormat {
 	private boolean stereo, sRGB;
 
 	public PixelFormat() {
-		init(0, 0, 16, 0, 4, 0, 0, 0, false, false);
+		init(DefaultValues.DEFAULT_PIXELFORMAT_BPP,
+				DefaultValues.DEFAULT_PIXELFORMAT_ALPHA,
+				DefaultValues.DEFAULT_PIXELFORMAT_DEPTH,
+				DefaultValues.DEFAULT_PIXELFORMAT_STENCIL,
+				DefaultValues.DEFAULT_PIXELFORMAT_SAMPLES,
+				DefaultValues.DEFAULT_PIXELFORMAT_NUM_AUX_BUFFERS,
+				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_BPP,
+				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_ALPHA,
+				DefaultValues.DEFAULT_PIXELFORMAT_STEREO,
+				DefaultValues.DEFAULT_PIXELFORMAT_SRGB);
 	}
 
 	public PixelFormat(int bpp, int alpha, int depth, int stencil, int samples) {
-		init(bpp, alpha, depth, stencil, samples, 0, 0, 0, false, false);
+		init(bpp, alpha, depth, stencil, samples,
+				DefaultValues.DEFAULT_PIXELFORMAT_NUM_AUX_BUFFERS,
+				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_BPP,
+				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_ALPHA,
+				DefaultValues.DEFAULT_PIXELFORMAT_STEREO,
+				DefaultValues.DEFAULT_PIXELFORMAT_SRGB);
 	}
 
 	public PixelFormat(int bpp, int alpha, int depth, int stencil, int samples,
 			boolean stereo, boolean sRGB) {
-		init(bpp, alpha, depth, stencil, samples, 0, 0, 0, stereo, sRGB);
+		init(bpp, alpha, depth, stencil, samples,
+				DefaultValues.DEFAULT_PIXELFORMAT_NUM_AUX_BUFFERS,
+				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_BPP,
+				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_ALPHA, stereo, sRGB);
 	}
 
 	public PixelFormat(int bpp, int alpha, int depth, int stencil, int samples,

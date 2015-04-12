@@ -1,20 +1,24 @@
 package postProcessingBlur;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import shader.Shader;
 import texture.Texture;
+import utils.Debugger;
 import vector.Vector2f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class BlurTest extends StandardGame {
 	Debugger debugger;
+	InputEvent toggleMouseBind;
 
 	@Override
 	public void init() {
@@ -36,6 +40,10 @@ public class BlurTest extends StandardGame {
 		blurPPShader.addArgument(new Vector2f(0.001f, 0));
 
 		addPostProcessingShader(blurPPShader);
+
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		inputs.addEvent(toggleMouseBind);
 	}
 
 	@Override
@@ -55,7 +63,15 @@ public class BlurTest extends StandardGame {
 	@Override
 	public void update(int delta) {
 		debugger.update();
-		cam.update(delta);
+		if (display.isMouseBound())
+			cam.update(delta);
+
+		if (toggleMouseBind.isActive()) {
+			if (!display.isMouseBound())
+				display.bindMouse();
+			else
+				display.unbindMouse();
+		}
 	}
 
 }

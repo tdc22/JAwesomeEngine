@@ -24,7 +24,6 @@ import static org.lwjgl.opengl.GL11.glClearStencil;
 import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glDepthFunc;
 import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glFrustum;
 import static org.lwjgl.opengl.GL11.glHint;
 import static org.lwjgl.opengl.GL11.glLoadMatrix;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
@@ -32,11 +31,6 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glShadeModel;
-import gui.Display;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import input.GLFWInputReader;
 import input.Input;
 import input.InputEvent;
@@ -48,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import math.VecMath;
+import objects.GameCamera;
 import objects.RenderedObject;
 
 import org.lwjgl.BufferUtils;
@@ -55,6 +50,13 @@ import org.lwjgl.BufferUtils;
 import shader.Shader;
 import shape2d.Quad;
 import texture.FramebufferObject;
+import texture.Texture;
+import utils.ViewFrustum;
+import display.Display;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public abstract class StandardGame extends AbstractGame {
 	protected List<RenderedObject> objects;
@@ -71,6 +73,7 @@ public abstract class StandardGame extends AbstractGame {
 	public InputManager inputs;
 	protected InputEvent closeEvent;
 
+	private ViewFrustum frustum;
 	private FloatBuffer identity;
 	boolean render2d = true;
 	boolean useFBO = true;
@@ -105,7 +108,8 @@ public abstract class StandardGame extends AbstractGame {
 				FramebufferObject current = p ? fbo2 : fbo1;
 				current.bind();
 				current.clear();
-				s.setArgument("texture", p ? tex0 : tex1);
+				((Texture) s.getArgument("texture")).setTextureID(p ? tex0
+						: tex1);
 				s.bind();
 				screen.render();
 				s.unbind();
@@ -265,7 +269,7 @@ public abstract class StandardGame extends AbstractGame {
 	}
 
 	protected void initOpenGL() {
-		glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClearDepth(1.0f);
 		glClearStencil(0);
 
@@ -278,17 +282,10 @@ public abstract class StandardGame extends AbstractGame {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 
-		glMatrixMode(GL_PROJECTION);
-		glLoadMatrix(identity);
-
-		// Calculate The Aspect Ratio Of The Window
-		float fH = (float) (Math.tan(settings.getFOVy() / 360f * Math.PI) * settings
-				.getZNear());
-		float fW = fH * settings.getResolutionX()
-				/ (float) settings.getResolutionY();
-		glFrustum(-fW, fW, -fH, fH, settings.getZNear(), settings.getZFar());
-
-		glMatrixMode(GL_MODELVIEW);
+		frustum = new ViewFrustum(settings.getResolutionX(),
+				settings.getResolutionY(), settings.getZNear(),
+				settings.getZFar(), settings.getFOVy());
+		frustum.apply();
 
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);

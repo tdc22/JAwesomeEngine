@@ -15,6 +15,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+import display.Display;
+import display.DisplayMode;
+import display.PixelFormat;
+
 public class SettingsDialog {
 	JFrame frame;
 	boolean open = true;

@@ -1,10 +1,6 @@
 package normalDebug;
 
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import objects.ShapedObject;
@@ -12,6 +8,10 @@ import shader.Shader;
 import shape.Box;
 import shape.Sphere;
 import utils.GLConstants;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ShaderTest extends StandardGame {
 	Shader normalshader;

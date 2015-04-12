@@ -1,11 +1,6 @@
 package shader4_Cube;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
@@ -15,7 +10,12 @@ import shape.Sphere;
 import texture.CubeEnvironmentMap;
 import texture.CubeMap;
 import texture.Texture;
+import utils.Debugger;
 import vector.Vector4f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ShaderTest4 extends StandardGame {
 	Texture texture, diffuse, bumpmap;
@@ -92,7 +92,7 @@ public class ShaderTest4 extends StandardGame {
 		textureshader.addArgumentNames("cubeMap");
 		textureshader.addArguments(new CubeMap(cubemapper.getTextureID()));
 		s.setShader(textureshader);
-		b.setShader(textureshader);
+		// b.setShader(textureshader);
 
 		// /*Shader textureshader2 = new Shader(ShaderLoader.loadShaderPair(
 		// "res/shaders/textureshader.vert",

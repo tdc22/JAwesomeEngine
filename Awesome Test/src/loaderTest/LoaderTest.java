@@ -1,12 +1,12 @@
 package loaderTest;
 
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import loader.ModelLoader;
 import objects.ShapedObject;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class LoaderTest extends StandardGame {
 

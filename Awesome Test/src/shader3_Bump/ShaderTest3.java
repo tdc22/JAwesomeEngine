@@ -1,10 +1,6 @@
 package shader3_Bump;
 
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
@@ -14,6 +10,10 @@ import shader.Shader;
 import shape.Box;
 import texture.Texture;
 import vector.Vector4f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ShaderTest3 extends StandardGame {
 	Texture texture, diffuse, bumpmap;

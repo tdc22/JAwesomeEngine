@@ -1,16 +1,16 @@
 package transRot;
 
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import loader.ModelLoader;
 import math.FastMath;
 import objects.RenderedObject;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class TransRot extends StandardGame {
 	RenderedObject rabbit1, rabbit2;
@@ -53,7 +53,8 @@ public class TransRot extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		cam.update(delta);
+		if (display.isMouseBound())
+			cam.update(delta);
 		if (toggleMouseBind.isActive()) {
 			if (!display.isMouseBound())
 				display.bindMouse();

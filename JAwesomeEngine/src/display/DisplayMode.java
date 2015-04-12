@@ -1,17 +1,20 @@
-package gui;
+package display;
+
+import utils.DefaultValues;
 
 public class DisplayMode {
 	int width, height;
 	boolean resizeable, vsync;
 	String title;
-	private final String DEFAULT_TITLE = "JAwesomeEngine";
 
 	public DisplayMode() {
-		init(800, 600, DEFAULT_TITLE, true, true);
+		init(DefaultValues.DEFAULT_DISPLAY_RESOLUTION_X,
+				DefaultValues.DEFAULT_DISPLAY_RESOLUTION_Y,
+				DefaultValues.DEFAULT_DISPLAY_TITLE, true, true);
 	}
 
 	public DisplayMode(int width, int height) {
-		init(width, height, DEFAULT_TITLE, false, true);
+		init(width, height, DefaultValues.DEFAULT_DISPLAY_TITLE, false, true);
 	}
 
 	public DisplayMode(int width, int height, String title) {

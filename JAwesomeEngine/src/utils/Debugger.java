@@ -1,4 +1,4 @@
-package game;
+package utils;
 
 import static org.lwjgl.opengl.GL11.GL_FILL;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
@@ -26,8 +26,8 @@ import input.KeyInput;
 
 import java.awt.Color;
 
+import objects.Camera;
 import objects.ShapedObject;
-import utils.GLConstants;
 import vector.Vector3f;
 
 public class Debugger {

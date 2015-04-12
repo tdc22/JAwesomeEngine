@@ -1,11 +1,6 @@
 package physicsCollisionDetection;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
@@ -32,10 +27,15 @@ import shader.Shader;
 import shape.Box;
 import shape.Cylinder;
 import shape.Sphere;
+import utils.Debugger;
 import utils.Pair;
 import vector.Vector3f;
 import vector.Vector4f;
 import broadphase.DynamicAABBTree;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class CollisionDetectionTest extends StandardGame {
 	PhysicsSpace space;

@@ -1,4 +1,4 @@
-package gui;
+package display;
 
 import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
 import static org.lwjgl.glfw.GLFW.GLFW_ACCUM_ALPHA_BITS;

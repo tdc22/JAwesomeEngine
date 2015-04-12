@@ -1,4 +1,4 @@
-package game;
+package objects;
 
 import static org.lwjgl.opengl.GL11.glMultMatrix;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
@@ -6,7 +6,7 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import math.QuatMath;
 import matrix.Matrix4f;
-import objects.GameObject;
+import utils.DefaultValues;
 import vector.Vector3f;
 
 public class Camera extends GameObject {
@@ -15,11 +15,14 @@ public class Camera extends GameObject {
 
 	public Camera() {
 		super();
-		init(new Vector3f(), 0, 0);
+		init(DefaultValues.DEFAULT_CAMERA_POSITION,
+				DefaultValues.DEFAULT_CAMERA_HORIZONTAL_ROTATION,
+				DefaultValues.DEFAULT_CAMERA_VERTICAL_ROTATION);
 	}
 
 	public Camera(Vector3f pos) {
-		init(pos, 0, 0);
+		init(pos, DefaultValues.DEFAULT_CAMERA_HORIZONTAL_ROTATION,
+				DefaultValues.DEFAULT_CAMERA_VERTICAL_ROTATION);
 	}
 
 	public Camera(Vector3f pos, float hRotation, float vRotation) {

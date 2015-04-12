@@ -1,21 +1,25 @@
 package lightingTest;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import objects.ShapedObject;
 import shader.Shader;
+import utils.Debugger;
 import vector.Vector3f;
 import vector.Vector4f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class LightingTest extends StandardGame {
 	Debugger debugger;
+	InputEvent toggleMouseBind;
 
 	@Override
 	public void init() {
@@ -44,6 +48,10 @@ public class LightingTest extends StandardGame {
 		bunny.setRenderHints(false, false, true);
 		bunny.setShader(shader);
 		addObject(bunny);
+
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		inputs.addEvent(toggleMouseBind);
 	}
 
 	@Override
@@ -62,7 +70,14 @@ public class LightingTest extends StandardGame {
 	@Override
 	public void update(int delta) {
 		debugger.update();
-		cam.update(delta);
+		if (display.isMouseBound())
+			cam.update(delta);
+		if (toggleMouseBind.isActive()) {
+			if (!display.isMouseBound())
+				display.bindMouse();
+			else
+				display.unbindMouse();
+		}
 	}
 
 }

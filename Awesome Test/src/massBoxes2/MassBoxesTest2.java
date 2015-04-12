@@ -1,17 +1,17 @@
 package massBoxes2;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
 import shader.Shader;
 import shape.Box;
 import texture.Texture;
+import utils.Debugger;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class MassBoxesTest2 extends StandardGame {
 	Debugger debugger;

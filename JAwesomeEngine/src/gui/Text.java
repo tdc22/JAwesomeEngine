@@ -3,6 +3,7 @@ package gui;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import loader.FontLoader;
 import objects.ShapedObject2;
+import utils.DefaultValues;
 
 public class Text extends ShapedObject2 {
 	String text;
@@ -10,11 +11,19 @@ public class Text extends ShapedObject2 {
 	float fontsize = 1, charactermargin, spacesize;
 
 	public Text(String text, float x, float y, Font f) {
-		init(text, x, y, f, 12);
+		init(text, x, y, f, DefaultValues.DEFAULT_FONT_SIZE,
+				DefaultValues.DEFAULT_FONT_CHARACTER_MARGIN,
+				DefaultValues.DEFAULT_FONT_SPACE_SIZE);
 	}
 
 	public Text(String text, float x, float y, Font f, float size) {
-		init(text, x, y, f, size);
+		init(text, x, y, f, size, DefaultValues.DEFAULT_FONT_CHARACTER_MARGIN,
+				DefaultValues.DEFAULT_FONT_SPACE_SIZE);
+	}
+
+	public Text(String text, float x, float y, Font f, float size,
+			float characterMargin, float spaceSize) {
+		init(text, x, y, f, size, characterMargin, spaceSize);
 	}
 
 	public float getCharacterMargin() {
@@ -33,12 +42,13 @@ public class Text extends ShapedObject2 {
 		return text;
 	}
 
-	private void init(String text, float x, float y, Font f, float size) {
+	private void init(String text, float x, float y, Font f, float size,
+			float characterMargin, float spaceSize) {
 		this.text = text;
 		setFont(f);
-		setSpaceSize(0.2f);
+		setSpaceSize(spaceSize);
 		setFontsize(size);
-		setCharacterMargin(0.14f);
+		setCharacterMargin(characterMargin);
 		translateTo(x, y);
 	}
 

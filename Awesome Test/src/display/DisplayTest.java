@@ -1,10 +1,6 @@
 package display;
 
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 
 public class DisplayTest extends StandardGame {
 

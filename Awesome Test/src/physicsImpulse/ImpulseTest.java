@@ -1,11 +1,6 @@
 package physicsImpulse;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import manifold.SimpleManifoldManager;
@@ -18,8 +13,13 @@ import positionalcorrection.NullCorrection;
 import quaternion.Quaternionf;
 import resolution.NullResolution;
 import shape.Box;
+import utils.Debugger;
 import vector.Vector3f;
 import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ImpulseTest extends StandardGame {
 	PhysicsSpace space;

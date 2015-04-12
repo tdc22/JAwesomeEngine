@@ -50,10 +50,13 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.opengl.GL32.GL_TEXTURE_2D_MULTISAMPLE;
 import static org.lwjgl.opengl.GL32.glTexImage2DMultisample;
-import game.Camera;
 import game.StandardGame;
 
 import java.nio.IntBuffer;
+
+import objects.Camera;
+import utils.DefaultValues;
+import utils.ViewFrustum;
 
 public class FramebufferObject {
 	StandardGame game;
@@ -61,30 +64,39 @@ public class FramebufferObject {
 	Texture colorBuffer;
 	int width, height;
 	IntBuffer imageData;
-	boolean multisampled, useCam;
+	boolean multisampled, useCam, useFrustum;
 	Camera cam;
+	ViewFrustum frustum;
 
 	public FramebufferObject(StandardGame game) {
-		init(game, 1024, 1024, 0, null, null);
+		init(game, DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_X,
+				DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_Y,
+				DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null, null);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height) {
-		init(game, width, height, 0, null, null);
+		init(game, width, height, DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES,
+				null, null, null);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height,
 			int samples) {
-		init(game, width, height, samples, null, null);
+		init(game, width, height, samples, null, null, null);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height,
 			int samples, Camera cam) {
-		init(game, width, height, samples, cam, null);
+		init(game, width, height, samples, cam, null, null);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height,
 			int samples, Camera cam, Texture colorbuffer) {
-		init(game, width, height, samples, cam, colorbuffer);
+		init(game, width, height, samples, cam, colorbuffer, null);
+	}
+
+	public FramebufferObject(StandardGame game, int width, int height,
+			int samples, Camera cam, Texture colorbuffer, ViewFrustum frustum) {
+		init(game, width, height, samples, cam, colorbuffer, frustum);
 	}
 
 	public void begin() {
@@ -95,6 +107,8 @@ public class FramebufferObject {
 
 		if (useCam)
 			cam.begin();
+		if (useFrustum)
+			frustum.begin();
 
 		bind();
 		clear();
@@ -131,6 +145,8 @@ public class FramebufferObject {
 	public void end() {
 		unbind();
 
+		if (useFrustum)
+			frustum.end();
 		if (useCam)
 			cam.end();
 
@@ -163,16 +179,16 @@ public class FramebufferObject {
 	}
 
 	private void init(StandardGame game, int width, int height, int samples,
-			Camera camera, Texture colorbuffer) {
+			Camera camera, Texture colorbuffer, ViewFrustum frustum) {
 		this.game = game;
 		this.width = width;
 		this.height = height;
 		this.samples = samples;
 
-		if (camera != null) {
+		if (useCam = (camera != null))
 			this.cam = camera;
-			useCam = true;
-		}
+		if (useFrustum = (frustum != null))
+			this.frustum = frustum;
 
 		multisampled = samples > 0;
 

@@ -1,10 +1,6 @@
 package physics2dCollisionDetection;
 
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import integration.EulerIntegration;
 
 import java.util.ArrayList;
@@ -31,6 +27,10 @@ import utils.Pair;
 import vector.Vector2f;
 import vector.Vector4f;
 import broadphase.SAP2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class CollisionDetectionTest2d extends StandardGame {
 	PhysicsSpace2 space;

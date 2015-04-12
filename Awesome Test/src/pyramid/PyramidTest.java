@@ -1,13 +1,13 @@
 package pyramid;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import loader.FontLoader;
 import shape.Box;
+import utils.Debugger;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class PyramidTest extends StandardGame {
 	Debugger debugger;

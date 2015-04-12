@@ -1,11 +1,11 @@
 package depthBufferTest;
 
-import game.Debugger;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import shader.Shader;
 import shape.Box;
+import utils.Debugger;
 import vector.Vector4f;
 
 public class DepthBufferTest extends StandardGame {

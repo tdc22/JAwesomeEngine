@@ -1,16 +1,16 @@
 package inputTest;
 
 import game.StandardGame;
-import gui.DisplayMode;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import input.GamepadInput;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import input.MouseInput;
 import shape.Box;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class InputTest extends StandardGame {
 	Box box;

@@ -1,4 +1,4 @@
-package gui;
+package display;
 
 public abstract class Display {
 	protected int width, height;

@@ -1,12 +1,7 @@
 package physicsFriction2;
 
-import game.Debugger;
 import game.StandardGame;
-import gui.DisplayMode;
 import gui.Font;
-import gui.GLDisplay;
-import gui.PixelFormat;
-import gui.VideoSettings;
 import integration.VerletIntegration;
 import loader.FontLoader;
 import manifold.MultiPointManifoldManager;
@@ -21,8 +16,13 @@ import quaternion.Quaternionf;
 import resolution.ImpulseResolution;
 import shape.Box;
 import shape.Sphere;
+import utils.Debugger;
 import vector.Vector3f;
 import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class FrictionTest extends StandardGame {
 	PhysicsSpace space;
