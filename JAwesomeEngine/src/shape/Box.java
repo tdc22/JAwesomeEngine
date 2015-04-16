@@ -46,10 +46,10 @@ public class Box extends ShapedObject implements BoxStructure {
 		Color color = Color.GRAY;
 
 		// Texturecoords
-		Vector2f a = new Vector2f(0, 0);
-		Vector2f b = new Vector2f(1, 0);
-		Vector2f c = new Vector2f(1, 1);
-		Vector2f d = new Vector2f(0, 1);
+		Vector2f a = new Vector2f(0, 1);
+		Vector2f b = new Vector2f(1, 1);
+		Vector2f c = new Vector2f(1, 0);
+		Vector2f d = new Vector2f(0, 0);
 
 		// Normals
 		Vector3f down = new Vector3f(0, -1, 0);

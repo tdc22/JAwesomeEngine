@@ -91,7 +91,7 @@ public class Shader {
 		uniformpositions = new ArrayList<Integer>(shader.getUniformPositions());
 		uniformtypes = new ArrayList<Integer>(shader.getArgumentTypes());
 		uniformarguments = new ArrayList<Object>(shader.getArguments());
-		uniformnames = new HashMap<String, Integer>();
+		uniformnames = new HashMap<String, Integer>(shader.getUniformNames());
 	}
 
 	public void addArgument(Object argument) {

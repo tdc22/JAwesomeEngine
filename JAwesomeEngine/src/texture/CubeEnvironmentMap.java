@@ -115,9 +115,9 @@ public class CubeEnvironmentMap {
 		front = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 180,
 				180), new Texture(cubemap.getTextureID(),
 				GL_TEXTURE_CUBE_MAP_NEGATIVE_Z));
-		back = new FramebufferObject(game, resX, resY, 0,
-				new Camera(pos, 0, 180), new Texture(cubemap.getTextureID(),
-						GL_TEXTURE_CUBE_MAP_POSITIVE_Z));
+		back = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 0,
+				180), new Texture(cubemap.getTextureID(),
+				GL_TEXTURE_CUBE_MAP_POSITIVE_Z));
 
 		cubemap.unbind();
 	}
