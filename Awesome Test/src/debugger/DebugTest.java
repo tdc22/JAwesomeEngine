@@ -1,4 +1,4 @@
-package debugManager;
+package debugger;
 
 import game.StandardGame;
 import loader.FontLoader;
