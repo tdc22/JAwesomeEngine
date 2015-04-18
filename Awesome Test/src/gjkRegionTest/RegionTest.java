@@ -365,13 +365,15 @@ public class RegionTest extends StandardGame {
 				pointnum += p.getIndexCount();
 			System.out.println("Total point number: " + pointnum);
 		}
+		debugger.update();
+
+		if (display.isMouseBound())
+			cam.update(delta);
 		if (toggleMouseBind.isActive()) {
 			if (!display.isMouseBound())
 				display.bindMouse();
 			else
 				display.unbindMouse();
 		}
-		debugger.update();
-		cam.update(delta);
 	}
 }

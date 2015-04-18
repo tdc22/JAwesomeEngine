@@ -32,6 +32,8 @@ public class PendulumTest2d extends StandardGame {
 	int tempdelta = 0;
 	Debugger debugger;
 	PhysicsDebug2 physicsdebug;
+	double time = 0;
+	RigidBody2 rbB1, rbB21, rbB22, rbB31, rbB32, rbB33;
 
 	@Override
 	public void init() {
@@ -68,9 +70,10 @@ public class PendulumTest2d extends StandardGame {
 
 		// Pendulum 1
 		Circle body1 = new Circle(0, 0, 20, 100);
-		RigidBody2 rbB1 = new RigidBody2(PhysicsShapeCreator.create(body1));
+		rbB1 = new RigidBody2(PhysicsShapeCreator.create(body1));
 		rbB1.setMass(1f);
 		rbB1.setInertia(new Matrix1f(1));
+		rbB1.setLinearDamping(0.0f);
 		space.addRigidBody(body1, rbB1);
 		add2dObject(body1);
 
@@ -79,16 +82,18 @@ public class PendulumTest2d extends StandardGame {
 
 		// Pendulum 2
 		Circle body21 = new Circle(400, 0, 20, 100);
-		RigidBody2 rbB21 = new RigidBody2(PhysicsShapeCreator.create(body21));
+		rbB21 = new RigidBody2(PhysicsShapeCreator.create(body21));
 		rbB21.setMass(1f);
 		rbB21.setInertia(new Matrix1f(1));
+		rbB21.setLinearDamping(0.0f);
 		space.addRigidBody(body21, rbB21);
 		add2dObject(body21);
 
 		Circle body22 = new Circle(400, 180, 20, 100);
-		RigidBody2 rbB22 = new RigidBody2(PhysicsShapeCreator.create(body22));
+		rbB22 = new RigidBody2(PhysicsShapeCreator.create(body22));
 		rbB22.setMass(1f);
 		rbB22.setInertia(new Matrix1f(1));
+		rbB22.setLinearDamping(0.0f);
 		space.addRigidBody(body22, rbB22);
 		add2dObject(body22);
 
@@ -99,23 +104,26 @@ public class PendulumTest2d extends StandardGame {
 
 		// Pendulum 3
 		Circle body31 = new Circle(800, 0, 20, 100);
-		RigidBody2 rbB31 = new RigidBody2(PhysicsShapeCreator.create(body31));
+		rbB31 = new RigidBody2(PhysicsShapeCreator.create(body31));
 		rbB31.setMass(1f);
 		rbB31.setInertia(new Matrix1f(1));
+		rbB31.setLinearDamping(0.0f);
 		space.addRigidBody(body31, rbB31);
 		add2dObject(body31);
 
 		Circle body32 = new Circle(800, 180, 20, 100);
-		RigidBody2 rbB32 = new RigidBody2(PhysicsShapeCreator.create(body32));
+		rbB32 = new RigidBody2(PhysicsShapeCreator.create(body32));
 		rbB32.setMass(1f);
 		rbB32.setInertia(new Matrix1f(1));
+		rbB32.setLinearDamping(0.0f);
 		space.addRigidBody(body32, rbB32);
 		add2dObject(body32);
 
 		Circle body33 = new Circle(980, 180, 20, 100);
-		RigidBody2 rbB33 = new RigidBody2(PhysicsShapeCreator.create(body33));
+		rbB33 = new RigidBody2(PhysicsShapeCreator.create(body33));
 		rbB33.setMass(1f);
 		rbB33.setInertia(new Matrix1f(1));
+		rbB33.setLinearDamping(0.0f);
 		space.addRigidBody(body33, rbB33);
 		add2dObject(body33);
 
@@ -125,6 +133,7 @@ public class PendulumTest2d extends StandardGame {
 		space.addConstraint(constraint31);
 		space.addConstraint(constraint32);
 		space.addConstraint(constraint33);
+
 	}
 
 	@Override
@@ -141,8 +150,29 @@ public class PendulumTest2d extends StandardGame {
 		physicsdebug.render2d();
 	}
 
+	private void reset() {
+		rbB1.setLinearVelocity(new Vector2f());
+		rbB1.translateTo(0, 0);
+		rbB21.setLinearVelocity(new Vector2f());
+		rbB21.translateTo(400, 0);
+		rbB22.setLinearVelocity(new Vector2f());
+		rbB22.translateTo(400, 180);
+		rbB31.setLinearVelocity(new Vector2f());
+		rbB31.translateTo(800, 0);
+		rbB32.setLinearVelocity(new Vector2f());
+		rbB32.translateTo(980, 180);
+		rbB33.setLinearVelocity(new Vector2f());
+		rbB33.translateTo(980, 180);
+	}
+
 	@Override
 	public void update(int delta) {
+		time += delta;
+		if (time > 60000 * 2) {
+			reset();
+			time = 0;
+		}
+
 		debugger.update();
 		space.update(delta);
 		physicsdebug.update();

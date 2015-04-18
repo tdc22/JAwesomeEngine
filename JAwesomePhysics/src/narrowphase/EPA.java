@@ -43,6 +43,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		faces.add(new Triangle(A, C, D));
 		faces.add(new Triangle(D, C, B));
 
+		System.out.println("------------------------------------");
 		// System.out.println(A + "; " + B + "; " + C + "; " + D);
 
 		Vector3f normal = new Vector3f();
@@ -57,7 +58,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 				Vector3f p = support(Sa, Sb, t.normal);
 				// System.out.println(t.normal);
 				double d = VecMath.dotproduct(p, t.normal);
-				// System.out.println(d - t.distance + "; " + p);
+				System.out.println(d - t.distance + "; " + p);
 				if (d - t.distance < TOLERANCE) {
 					normal = t.normal;
 					depth = (float) d;

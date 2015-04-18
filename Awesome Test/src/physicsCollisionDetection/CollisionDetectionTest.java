@@ -31,7 +31,7 @@ import utils.Debugger;
 import utils.Pair;
 import vector.Vector3f;
 import vector.Vector4f;
-import broadphase.DynamicAABBTree;
+import broadphase.SAP;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
@@ -52,6 +52,7 @@ public class CollisionDetectionTest extends StandardGame {
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
 				new VideoSettings());
+		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
@@ -74,8 +75,8 @@ public class CollisionDetectionTest extends StandardGame {
 
 		manifolds = new ArrayList<ManifoldVisualization>();
 
-		space = new PhysicsSpace(new EulerIntegration(), new DynamicAABBTree(),
-				new GJK(new EPA()), new NullResolution(), new NullCorrection(),
+		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(
+				new EPA()), new NullResolution(), new NullCorrection(),
 				new SimpleManifoldManager<Vector3f>());
 		space.setCullStaticOverlaps(false);
 
@@ -198,15 +199,15 @@ public class CollisionDetectionTest extends StandardGame {
 			Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>> o = cm
 					.getObjects();
 			if (o.contains(rb1))
-				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
+				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 			if (o.contains(rb2))
-				s2.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
+				s2.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 			if (o.contains(rb3))
-				s3.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
+				s3.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 			if (o.contains(rb4))
-				s4.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
+				s4.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 			if (o.contains(rb5))
-				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 0.5f));
+				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 		}
 
 		debugger.update();
