@@ -46,7 +46,7 @@ public class CollisionDetectionTest extends StandardGame {
 	RigidBody3 rb1, rb2, rb3, rb4, rb5;
 	Debugger debugger;
 	List<ManifoldVisualization> manifolds;
-	InputEvent toggleMouseBind;
+	InputEvent toggleMouseBind, giveMeData;
 
 	@Override
 	public void init() {
@@ -115,7 +115,10 @@ public class CollisionDetectionTest extends StandardGame {
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
 				Input.KEYBOARD_EVENT, "R", KeyInput.KEY_PRESSED));
+		giveMeData = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "P", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
+		inputs.addEvent(giveMeData);
 	}
 
 	@Override
@@ -172,6 +175,8 @@ public class CollisionDetectionTest extends StandardGame {
 		}
 
 		space.update(delta);
+		if (giveMeData.isActive())
+			System.out.println(b1.getTranslation() + "; " + b1.getRotation());
 
 		s1.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s2.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));

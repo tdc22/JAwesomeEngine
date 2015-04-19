@@ -6,6 +6,9 @@ import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
+
+import java.awt.Color;
+
 import loader.FontLoader;
 import manifold.SimpleManifoldManager;
 import narrowphase.EPA;
@@ -67,12 +70,13 @@ public class BasicTest extends StandardGame {
 		// space.addRigidBody(q, rb1);
 		// addObject(q);
 
-		Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
-		rb1 = new RigidBody3(PhysicsShapeCreator.create(c));
-		rb1.setMass(1f);
-		rb1.setInertia(new Quaternionf());
-		space.addRigidBody(c, rb1);
-		addObject(c);
+		// Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
+		// c.setColor(Color.RED);
+		// rb1 = new RigidBody3(PhysicsShapeCreator.create(c));
+		// rb1.setMass(1f);
+		// rb1.setInertia(new Quaternionf());
+		// space.addRigidBody(c, rb1);
+		// addObject(c);
 
 		step = new InputEvent("Step", new Input(Input.KEYBOARD_EVENT, " ",
 				KeyInput.KEY_PRESSED));
@@ -103,6 +107,7 @@ public class BasicTest extends StandardGame {
 		if (tempdelta > 200) {
 			if (inputs.isMouseButtonDown("0")) {
 				Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
+				q.setColor(Color.BLUE);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(q));
 				rb.setMass(1f);
 				rb.setInertia(new Quaternionf());
@@ -121,6 +126,7 @@ public class BasicTest extends StandardGame {
 			}
 			if (inputs.isMouseButtonDown("1")) {
 				Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
+				c.setColor(Color.RED);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(c));
 				rb.setMass(1f);
 				rb.setInertia(new Quaternionf());
@@ -133,8 +139,8 @@ public class BasicTest extends StandardGame {
 		}
 
 		debugger.update();
-		if (run.isActive() || step.isActive())
-			space.update(delta);
+		// if (run.isActive() || step.isActive())
+		space.update(delta);
 		physicsdebug.update();
 		cam.update(delta);
 	}

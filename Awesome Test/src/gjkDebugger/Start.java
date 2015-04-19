@@ -1,8 +1,8 @@
-package gjkRegionTest;
+package gjkDebugger;
 
 public class Start {
 	public static void main(String[] args) {
-		RegionTest dt = new RegionTest();
+		GJKDebugger dt = new GJKDebugger();
 		dt.start();
 	}
 }

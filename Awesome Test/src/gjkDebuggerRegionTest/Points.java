@@ -1,4 +1,4 @@
-package gjkRegionTest;
+package gjkDebuggerRegionTest;
 
 import objects.ShapedObject;
 import shader.Shader;

@@ -43,7 +43,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		faces.add(new Triangle(A, C, D));
 		faces.add(new Triangle(D, C, B));
 
-		System.out.println("------------------------------------");
+		// System.out.println("------------------------------------");
 		// System.out.println(A + "; " + B + "; " + C + "; " + D);
 
 		Vector3f normal = new Vector3f();
@@ -58,7 +58,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 				Vector3f p = support(Sa, Sb, t.normal);
 				// System.out.println(t.normal);
 				double d = VecMath.dotproduct(p, t.normal);
-				System.out.println(d - t.distance + "; " + p);
+				// System.out.println(d - t.distance + "; " + p);
 				if (d - t.distance < TOLERANCE) {
 					normal = t.normal;
 					depth = (float) d;
@@ -66,12 +66,48 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 					// + t.a + "; " + t.b + "; " + t.c);
 					break;
 				} else {
-					faces.add(new Triangle(t.a, t.b, p));
-					faces.add(new Triangle(t.b, t.c, p));
-					faces.add(new Triangle(t.c, t.a, p));
+					// Check if convex!!!
+					Triangle[] adjacents = findAdjacentTriangles(t, faces);
+
+					if (adjacents[0] != null) {
+						if (VecMath.dotproduct(VecMath.subtraction(p, t.a),
+								adjacents[0].normal) > 0) {
+							Vector3f adjD = findTheD(t.a, t.b, adjacents[0]);
+							faces.add(new Triangle(p, t.a, adjD));
+							faces.add(new Triangle(t.b, p, adjD));
+							faces.remove(adjacents[0]);
+						} else {
+							faces.add(new Triangle(t.a, t.b, p));
+						}
+					}
+
+					if (adjacents[1] != null) {
+						if (VecMath.dotproduct(VecMath.subtraction(p, t.b),
+								adjacents[1].normal) > 0) {
+							Vector3f adjD = findTheD(t.b, t.c, adjacents[1]);
+							faces.add(new Triangle(p, t.b, adjD));
+							faces.add(new Triangle(t.c, p, adjD));
+							faces.remove(adjacents[1]);
+						} else {
+							faces.add(new Triangle(t.b, t.c, p));
+						}
+					}
+
+					if (adjacents[2] != null) {
+						if (VecMath.dotproduct(VecMath.subtraction(p, t.c),
+								adjacents[2].normal) > 0) {
+							Vector3f adjD = findTheD(t.c, t.a, adjacents[2]);
+							faces.add(new Triangle(p, t.c, adjD));
+							faces.add(new Triangle(t.a, p, adjD));
+							faces.remove(adjacents[2]);
+						} else {
+							faces.add(new Triangle(t.c, t.a, p));
+						}
+					}
 				}
 			}
 			faces.remove(t);
+
 			if (faces.size() == 0) {
 				System.out.println("ERROR");
 				break;
@@ -115,6 +151,49 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 			}
 		}
 		return closest;
+	}
+
+	/**
+	 * Finds up to three triangles adjacent to t.
+	 * 
+	 * @param t
+	 * @param faces
+	 * @return
+	 */
+	private Triangle[] findAdjacentTriangles(Triangle t, List<Triangle> faces) {
+		Triangle[] result = new Triangle[3];
+		for (Triangle f : faces) {
+			if (!f.equals(t)) {
+				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b)
+						&& f.c.equals(t.a) || f.c.equals(t.b)
+						&& f.a.equals(t.a))
+					result[0] = f;
+				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c)
+						&& f.c.equals(t.b) || f.c.equals(t.c)
+						&& f.a.equals(t.b))
+					result[1] = f;
+				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a)
+						&& f.c.equals(t.c) || f.c.equals(t.a)
+						&& f.a.equals(t.c))
+					result[2] = f;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Finds the vertex in b that is not ax or ay.
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	private Vector3f findTheD(Vector3f ax, Vector3f ay, Triangle b) {
+		if (!b.a.equals(ax) && !b.a.equals(ay))
+			return b.a;
+		if (!b.b.equals(ax) && !b.b.equals(ay))
+			return b.b;
+		return b.c;
 	}
 
 	private boolean isOriginInsideTriangleArea(Triangle t) {

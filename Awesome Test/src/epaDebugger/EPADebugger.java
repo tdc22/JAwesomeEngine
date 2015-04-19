@@ -17,6 +17,7 @@ import objects.SupportMap;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import physicsSupportFunction.SupportDifferenceObject;
+import quaternion.Quaternionf;
 import shape.Box;
 import shape.Sphere;
 import utils.Debugger;
@@ -50,7 +51,9 @@ public class EPADebugger extends StandardGame {
 				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
-		Box b1 = new Box(-8.339999f, 9.969998f, 0.0f, 1f, 1f, 1f);
+		Box b1 = new Box(-8.960001f, 8.190001f, 0.0f, 1f, 1f, 1f);
+		b1.setRotation(new Quaternionf(0.87097573f, -0.41262922f, 0.26483604f,
+				0.03165175f));
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
 
 		Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
@@ -114,10 +117,6 @@ public class EPADebugger extends StandardGame {
 		}
 	}
 
-	public void updateSimplex() {
-
-	}
-
 	// ------------------- EPA ---------------------
 	List<Triangle> faces;
 	Vector3f normal = new Vector3f();
@@ -162,11 +161,50 @@ public class EPADebugger extends StandardGame {
 				depth = (float) d;
 				// System.out.println("res: " + normal + "; " + depth + "; "
 				// + t.a + "; " + t.b + "; " + t.c);
-				return; // break replaced with return
+				return;
 			} else {
-				faces.add(new Triangle(t.a, t.b, p));
-				faces.add(new Triangle(t.b, t.c, p));
-				faces.add(new Triangle(t.c, t.a, p));
+				// Check if convex!!!
+				Triangle[] adjacents = findAdjacentTriangles(t, faces);
+				for (Triangle a : adjacents) {
+					if (a != null)
+						System.out.println("NOTNULL " + a.a + "; " + a.b + "; "
+								+ a.c);
+				}
+				if (adjacents[0] != null) {
+					if (VecMath.dotproduct(VecMath.subtraction(p, t.a),
+							adjacents[0].normal) > 0) {
+						Vector3f adjD = findTheD(t.a, t.b, adjacents[0]);
+						faces.add(new Triangle(p, t.a, adjD));
+						faces.add(new Triangle(t.b, p, adjD));
+						faces.remove(adjacents[0]);
+					} else {
+						faces.add(new Triangle(t.a, t.b, p));
+					}
+				}
+
+				if (adjacents[1] != null) {
+					if (VecMath.dotproduct(VecMath.subtraction(p, t.b),
+							adjacents[1].normal) > 0) {
+						Vector3f adjD = findTheD(t.b, t.c, adjacents[1]);
+						faces.add(new Triangle(p, t.b, adjD));
+						faces.add(new Triangle(t.c, p, adjD));
+						faces.remove(adjacents[1]);
+					} else {
+						faces.add(new Triangle(t.b, t.c, p));
+					}
+				}
+
+				if (adjacents[2] != null) {
+					if (VecMath.dotproduct(VecMath.subtraction(p, t.c),
+							adjacents[2].normal) > 0) {
+						Vector3f adjD = findTheD(t.c, t.a, adjacents[2]);
+						faces.add(new Triangle(p, t.c, adjD));
+						faces.add(new Triangle(t.a, p, adjD));
+						faces.remove(adjacents[2]);
+					} else {
+						faces.add(new Triangle(t.c, t.a, p));
+					}
+				}
 			}
 		}
 		faces.remove(t);
@@ -188,6 +226,49 @@ public class EPADebugger extends StandardGame {
 			}
 		}
 		return closest;
+	}
+
+	/**
+	 * Finds up to three triangles adjacent to t.
+	 * 
+	 * @param t
+	 * @param faces
+	 * @return
+	 */
+	private Triangle[] findAdjacentTriangles(Triangle t, List<Triangle> faces) {
+		Triangle[] result = new Triangle[3];
+		for (Triangle f : faces) {
+			if (!f.equals(t)) {
+				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b)
+						&& f.c.equals(t.a) || f.c.equals(t.b)
+						&& f.a.equals(t.a))
+					result[0] = f;
+				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c)
+						&& f.c.equals(t.b) || f.c.equals(t.c)
+						&& f.a.equals(t.b))
+					result[1] = f;
+				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a)
+						&& f.c.equals(t.c) || f.c.equals(t.a)
+						&& f.a.equals(t.c))
+					result[2] = f;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Finds the vertex in b that is not ax or ay.
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	private Vector3f findTheD(Vector3f ax, Vector3f ay, Triangle b) {
+		if (!b.a.equals(ax) && !b.a.equals(ay))
+			return b.a;
+		if (!b.b.equals(ax) && !b.b.equals(ay))
+			return b.b;
+		return b.c;
 	}
 
 	private boolean isOriginInsideTriangleArea(Triangle t) {

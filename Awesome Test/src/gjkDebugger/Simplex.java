@@ -1,4 +1,4 @@
-package gjkRegionTest;
+package gjkDebugger;
 
 import java.awt.Color;
 import java.util.List;

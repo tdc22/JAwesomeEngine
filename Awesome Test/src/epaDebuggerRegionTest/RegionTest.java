@@ -64,6 +64,8 @@ public class RegionTest extends StandardGame {
 				falsePoints.addIndex(falsePoints.getIndexCount());
 			}
 		}
+		System.out.println("ursprung: "
+				+ isOriginInsideTriangleArea(new Vector3f()));
 		truePoints.prerender();
 		falsePoints.prerender();
 	}

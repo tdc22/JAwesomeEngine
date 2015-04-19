@@ -18,7 +18,8 @@ public class Simplex extends ShapedObject {
 		addVertex(a);
 		addVertex(b);
 		addVertex(c);
-		normal = VecMath.computeNormal(a, b, c);
+		normal = VecMath.normalize(VecMath.computeNormal(a, b, c));
+		System.out.println("normal: " + normal);
 
 		addIndices(0, 1, 2);
 
