@@ -51,12 +51,19 @@ public class EPADebugger extends StandardGame {
 				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
-		Box b1 = new Box(-8.960001f, 8.190001f, 0.0f, 1f, 1f, 1f);
-		b1.setRotation(new Quaternionf(0.87097573f, -0.41262922f, 0.26483604f,
-				0.03165175f));
+//		Box b1 = new Box(-8.960001f, 8.190001f, 0.0f, 1f, 1f, 1f);
+//		b1.setRotation(new Quaternionf(0.87097573f, -0.41262922f, 0.26483604f,
+//				0.03165175f));
+//		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
+//
+//		Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
+//		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+		
+		Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
+		b1.setRotation(new Quaternionf(0.25023422f, -0.09507953f, -0.8314483f, -0.48689112f));
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
 
-		Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
+		Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
 		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
 		// Fix transformation (usually done in PhysicsSpace-class of Engine

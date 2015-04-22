@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import loader.FontLoader;
+import math.QuatMath;
 import math.VecMath;
 import objects.RigidBody3;
 import objects.ShapedObject;
@@ -51,12 +52,19 @@ public class GJKDebugger extends StandardGame {
 				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
-		Box b1 = new Box(-8.960001f, 8.190001f, 0.0f, 1f, 1f, 1f);
-		b1.setRotation(new Quaternionf(0.87097573f, -0.41262922f, 0.26483604f,
-				0.03165175f));
+//		Box b1 = new Box(-8.960001f, 8.190001f, 0.0f, 1f, 1f, 1f);
+//		b1.setRotation(new Quaternionf(0.87097573f, -0.41262922f, 0.26483604f,
+//				0.03165175f));
+//		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
+//
+//		Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
+//		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+		
+		Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
+		b1.setRotation(new Quaternionf(0.25023422f, -0.09507953f, -0.8314483f, -0.48689112f));
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
 
-		Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
+		Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
 		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
 		
 		newPoint = new Sphere(0, 0, 0, 0.05f, 36, 36);
@@ -83,9 +91,32 @@ public class GJKDebugger extends StandardGame {
 		line = new Line();
 		line.update(new Vector3f(), direction);
 
+		BRUTEFORCE();
+		
 		InputEvent stepGJK = new InputEvent("Step GJK", new Input(
 				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(stepGJK);
+	}
+	
+	public void BRUTEFORCE() {
+		for(int i = 0; i < 2000; i++) {
+			Vector3f v1 = randomVec();
+			Vector3f v2 = randomVec();
+			Vector3f v3 = randomVec();
+			addObject(new TriangleShape(support(rb1, rb2, v1), support(rb1, rb2, v2), support(rb1, rb2, v3)));
+			addObject(new Line(new Vector3f(), v1));
+			addObject(new Line(new Vector3f(), v2));
+			addObject(new Line(new Vector3f(), v3));
+		}
+	}
+	
+	private Vector3f randomVec() {
+		Quaternionf quat = new Quaternionf();
+		quat.rotate(Math.random()*360, new Vector3f(0, 0, 1));
+		quat.rotate(Math.random()*360, new Vector3f(0, 1, 0));
+		quat.rotate(Math.random()*360, new Vector3f(1, 0, 0));
+		System.out.println(QuatMath.transform(quat, new Vector3f(0, 1, 0)));
+		return QuatMath.transform(quat, new Vector3f(0, 1, 0));
 	}
 
 	@Override
@@ -379,16 +410,35 @@ public class GJKDebugger extends StandardGame {
 	}
 	
 	private class Line extends ShapedObject {
+		Color c;
+		
 		public Line() {
 			setRenderMode(GLConstants.LINES);
-			setColor(Color.CYAN);
+			c = Color.CYAN;
+		}
+		
+		public Line(Vector3f start, Vector3f end) {
+			setRenderMode(GLConstants.LINES);
+			c = Color.WHITE;
+			update(start, end);
 		}
 		
 		public void update(Vector3f start, Vector3f end) {
 			delete();
-			addVertex(start, Color.CYAN);
-			addVertex(end, Color.CYAN);
+			addVertex(start, c);
+			addVertex(end, c);
 			addIndices(0, 1);
+			prerender();
+		}
+	}
+	
+	private class TriangleShape extends ShapedObject {
+		public TriangleShape(Vector3f a, Vector3f b, Vector3f c) {
+			setRenderMode(GLConstants.TRIANGLES);
+			addVertex(a);
+			addVertex(b);
+			addVertex(c);
+			addIndices(0, 1, 2);
 			prerender();
 		}
 	}
