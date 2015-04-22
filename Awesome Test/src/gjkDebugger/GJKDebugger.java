@@ -5,12 +5,14 @@ import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
 import loader.FontLoader;
 import math.VecMath;
 import objects.RigidBody3;
+import objects.ShapedObject;
 import objects.SupportMap;
 import physics.PhysicsShapeCreator;
 import physicsSupportFunction.SupportDifferenceObject;
@@ -18,6 +20,7 @@ import quaternion.Quaternionf;
 import shape.Box;
 import shape.Sphere;
 import utils.Debugger;
+import utils.GLConstants;
 import vector.Vector3f;
 import display.DisplayMode;
 import display.GLDisplay;
@@ -30,12 +33,14 @@ public class GJKDebugger extends StandardGame {
 	Debugger debugger;
 	RigidBody3 rb1, rb2;
 	SupportDifferenceObject support1;
+	Line line;
+	Sphere newPoint, mostRecentPoint;
 
 	InputEvent toggleMouseBind;
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0),
 				new VideoSettings());
 		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
@@ -53,6 +58,14 @@ public class GJKDebugger extends StandardGame {
 
 		Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
 		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+		
+		newPoint = new Sphere(0, 0, 0, 0.05f, 36, 36);
+		newPoint.setColor(Color.CYAN);
+		addObject(newPoint);
+		
+		mostRecentPoint = new Sphere(0, 0, 0, 0.05f, 36, 36);
+		mostRecentPoint.setColor(Color.BLUE);
+		addObject(mostRecentPoint);
 
 		// Fix transformation (usually done in PhysicsSpace-class of Engine
 		rb1.setRotation(b1.getRotation());
@@ -66,6 +79,9 @@ public class GJKDebugger extends StandardGame {
 
 		initGJK();
 		GJKsimplex = new Simplex(simplex);
+		
+		line = new Line();
+		line.update(new Vector3f(), direction);
 
 		InputEvent stepGJK = new InputEvent("Step GJK", new Input(
 				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
@@ -79,6 +95,7 @@ public class GJKDebugger extends StandardGame {
 		renderScene();
 		GJKsimplex.render();
 		support1.render();
+		line.render();
 	}
 
 	@Override
@@ -93,8 +110,10 @@ public class GJKDebugger extends StandardGame {
 		if (inputs.isEventActive("Step GJK")) {
 			stepGJK();
 			GJKsimplex.delete();
-			System.out.println("Simplexcount: " + simplex.size());
 			GJKsimplex = new Simplex(simplex);
+			line.update(new Vector3f(), direction);
+			mostRecentPoint.translateTo(newPoint.getTranslation());
+			newPoint.translateTo(support(rb1, rb2, direction));
 		}
 		debugger.update();
 
@@ -124,6 +143,8 @@ public class GJKDebugger extends StandardGame {
 		Vector3f a = support(rb1, rb2, direction);
 		// System.out.println("New Point: " + a);
 		// if AtD < 0 No Intersection
+		System.out.println();
+		System.out.println(simplex.size() + " dir: " + direction + "; " + a + "; " + VecMath.dotproduct(a, direction));
 		if (VecMath.dotproduct(a, direction) < 0)
 			System.out.println("Failure!");
 		// [] += A
@@ -151,12 +172,12 @@ public class GJKDebugger extends StandardGame {
 				// Region 1
 				direction = edgeDirection(AB, AO);
 				// System.out.print(AB.toString() + "; " + AO.toString());
-				// System.out.print("line region 1");
+				System.out.print("line region 1");
 			} else {
 				// Region 2
 				simplex.remove(1);
 				direction = AO;
-				// System.out.print("line region 2");
+				System.out.print("line region 2");
 			}
 			// System.out.println(" " + A + "; " + B + "; " + direction);
 		}
@@ -176,20 +197,20 @@ public class GJKDebugger extends StandardGame {
 					// Region 1
 					simplex.remove(1);
 					direction = edgeDirection(AC, AO);
-					// System.out.print("r 1");
+					System.out.print("r 1");
 				} else {
 					// *
 					if (VecMath.dotproduct(AB, AO) > 0) {
 						// Region 4
 						simplex.remove(0);
 						direction = edgeDirection(AB, AO);
-						// System.out.print("r 4");
+						System.out.print("r 4");
 					} else {
 						// Region 5
 						simplex.remove(2);
 						simplex.remove(1);
 						direction = AO;
-						// System.out.print("r 5");
+						System.out.print("r 5");
 					}
 				}
 			} else {
@@ -199,26 +220,26 @@ public class GJKDebugger extends StandardGame {
 						// Region 4
 						simplex.remove(0);
 						direction = edgeDirection(AB, AO);
-						// System.out.print("r 4(2)");
+						System.out.print("r 4(2)");
 					} else {
 						// Region 5
 						simplex.remove(2);
 						simplex.remove(1);
 						direction = AO;
-						// System.out.print("r 5(2)");
+						System.out.print("r 5(2)");
 					}
 				} else {
 					if (VecMath.dotproduct(ABC, AO) >= 0) {
 						// Region 2
 						direction = ABC;
-						// System.out.print("r 2");
+						System.out.print("r 2");
 					} else {
 						// Region 3
 						Vector3f temp = simplex.get(0);
 						simplex.set(0, simplex.get(1));
 						simplex.set(1, temp);
 						direction = VecMath.negate(ABC);
-						// System.out.print("r 3");
+						System.out.print("r 3");
 					}
 				}
 			}
@@ -277,13 +298,13 @@ public class GJKDebugger extends StandardGame {
 						simplex.remove(1);
 						simplex.remove(0);
 						direction = AO;
-						// System.out.print("top");
+						System.out.print("top");
 					} else {
 						// Edge 1
 						simplex.remove(1);
 						simplex.remove(0);
 						direction = edgeDirection(AB, AO);
-						// System.out.print("edge 1");
+						System.out.print("edge 1");
 					}
 				} else {
 					if (VecMath.dotproduct(ACD, AO) > 0) {
@@ -291,12 +312,12 @@ public class GJKDebugger extends StandardGame {
 						simplex.remove(2);
 						simplex.remove(0);
 						direction = edgeDirection(AC, AO);
-						// System.out.print("edge 2");
+						System.out.print("edge 2");
 					} else {
 						// Face 1
 						simplex.remove(0);
 						direction = ABC;
-						// System.out.print("face 1");
+						System.out.print("face 1");
 					}
 				}
 			} else {
@@ -306,7 +327,7 @@ public class GJKDebugger extends StandardGame {
 						simplex.remove(2);
 						simplex.remove(1);
 						direction = edgeDirection(AD, AO);
-						// System.out.print("edge 3");
+						System.out.print("edge 3");
 					} else {
 						// Face 2
 						simplex.remove(1); // CHANGE ORIENTATION?????
@@ -314,17 +335,17 @@ public class GJKDebugger extends StandardGame {
 						simplex.set(0, simplex.get(1));
 						simplex.set(1, temp);
 						direction = ADB;
-						// System.out.print("face 2");
+						System.out.print("face 2");
 					}
 				} else {
 					if (VecMath.dotproduct(ACD, AO) > 0) {
 						// Face 3
 						simplex.remove(2);
 						direction = ACD;
-						// System.out.print("face 3");
+						System.out.print("face 3");
 					} else {
 						// Center
-						// System.out.print("center");
+						System.out.print("center");
 						// System.out.println(" " + A + "; " + B + "; " + C +
 						// "; " + D);
 						return true;
@@ -355,5 +376,20 @@ public class GJKDebugger extends StandardGame {
 		// "; " + Sb.supportPoint(VecMath.negate(dir)) + "; " + dir);
 		return VecMath.subtraction(Sa.supportPoint(dir),
 				Sb.supportPoint(VecMath.negate(dir)));
+	}
+	
+	private class Line extends ShapedObject {
+		public Line() {
+			setRenderMode(GLConstants.LINES);
+			setColor(Color.CYAN);
+		}
+		
+		public void update(Vector3f start, Vector3f end) {
+			delete();
+			addVertex(start, Color.CYAN);
+			addVertex(end, Color.CYAN);
+			addIndices(0, 1);
+			prerender();
+		}
 	}
 }
