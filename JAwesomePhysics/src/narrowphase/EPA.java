@@ -233,6 +233,6 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
 			Vector3f dir) {
 		return VecMath.subtraction(Sa.supportPoint(dir),
-				Sb.supportPoint(VecMath.negate(dir)));
+				Sb.supportPointNegative(dir));
 	}
 }

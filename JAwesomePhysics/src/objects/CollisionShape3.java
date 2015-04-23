@@ -40,9 +40,21 @@ public abstract class CollisionShape3 extends
 	}
 
 	@Override
+	public Vector3f supportPointNegative(Vector3f direction) {
+		return VecMath.addition(supportPointRelativeNegative(direction),
+				getTranslation());
+	}
+
+	@Override
 	public Vector3f supportPointRelative(Vector3f direction) {
 		return QuatMath.transform(this.getRotation(),
 				supportcalculator.supportPointLocal(direction));
+	}
+
+	@Override
+	public Vector3f supportPointRelativeNegative(Vector3f direction) {
+		return QuatMath.transform(this.getRotation(),
+				supportcalculator.supportPointLocalNegative(direction));
 	}
 
 	@Override

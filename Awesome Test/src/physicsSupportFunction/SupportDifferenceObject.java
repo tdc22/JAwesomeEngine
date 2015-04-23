@@ -2,7 +2,9 @@ package physicsSupportFunction;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import math.VecMath;
 import matrix.Matrix4f;
@@ -40,7 +42,7 @@ public class SupportDifferenceObject extends ShapedObject {
 		// System.out.println(VecMath.substraction(Sa.supportPoint(dir),
 		// Sb.supportPoint(VecMath.negate(dir))).toString());
 		return VecMath.subtraction(Sa.supportPoint(dir),
-				Sb.supportPoint(VecMath.negate(dir)));
+				Sb.supportPointNegative(dir));
 	}
 
 	public List<Vector3f> updateShape() {
@@ -69,6 +71,8 @@ public class SupportDifferenceObject extends ShapedObject {
 		// result.add(res);
 		// }
 
+		HashMap<Vector3f, Integer> tmp = new HashMap<Vector3f, Integer>();
+
 		Vector3f vx = new Vector3f(1, 0, 0);
 		Vector3f vy = new Vector3f(0, 1, 0);
 		Vector3f vz = new Vector3f(0, 0, 1);
@@ -84,12 +88,23 @@ public class SupportDifferenceObject extends ShapedObject {
 					if (!result.contains(res))
 						result.add(res);
 
+					if (tmp.containsKey(res)) {
+						tmp.put(res, tmp.get(res) + 1);
+					} else {
+						tmp.put(res, 1);
+					}
+
 					mat.rotate(36, vz);
 				}
 				mat.rotate(36, vy);
 			}
 			mat.rotate(36, vx);
 		}
+
+		for (Map.Entry<Vector3f, Integer> entry : tmp.entrySet()) {
+			System.out.println(entry.getKey() + ": " + entry.getValue());
+		}
+
 		// Vector3f res = support(rb1, rb2, new Vector3f(1, 1, 1));
 
 		// System.out.println(result.size());

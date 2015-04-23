@@ -25,6 +25,16 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 					collisionshape.getInverseRotation(), direction);
 			return new Vector2f(v.x * radius, v.y * height);
 		}
+
+		@Override
+		public Vector2f supportPointLocalNegative(Vector2f direction) {
+			if (direction.length() == 0)
+				direction = new Vector2f(0, 1);
+			direction.normalize();
+			Vector2f v = ComplexMath.transform(
+					collisionshape.getInverseRotation(), direction);
+			return new Vector2f(v.x * -radius, v.y * -height);
+		}
 	}
 
 	float radius, height;

@@ -30,6 +30,22 @@ public abstract class Vector3 extends Vector {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
+	public int hashCode() {
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(getX());
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(getY());
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(getZ());
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public final int getDimensions() {
 		return 3;
 	}

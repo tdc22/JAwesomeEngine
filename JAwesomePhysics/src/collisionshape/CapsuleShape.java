@@ -25,6 +25,16 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 					collisionshape.getInverseRotation(), direction);
 			return new Vector3f(v.x * radius, v.y * height, v.z * radius);
 		}
+
+		@Override
+		public Vector3f supportPointLocalNegative(Vector3f direction) {
+			if (direction.length() == 0)
+				direction = new Vector3f(0, -1, 0);
+			direction.normalize();
+			Vector3f v = QuatMath.transform(
+					collisionshape.getInverseRotation(), direction);
+			return new Vector3f(-v.x * radius, -v.y * height, -v.z * radius);
+		}
 	}
 
 	float radius, height;

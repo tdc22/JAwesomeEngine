@@ -214,8 +214,9 @@ public class CollisionDetectionTest extends StandardGame {
 			if (o.contains(rb5))
 				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 		}
-		System.out.println(rb1.getTranslation() + "; " + rb1.getRotation() + "; ");
-		
+		System.out.println(rb1.getTranslation() + "; " + rb1.getRotation()
+				+ "; ");
+
 		debugger.update();
 		cam.update(delta);
 	}

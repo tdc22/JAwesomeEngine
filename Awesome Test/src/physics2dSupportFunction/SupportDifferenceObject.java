@@ -41,7 +41,7 @@ public class SupportDifferenceObject extends ShapedObject2 {
 		// System.out.println(VecMath.substraction(Sa.supportPoint(dir),
 		// Sb.supportPoint(VecMath.negate(dir))).toString());
 		return VecMath.subtraction(Sa.supportPoint(dir),
-				Sb.supportPoint(VecMath.negate(dir)));
+				Sb.supportPointNegative(dir));
 	}
 
 	public List<Vector2f> updateShape() {

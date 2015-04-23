@@ -40,8 +40,8 @@ public class SupportFunctionTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(),
+				new PixelFormat().withSamples(0), new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);

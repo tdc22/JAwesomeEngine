@@ -75,5 +75,9 @@ public abstract class CollisionShape<L extends Vector, A extends Rotation>
 		return supportcalculator.supportPointLocal(direction);
 	}
 
+	public L supportPointLocalNegative(L direction) {
+		return supportcalculator.supportPointLocalNegative(direction);
+	}
+
 	public abstract void updateInverseRotation();
 }
