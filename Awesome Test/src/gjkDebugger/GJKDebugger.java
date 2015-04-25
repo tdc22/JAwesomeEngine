@@ -101,7 +101,7 @@ public class GJKDebugger extends StandardGame {
 	}
 
 	public void BRUTEFORCE() {
-		for (int i = 0; i < 2000; i++) {
+		for (int i = 0; i < 1000; i++) {
 			Vector3f v1 = randomVec();
 			Vector3f v2 = randomVec();
 			Vector3f v3 = randomVec();
@@ -110,6 +110,11 @@ public class GJKDebugger extends StandardGame {
 			// addObject(new Line(new Vector3f(), v1));
 			// addObject(new Line(new Vector3f(), v2));
 			// addObject(new Line(new Vector3f(), v3));
+		}
+		for (int i = 0; i < 2000; i++) {
+			Vector3f v1 = randomVec();
+			Vector3f v2 = randomVec();
+			addObject(new Point(VecMath.subtraction(rb1.supportPoint(v1), rb2.supportPointNegative(v2))));
 		}
 	}
 
@@ -410,6 +415,15 @@ public class GJKDebugger extends StandardGame {
 		// "; " + Sb.supportPoint(VecMath.negate(dir)) + "; " + dir);
 		return VecMath.subtraction(Sa.supportPoint(dir),
 				Sb.supportPointNegative(dir));
+	}
+	
+	private class Point extends ShapedObject {
+		public Point(Vector3f point) {
+			setRenderMode(GLConstants.POINTS);
+			addVertex(point);
+			addIndex(0);
+			prerender();
+		}
 	}
 
 	private class Line extends ShapedObject {
