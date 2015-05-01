@@ -48,6 +48,8 @@ public class DefaultValues {
 	public static final int DEFAULT_FRAMEBUFFER_RESOLUTION_X = 1024;
 	public static final int DEFAULT_FRAMEBUFFER_RESOLUTION_Y = 1024;
 	public static final int DEFAULT_FRAMEBUFFER_SAMPLES = 0;
+	public static final boolean DEFAULT_FRAMEBUFFER_DRAW_COLOR = true;
+	public static final boolean DEFAULT_FRAMEBUFFER_DRAW_DEPTH = true;
 	// Texture values
 	public static final int DEFAULT_TEXTURE_TYPE = GL_TEXTURE_2D;
 }
