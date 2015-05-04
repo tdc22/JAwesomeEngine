@@ -35,7 +35,6 @@ import java.nio.ByteBuffer;
 import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL12;
 
 public class TextureLoader {
 	// from http://www.java-gaming.org/index.php?topic=25516.0
@@ -53,8 +52,8 @@ public class TextureLoader {
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
 		// Setup wrap mode
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 		// Setup texture scaling filtering
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -81,7 +80,7 @@ public class TextureLoader {
 		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * bpp);
 
 		if (hasalpha) {
-			for (int y = 0; y < height; y++) {
+			for (int y = (height - 1); y >= 0; y--) {
 				for (int x = 0; x < width; x++) {
 					int pixel = pixels[y * width + x];
 					buffer.put((byte) ((pixel >> 16) & 0xFF)); // Red component
@@ -92,7 +91,7 @@ public class TextureLoader {
 				}
 			}
 		} else {
-			for (int y = 0; y < height; y++) {
+			for (int y = (height - 1); y >= 0; y--) {
 				for (int x = 0; x < width; x++) {
 					int pixel = pixels[y * width + x];
 					buffer.put((byte) ((pixel >> 16) & 0xFF)); // Red component

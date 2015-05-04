@@ -57,10 +57,10 @@ public class Quad extends ShapedObject2 implements QuadStructure {
 		halfsize = new Vector2f(hsx, hsy);
 		Color color = Color.GRAY;
 
-		addVertex(new Vector2f(-hsx, -hsy), color, new Vector2f(0, 0));
-		addVertex(new Vector2f(-hsx, hsy), color, new Vector2f(0, 1));
-		addVertex(new Vector2f(hsx, hsy), color, new Vector2f(1, 1));
-		addVertex(new Vector2f(hsx, -hsy), color, new Vector2f(1, 0));
+		addVertex(new Vector2f(-hsx, hsy), color, new Vector2f(0, 0));
+		addVertex(new Vector2f(hsx, hsy), color, new Vector2f(1, 0));
+		addVertex(new Vector2f(hsx, -hsy), color, new Vector2f(1, 1));
+		addVertex(new Vector2f(-hsx, -hsy), color, new Vector2f(0, 1));
 
 		addQuad(0, 1, 2, 3);
 

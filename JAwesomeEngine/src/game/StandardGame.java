@@ -233,8 +233,8 @@ public abstract class StandardGame extends AbstractGame {
 
 			float halfResX = videosettings.getResolutionX() / 2f;
 			float halfResY = videosettings.getResolutionY() / 2f;
-			screen = new Quad(halfResX, halfResY, halfResX, -halfResY);
-			screen.invertAllTriangles();
+			screen = new Quad(halfResX, halfResY, halfResX, halfResY);
+			// screen.invertAllTriangles();
 			screen.setRenderHints(false, true, false);
 		}
 	}
