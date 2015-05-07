@@ -62,8 +62,8 @@ public class GJKDebugger extends StandardGame {
 		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
 		Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
-		Quaternionf falsecase = new Quaternionf(0.25023422f, -0.09507953f, -0.8314483f,
-				-0.48689112f);
+		Quaternionf falsecase = new Quaternionf(0.25023422f, -0.09507953f,
+				-0.8314483f, -0.48689112f);
 		b1.setRotation(falsecase);
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
 
@@ -97,7 +97,8 @@ public class GJKDebugger extends StandardGame {
 		BRUTEFORCE(rb1, rb2, Color.GRAY);
 		rb1.setRotation(new Quaternionf());
 		BRUTEFORCE(rb1, rb2, Color.RED);
-		Quaternionf interpolation = QuatMath.slerp(new Quaternionf(), falsecase, 0.5f);
+		Quaternionf interpolation = QuatMath.slerp(new Quaternionf(),
+				falsecase, 0.5f);
 		rb1.setRotation(interpolation);
 		BRUTEFORCE(rb1, rb2, Color.GREEN);
 
@@ -111,8 +112,8 @@ public class GJKDebugger extends StandardGame {
 			Vector3f v1 = randomVec();
 			Vector3f v2 = randomVec();
 			Vector3f v3 = randomVec();
-			addObject(new TriangleShape(support(r1, r2, v1), support(r1,
-					r2, v2), support(r1, r2, v3), c));
+			addObject(new TriangleShape(support(r1, r2, v1),
+					support(r1, r2, v2), support(r1, r2, v3), c));
 			// addObject(new Line(new Vector3f(), v1));
 			// addObject(new Line(new Vector3f(), v2));
 			// addObject(new Line(new Vector3f(), v3));
@@ -120,7 +121,8 @@ public class GJKDebugger extends StandardGame {
 		for (int i = 0; i < 1000; i++) {
 			Vector3f v1 = randomVec();
 			Vector3f v2 = randomVec();
-			addObject(new Point(VecMath.subtraction(r1.supportPoint(v1), r2.supportPointNegative(v2)), c));
+			addObject(new Point(VecMath.subtraction(r1.supportPoint(v1),
+					r2.supportPointNegative(v2)), c));
 		}
 	}
 
@@ -422,7 +424,7 @@ public class GJKDebugger extends StandardGame {
 		return VecMath.subtraction(Sa.supportPoint(dir),
 				Sb.supportPointNegative(dir));
 	}
-	
+
 	private class Point extends ShapedObject {
 		public Point(Vector3f point, Color col) {
 			setRenderMode(GLConstants.POINTS);

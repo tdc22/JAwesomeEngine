@@ -60,11 +60,12 @@ import utils.ViewFrustum;
 
 public class FramebufferObject {
 	StandardGame game;
-	int frameBufferID, depthBufferID, samples;
-	Texture colorBuffer;
+	int frameBufferID, colorRBID, depthRBID, samples;
+	Texture colorTexture, depthTexture;
 	int width, height;
 	IntBuffer imageData;
-	boolean multisampled, useCam, useFrustum, drawColor, drawDepth;
+	boolean multisampled, useCam, useFrustum, drawColor, drawDepth,
+			renderColorTexture, renderDepthTexture;
 	Camera cam;
 	ViewFrustum frustum;
 
@@ -73,41 +74,60 @@ public class FramebufferObject {
 				DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_Y,
 				DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH);
+				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height) {
 		init(game, width, height, DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES,
 				null, null, null, DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH);
+				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height,
 			int samples) {
 		init(game, width, height, samples, null, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH);
+				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height,
 			int samples, Camera cam) {
 		init(game, width, height, samples, cam, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH);
+				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height,
 			int samples, Camera cam, Texture colorbuffer) {
 		init(game, width, height, samples, cam, colorbuffer, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH);
+				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
 	public FramebufferObject(StandardGame game, int width, int height,
 			int samples, Camera cam, Texture colorbuffer, ViewFrustum frustum) {
 		init(game, width, height, samples, cam, colorbuffer, frustum,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH);
+				DefaultValues.DEFAULT_FRAMEBUFFER_DRAW_DEPTH,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+	}
+
+	public FramebufferObject(StandardGame game, int width, int height,
+			int samples, Camera cam, boolean drawColor, boolean drawDepth) {
+		init(game, width, height, samples, cam, null, null, drawColor,
+				drawDepth, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
 	public void begin() {
@@ -150,10 +170,20 @@ public class FramebufferObject {
 	public void delete() {
 		if (useCam)
 			cam.delete();
-		if (drawDepth)
-			glDeleteRenderbuffers(depthBufferID);
-		if (drawColor)
-			colorBuffer.delete();
+		if (drawDepth) {
+			if (renderDepthTexture) {
+				depthTexture.delete();
+			} else {
+				glDeleteRenderbuffers(depthRBID);
+			}
+		}
+		if (drawColor) {
+			if (renderColorTexture) {
+				colorTexture.delete();
+			} else {
+				glDeleteRenderbuffers(colorRBID);
+			}
+		}
 		glDeleteFramebuffers(frameBufferID);
 	}
 
@@ -186,7 +216,7 @@ public class FramebufferObject {
 	}
 
 	public int getTextureID() {
-		return colorBuffer.getTextureID();
+		return colorTexture.getTextureID();
 	}
 
 	public int getWidth() {
@@ -195,13 +225,16 @@ public class FramebufferObject {
 
 	private void init(StandardGame game, int width, int height, int samples,
 			Camera camera, Texture colorbuffer, ViewFrustum frustum,
-			boolean drawColor, boolean drawDepth) {
+			boolean drawColor, boolean drawDepth, boolean renderColorTexture,
+			boolean renderDepthTexture) {
 		this.game = game;
 		this.width = width;
 		this.height = height;
 		this.samples = samples;
 		this.drawColor = drawColor;
 		this.drawDepth = drawDepth;
+		this.renderColorTexture = renderColorTexture;
+		this.renderDepthTexture = renderDepthTexture;
 
 		if (useCam = (camera != null))
 			this.cam = camera;
@@ -217,22 +250,70 @@ public class FramebufferObject {
 
 		// Colorbuffer
 		if (drawColor) {
-			boolean newColorBuffer = colorbuffer == null;
-			if (newColorBuffer) {
-				colorBuffer = new Texture();
-				colorBuffer
-						.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE
-								: GL_TEXTURE_2D);
+			if (renderColorTexture) {
+				boolean newColorBuffer = colorbuffer == null;
+				if (newColorBuffer) {
+					colorTexture = new Texture();
+					colorTexture
+							.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE
+									: GL_TEXTURE_2D);
+				} else {
+					colorTexture = colorbuffer;
+				}
+				int textureType = colorTexture.getTextureType();
+				if (newColorBuffer) {
+					colorTexture = new Texture();
+					colorTexture
+							.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE
+									: GL_TEXTURE_2D);
+					colorTexture.bind();
+					glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER,
+							GL_LINEAR);
+					glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER,
+							GL_LINEAR);
+					glTexParameteri(textureType, GL_TEXTURE_WRAP_S,
+							GL_CLAMP_TO_EDGE);
+					glTexParameteri(textureType, GL_TEXTURE_WRAP_T,
+							GL_CLAMP_TO_EDGE);
+					if (multisampled) {
+						glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE,
+								samples, GL_RGBA, width, height, true);
+					} else {
+						glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+								0, GL_RGBA, GL_UNSIGNED_BYTE,
+								(java.nio.ByteBuffer) null);
+					}
+				}
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+						textureType, colorTexture.getTextureID(), 0);
 			} else {
-				colorBuffer = colorbuffer;
+				colorRBID = glGenRenderbuffers();
+				glBindRenderbuffer(GL_RENDERBUFFER, colorRBID);
+				if (multisampled) {
+					glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples,
+							GL_RGBA, width, height);
+				} else {
+					glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width,
+							height);
+				}
+				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+						GL_RENDERBUFFER, colorRBID);
 			}
-			int textureType = colorBuffer.getTextureType();
-			if (newColorBuffer) {
-				colorBuffer = new Texture();
-				colorBuffer
+		}
+
+		// Depthbuffer
+		if (drawDepth) {
+			if (renderDepthTexture) {
+				depthTexture = new Texture();
+				depthTexture
 						.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE
 								: GL_TEXTURE_2D);
-				colorBuffer.bind();
+				depthTexture = new Texture();
+				depthTexture
+						.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE
+								: GL_TEXTURE_2D);
+				depthTexture.bind();
+				int textureType = depthTexture.getTextureType();
 				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				glTexParameteri(textureType, GL_TEXTURE_WRAP_S,
@@ -247,24 +328,21 @@ public class FramebufferObject {
 							GL_RGBA, GL_UNSIGNED_BYTE,
 							(java.nio.ByteBuffer) null);
 				}
-			}
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-					textureType, colorBuffer.getTextureID(), 0);
-		}
-
-		// Depthbuffer
-		if (drawDepth) {
-			depthBufferID = glGenRenderbuffers();
-			glBindRenderbuffer(GL_RENDERBUFFER, depthBufferID);
-			if (multisampled) {
-				glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples,
-						GL_DEPTH_COMPONENT, width, height);
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+						textureType, depthTexture.getTextureID(), 0);
 			} else {
-				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-						width, height);
+				depthRBID = glGenRenderbuffers();
+				glBindRenderbuffer(GL_RENDERBUFFER, depthRBID);
+				if (multisampled) {
+					glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples,
+							GL_DEPTH_COMPONENT, width, height);
+				} else {
+					glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+							width, height);
+				}
+				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+						GL_RENDERBUFFER, depthRBID);
 			}
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-					GL_RENDERBUFFER, depthBufferID);
 		}
 
 		int framebuffercheck = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -297,10 +375,22 @@ public class FramebufferObject {
 							+ framebuffercheck);
 		}
 
-		if (colorbuffer == null)
-			colorBuffer.unbind();
-		if (drawDepth)
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		if (drawColor) {
+			if (renderColorTexture) {
+				if (colorbuffer == null) {
+					colorTexture.unbind();
+				}
+			} else {
+				glBindRenderbuffer(GL_RENDERBUFFER, 0);
+			}
+		}
+		if (drawDepth) {
+			if (renderDepthTexture) {
+				depthTexture.unbind();
+			} else {
+				glBindRenderbuffer(GL_RENDERBUFFER, 0);
+			}
+		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

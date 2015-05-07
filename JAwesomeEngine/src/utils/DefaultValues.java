@@ -50,6 +50,8 @@ public class DefaultValues {
 	public static final int DEFAULT_FRAMEBUFFER_SAMPLES = 0;
 	public static final boolean DEFAULT_FRAMEBUFFER_DRAW_COLOR = true;
 	public static final boolean DEFAULT_FRAMEBUFFER_DRAW_DEPTH = true;
+	public static final boolean DEFAULT_FRAMEBUFFER_COLOR_TEXTURE = true;
+	public static final boolean DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE = false;
 	// Texture values
 	public static final int DEFAULT_TEXTURE_TYPE = GL_TEXTURE_2D;
 }
