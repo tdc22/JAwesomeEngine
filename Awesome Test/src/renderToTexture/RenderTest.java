@@ -40,8 +40,8 @@ public class RenderTest extends StandardGame {
 				"res/shaders/textureshader.vert",
 				"res/shaders/textureshader.frag"));
 		screenshader.addArgumentName("texture");
-		screenshader.addArgument(new Texture(rtt.getTextureID())); // alternative:
-																	// framebuffer.getTexture()
+		screenshader.addArgument(new Texture(rtt.getColorTextureID())); // alternative:
+																		// framebuffer.getTextureID()
 
 		Box screen = new Box(2, 3, 12, 2, 1, 0.1f);
 		screen.setRenderHints(false, true, false);

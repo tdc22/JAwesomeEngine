@@ -3,11 +3,14 @@ package shadowMapping;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ModelLoader;
+import loader.ShaderLoader;
 import objects.Camera;
+import shader.Shader;
 import shape.Box;
 import shape.Cylinder;
 import shape.Sphere;
 import texture.FramebufferObject;
+import texture.Texture;
 import utils.Debugger;
 import vector.Vector3f;
 import display.DisplayMode;
@@ -18,6 +21,7 @@ import display.VideoSettings;
 public class ShadowTest extends StandardGame {
 	Debugger debugger;
 	FramebufferObject depthMap;
+	Shader shadowshader;
 
 	@Override
 	public void init() {
@@ -37,26 +41,22 @@ public class ShadowTest extends StandardGame {
 		addObject(new Cylinder(8, 0, 0, 1, 2, 36));
 
 		depthMap = new FramebufferObject(this, 1024, 1024, 0, new Camera(
-				new Vector3f(0, 0, 12), 0, 0), false, true);
-		depthMap.updateTexture();
+				new Vector3f(0, 0, 12), 0, 0), true, true, true, true);
 
-		// Shader screenshader = new Shader(ShaderLoader.loadShaderFromFile(
-		// "res/shaders/textureshader.vert",
-		// "res/shaders/textureshader.frag"));
-		// screenshader.addArgumentName("texture");
-		// screenshader.addArgument(new Texture(depthMap.getDepthTextureID()));
-
-		Box screen = new Box(2, 3, 12, 2, 1, 0.1f);
-		screen.setRenderHints(false, true, false);
-		// screen.setShader(screenshader);
-		addObject(screen);
+		shadowshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/shadowmapping.vert",
+				"res/shaders/shadowmapping.frag"));
+		shadowshader.addArgumentName("shadowMap");
+		shadowshader.addArgument(new Texture(depthMap.getDepthTextureID()));
 	}
 
 	@Override
 	public void render() {
 		debugger.render3d();
 		debugger.begin();
+		shadowshader.bind();
 		renderScene();
+		shadowshader.unbind();
 	}
 
 	@Override
@@ -68,6 +68,7 @@ public class ShadowTest extends StandardGame {
 
 	@Override
 	public void update(int delta) {
+		depthMap.updateTexture();
 		debugger.update();
 		cam.update(delta);
 	}

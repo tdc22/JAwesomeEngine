@@ -99,8 +99,8 @@ public abstract class StandardGame extends AbstractGame {
 	private void applyPostProcessing(List<Shader> ppshaders,
 			FramebufferObject fbo1, FramebufferObject fbo2) {
 		boolean p = true;
-		int tex0 = fbo1.getTextureID();
-		int tex1 = fbo2.getTextureID();
+		int tex0 = fbo1.getColorTextureID();
+		int tex1 = fbo2.getColorTextureID();
 		for (Shader s : ppshaders) {
 			// TODO: Create Multipass shader-class with integer for number of
 			// iterations.... + try to put this in there?
