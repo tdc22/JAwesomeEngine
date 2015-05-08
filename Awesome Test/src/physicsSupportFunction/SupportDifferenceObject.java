@@ -71,7 +71,7 @@ public class SupportDifferenceObject extends ShapedObject {
 		// result.add(res);
 		// }
 
-		HashMap<Vector3f, Integer> tmp = new HashMap<Vector3f, Integer>();
+//		HashMap<Vector3f, Integer> tmp = new HashMap<Vector3f, Integer>();
 
 		Vector3f vx = new Vector3f(1, 0, 0);
 		Vector3f vy = new Vector3f(0, 1, 0);
@@ -88,11 +88,11 @@ public class SupportDifferenceObject extends ShapedObject {
 					if (!result.contains(res))
 						result.add(res);
 
-					if (tmp.containsKey(res)) {
-						tmp.put(res, tmp.get(res) + 1);
-					} else {
-						tmp.put(res, 1);
-					}
+//					if (tmp.containsKey(res)) {
+//						tmp.put(res, tmp.get(res) + 1);
+//					} else {
+//						tmp.put(res, 1);
+//					}
 
 					mat.rotate(36, vz);
 				}
@@ -101,9 +101,9 @@ public class SupportDifferenceObject extends ShapedObject {
 			mat.rotate(36, vx);
 		}
 
-		for (Map.Entry<Vector3f, Integer> entry : tmp.entrySet()) {
-			System.out.println(entry.getKey() + ": " + entry.getValue());
-		}
+//		for (Map.Entry<Vector3f, Integer> entry : tmp.entrySet()) {
+//			System.out.println(entry.getKey() + ": " + entry.getValue());
+//		}
 
 		// Vector3f res = support(rb1, rb2, new Vector3f(1, 1, 1));
 
