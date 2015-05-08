@@ -25,7 +25,7 @@ import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glDepthFunc;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glHint;
-import static org.lwjgl.opengl.GL11.glLoadMatrix;
+import static org.lwjgl.opengl.GL11.glLoadMatrixf;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
@@ -304,11 +304,11 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 	protected void mode2d() {
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
-		glLoadMatrix(identity);
+		glLoadMatrixf(identity);
 		glOrtho(0, settings.getResolutionX(), settings.getResolutionY(), 0, -1,
 				1);
 		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrix(identity);
+		glLoadMatrixf(identity);
 	}
 
 	protected void mode3d() {

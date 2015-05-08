@@ -1,6 +1,6 @@
 package terrain;
 
-import static org.lwjgl.opengl.GL11.glMultMatrix;
+import static org.lwjgl.opengl.GL11.glMultMatrixf;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslatef;
@@ -238,7 +238,7 @@ public class ChunkedTerrain extends RenderedObject {
 			shader.bind();
 
 		glTranslatef(rotcenter.x, rotcenter.y, rotcenter.z);
-		glMultMatrix(buf);
+		glMultMatrixf(buf);
 		glTranslatef(-rotcenter.x, -rotcenter.y, -rotcenter.z);
 
 		for (int chx = 0; chx < chunks.length; chx++) {

@@ -12,9 +12,9 @@ import static org.lwjgl.opengl.GL20.glUniform1i;
 import static org.lwjgl.opengl.GL20.glUniform2f;
 import static org.lwjgl.opengl.GL20.glUniform3f;
 import static org.lwjgl.opengl.GL20.glUniform4f;
-import static org.lwjgl.opengl.GL20.glUniformMatrix2;
-import static org.lwjgl.opengl.GL20.glUniformMatrix3;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4;
+import static org.lwjgl.opengl.GL20.glUniformMatrix2fv;
+import static org.lwjgl.opengl.GL20.glUniformMatrix3fv;
+import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
 import java.nio.FloatBuffer;
@@ -80,15 +80,15 @@ public class ShaderList {
 							((Vector4f) argument).w);
 					break;
 				case 6:
-					glUniformMatrix2(uniformlocation, false,
+					glUniformMatrix2fv(uniformlocation, false,
 							(FloatBuffer) argument);
 					break;
 				case 7:
-					glUniformMatrix3(uniformlocation, false,
+					glUniformMatrix3fv(uniformlocation, false,
 							(FloatBuffer) argument);
 					break;
 				case 8:
-					glUniformMatrix4(uniformlocation, false,
+					glUniformMatrix4fv(uniformlocation, false,
 							(FloatBuffer) argument);
 					break;
 				case 9:

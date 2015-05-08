@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL11.glColorPointer;
 import static org.lwjgl.opengl.GL11.glDisableClientState;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL11.glEnableClientState;
-import static org.lwjgl.opengl.GL11.glMultMatrix;
+import static org.lwjgl.opengl.GL11.glMultMatrixf;
 import static org.lwjgl.opengl.GL11.glNormalPointer;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
@@ -223,7 +223,7 @@ public class ShapedObject extends RenderedObject {
 
 		glPushMatrix();
 		glTranslatef(rotcenter.x, rotcenter.y, rotcenter.z);
-		glMultMatrix(buf);
+		glMultMatrixf(buf);
 		glTranslatef(-rotcenter.x, -rotcenter.y, -rotcenter.z);
 	}
 

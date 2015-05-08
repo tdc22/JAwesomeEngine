@@ -3,7 +3,7 @@ package utils;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.glFrustum;
-import static org.lwjgl.opengl.GL11.glLoadMatrix;
+import static org.lwjgl.opengl.GL11.glLoadMatrixf;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
@@ -32,7 +32,7 @@ public class ViewFrustum {
 
 	public void apply() {
 		glMatrixMode(GL_PROJECTION);
-		glLoadMatrix(identity);
+		glLoadMatrixf(identity);
 		glFrustum(-halfWidth, halfWidth, -halfHeight, halfHeight, zNear, zFar);
 		glMatrixMode(GL_MODELVIEW);
 	}
@@ -40,7 +40,7 @@ public class ViewFrustum {
 	public void begin() {
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
-		glLoadMatrix(identity);
+		glLoadMatrixf(identity);
 		glFrustum(-halfWidth, halfWidth, -halfHeight, halfHeight, zNear, zFar);
 		glMatrixMode(GL_MODELVIEW);
 	}

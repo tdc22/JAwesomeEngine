@@ -1,6 +1,6 @@
 package objects;
 
-import static org.lwjgl.opengl.GL11.glMultMatrix;
+import static org.lwjgl.opengl.GL11.glMultMatrixf;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslatef;
@@ -32,7 +32,7 @@ public class Camera extends GameObject {
 	public void begin() {
 		glPushMatrix();
 		glTranslatef(rotcenter.x, rotcenter.y, rotcenter.z);
-		glMultMatrix(buf);
+		glMultMatrixf(buf);
 		glTranslatef(-rotcenter.x, -rotcenter.y, -rotcenter.z);
 	}
 
