@@ -33,6 +33,7 @@ public class JInputReader extends InputReader {
 		setupKeys();
 	}
 
+	@Override
 	public boolean isKeyDown(String componentid) {
 		for (Keyboard k : keyboardcontrollers) {
 			if (k.isKeyDown(keys.get(componentid)))

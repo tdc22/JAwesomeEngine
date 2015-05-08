@@ -29,83 +29,63 @@ import display.PixelFormat;
 import display.VideoSettings;
 
 public class GJKDebugger extends StandardGame {
+	private class Line extends ShapedObject {
+		Color c;
+
+		public Line() {
+			setRenderMode(GLConstants.LINES);
+			c = Color.CYAN;
+		}
+
+		public Line(Vector3f start, Vector3f end) {
+			setRenderMode(GLConstants.LINES);
+			c = Color.WHITE;
+			update(start, end);
+		}
+
+		public void update(Vector3f start, Vector3f end) {
+			delete();
+			addVertex(start, c);
+			addVertex(end, c);
+			addIndices(0, 1);
+			prerender();
+		}
+	}
+	private class Point extends ShapedObject {
+		public Point(Vector3f point, Color col) {
+			setRenderMode(GLConstants.POINTS);
+			addVertex(point, col);
+			addIndex(0);
+			prerender();
+		}
+	}
+	private class TriangleShape extends ShapedObject {
+		public TriangleShape(Vector3f a, Vector3f b, Vector3f c, Color col) {
+			setRenderMode(GLConstants.TRIANGLES);
+			addVertex(a, col);
+			addVertex(b, col);
+			addVertex(c, col);
+			addIndices(0, 1, 2);
+			prerender();
+		}
+	}
 	Simplex GJKsimplex;
 	boolean rebuildsimplex = false;
 	Debugger debugger;
 	RigidBody3 rb1, rb2;
+
 	SupportDifferenceObject support1;
+
 	Line line;
+
 	Sphere newPoint, mostRecentPoint;
 
 	InputEvent toggleMouseBind;
 
-	@Override
-	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(),
-				new PixelFormat().withSamples(0), new VideoSettings());
-		debugger = new Debugger(inputs,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		display.bindMouse();
-		cam.setFlyCam(true);
+	// ------------------- GJK ---------------------
+	List<Vector3f> simplex;
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
-		inputs.addEvent(toggleMouseBind);
-
-		// Box b1 = new Box(-8.960001f, 8.190001f, 0.0f, 1f, 1f, 1f);
-		// b1.setRotation(new Quaternionf(0.87097573f, -0.41262922f,
-		// 0.26483604f,
-		// 0.03165175f));
-		// rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
-		//
-		// Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
-		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
-
-		Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
-		Quaternionf falsecase = new Quaternionf(0.25023422f, -0.09507953f,
-				-0.8314483f, -0.48689112f);
-		b1.setRotation(falsecase);
-		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
-
-		Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
-		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
-
-		newPoint = new Sphere(0, 0, 0, 0.05f, 36, 36);
-		newPoint.setColor(Color.CYAN);
-		addObject(newPoint);
-
-		mostRecentPoint = new Sphere(0, 0, 0, 0.05f, 36, 36);
-		mostRecentPoint.setColor(Color.BLUE);
-		addObject(mostRecentPoint);
-
-		// Fix transformation (usually done in PhysicsSpace-class of Engine
-		rb1.setRotation(b1.getRotation());
-		rb1.setTranslation(b1.getTranslation());
-
-		rb2.setRotation(s1.getRotation());
-		rb2.setTranslation(s1.getTranslation());
-
-		// Visualize the support functions
-		support1 = new SupportDifferenceObject(b1, rb1, s1, rb2);
-
-		initGJK();
-		GJKsimplex = new Simplex(simplex);
-
-		line = new Line();
-		line.update(new Vector3f(), direction);
-
-		BRUTEFORCE(rb1, rb2, Color.GRAY);
-		rb1.setRotation(new Quaternionf());
-		BRUTEFORCE(rb1, rb2, Color.RED);
-		Quaternionf interpolation = QuatMath.slerp(new Quaternionf(),
-				falsecase, 0.5f);
-		rb1.setRotation(interpolation);
-		BRUTEFORCE(rb1, rb2, Color.GREEN);
-
-		InputEvent stepGJK = new InputEvent("Step GJK", new Input(
-				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
-		inputs.addEvent(stepGJK);
-	}
+	Vector3f direction;
 
 	public void BRUTEFORCE(RigidBody3 r1, RigidBody3 r2, Color c) {
 		for (int i = 0; i < 500; i++) {
@@ -125,86 +105,6 @@ public class GJKDebugger extends StandardGame {
 					r2.supportPointNegative(v2)), c));
 		}
 	}
-
-	private Vector3f randomVec() {
-		Quaternionf quat = new Quaternionf();
-		quat.rotate(Math.random() * 360, new Vector3f(0, 0, 1));
-		quat.rotate(Math.random() * 360, new Vector3f(0, 1, 0));
-		quat.rotate(Math.random() * 360, new Vector3f(1, 0, 0));
-		return QuatMath.transform(quat, new Vector3f(0, 1, 0));
-	}
-
-	@Override
-	public void render() {
-		debugger.render3d();
-		debugger.begin();
-		renderScene();
-		GJKsimplex.render();
-		support1.render();
-		line.render();
-	}
-
-	@Override
-	public void render2d() {
-		render2dScene();
-		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
-	}
-
-	@Override
-	public void update(int delta) {
-		if (inputs.isEventActive("Step GJK")) {
-			stepGJK();
-			GJKsimplex.delete();
-			GJKsimplex = new Simplex(simplex);
-			line.update(new Vector3f(), direction);
-			mostRecentPoint.translateTo(newPoint.getTranslation());
-			newPoint.translateTo(support(rb1, rb2, direction));
-		}
-		debugger.update();
-
-		if (display.isMouseBound())
-			cam.update(delta);
-		if (toggleMouseBind.isActive()) {
-			if (!display.isMouseBound())
-				display.bindMouse();
-			else
-				display.unbindMouse();
-		}
-	}
-
-	public void initGJK() {
-		// System.out.println("---------- New Loop: ----------");
-		simplex = new ArrayList<Vector3f>();
-		// S = Support(?)
-		direction = support(rb1, rb2, new Vector3f(1, 1, 1));
-		// [] = S
-		simplex.add(direction);
-		// D = -S
-		direction = VecMath.negate(direction);
-	}
-
-	public void stepGJK() {
-		// A = Support(D)
-		Vector3f a = support(rb1, rb2, direction);
-		// System.out.println("New Point: " + a);
-		// if AtD < 0 No Intersection
-		System.out.println();
-		System.out.println(simplex.size() + " dir: " + direction + "; " + a
-				+ "; " + VecMath.dotproduct(a, direction));
-		if (VecMath.dotproduct(a, direction) < 0)
-			System.out.println("Failure!");
-		// [] += A
-		simplex.add(a);
-		// if DoSimplex([], D) Intersection
-		if (doSimplex()) {
-			System.out.println("Scuccess!");
-		}
-	}
-
-	// ------------------- GJK ---------------------
-	List<Vector3f> simplex;
-	Vector3f direction;
 
 	private boolean doSimplex() {
 		int simplexsize = simplex.size();
@@ -405,14 +305,135 @@ public class GJKDebugger extends StandardGame {
 		return false;
 	}
 
+	private Vector3f edgeDirection(Vector3f edge, Vector3f origin) {
+		return VecMath.crossproduct(VecMath.crossproduct(edge, origin), edge);
+	}
+
+	@Override
+	public void init() {
+		initDisplay(new GLDisplay(), new DisplayMode(),
+				new PixelFormat().withSamples(0), new VideoSettings());
+		debugger = new Debugger(inputs,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		display.bindMouse();
+		cam.setFlyCam(true);
+
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		inputs.addEvent(toggleMouseBind);
+
+		// Box b1 = new Box(-8.960001f, 8.190001f, 0.0f, 1f, 1f, 1f);
+		// b1.setRotation(new Quaternionf(0.87097573f, -0.41262922f,
+		// 0.26483604f,
+		// 0.03165175f));
+		// rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
+		//
+		// Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
+		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+
+		Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
+		Quaternionf falsecase = new Quaternionf(0.25023422f, -0.09507953f,
+				-0.8314483f, -0.48689112f);
+		b1.setRotation(falsecase);
+		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
+
+		Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
+		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+
+		newPoint = new Sphere(0, 0, 0, 0.05f, 36, 36);
+		newPoint.setColor(Color.CYAN);
+		addObject(newPoint);
+
+		mostRecentPoint = new Sphere(0, 0, 0, 0.05f, 36, 36);
+		mostRecentPoint.setColor(Color.BLUE);
+		addObject(mostRecentPoint);
+
+		// Fix transformation (usually done in PhysicsSpace-class of Engine
+		rb1.setRotation(b1.getRotation());
+		rb1.setTranslation(b1.getTranslation());
+
+		rb2.setRotation(s1.getRotation());
+		rb2.setTranslation(s1.getTranslation());
+
+		// Visualize the support functions
+		support1 = new SupportDifferenceObject(b1, rb1, s1, rb2);
+
+		initGJK();
+		GJKsimplex = new Simplex(simplex);
+
+		line = new Line();
+		line.update(new Vector3f(), direction);
+
+		BRUTEFORCE(rb1, rb2, Color.GRAY);
+		rb1.setRotation(new Quaternionf());
+		BRUTEFORCE(rb1, rb2, Color.RED);
+		Quaternionf interpolation = QuatMath.slerp(new Quaternionf(),
+				falsecase, 0.5f);
+		rb1.setRotation(interpolation);
+		BRUTEFORCE(rb1, rb2, Color.GREEN);
+
+		InputEvent stepGJK = new InputEvent("Step GJK", new Input(
+				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
+		inputs.addEvent(stepGJK);
+	}
+	public void initGJK() {
+		// System.out.println("---------- New Loop: ----------");
+		simplex = new ArrayList<Vector3f>();
+		// S = Support(?)
+		direction = support(rb1, rb2, new Vector3f(1, 1, 1));
+		// [] = S
+		simplex.add(direction);
+		// D = -S
+		direction = VecMath.negate(direction);
+	}
+
+	private Vector3f randomVec() {
+		Quaternionf quat = new Quaternionf();
+		quat.rotate(Math.random() * 360, new Vector3f(0, 0, 1));
+		quat.rotate(Math.random() * 360, new Vector3f(0, 1, 0));
+		quat.rotate(Math.random() * 360, new Vector3f(1, 0, 0));
+		return QuatMath.transform(quat, new Vector3f(0, 1, 0));
+	}
+
 	// private Vector3f randomvector() {
 	// return new Vector3f((int) (Math.random() * 2) * 2 - 1,
 	// (int) (Math.random() * 2) * 2 - 1,
 	// (int) (Math.random() * 2) * 2 - 1);
 	// }
 
-	private Vector3f edgeDirection(Vector3f edge, Vector3f origin) {
-		return VecMath.crossproduct(VecMath.crossproduct(edge, origin), edge);
+	@Override
+	public void render() {
+		debugger.render3d();
+		debugger.begin();
+		renderScene();
+		GJKsimplex.render();
+		support1.render();
+		line.render();
+	}
+
+	@Override
+	public void render2d() {
+		render2dScene();
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
+	}
+
+	public void stepGJK() {
+		// A = Support(D)
+		Vector3f a = support(rb1, rb2, direction);
+		// System.out.println("New Point: " + a);
+		// if AtD < 0 No Intersection
+		System.out.println();
+		System.out.println(simplex.size() + " dir: " + direction + "; " + a
+				+ "; " + VecMath.dotproduct(a, direction));
+		if (VecMath.dotproduct(a, direction) < 0)
+			System.out.println("Failure!");
+		// [] += A
+		simplex.add(a);
+		// if DoSimplex([], D) Intersection
+		if (doSimplex()) {
+			System.out.println("Scuccess!");
+		}
 	}
 
 	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
@@ -425,46 +446,25 @@ public class GJKDebugger extends StandardGame {
 				Sb.supportPointNegative(dir));
 	}
 
-	private class Point extends ShapedObject {
-		public Point(Vector3f point, Color col) {
-			setRenderMode(GLConstants.POINTS);
-			addVertex(point, col);
-			addIndex(0);
-			prerender();
+	@Override
+	public void update(int delta) {
+		if (inputs.isEventActive("Step GJK")) {
+			stepGJK();
+			GJKsimplex.delete();
+			GJKsimplex = new Simplex(simplex);
+			line.update(new Vector3f(), direction);
+			mostRecentPoint.translateTo(newPoint.getTranslation());
+			newPoint.translateTo(support(rb1, rb2, direction));
 		}
-	}
+		debugger.update();
 
-	private class Line extends ShapedObject {
-		Color c;
-
-		public Line() {
-			setRenderMode(GLConstants.LINES);
-			c = Color.CYAN;
-		}
-
-		public Line(Vector3f start, Vector3f end) {
-			setRenderMode(GLConstants.LINES);
-			c = Color.WHITE;
-			update(start, end);
-		}
-
-		public void update(Vector3f start, Vector3f end) {
-			delete();
-			addVertex(start, c);
-			addVertex(end, c);
-			addIndices(0, 1);
-			prerender();
-		}
-	}
-
-	private class TriangleShape extends ShapedObject {
-		public TriangleShape(Vector3f a, Vector3f b, Vector3f c, Color col) {
-			setRenderMode(GLConstants.TRIANGLES);
-			addVertex(a, col);
-			addVertex(b, col);
-			addVertex(c, col);
-			addIndices(0, 1, 2);
-			prerender();
+		if (display.isMouseBound())
+			cam.update(delta);
+		if (toggleMouseBind.isActive()) {
+			if (!display.isMouseBound())
+				display.bindMouse();
+			else
+				display.unbindMouse();
 		}
 	}
 }

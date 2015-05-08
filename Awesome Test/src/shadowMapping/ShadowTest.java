@@ -22,6 +22,7 @@ public class ShadowTest extends StandardGame {
 	Debugger debugger;
 	FramebufferObject depthMap;
 	Shader shadowshader;
+	boolean shadow = false;
 
 	@Override
 	public void init() {
@@ -48,15 +49,20 @@ public class ShadowTest extends StandardGame {
 				"res/shaders/shadowmapping.frag"));
 		shadowshader.addArgumentName("shadowMap");
 		shadowshader.addArgument(new Texture(depthMap.getDepthTextureID()));
+
+		depthMap.updateTexture();
+		shadow = true;
 	}
 
 	@Override
 	public void render() {
 		debugger.render3d();
 		debugger.begin();
-		shadowshader.bind();
+		if (shadow)
+			shadowshader.bind();
 		renderScene();
-		shadowshader.unbind();
+		if (shadow)
+			shadowshader.unbind();
 	}
 
 	@Override
@@ -68,7 +74,6 @@ public class ShadowTest extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		depthMap.updateTexture();
 		debugger.update();
 		cam.update(delta);
 	}

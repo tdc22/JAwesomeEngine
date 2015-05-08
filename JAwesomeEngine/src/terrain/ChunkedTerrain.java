@@ -262,6 +262,7 @@ public class ChunkedTerrain extends RenderedObject {
 		this.lod5 = lod5;
 	}
 
+	@Override
 	public void setShader(Shader s) {
 		shader = s;
 	}

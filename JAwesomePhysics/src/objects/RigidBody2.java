@@ -75,6 +75,11 @@ public class RigidBody2 extends
 	}
 
 	@Override
+	public AABB<Vector2f> getGlobalAABB() {
+		return new AABB2(getGlobalMinAABB(), getGlobalMaxAABB());
+	}
+
+	@Override
 	public Vector2f getGlobalMaxAABB() {
 		return VecMath.addition(aabb.getMax(), getTranslation2());
 	}
@@ -123,10 +128,5 @@ public class RigidBody2 extends
 		Complexf c = new Complexf(getRotation().get2dRotation());
 		c.invert();
 		invrotation = c;
-	}
-
-	@Override
-	public AABB<Vector2f> getGlobalAABB() {
-		return new AABB2(getGlobalMinAABB(), getGlobalMaxAABB());
 	}
 }

@@ -50,16 +50,16 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.opengl.GL32.GL_TEXTURE_2D_MULTISAMPLE;
 import static org.lwjgl.opengl.GL32.glTexImage2DMultisample;
-import game.StandardGame;
 
 import java.nio.IntBuffer;
 
 import objects.Camera;
+import objects.Renderable;
 import utils.DefaultValues;
 import utils.ViewFrustum;
 
 public class FramebufferObject {
-	StandardGame game;
+	Renderable render;
 	int frameBufferID, colorRBID, depthRBID, samples;
 	Texture colorTexture, depthTexture;
 	int width, height;
@@ -69,8 +69,8 @@ public class FramebufferObject {
 	Camera cam;
 	ViewFrustum frustum;
 
-	public FramebufferObject(StandardGame game) {
-		init(game, DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_X,
+	public FramebufferObject(Renderable render) {
+		init(render, DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_X,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_Y,
 				DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
@@ -79,8 +79,8 @@ public class FramebufferObject {
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(StandardGame game, int width, int height) {
-		init(game, width, height, DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES,
+	public FramebufferObject(Renderable render, int width, int height) {
+		init(render, width, height, DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES,
 				null, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
@@ -88,54 +88,54 @@ public class FramebufferObject {
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(StandardGame game, int width, int height,
+	public FramebufferObject(Renderable render, int width, int height,
 			int samples) {
-		init(game, width, height, samples, null, null, null,
+		init(render, width, height, samples, null, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
 				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(StandardGame game, int width, int height,
+	public FramebufferObject(Renderable render, int width, int height,
 			int samples, Camera cam) {
-		init(game, width, height, samples, cam, null, null,
+		init(render, width, height, samples, cam, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
 				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(StandardGame game, int width, int height,
-			int samples, Camera cam, Texture colorbuffer) {
-		init(game, width, height, samples, cam, colorbuffer, null,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
-				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
-	}
-
-	public FramebufferObject(StandardGame game, int width, int height,
-			int samples, Camera cam, Texture colorbuffer, ViewFrustum frustum) {
-		init(game, width, height, samples, cam, colorbuffer, frustum,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
-				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
-	}
-
-	public FramebufferObject(StandardGame game, int width, int height,
+	public FramebufferObject(Renderable render, int width, int height,
 			int samples, Camera cam, boolean renderColor, boolean renderDepth) {
-		init(game, width, height, samples, cam, null, null, renderColor,
+		init(render, width, height, samples, cam, null, null, renderColor,
 				renderDepth, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(StandardGame game, int width, int height,
+	public FramebufferObject(Renderable render, int width, int height,
 			int samples, Camera cam, boolean renderColor, boolean renderDepth,
 			boolean renderColorToTexture, boolean renderDepthToTexture) {
-		init(game, width, height, samples, cam, null, null, renderColor,
+		init(render, width, height, samples, cam, null, null, renderColor,
 				renderDepth, renderColorToTexture, renderDepthToTexture);
+	}
+
+	public FramebufferObject(Renderable render, int width, int height,
+			int samples, Camera cam, Texture colorbuffer) {
+		init(render, width, height, samples, cam, colorbuffer, null,
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+	}
+
+	public FramebufferObject(Renderable render, int width, int height,
+			int samples, Camera cam, Texture colorbuffer, ViewFrustum frustum) {
+		init(render, width, height, samples, cam, colorbuffer, frustum,
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
 	public void begin() {
@@ -207,8 +207,16 @@ public class FramebufferObject {
 		glEnable(GL_TEXTURE_2D);
 	}
 
+	public int getColorTextureID() {
+		return colorTexture.getTextureID();
+	}
+
 	public IntBuffer getData() {
 		return imageData;
+	}
+
+	public int getDepthTextureID() {
+		return depthTexture.getTextureID();
 	}
 
 	public int getFramebufferID() {
@@ -223,23 +231,15 @@ public class FramebufferObject {
 		return samples;
 	}
 
-	public int getColorTextureID() {
-		return colorTexture.getTextureID();
-	}
-
-	public int getDepthTextureID() {
-		return depthTexture.getTextureID();
-	}
-
 	public int getWidth() {
 		return width;
 	}
 
-	private void init(StandardGame game, int width, int height, int samples,
+	private void init(Renderable render, int width, int height, int samples,
 			Camera camera, Texture colorbuffer, ViewFrustum frustum,
 			boolean renderColor, boolean renderDepth,
 			boolean renderColorToTexture, boolean renderDepthToTexture) {
-		this.game = game;
+		this.render = render;
 		this.width = width;
 		this.height = height;
 		this.samples = samples;
@@ -402,6 +402,22 @@ public class FramebufferObject {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	public boolean isColorRendered() {
+		return renderColor;
+	}
+
+	public boolean isColorRenderedToTexture() {
+		return renderColorToTexture;
+	}
+
+	public boolean isDepthRendered() {
+		return renderDepth;
+	}
+
+	public boolean isDepthRenderedToTexture() {
+		return renderDepthToTexture;
+	}
+
 	public boolean isMultisampled() {
 		return multisampled;
 	}
@@ -412,7 +428,7 @@ public class FramebufferObject {
 
 	public void updateTexture() {
 		begin();
-		game.render();
+		render.render();
 		end();
 	}
 }

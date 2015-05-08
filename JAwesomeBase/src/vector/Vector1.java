@@ -29,17 +29,6 @@ public abstract class Vector1 extends Vector {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int hashCode() {
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(getX());
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public final int getDimensions() {
 		return 1;
 	}
@@ -55,6 +44,18 @@ public abstract class Vector1 extends Vector {
 	 * @see Vector1#getX()
 	 */
 	public abstract float getXf();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(getX());
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
 
 	/**
 	 * Scales the vector by another one.

@@ -31,46 +31,6 @@ import objects.ShapedObject;
 import vector.Vector3f;
 
 public class Debugger {
-	Font font;
-	boolean showdata = false;
-	boolean showaxis = false;
-	boolean showgrid = false;
-	boolean wireframe = false;
-	boolean isFirstError = true;
-	String firsterror;
-	Text text;
-	Camera cam;
-	Vector3f range;
-	private ShapedObject xaxis, yaxis, zaxis;
-	InputEvent toggledata, toggleaxis, togglegrid, togglewireframe;
-
-	public Debugger(InputManager i, Font f, Camera cam) {
-		font = f;
-		this.cam = cam;
-
-		text = new Text("", 10, 10, font);
-
-		xaxis = new ShapedObject();
-		yaxis = new ShapedObject();
-		zaxis = new ShapedObject();
-		xaxis.setRenderMode(GLConstants.LINES);
-		yaxis.setRenderMode(GLConstants.LINES);
-		zaxis.setRenderMode(GLConstants.LINES);
-
-		setRange(new Vector3f(1000, 1000, 1000));
-		setupControls(i);
-	}
-
-	public void begin() {
-		if (wireframe)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-
-	public void end() {
-		if (wireframe)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-
 	public static String getGLErrorName(int glErrorID) {
 		String glerror = "no error";
 		if (glErrorID != GL_NO_ERROR) {
@@ -101,6 +61,46 @@ public class Debugger {
 			}
 		}
 		return glerror;
+	}
+	Font font;
+	boolean showdata = false;
+	boolean showaxis = false;
+	boolean showgrid = false;
+	boolean wireframe = false;
+	boolean isFirstError = true;
+	String firsterror;
+	Text text;
+	Camera cam;
+	Vector3f range;
+	private ShapedObject xaxis, yaxis, zaxis;
+
+	InputEvent toggledata, toggleaxis, togglegrid, togglewireframe;
+
+	public Debugger(InputManager i, Font f, Camera cam) {
+		font = f;
+		this.cam = cam;
+
+		text = new Text("", 10, 10, font);
+
+		xaxis = new ShapedObject();
+		yaxis = new ShapedObject();
+		zaxis = new ShapedObject();
+		xaxis.setRenderMode(GLConstants.LINES);
+		yaxis.setRenderMode(GLConstants.LINES);
+		zaxis.setRenderMode(GLConstants.LINES);
+
+		setRange(new Vector3f(1000, 1000, 1000));
+		setupControls(i);
+	}
+
+	public void begin() {
+		if (wireframe)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+
+	public void end() {
+		if (wireframe)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
 	public boolean isAxisShown() {

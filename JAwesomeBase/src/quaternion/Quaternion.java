@@ -80,6 +80,7 @@ public abstract class Quaternion implements Rotation {
 	/**
 	 * Inverts the quaternion.
 	 */
+	@Override
 	public abstract void invert();
 
 	/**

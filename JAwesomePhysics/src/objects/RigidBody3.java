@@ -68,6 +68,11 @@ public class RigidBody3 extends
 	}
 
 	@Override
+	public AABB<Vector3f> getGlobalAABB() {
+		return new AABB3(getGlobalMinAABB(), getGlobalMaxAABB());
+	}
+
+	@Override
 	public Vector3f getGlobalMaxAABB() {
 		return VecMath.addition(aabb.getMax(), getTranslation());
 	}
@@ -116,10 +121,5 @@ public class RigidBody3 extends
 		Quaternionf q = new Quaternionf(this.getRotation());
 		q.invert();
 		invrotation = q;
-	}
-
-	@Override
-	public AABB<Vector3f> getGlobalAABB() {
-		return new AABB3(getGlobalMinAABB(), getGlobalMaxAABB());
 	}
 }

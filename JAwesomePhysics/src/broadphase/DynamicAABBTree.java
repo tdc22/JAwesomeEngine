@@ -93,62 +93,11 @@ public class DynamicAABBTree implements Broadphase<Vector3f> {
 		toString(root);
 	}
 
-	@Override
-	public Set<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>> getOverlaps() {
-		return new LinkedHashSet<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>>(
-				overlaps);
-	}
-
-	@Override
-	public Set<RigidBody<Vector3f, ?, ?, ?>> raycast() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void remove(RigidBody<Vector3f, ?, ?, ?> object) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void update() {
-		updateAABBTree();
-
-		overlaps.clear();
-
-		System.out.println("-----------------------------");
-		toString(root);
-
-		if (root == null || root.isLeaf())
-			return;
-
-		clearChildrenCrossFlagHelper(root);
-
-		computePairsHelper(root.leftChild, root.rightChild);
-	}
-
-	private void toString(Node n) {
-		System.out.println(n.aabb + "; " + n.isLeaf() + "; " + n.leftChild
-				+ "; " + n.rightChild);
-		if (!n.isLeaf()) {
-			toString(n.leftChild);
-			toString(n.rightChild);
-		}
-	}
-
 	private void clearChildrenCrossFlagHelper(Node node) {
 		node.childrenCrossed = false;
 		if (!node.isLeaf()) {
 			clearChildrenCrossFlagHelper(node.leftChild);
 			clearChildrenCrossFlagHelper(node.rightChild);
-		}
-	}
-
-	private void crossChildren(Node node) {
-		if (!node.childrenCrossed) {
-			computePairsHelper(node.leftChild, node.rightChild);
-			node.childrenCrossed = true;
 		}
 	}
 
@@ -181,33 +130,17 @@ public class DynamicAABBTree implements Broadphase<Vector3f> {
 		}
 	}
 
-	private void updateAABBTree() {
-		if (root != null) {
-			if (root.isLeaf())
-				root.updateAABB(margin);
-			else {
-				invalidNodes.clear();
-				updateNodeHelper(root, invalidNodes);
-
-				for (Node node : invalidNodes) {
-					Node parent = node.parent;
-					Node sibling = node.getSibling();
-					sibling.parent = (parent.parent != null) ? parent.parent
-							: null;
-					if (parent.parent != null) {
-						if (parent == parent.parent.leftChild)
-							parent.parent.leftChild = sibling;
-						else
-							parent.parent.rightChild = sibling;
-					} else
-						root = sibling;
-
-					node.updateAABB(margin);
-					insertNode(node, root);
-				}
-				invalidNodes.clear();
-			}
+	private void crossChildren(Node node) {
+		if (!node.childrenCrossed) {
+			computePairsHelper(node.leftChild, node.rightChild);
+			node.childrenCrossed = true;
 		}
+	}
+
+	@Override
+	public Set<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>> getOverlaps() {
+		return new LinkedHashSet<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>>(
+				overlaps);
 	}
 
 	private Node insertNode(Node node, Node parent) {
@@ -235,6 +168,18 @@ public class DynamicAABBTree implements Broadphase<Vector3f> {
 		return parent;
 	}
 
+	@Override
+	public Set<RigidBody<Vector3f, ?, ?, ?>> raycast() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void remove(RigidBody<Vector3f, ?, ?, ?> object) {
+		// TODO Auto-generated method stub
+
+	}
+
 	private void removeNode(Node node) {
 		Node parent = node.parent;
 		if (parent != null) {
@@ -254,6 +199,61 @@ public class DynamicAABBTree implements Broadphase<Vector3f> {
 		} else {
 			root = null;
 			node = null;
+		}
+	}
+
+	private void toString(Node n) {
+		System.out.println(n.aabb + "; " + n.isLeaf() + "; " + n.leftChild
+				+ "; " + n.rightChild);
+		if (!n.isLeaf()) {
+			toString(n.leftChild);
+			toString(n.rightChild);
+		}
+	}
+
+	@Override
+	public void update() {
+		updateAABBTree();
+
+		overlaps.clear();
+
+		System.out.println("-----------------------------");
+		toString(root);
+
+		if (root == null || root.isLeaf())
+			return;
+
+		clearChildrenCrossFlagHelper(root);
+
+		computePairsHelper(root.leftChild, root.rightChild);
+	}
+
+	private void updateAABBTree() {
+		if (root != null) {
+			if (root.isLeaf())
+				root.updateAABB(margin);
+			else {
+				invalidNodes.clear();
+				updateNodeHelper(root, invalidNodes);
+
+				for (Node node : invalidNodes) {
+					Node parent = node.parent;
+					Node sibling = node.getSibling();
+					sibling.parent = (parent.parent != null) ? parent.parent
+							: null;
+					if (parent.parent != null) {
+						if (parent == parent.parent.leftChild)
+							parent.parent.leftChild = sibling;
+						else
+							parent.parent.rightChild = sibling;
+					} else
+						root = sibling;
+
+					node.updateAABB(margin);
+					insertNode(node, root);
+				}
+				invalidNodes.clear();
+			}
 		}
 	}
 

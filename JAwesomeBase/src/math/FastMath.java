@@ -9,6 +9,12 @@ package math;
  */
 
 public class FastMath {
+	public static final double PI = Math.PI;
+
+	public static final double TWO_PI = 2.0f * PI;
+
+	public static final double HALF_PI = 0.5f * PI;
+
 	/**
 	 * Computes the cosine of a given angle.
 	 * 
@@ -63,10 +69,4 @@ public class FastMath {
 	public static float sin(float angle) {
 		return (float) sin((double) angle);
 	}
-
-	public static final double PI = Math.PI;
-
-	public static final double TWO_PI = 2.0f * PI;
-
-	public static final double HALF_PI = 0.5f * PI;
 }

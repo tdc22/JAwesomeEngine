@@ -23,14 +23,6 @@ public class Texture {
 		this.textureType = texturetype;
 	}
 
-	public void setTextureID(int textureid) {
-		this.textureID = textureid;
-	}
-
-	public void setTextureType(int texturetype) {
-		this.textureType = texturetype;
-	}
-
 	public void bind() {
 		glBindTexture(textureType, textureID);
 	}
@@ -45,6 +37,14 @@ public class Texture {
 
 	public int getTextureType() {
 		return textureType;
+	}
+
+	public void setTextureID(int textureid) {
+		this.textureID = textureid;
+	}
+
+	public void setTextureType(int texturetype) {
+		this.textureType = texturetype;
 	}
 
 	public void unbind() {

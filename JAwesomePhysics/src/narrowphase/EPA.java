@@ -137,23 +137,6 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 	}
 
 	/**
-	 * Finds the closest feature to the origin on the Minkowski Difference.
-	 */
-	private Triangle findClosestTriangle(List<Triangle> faces) {
-		Triangle closest = null;
-		float distance = Float.MAX_VALUE;
-		for (Triangle f : faces) {
-			float dist = VecMath.dotproduct(f.normal, f.a);
-			if (dist < distance) {
-				closest = f;
-				distance = dist;
-				f.distance = distance;
-			}
-		}
-		return closest;
-	}
-
-	/**
 	 * Finds up to three triangles adjacent to t.
 	 * 
 	 * @param t
@@ -179,6 +162,23 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Finds the closest feature to the origin on the Minkowski Difference.
+	 */
+	private Triangle findClosestTriangle(List<Triangle> faces) {
+		Triangle closest = null;
+		float distance = Float.MAX_VALUE;
+		for (Triangle f : faces) {
+			float dist = VecMath.dotproduct(f.normal, f.a);
+			if (dist < distance) {
+				closest = f;
+				distance = dist;
+				f.distance = distance;
+			}
+		}
+		return closest;
 	}
 
 	/**

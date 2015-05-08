@@ -71,10 +71,12 @@ public abstract class CollisionShape<L extends Vector, A extends Rotation>
 		aabb.setMin(minAABB);
 	}
 
+	@Override
 	public L supportPointLocal(L direction) {
 		return supportcalculator.supportPointLocal(direction);
 	}
 
+	@Override
 	public L supportPointLocalNegative(L direction) {
 		return supportcalculator.supportPointLocalNegative(direction);
 	}

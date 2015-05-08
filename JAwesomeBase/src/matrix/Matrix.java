@@ -71,6 +71,7 @@ public abstract class Matrix implements Rotation {
 	/**
 	 * Inverts the matrix.
 	 */
+	@Override
 	public abstract void invert();
 
 	/**

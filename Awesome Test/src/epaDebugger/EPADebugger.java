@@ -27,114 +27,37 @@ import display.PixelFormat;
 import display.VideoSettings;
 
 public class EPADebugger extends StandardGame {
+	public class Triangle {
+		Vector3f a, b, c, normal;
+		float distance;
+
+		public Triangle(Vector3f a, Vector3f b, Vector3f c) {
+			this.a = a;
+			this.b = b;
+			this.c = c;
+			normal = VecMath.normalize(VecMath.computeNormal(a, b, c));
+		}
+	}
 	PhysicsSpace space;
 	Debugger debugger;
 	RigidBody3 rb1, rb2;
 	Simplex simplex;
+
 	SupportDifferenceObject support1;
 
 	InputEvent toggleMouseBind;
 
-	@Override
-	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
-
-		display.bindMouse();
-		debugger = new Debugger(inputs,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		cam.setFlyCam(true);
-		cam.translateTo(0, 2, 20);
-
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
-		inputs.addEvent(toggleMouseBind);
-
-		// Box b1 = new Box(-8.960001f, 8.190001f, 0.0f, 1f, 1f, 1f);
-		// b1.setRotation(new Quaternionf(0.87097573f, -0.41262922f,
-		// 0.26483604f,
-		// 0.03165175f));
-		// rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
-		//
-		// Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
-		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
-
-		Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
-		b1.setRotation(new Quaternionf(0.25023422f, -0.09507953f, -0.8314483f,
-				-0.48689112f));
-		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
-
-		Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
-		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
-
-		// Fix transformation (usually done in PhysicsSpace-class of Engine
-		rb1.setRotation(b1.getRotation());
-		rb1.setTranslation(b1.getTranslation());
-
-		rb2.setRotation(s1.getRotation());
-		rb2.setTranslation(s1.getTranslation());
-
-		// Visualize the support functions
-		support1 = new SupportDifferenceObject(b1, rb1, s1, rb2);
-
-		// Compute simplex as starting point for EPA
-		GJK gjk = new GJK(new EmptyManifoldGenerator());
-		gjk.isColliding(rb1, rb2);
-
-		// init EPA
-		epaInit(gjk.getSimplex());
-
-		// Input to step EPA
-		InputEvent stepEPA = new InputEvent("Step EPA", new Input(
-				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
-		inputs.addEvent(stepEPA);
-	}
-
-	@Override
-	public void render() {
-		debugger.render3d();
-		debugger.begin();
-		renderScene();
-		simplex.render();
-		support1.render();
-	}
-
-	@Override
-	public void render2d() {
-		render2dScene();
-		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
-	}
-
-	@Override
-	public void update(int delta) {
-		if (inputs.isEventActive("Step EPA")) {
-			epaStep();
-			simplex.delete();
-			simplex = new Simplex(faces);
-		}
-		debugger.update();
-
-		if (display.isMouseBound())
-			cam.update(delta);
-		if (toggleMouseBind.isActive()) {
-			if (!display.isMouseBound())
-				display.bindMouse();
-			else
-				display.unbindMouse();
-		}
-	}
-
 	// ------------------- EPA ---------------------
 	List<Triangle> faces;
+
 	Vector3f normal = new Vector3f();
+
 	float depth = 0;
+
 	SupportMap<Vector3f> Sa;
 	SupportMap<Vector3f> Sb;
-
 	private final float TOLERANCE = 0.001f;
 	private final int MAX_ITERATIONS = 50;
-
 	public void epaInit(List<Vector3f> gjksimplex) {
 		Sa = rb1;
 		Sb = rb2;
@@ -221,21 +144,6 @@ public class EPADebugger extends StandardGame {
 			return; // break replaced with return
 		}
 	}
-
-	private Triangle findClosestTriangle(List<Triangle> faces) {
-		Triangle closest = null;
-		float distance = Float.MAX_VALUE;
-		for (Triangle f : faces) {
-			float dist = VecMath.dotproduct(f.normal, f.a);
-			if (dist < distance) {
-				closest = f;
-				distance = dist;
-				f.distance = distance;
-			}
-		}
-		return closest;
-	}
-
 	/**
 	 * Finds up to three triangles adjacent to t.
 	 * 
@@ -264,6 +172,20 @@ public class EPADebugger extends StandardGame {
 		return result;
 	}
 
+	private Triangle findClosestTriangle(List<Triangle> faces) {
+		Triangle closest = null;
+		float distance = Float.MAX_VALUE;
+		for (Triangle f : faces) {
+			float dist = VecMath.dotproduct(f.normal, f.a);
+			if (dist < distance) {
+				closest = f;
+				distance = dist;
+				f.distance = distance;
+			}
+		}
+		return closest;
+	}
+
 	/**
 	 * Finds the vertex in b that is not ax or ay.
 	 * 
@@ -277,6 +199,61 @@ public class EPADebugger extends StandardGame {
 		if (!b.b.equals(ax) && !b.b.equals(ay))
 			return b.b;
 		return b.c;
+	}
+
+	@Override
+	public void init() {
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
+
+		display.bindMouse();
+		debugger = new Debugger(inputs,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		cam.setFlyCam(true);
+		cam.translateTo(0, 2, 20);
+
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		inputs.addEvent(toggleMouseBind);
+
+		// Box b1 = new Box(-8.960001f, 8.190001f, 0.0f, 1f, 1f, 1f);
+		// b1.setRotation(new Quaternionf(0.87097573f, -0.41262922f,
+		// 0.26483604f,
+		// 0.03165175f));
+		// rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
+		//
+		// Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
+		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+
+		Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
+		b1.setRotation(new Quaternionf(0.25023422f, -0.09507953f, -0.8314483f,
+				-0.48689112f));
+		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
+
+		Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
+		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+
+		// Fix transformation (usually done in PhysicsSpace-class of Engine
+		rb1.setRotation(b1.getRotation());
+		rb1.setTranslation(b1.getTranslation());
+
+		rb2.setRotation(s1.getRotation());
+		rb2.setTranslation(s1.getTranslation());
+
+		// Visualize the support functions
+		support1 = new SupportDifferenceObject(b1, rb1, s1, rb2);
+
+		// Compute simplex as starting point for EPA
+		GJK gjk = new GJK(new EmptyManifoldGenerator());
+		gjk.isColliding(rb1, rb2);
+
+		// init EPA
+		epaInit(gjk.getSimplex());
+
+		// Input to step EPA
+		InputEvent stepEPA = new InputEvent("Step EPA", new Input(
+				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
+		inputs.addEvent(stepEPA);
 	}
 
 	private boolean isOriginInsideTriangleArea(Triangle t) {
@@ -296,21 +273,44 @@ public class EPADebugger extends StandardGame {
 		return false;
 	}
 
+	@Override
+	public void render() {
+		debugger.render3d();
+		debugger.begin();
+		renderScene();
+		simplex.render();
+		support1.render();
+	}
+
+	@Override
+	public void render2d() {
+		render2dScene();
+		debugger.end();
+		debugger.render2d(fps, objects.size(), objects2d.size());
+	}
+
 	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
 			Vector3f dir) {
 		return VecMath.subtraction(Sa.supportPoint(dir),
 				Sb.supportPoint(VecMath.negate(dir)));
 	}
 
-	public class Triangle {
-		Vector3f a, b, c, normal;
-		float distance;
+	@Override
+	public void update(int delta) {
+		if (inputs.isEventActive("Step EPA")) {
+			epaStep();
+			simplex.delete();
+			simplex = new Simplex(faces);
+		}
+		debugger.update();
 
-		public Triangle(Vector3f a, Vector3f b, Vector3f c) {
-			this.a = a;
-			this.b = b;
-			this.c = c;
-			normal = VecMath.normalize(VecMath.computeNormal(a, b, c));
+		if (display.isMouseBound())
+			cam.update(delta);
+		if (toggleMouseBind.isActive()) {
+			if (!display.isMouseBound())
+				display.bindMouse();
+			else
+				display.unbindMouse();
 		}
 	}
 }

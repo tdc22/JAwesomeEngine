@@ -36,6 +36,7 @@ public abstract class Complex implements Rotation {
 	/**
 	 * Inverts the complex number.
 	 */
+	@Override
 	public abstract void invert();
 
 	/**

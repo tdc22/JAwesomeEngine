@@ -43,7 +43,9 @@ import java.util.List;
 
 import math.VecMath;
 import objects.GameCamera;
+import objects.Renderable;
 import objects.RenderedObject;
+import objects.Updateable;
 
 import org.lwjgl.BufferUtils;
 
@@ -58,7 +60,8 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 
-public abstract class StandardGame extends AbstractGame {
+public abstract class StandardGame extends AbstractGame implements Renderable,
+		Updateable {
 	protected List<RenderedObject> objects;
 	protected List<RenderedObject> objects2d;
 	public VideoSettings settings;
@@ -322,6 +325,7 @@ public abstract class StandardGame extends AbstractGame {
 		cam.begin();
 	}
 
+	@Override
 	public abstract void render();
 
 	public abstract void render2d();

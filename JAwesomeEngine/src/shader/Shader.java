@@ -145,7 +145,7 @@ public class Shader {
 			System.out.println("Argument type is Matrix4f");
 		} else if (argument instanceof Texture) {
 			uniformtypes.add(9);
-			uniformarguments.add((Texture) argument);
+			uniformarguments.add(argument);
 			System.out.println("Argument type is Texture");
 		}
 	}
@@ -276,12 +276,12 @@ public class Shader {
 		uniformnames.clear();
 	}
 
-	public int getArgumentID(String argumentname) {
-		return uniformnames.get(argumentname);
-	}
-
 	public Object getArgument(String argumentname) {
 		return uniformarguments.get(getArgumentID(argumentname));
+	}
+
+	public int getArgumentID(String argumentname) {
+		return uniformnames.get(argumentname);
 	}
 
 	public List<Object> getArguments() {

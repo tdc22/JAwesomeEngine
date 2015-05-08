@@ -41,6 +41,18 @@ public class GameCamera extends Camera implements Updateable {
 		init(inputs, minVAngle, maxVAngle, speed);
 	}
 
+	public float getFlySpeed() {
+		return speed;
+	}
+
+	public float getMaxVAngle() {
+		return maxVAngle;
+	}
+
+	public float getMinVAngle() {
+		return minVAngle;
+	}
+
 	private void init(InputManager inputs, float minVAngle, float maxVAngle,
 			float speed) {
 		this.minVAngle = minVAngle;
@@ -54,10 +66,6 @@ public class GameCamera extends Camera implements Updateable {
 		setupControls(inputs);
 	}
 
-	public float getFlySpeed() {
-		return speed;
-	}
-
 	public boolean isFlyCam() {
 		return flycam;
 	}
@@ -68,6 +76,29 @@ public class GameCamera extends Camera implements Updateable {
 
 	public boolean isInvertedY() {
 		return invertY;
+	}
+
+	@Override
+	public void rotation(float deltah, float deltav) {
+		hrot += deltah;
+		if (deltav > 0) {
+			if (vrot + deltav < maxVAngle) {
+				vrot += deltav;
+			} else {
+				vrot = maxVAngle;
+			}
+		} else {
+			if (vrot + deltav > minVAngle) {
+				vrot += deltav;
+			} else {
+				vrot = minVAngle;
+			}
+		}
+
+		if (hrot > 360 || hrot < -360) {
+			hrot %= 360;
+		}
+		rotateTo(vrot, hrot, 0);
 	}
 
 	public void setFlyCam(boolean fly) {
@@ -91,42 +122,12 @@ public class GameCamera extends Camera implements Updateable {
 		invertY = inverted;
 	}
 
-	public void setMinVAngle(float angle) {
-		minVAngle = angle;
-	}
-
 	public void setMaxVAngle(float angle) {
 		maxVAngle = angle;
 	}
 
-	public float getMinVAngle() {
-		return minVAngle;
-	}
-
-	public float getMaxVAngle() {
-		return maxVAngle;
-	}
-
-	public void rotation(float deltah, float deltav) {
-		hrot += deltah;
-		if (deltav > 0) {
-			if (vrot + deltav < maxVAngle) {
-				vrot += deltav;
-			} else {
-				vrot = maxVAngle;
-			}
-		} else {
-			if (vrot + deltav > minVAngle) {
-				vrot += deltav;
-			} else {
-				vrot = minVAngle;
-			}
-		}
-
-		if (hrot > 360 || hrot < -360) {
-			hrot %= 360;
-		}
-		rotateTo(vrot, hrot, 0);
+	public void setMinVAngle(float angle) {
+		minVAngle = angle;
 	}
 
 	private void setupControls(InputManager inputs) {
@@ -149,6 +150,7 @@ public class GameCamera extends Camera implements Updateable {
 		inputs.addEvent(right);
 	}
 
+	@Override
 	public void update(int delta) {
 		if (flycam) {
 			float mousedx = inputs.getMouseDX();

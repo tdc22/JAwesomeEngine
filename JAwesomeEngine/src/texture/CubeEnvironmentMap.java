@@ -54,6 +54,40 @@ public class CubeEnvironmentMap {
 		init(game, pos, resX, resY, zNear, zFar);
 	}
 
+	public void delete() {
+		cubemap.delete();
+		top.delete();
+		bottom.delete();
+		front.delete();
+		back.delete();
+		left.delete();
+		right.delete();
+	}
+
+	public FramebufferObject getFramebufferBack() {
+		return back;
+	}
+
+	public FramebufferObject getFramebufferBottom() {
+		return bottom;
+	}
+
+	public FramebufferObject getFramebufferFront() {
+		return front;
+	}
+
+	public FramebufferObject getFramebufferLeft() {
+		return left;
+	}
+
+	public FramebufferObject getFramebufferRight() {
+		return right;
+	}
+
+	public FramebufferObject getFramebufferTop() {
+		return top;
+	}
+
 	public int getTextureHeight() {
 		return height;
 	}
@@ -133,40 +167,6 @@ public class CubeEnvironmentMap {
 		right.updateTexture();
 
 		frustum.end();
-	}
-
-	public FramebufferObject getFramebufferTop() {
-		return top;
-	}
-
-	public FramebufferObject getFramebufferBottom() {
-		return bottom;
-	}
-
-	public FramebufferObject getFramebufferFront() {
-		return front;
-	}
-
-	public FramebufferObject getFramebufferBack() {
-		return back;
-	}
-
-	public FramebufferObject getFramebufferLeft() {
-		return left;
-	}
-
-	public FramebufferObject getFramebufferRight() {
-		return right;
-	}
-
-	public void delete() {
-		cubemap.delete();
-		top.delete();
-		bottom.delete();
-		front.delete();
-		back.delete();
-		left.delete();
-		right.delete();
 	}
 
 }

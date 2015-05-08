@@ -21,7 +21,7 @@ public class ViewFrustum {
 	public ViewFrustum(float width, float height, float zNear, float zFar,
 			float fovY) {
 		halfHeight = (float) (Math.tan(fovY / 360f * Math.PI) * zNear);
-		halfWidth = halfHeight * width / (float) height;
+		halfWidth = halfHeight * width / height;
 		this.zNear = zNear;
 		this.zFar = zFar;
 
