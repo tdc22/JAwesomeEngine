@@ -78,8 +78,8 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 
 	private ViewFrustum frustum;
 	private FloatBuffer identity;
-	boolean render2d = true;
-	boolean useFBO = true;
+	protected boolean render2d = true;
+	protected boolean useFBO = true;
 	protected List<Shader> postProcessing, postProcessing2;
 	protected int postProcessingIterations = 20; // TODO: Rethink that
 
