@@ -171,6 +171,7 @@ public class SupportFunctionTest extends StandardGame {
 			so4.updateShape();
 
 //			dirrenderer.setDirections(support1.updateShape());
+			support1.updateShape();
 			support2.updateShape();
 			support3.updateShape();
 			// support2.updateShape();

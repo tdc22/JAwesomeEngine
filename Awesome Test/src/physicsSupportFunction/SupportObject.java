@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import math.QuatMath;
 import objects.RigidBody;
 import objects.ShapedObject;
 import utils.GLConstants;
@@ -28,7 +29,7 @@ public class SupportObject extends ShapedObject {
 
 		List<Vector3f> result = new ArrayList<Vector3f>();
 		for (Vector3f v : v1) {
-			Vector3f res = rb.supportPoint(v);
+			Vector3f res = rb.supportPoint(QuatMath.transform(rb.getRotation(), v));
 			if (!result.contains(res))
 				result.add(res);
 		}
