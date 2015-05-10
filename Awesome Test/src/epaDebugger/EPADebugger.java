@@ -19,6 +19,7 @@ import physics.PhysicsSpace;
 import physicsSupportFunction.SupportDifferenceObject;
 import quaternion.Quaternionf;
 import shape.Box;
+import shape.Sphere;
 import utils.Debugger;
 import vector.Vector3f;
 import display.DisplayMode;
@@ -225,23 +226,40 @@ public class EPADebugger extends StandardGame {
 		// Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
 		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
-		Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
-		b1.setRotation(new Quaternionf(0.25023422f, -0.09507953f, -0.8314483f,
-				-0.48689112f));
-		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
+		// Test 2:
+//		Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
+//		b1.setRotation(new Quaternionf(0.25023422f, -0.09507953f, -0.8314483f,
+//				-0.48689112f));
+//		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
+//
+//		Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
+//		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+//
+//		// Fix transformation (usually done in PhysicsSpace-class of Engine
+//		rb1.setRotation(b1.getRotation());
+//		rb1.setTranslation(b1.getTranslation());
+//
+//		rb2.setRotation(s1.getRotation());
+//		rb2.setTranslation(s1.getTranslation());
+		
+		//Test 3
+		Sphere s1 = new Sphere(-0.033776358f, -2.2662005f, -0.03187143f, 0.5f, 36, 36);
+		s1.setRotation(new Quaternionf(1.0, -9.505826E-5, 1.3472783E-6, 2.0184624E-4));
+		rb1 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
-		Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
-		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+		Sphere s2 = new Sphere(0.11460103f, -3.118881f, -0.0043758536f, 0.5f, 36, 36);
+		s2.setRotation(new Quaternionf(0.99999946, 9.70781E-5, 2.2611355E-5, -0.0011489653));
+		rb2 = new RigidBody3(PhysicsShapeCreator.create(s2));
 
 		// Fix transformation (usually done in PhysicsSpace-class of Engine
-		rb1.setRotation(b1.getRotation());
-		rb1.setTranslation(b1.getTranslation());
+		rb1.setRotation(s1.getRotation());
+		rb1.setTranslation(s1.getTranslation());
 
-		rb2.setRotation(s1.getRotation());
-		rb2.setTranslation(s1.getTranslation());
+		rb2.setRotation(s2.getRotation());
+		rb2.setTranslation(s2.getTranslation());
 
 		// Visualize the support functions
-		support1 = new SupportDifferenceObject(b1, rb1, s1, rb2);
+		support1 = new SupportDifferenceObject(s1, rb1, s2, rb2);
 
 		// Compute simplex as starting point for EPA
 		GJK gjk = new GJK(new EmptyManifoldGenerator());
