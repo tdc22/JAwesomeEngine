@@ -62,6 +62,7 @@ public class Debugger {
 		}
 		return glerror;
 	}
+
 	Font font;
 	boolean showdata = false;
 	boolean showaxis = false;

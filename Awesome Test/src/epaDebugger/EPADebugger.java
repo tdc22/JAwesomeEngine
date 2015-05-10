@@ -18,7 +18,6 @@ import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import physicsSupportFunction.SupportDifferenceObject;
 import quaternion.Quaternionf;
-import shape.Box;
 import shape.Sphere;
 import utils.Debugger;
 import vector.Vector3f;
@@ -39,6 +38,7 @@ public class EPADebugger extends StandardGame {
 			normal = VecMath.normalize(VecMath.computeNormal(a, b, c));
 		}
 	}
+
 	PhysicsSpace space;
 	Debugger debugger;
 	RigidBody3 rb1, rb2;
@@ -59,6 +59,7 @@ public class EPADebugger extends StandardGame {
 	SupportMap<Vector3f> Sb;
 	private final float TOLERANCE = 0.001f;
 	private final int MAX_ITERATIONS = 50;
+
 	public void epaInit(List<Vector3f> gjksimplex) {
 		Sa = rb1;
 		Sb = rb2;
@@ -145,6 +146,7 @@ public class EPADebugger extends StandardGame {
 			return; // break replaced with return
 		}
 	}
+
 	/**
 	 * Finds up to three triangles adjacent to t.
 	 * 
@@ -211,7 +213,8 @@ public class EPADebugger extends StandardGame {
 		debugger = new Debugger(inputs,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		cam.setFlyCam(true);
-		cam.translateTo(0, 2, 20);
+		cam.translateTo(0, 1, 3);
+		cam.setFlySpeed(0.001f);
 
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
 				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
@@ -227,28 +230,33 @@ public class EPADebugger extends StandardGame {
 		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
 		// Test 2:
-//		Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
-//		b1.setRotation(new Quaternionf(0.25023422f, -0.09507953f, -0.8314483f,
-//				-0.48689112f));
-//		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
-//
-//		Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
-//		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
-//
-//		// Fix transformation (usually done in PhysicsSpace-class of Engine
-//		rb1.setRotation(b1.getRotation());
-//		rb1.setTranslation(b1.getTranslation());
-//
-//		rb2.setRotation(s1.getRotation());
-//		rb2.setTranslation(s1.getTranslation());
-		
-		//Test 3
-		Sphere s1 = new Sphere(-0.033776358f, -2.2662005f, -0.03187143f, 0.5f, 36, 36);
-		s1.setRotation(new Quaternionf(1.0, -9.505826E-5, 1.3472783E-6, 2.0184624E-4));
+		// Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
+		// b1.setRotation(new Quaternionf(0.25023422f, -0.09507953f,
+		// -0.8314483f,
+		// -0.48689112f));
+		// rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
+		//
+		// Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
+		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+		//
+		// // Fix transformation (usually done in PhysicsSpace-class of Engine
+		// rb1.setRotation(b1.getRotation());
+		// rb1.setTranslation(b1.getTranslation());
+		//
+		// rb2.setRotation(s1.getRotation());
+		// rb2.setTranslation(s1.getTranslation());
+
+		// Test 3
+		Sphere s1 = new Sphere(-0.033776358f, -2.2662005f, -0.03187143f, 0.5f,
+				36, 36);
+		s1.setRotation(new Quaternionf(1.0, -9.505826E-5, 1.3472783E-6,
+				2.0184624E-4));
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
-		Sphere s2 = new Sphere(0.11460103f, -3.118881f, -0.0043758536f, 0.5f, 36, 36);
-		s2.setRotation(new Quaternionf(0.99999946, 9.70781E-5, 2.2611355E-5, -0.0011489653));
+		Sphere s2 = new Sphere(0.11460103f, -3.118881f, -0.0043758536f, 0.5f,
+				36, 36);
+		s2.setRotation(new Quaternionf(0.99999946, 9.70781E-5, 2.2611355E-5,
+				-0.0011489653));
 		rb2 = new RigidBody3(PhysicsShapeCreator.create(s2));
 
 		// Fix transformation (usually done in PhysicsSpace-class of Engine

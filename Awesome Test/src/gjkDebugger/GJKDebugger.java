@@ -51,6 +51,7 @@ public class GJKDebugger extends StandardGame {
 			prerender();
 		}
 	}
+
 	private class Point extends ShapedObject {
 		public Point(Vector3f point, Color col) {
 			setRenderMode(GLConstants.POINTS);
@@ -59,6 +60,7 @@ public class GJKDebugger extends StandardGame {
 			prerender();
 		}
 	}
+
 	private class TriangleShape extends ShapedObject {
 		public TriangleShape(Vector3f a, Vector3f b, Vector3f c, Color col) {
 			setRenderMode(GLConstants.TRIANGLES);
@@ -69,6 +71,7 @@ public class GJKDebugger extends StandardGame {
 			prerender();
 		}
 	}
+
 	Simplex GJKsimplex;
 	boolean rebuildsimplex = false;
 	Debugger debugger;
@@ -376,6 +379,7 @@ public class GJKDebugger extends StandardGame {
 				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(stepGJK);
 	}
+
 	public void initGJK() {
 		// System.out.println("---------- New Loop: ----------");
 		simplex = new ArrayList<Vector3f>();

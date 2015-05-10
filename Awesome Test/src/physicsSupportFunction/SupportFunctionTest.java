@@ -33,7 +33,7 @@ public class SupportFunctionTest extends StandardGame {
 	Cylinder c1;
 	SupportObject so1, so2, so3, so4;
 	SupportDifferenceObject support1, support2, support3;
-//	DirectionRenderer dirrenderer;
+	// DirectionRenderer dirrenderer;
 	RigidBody3 rb1, rb2, rb3, rb4;
 	Debugger debugger;
 	InputEvent toggleMouseBind;
@@ -77,8 +77,8 @@ public class SupportFunctionTest extends StandardGame {
 		space.addRigidBody(c1, rb4);
 		addObject(c1);
 
-//		dirrenderer = new DirectionRenderer();
-//		addObject(dirrenderer);
+		// dirrenderer = new DirectionRenderer();
+		// addObject(dirrenderer);
 
 		so1 = new SupportObject(b1, rb1);
 		so2 = new SupportObject(b2, rb2);
@@ -170,7 +170,7 @@ public class SupportFunctionTest extends StandardGame {
 			so3.updateShape();
 			so4.updateShape();
 
-//			dirrenderer.setDirections(support1.updateShape());
+			// dirrenderer.setDirections(support1.updateShape());
 			support1.updateShape();
 			support2.updateShape();
 			support3.updateShape();

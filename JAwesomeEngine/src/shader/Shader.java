@@ -216,13 +216,16 @@ public class Shader {
 						((Vector4f) argument).w);
 				break;
 			case 6:
-				glUniformMatrix2fv(uniformlocation, false, (FloatBuffer) argument);
+				glUniformMatrix2fv(uniformlocation, false,
+						(FloatBuffer) argument);
 				break;
 			case 7:
-				glUniformMatrix3fv(uniformlocation, false, (FloatBuffer) argument);
+				glUniformMatrix3fv(uniformlocation, false,
+						(FloatBuffer) argument);
 				break;
 			case 8:
-				glUniformMatrix4fv(uniformlocation, false, (FloatBuffer) argument);
+				glUniformMatrix4fv(uniformlocation, false,
+						(FloatBuffer) argument);
 				break;
 			case 9:
 				switch (texturenumber) {
