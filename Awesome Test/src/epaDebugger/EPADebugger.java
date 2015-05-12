@@ -75,7 +75,7 @@ public class EPADebugger extends StandardGame {
 		faces.add(new Triangle(A, C, D));
 		faces.add(new Triangle(D, C, B));
 
-		simplex = new Simplex(faces);
+		simplex = new Simplex(faces, findClosestTriangle(faces));
 	}
 
 	public void epaStep() {
@@ -103,40 +103,37 @@ public class EPADebugger extends StandardGame {
 						System.out.println("NOTNULL " + a.a + "; " + a.b + "; "
 								+ a.c);
 				}
-				if (adjacents[0] != null) {
-					if (VecMath.dotproduct(VecMath.subtraction(p, t.a),
-							adjacents[0].normal) > 0) {
-						Vector3f adjD = findTheD(t.a, t.b, adjacents[0]);
-						faces.add(new Triangle(p, t.a, adjD));
-						faces.add(new Triangle(t.b, p, adjD));
-						faces.remove(adjacents[0]);
-					} else {
-						faces.add(new Triangle(t.a, t.b, p));
-					}
+				if (adjacents[0] != null
+						&& VecMath.dotproduct(VecMath.subtraction(p, t.a),
+								adjacents[0].normal) > 0) {
+					Vector3f adjD = findTheD(t.a, t.b, adjacents[0]);
+					faces.add(new Triangle(p, t.a, adjD));
+					faces.add(new Triangle(t.b, p, adjD));
+					faces.remove(adjacents[0]);
+				} else {
+					faces.add(new Triangle(t.a, t.b, p));
 				}
 
-				if (adjacents[1] != null) {
-					if (VecMath.dotproduct(VecMath.subtraction(p, t.b),
-							adjacents[1].normal) > 0) {
-						Vector3f adjD = findTheD(t.b, t.c, adjacents[1]);
-						faces.add(new Triangle(p, t.b, adjD));
-						faces.add(new Triangle(t.c, p, adjD));
-						faces.remove(adjacents[1]);
-					} else {
-						faces.add(new Triangle(t.b, t.c, p));
-					}
+				if (adjacents[1] != null
+						&& VecMath.dotproduct(VecMath.subtraction(p, t.b),
+								adjacents[1].normal) > 0) {
+					Vector3f adjD = findTheD(t.b, t.c, adjacents[1]);
+					faces.add(new Triangle(p, t.b, adjD));
+					faces.add(new Triangle(t.c, p, adjD));
+					faces.remove(adjacents[1]);
+				} else {
+					faces.add(new Triangle(t.b, t.c, p));
 				}
 
-				if (adjacents[2] != null) {
-					if (VecMath.dotproduct(VecMath.subtraction(p, t.c),
-							adjacents[2].normal) > 0) {
-						Vector3f adjD = findTheD(t.c, t.a, adjacents[2]);
-						faces.add(new Triangle(p, t.c, adjD));
-						faces.add(new Triangle(t.a, p, adjD));
-						faces.remove(adjacents[2]);
-					} else {
-						faces.add(new Triangle(t.c, t.a, p));
-					}
+				if (adjacents[2] != null
+						&& VecMath.dotproduct(VecMath.subtraction(p, t.c),
+								adjacents[2].normal) > 0) {
+					Vector3f adjD = findTheD(t.c, t.a, adjacents[2]);
+					faces.add(new Triangle(p, t.c, adjD));
+					faces.add(new Triangle(t.a, p, adjD));
+					faces.remove(adjacents[2]);
+				} else {
+					faces.add(new Triangle(t.c, t.a, p));
 				}
 			}
 		}
@@ -326,7 +323,7 @@ public class EPADebugger extends StandardGame {
 		if (inputs.isEventActive("Step EPA")) {
 			epaStep();
 			simplex.delete();
-			simplex = new Simplex(faces);
+			simplex = new Simplex(faces, findClosestTriangle(faces));
 		}
 		debugger.update();
 

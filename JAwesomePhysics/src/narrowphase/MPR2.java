@@ -28,5 +28,4 @@ public class MPR2 extends MinkowskiPortalRefinement<Vector2f> {
 		Vector2f deep =
 		return false;
 	}
-
 }

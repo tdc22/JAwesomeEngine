@@ -9,15 +9,18 @@ import utils.GLConstants;
 import epaDebugger.EPADebugger.Triangle;
 
 public class Simplex extends ShapedObject {
-	public Simplex(List<Triangle> triangles) {
+	public Simplex(List<Triangle> triangles, Triangle closest) {
 		setRenderMode(GLConstants.TRIANGLES);
 
 		int a = 0;
 		for (Triangle t : triangles) {
 			boolean oita = isOriginInsideTriangleArea(t);
-
-			Color c = oita ? Color.WHITE : Color.RED;
-
+			Color c;
+			if (t.equals(closest)) {
+				c = oita ? Color.BLUE : Color.CYAN;
+			} else {
+				c = oita ? Color.WHITE : Color.RED;
+			}
 			addVertex(t.a, c);
 			addVertex(t.b, c);
 			addVertex(t.c, c);
