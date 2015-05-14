@@ -63,16 +63,17 @@ public class FrictionTest extends StandardGame {
 
 	@Override
 	public void render() {
+		debugger.render3d();
+		debugger.begin();
 		renderScene();
+		debugger.end();
+		physicsdebug.render3d();
 	}
 
 	@Override
 	public void render2d() {
 		debugger.render2d(fps, objects.size(), objects2d.size());
-		debugger.begin();
 		render2dScene();
-		debugger.end();
-		physicsdebug.render2d();
 	}
 
 	@Override
@@ -83,7 +84,7 @@ public class FrictionTest extends StandardGame {
 				Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(q));
 				rb.setMass(1f);
-				rb.setInertia(new Quaternionf());
+				rb.setInertia(new Quaternionf(0.1f, 0, 0, 0));
 				space.addRigidBody(q, rb);
 				addObject(q);
 				tempdelta = 0;
@@ -92,7 +93,7 @@ public class FrictionTest extends StandardGame {
 				Sphere q = new Sphere(0, 10, 0, 0.5f, 36, 36);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(q));
 				rb.setMass(1f);
-				rb.setInertia(new Quaternionf());
+				rb.setInertia(new Quaternionf(0.1f, 0, 0, 0));
 				space.addRigidBody(q, rb);
 				addObject(q);
 				tempdelta = 0;

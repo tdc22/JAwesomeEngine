@@ -188,8 +188,6 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		for (RigidBody<?, ?, ?, ?> o : objects)
 			o.updateInverseRotation();
 
-		// System.out.println("Physics start");
-
 		broadphase.update();
 		overlaps = broadphase.getOverlaps();
 
@@ -208,7 +206,6 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 									overlap.getSecond());
 					manifoldmanager.add(new CollisionManifold<L>(overlap,
 							contactManifold));
-					// System.out.println("COLLision");
 				}
 		}
 		for (int i = 0; i < resolutionIterations; i++)

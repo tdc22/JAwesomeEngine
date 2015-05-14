@@ -18,7 +18,7 @@ import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import physicsSupportFunction.SupportDifferenceObject;
 import quaternion.Quaternionf;
-import shape.Sphere;
+import shape.Box;
 import utils.Debugger;
 import vector.Vector3f;
 import display.DisplayMode;
@@ -65,6 +65,9 @@ public class EPADebugger extends StandardGame {
 		Sb = rb2;
 
 		faces = new ArrayList<Triangle>();
+
+		System.out.println(gjksimplex.get(0) + "; " + gjksimplex.get(1) + "; "
+				+ gjksimplex.get(2));
 
 		Vector3f A = gjksimplex.get(3);
 		Vector3f B = gjksimplex.get(2);
@@ -244,16 +247,38 @@ public class EPADebugger extends StandardGame {
 		// rb2.setTranslation(s1.getTranslation());
 
 		// Test 3
-		Sphere s1 = new Sphere(-0.033776358f, -2.2662005f, -0.03187143f, 0.5f,
-				36, 36);
-		s1.setRotation(new Quaternionf(1.0, -9.505826E-5, 1.3472783E-6,
-				2.0184624E-4));
+		// Sphere s1 = new Sphere(-0.033776358f, -2.2662005f, -0.03187143f,
+		// 0.5f,
+		// 36, 36);
+		// s1.setRotation(new Quaternionf(1.0, -9.505826E-5, 1.3472783E-6,
+		// 2.0184624E-4));
+		// rb1 = new RigidBody3(PhysicsShapeCreator.create(s1));
+		//
+		// Sphere s2 = new Sphere(0.11460103f, -3.118881f, -0.0043758536f, 0.5f,
+		// 36, 36);
+		// s2.setRotation(new Quaternionf(0.99999946, 9.70781E-5, 2.2611355E-5,
+		// -0.0011489653));
+		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s2));
+
+		/*
+		 * output: 4; Vector3f[0.5908022, 1.0959291, -0.57619476];
+		 * Vector3f[-0.03338337, -1.4683976, -0.78323746]; Vector3f[-1.0176206,
+		 * 0.1312356, 0.26089716]; Vector3f[1.1122894, -0.14214492,
+		 * -0.13434744];|; Vector3f[8.088608, -3.203665, -7.5166597];
+		 * Quaternionf[0.8605771, 0.37082738, 0.0139486715, -0.34885654];
+		 * Vector3f[8.280044, -3.325496, -6.407919]; Quaternionf[0.9584382,
+		 * 0.028309878, 0.061130494, -0.27723733] ERROR
+		 */
+
+		// Test 4
+		Box s1 = new Box(8.088608f, -3.203665f, -7.5166597f, 0.5f, 0.5f, 0.5f);
+		s1.setRotation(new Quaternionf(0.8605771, 0.37082738, 0.0139486715,
+				-0.34885654));
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
-		Sphere s2 = new Sphere(0.11460103f, -3.118881f, -0.0043758536f, 0.5f,
-				36, 36);
-		s2.setRotation(new Quaternionf(0.99999946, 9.70781E-5, 2.2611355E-5,
-				-0.0011489653));
+		Box s2 = new Box(8.280044f, -3.325496f, -6.407919f, 0.5f, 0.5f, 0.5f);
+		s2.setRotation(new Quaternionf(0.9584382, 0.028309878, 0.061130494,
+				-0.27723733));
 		rb2 = new RigidBody3(PhysicsShapeCreator.create(s2));
 
 		// Fix transformation (usually done in PhysicsSpace-class of Engine
