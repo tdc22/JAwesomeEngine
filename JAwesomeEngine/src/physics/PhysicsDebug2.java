@@ -138,11 +138,11 @@ public class PhysicsDebug2 {
 				float velAlongNormal = VecMath.dotproduct(rv, normal);
 				if (velAlongNormal <= 0) {
 					float e = Math.min(A.getRestitution(), B.getRestitution());
-					float ca = (float) Math.pow(
-							VecMath.crossproduct(contactA, normal), 2)
+					float ca = (float) VecMath.crossproduct(contactA, normal)
+							* VecMath.crossproduct(contactA, normal)
 							* A.getInverseInertia().getf(0, 0);
-					float cb = (float) Math.pow(
-							VecMath.crossproduct(contactB, normal), 2)
+					float cb = (float) VecMath.crossproduct(contactB, normal)
+							* VecMath.crossproduct(contactB, normal)
 							* B.getInverseInertia().getf(0, 0);
 					float j = (-(1 + e) * velAlongNormal)
 							/ (A.getInverseMass() + B.getInverseMass() + ca + cb);

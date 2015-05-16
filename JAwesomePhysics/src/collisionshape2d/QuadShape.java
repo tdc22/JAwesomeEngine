@@ -2,18 +2,27 @@ package collisionshape2d;
 
 import math.ComplexMath;
 import math.VecMath;
+import matrix.Matrix1f;
 import objects.CollisionShape;
 import objects.CollisionShape2;
+import objects.InertiaCalculator;
 import objects.SupportCalculator;
 import quaternion.Complexf;
 import shapedata2d.QuadStructure;
 import vector.Vector2f;
 
 public class QuadShape extends CollisionShape2 implements QuadStructure {
-	protected class QuadSupport implements SupportCalculator<Vector2f> {
-		private CollisionShape<Vector2f, Complexf> collisionshape;
+	protected class QuadInertia implements InertiaCalculator<Matrix1f> {
+		@Override
+		public Matrix1f calculateInertia(float mass) {
+			return new Matrix1f(1);
+		}
+	}
 
-		public QuadSupport(CollisionShape<Vector2f, Complexf> cs) {
+	protected class QuadSupport implements SupportCalculator<Vector2f> {
+		private CollisionShape<Vector2f, Complexf, Matrix1f> collisionshape;
+
+		public QuadSupport(CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 			collisionshape = cs;
 		}
 
@@ -65,8 +74,13 @@ public class QuadShape extends CollisionShape2 implements QuadStructure {
 	}
 
 	@Override
+	public InertiaCalculator<Matrix1f> createInertiaCalculator() {
+		return new QuadInertia();
+	}
+
+	@Override
 	public SupportCalculator<Vector2f> createSupportCalculator(
-			CollisionShape<Vector2f, Complexf> cs) {
+			CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 		return new QuadSupport(cs);
 	}
 

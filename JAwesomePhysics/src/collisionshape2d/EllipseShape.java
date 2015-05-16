@@ -1,18 +1,27 @@
 package collisionshape2d;
 
 import math.ComplexMath;
+import matrix.Matrix1f;
 import objects.CollisionShape;
 import objects.CollisionShape2;
+import objects.InertiaCalculator;
 import objects.SupportCalculator;
 import quaternion.Complexf;
 import shapedata2d.EllipseStructure;
 import vector.Vector2f;
 
 public class EllipseShape extends CollisionShape2 implements EllipseStructure {
-	protected class EllipseSupport implements SupportCalculator<Vector2f> {
-		private CollisionShape<Vector2f, Complexf> collisionshape;
+	protected class EllipseInertia implements InertiaCalculator<Matrix1f> {
+		@Override
+		public Matrix1f calculateInertia(float mass) {
+			return new Matrix1f(1);
+		}
+	}
 
-		public EllipseSupport(CollisionShape<Vector2f, Complexf> cs) {
+	protected class EllipseSupport implements SupportCalculator<Vector2f> {
+		private CollisionShape<Vector2f, Complexf, Matrix1f> collisionshape;
+
+		public EllipseSupport(CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 			collisionshape = cs;
 		}
 
@@ -56,8 +65,13 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 	}
 
 	@Override
+	public InertiaCalculator<Matrix1f> createInertiaCalculator() {
+		return new EllipseInertia();
+	}
+
+	@Override
 	public SupportCalculator<Vector2f> createSupportCalculator(
-			CollisionShape<Vector2f, Complexf> cs) {
+			CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 		return new EllipseSupport(cs);
 	}
 

@@ -2,6 +2,9 @@ package matrix;
 
 import java.nio.FloatBuffer;
 
+import quaternion.Complex;
+import quaternion.Complexd;
+import quaternion.Complexf;
 import vector.Vector2;
 import vector.Vector2d;
 
@@ -267,6 +270,40 @@ public class Matrix2d extends Matrix2 {
 	public void storeTranspose(FloatBuffer buf) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Complex toComplex() {
+		double tr = matrix[0][0] + matrix[1][1];
+		if (tr > 0) {
+			double S = Math.sqrt(tr + 1.0) * 2;
+			return new Complexd(0.25 * S, (matrix[1][0] - matrix[0][1]) / S);
+		} else {
+			double S = Math.sqrt(1.0 + matrix[0][0] - matrix[1][1] - 0) * 2;
+			return new Complexd((matrix[0][1] + matrix[1][0]) / S, 0.25 * S);
+		}
+	}
+
+	@Override
+	public Complex toComplexDiagonal() {
+		return new Complexd(Math.sqrt(1 + matrix[0][0] + matrix[1][1]) / 2, 0);
+	}
+
+	@Override
+	public Complexf toComplexDiagonalf() {
+		return new Complexf(Math.sqrt(1 + matrix[0][0] + matrix[1][1]) / 2, 0);
+	}
+
+	@Override
+	public Complexf toComplexf() {
+		float tr = (float) (matrix[0][0] + matrix[1][1]);
+		if (tr > 0) {
+			float S = (float) (Math.sqrt(tr + 1.0) * 2);
+			return new Complexf(0.25 * S, (matrix[1][0] - matrix[0][1]) / S);
+		} else {
+			float S = (float) (Math.sqrt(1.0 + matrix[0][0] - matrix[1][1] - 0) * 2);
+			return new Complexf((matrix[0][1] + matrix[1][0]) / S, 0.25 * S);
+		}
 	}
 
 	/**

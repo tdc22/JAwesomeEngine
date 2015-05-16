@@ -60,6 +60,8 @@ public class BasicTest extends StandardGame {
 
 		Box ground = new Box(0, -5, 0, 10, 1, 10);
 		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
+		rb.getLinearVelocity();
+
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 

@@ -1,6 +1,7 @@
 package miscTests;
 
 import math.QuatMath;
+import matrix.Matrix3f;
 import quaternion.Quaternionf;
 import vector.Vector3f;
 
@@ -11,6 +12,14 @@ public class QuaternionTest2 {
 		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/
 		Quaternionf q1 = new Quaternionf(0.7071, 0.7071, 0, 0);
 		System.out.println(q1.toMatrix());
+
+		System.out.println();
+
+		// Matrix to Quaternion
+		// source:
+		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/
+		Matrix3f m = new Matrix3f(1, 0, 0, 0, 0, -1, 0, 1, 0);
+		System.out.println(m.toQuaternion());
 
 		System.out.println();
 

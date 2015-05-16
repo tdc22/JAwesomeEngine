@@ -1,6 +1,6 @@
 package quaternion;
 
-import matrix.Matrix3d;
+import matrix.Matrix3;
 import matrix.Matrix3f;
 import vector.Vector3;
 
@@ -196,7 +196,7 @@ public abstract class Quaternion implements Rotation {
 	 * 
 	 * @return rotation matrix
 	 */
-	public abstract Matrix3d toMatrix();
+	public abstract Matrix3 toMatrix();
 
 	/**
 	 * @see Quaternion#toMatrix()

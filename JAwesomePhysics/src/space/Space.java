@@ -33,6 +33,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> overlaps;
 	protected List<Constraint<L>> constraints;
 	protected L globalForce;
+	protected L globalGravitation;
 	protected int resolutionIterations = 25;
 	protected int constraintResolutionIterations = 25;
 	protected boolean cullStaticOverlaps = true;

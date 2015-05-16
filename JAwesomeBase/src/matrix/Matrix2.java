@@ -1,5 +1,7 @@
 package matrix;
 
+import quaternion.Complex;
+import quaternion.Complexf;
 import vector.Vector2;
 
 /**
@@ -40,4 +42,12 @@ public abstract class Matrix2 extends Matrix {
 	 * @see Matrix1#set(Matrix1)
 	 */
 	public abstract void set(Matrix2 mat);
+
+	public abstract Complex toComplex();
+
+	public abstract Complex toComplexDiagonal();
+
+	public abstract Complexf toComplexDiagonalf();
+
+	public abstract Complexf toComplexf();
 }

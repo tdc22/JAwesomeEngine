@@ -6,9 +6,9 @@ public abstract class InputReader {
 	public abstract int getGamepadCount();
 
 	public float getGamepadStickValue(int gamepad, int sticknum) {
-		return (float) Math.sqrt(Math.pow(
-				getGamepadStickValue(gamepad, sticknum, "x"), 2)
-				+ Math.pow(getGamepadStickValue(gamepad, sticknum, "y"), 2));
+		float vx = getGamepadStickValue(gamepad, sticknum, "x");
+		float vy = getGamepadStickValue(gamepad, sticknum, "y");
+		return (float) Math.sqrt(vx * vx + vy * vy);
 	}
 
 	public abstract float getGamepadStickValue(int gamepad, int sticknum,

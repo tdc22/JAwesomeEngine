@@ -2,6 +2,9 @@ package matrix;
 
 import java.nio.FloatBuffer;
 
+import quaternion.Quaternion;
+import quaternion.Quaterniond;
+import quaternion.Quaternionf;
 import vector.Vector3;
 import vector.Vector3d;
 
@@ -353,6 +356,78 @@ public class Matrix3d extends Matrix3 {
 	public void storeTranspose(FloatBuffer buf) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Quaternion toQuaternion() {
+		double tr = matrix[0][0] + matrix[1][1] + matrix[2][2];
+		if (tr > 0) {
+			double S = Math.sqrt(tr + 1.0) * 2;
+			return new Quaterniond(0.25 * S, (matrix[2][1] - matrix[1][2]) / S,
+					(matrix[0][2] - matrix[2][0]) / S,
+					(matrix[1][0] - matrix[0][1]) / S);
+		} else if ((matrix[0][0] > matrix[1][1])
+				& (matrix[0][0] > matrix[2][2])) {
+			double S = Math.sqrt(1.0 + matrix[0][0] - matrix[1][1]
+					- matrix[2][2]) * 2;
+			return new Quaterniond((matrix[2][1] - matrix[1][2]) / S, 0.25 * S,
+					(matrix[0][1] + matrix[1][0]) / S,
+					(matrix[0][2] + matrix[2][0]) / S);
+		} else if (matrix[1][1] > matrix[2][2]) {
+			double S = Math.sqrt(1.0 + matrix[1][1] - matrix[0][0]
+					- matrix[2][2]) * 2;
+			return new Quaterniond((matrix[0][2] - matrix[2][0]) / S,
+					(matrix[0][1] + matrix[1][0]) / S, 0.25 * S,
+					(matrix[1][2] + matrix[2][1]) / S);
+		} else {
+			double S = Math.sqrt(1.0 + matrix[2][2] - matrix[0][0]
+					- matrix[1][1]) * 2;
+			return new Quaterniond((matrix[1][0] - matrix[0][1]) / S,
+					(matrix[0][2] + matrix[2][0]) / S,
+					(matrix[1][2] + matrix[2][1]) / S, 0.25 * S);
+		}
+	}
+
+	@Override
+	public Quaternion toQuaternionDiagonal() {
+		return new Quaterniond(Math.sqrt(1 + matrix[0][0] + matrix[1][1]
+				+ matrix[2][2]) / 2, 0, 0, 0);
+	}
+
+	@Override
+	public Quaternionf toQuaternionDiagonalf() {
+		return new Quaternionf(Math.sqrt(1 + matrix[0][0] + matrix[1][1]
+				+ matrix[2][2]) / 2, 0, 0, 0);
+	}
+
+	@Override
+	public Quaternionf toQuaternionf() {
+		float tr = (float) (matrix[0][0] + matrix[1][1] + matrix[2][2]);
+		if (tr > 0) {
+			float S = (float) Math.sqrt(tr + 1.0) * 2;
+			return new Quaternionf(0.25 * S, (matrix[2][1] - matrix[1][2]) / S,
+					(matrix[0][2] - matrix[2][0]) / S,
+					(matrix[1][0] - matrix[0][1]) / S);
+		} else if ((matrix[0][0] > matrix[1][1])
+				& (matrix[0][0] > matrix[2][2])) {
+			float S = (float) Math.sqrt(1.0 + matrix[0][0] - matrix[1][1]
+					- matrix[2][2]) * 2;
+			return new Quaternionf((matrix[2][1] - matrix[1][2]) / S, 0.25 * S,
+					(matrix[0][1] + matrix[1][0]) / S,
+					(matrix[0][2] + matrix[2][0]) / S);
+		} else if (matrix[1][1] > matrix[2][2]) {
+			float S = (float) Math.sqrt(1.0 + matrix[1][1] - matrix[0][0]
+					- matrix[2][2]) * 2;
+			return new Quaternionf((matrix[0][2] - matrix[2][0]) / S,
+					(matrix[0][1] + matrix[1][0]) / S, 0.25 * S,
+					(matrix[1][2] + matrix[2][1]) / S);
+		} else {
+			float S = (float) Math.sqrt(1.0 + matrix[2][2] - matrix[0][0]
+					- matrix[1][1]) * 2;
+			return new Quaternionf((matrix[1][0] - matrix[0][1]) / S,
+					(matrix[0][2] + matrix[2][0]) / S,
+					(matrix[1][2] + matrix[2][1]) / S, 0.25 * S);
+		}
 	}
 
 	/**

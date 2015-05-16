@@ -1,8 +1,10 @@
 package collisionshape;
 
 import math.QuatMath;
+import matrix.Matrix3f;
 import objects.CollisionShape;
 import objects.CollisionShape3;
+import objects.InertiaCalculator;
 import objects.SupportCalculator;
 import quaternion.Quaternionf;
 import shapedata.CylinderStructure;
@@ -10,10 +12,24 @@ import vector.Vector2f;
 import vector.Vector3f;
 
 public class CylinderShape extends CollisionShape3 implements CylinderStructure {
-	protected class CylinderSupport implements SupportCalculator<Vector3f> {
-		private CollisionShape<Vector3f, Quaternionf> collisionshape;
+	protected class CylinderInertia implements InertiaCalculator<Quaternionf> {
+		@Override
+		public Quaternionf calculateInertia(float mass) {
+			float fmass = mass / 12f;
+			float height = halfheight * 2;
+			Matrix3f inertiaMatrix = new Matrix3f(fmass
+					* (3 * radius * radius + height * height), 0, 0, 0, fmass
+					* (3 * radius * radius + height * height), 0, 0, 0, 0.5f
+					* mass * radius * radius);
+			return inertiaMatrix.toQuaternionDiagonalf();
+		}
+	}
 
-		public CylinderSupport(CollisionShape<Vector3f, Quaternionf> cs) {
+	protected class CylinderSupport implements SupportCalculator<Vector3f> {
+		private CollisionShape<Vector3f, Quaternionf, Quaternionf> collisionshape;
+
+		public CylinderSupport(
+				CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 			collisionshape = cs;
 		}
 
@@ -60,8 +76,13 @@ public class CylinderShape extends CollisionShape3 implements CylinderStructure 
 	}
 
 	@Override
+	public InertiaCalculator<Quaternionf> createInertiaCalculator() {
+		return new CylinderInertia();
+	}
+
+	@Override
 	public SupportCalculator<Vector3f> createSupportCalculator(
-			CollisionShape<Vector3f, Quaternionf> cs) {
+			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		return new CylinderSupport(cs);
 	}
 

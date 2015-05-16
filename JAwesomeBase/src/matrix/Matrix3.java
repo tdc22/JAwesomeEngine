@@ -1,5 +1,7 @@
 package matrix;
 
+import quaternion.Quaternion;
+import quaternion.Quaternionf;
 import vector.Vector3;
 
 /**
@@ -40,4 +42,12 @@ public abstract class Matrix3 extends Matrix {
 	 * @see Matrix1#set(Matrix1)
 	 */
 	public abstract void set(Matrix3 mat);
+
+	public abstract Quaternion toQuaternion();
+
+	public abstract Quaternion toQuaternionDiagonal();
+
+	public abstract Quaternionf toQuaternionDiagonalf();
+
+	public abstract Quaternionf toQuaternionf();
 }

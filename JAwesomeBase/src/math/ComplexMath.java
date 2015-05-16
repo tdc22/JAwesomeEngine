@@ -25,6 +25,30 @@ public class ComplexMath {
 				+ c2.getImaginaryf());
 	}
 
+	public static Complexd conjugate(Complex c) {
+		return new Complexd(c.getReal(), -c.getImaginary());
+	}
+
+	public static Complexf conjugate(Complexf c) {
+		return new Complexf(c.getRealf(), -c.getImaginaryf());
+	}
+
+	public static Complexd invert(Complex c) {
+		Complexd conj = conjugate(c);
+		double mag = Math.abs(conj.magnitudeSquared());
+		if (mag != 0)
+			conj.scale(1 / mag);
+		return conj;
+	}
+
+	public static Complexf invert(Complexf c) {
+		Complexf conj = conjugate(c);
+		float mag = (float) Math.abs(conj.magnitudeSquared());
+		if (mag != 0)
+			conj.scale(1 / mag);
+		return conj;
+	}
+
 	public static Complexd multiplication(Complex c1, Complex c2) {
 		return new Complexd(c1.getReal() * c2.getReal() - c1.getImaginary()
 				* c2.getImaginary(), c1.getReal() * c2.getImaginary()

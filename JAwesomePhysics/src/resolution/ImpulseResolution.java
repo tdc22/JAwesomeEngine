@@ -111,10 +111,10 @@ public class ImpulseResolution implements CollisionResolution {
 			return;
 
 		float e = Math.min(A.getRestitution(), B.getRestitution());
-		float ca = (float) Math.pow(VecMath.crossproduct(contactA, normal), 2)
-				* A.getInverseInertia().getf(0, 0);
-		float cb = (float) Math.pow(VecMath.crossproduct(contactB, normal), 2)
-				* B.getInverseInertia().getf(0, 0);
+		float crossA = VecMath.crossproduct(contactA, normal);
+		float ca = crossA * crossA * A.getInverseInertia().getf(0, 0);
+		float crossB = VecMath.crossproduct(contactB, normal);
+		float cb = crossB * crossB * B.getInverseInertia().getf(0, 0);
 		// Vector2f ca =
 		// VecMath.scale(VecMath.crossproduct(VecMath.crossproduct(contactA,
 		// normal), contactA), A.getInverseInertia().getf(0, 0));

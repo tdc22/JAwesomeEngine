@@ -27,6 +27,15 @@ public class QuatMath {
 				+ q2.getQ3f());
 	}
 
+	public static Quaterniond conjugate(Quaternion q) {
+		return new Quaterniond(q.getQ0(), -q.getQ1(), -q.getQ2(), -q.getQ3());
+	}
+
+	public static Quaternionf conjugate(Quaternionf q) {
+		return new Quaternionf(q.getQ0f(), -q.getQ1f(), -q.getQ2f(),
+				-q.getQ3f());
+	}
+
 	public static double dotproduct(Quaternion v1, Quaternion v2) {
 		return v1.getQ0() * v2.getQ0() + v1.getQ1() * v2.getQ1() + v1.getQ2()
 				* v2.getQ2() + v1.getQ3() * v2.getQ3();
@@ -35,14 +44,6 @@ public class QuatMath {
 	public static float dotproduct(Quaternionf v1, Quaternionf v2) {
 		return v1.getQ0f() * v2.getQ0f() + v1.getQ1f() * v2.getQ1f()
 				+ v1.getQ2f() * v2.getQ2f() + v1.getQ3f() * v2.getQ3f();
-	}
-
-	public static Quaterniond lerp(Quaternion q1, Quaternion q2, double t) {
-		return normalize(addition(scale(q1, 1 - t), scale(q2, t)));
-	}
-
-	public static Quaternionf lerp(Quaternionf q1, Quaternionf q2, float t) {
-		return normalize(addition(scale(q1, 1 - t), scale(q2, t)));
 	}
 
 	// public static Quaterniond multiplication(Quaternion q1, Quaternion q2) {
@@ -57,6 +58,30 @@ public class QuatMath {
 	// * q2.getQ1f(), q1.getQ2f() * q2.getQ2f(), q1.getQ3f()
 	// * q2.getQ3f());
 	// }
+
+	public static Quaterniond invert(Quaternion q) {
+		Quaterniond conj = conjugate(q);
+		double mag = Math.abs(conj.magnitudeSquared());
+		if (mag != 0)
+			conj.scale(1 / mag);
+		return conj;
+	}
+
+	public static Quaternionf invert(Quaternionf q) {
+		Quaternionf conj = conjugate(q);
+		float mag = (float) Math.abs(conj.magnitudeSquared());
+		if (mag != 0)
+			conj.scale(1 / mag);
+		return conj;
+	}
+
+	public static Quaterniond lerp(Quaternion q1, Quaternion q2, double t) {
+		return normalize(addition(scale(q1, 1 - t), scale(q2, t)));
+	}
+
+	public static Quaternionf lerp(Quaternionf q1, Quaternionf q2, float t) {
+		return normalize(addition(scale(q1, 1 - t), scale(q2, t)));
+	}
 
 	public static Quaterniond multiplication(Quaternion q1, Quaternion q2) {
 		return new Quaterniond(q1.getQ0() * q2.getQ0() - q1.getQ1()

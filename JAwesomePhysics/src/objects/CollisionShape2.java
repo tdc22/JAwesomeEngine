@@ -2,11 +2,12 @@ package objects;
 
 import math.ComplexMath;
 import math.VecMath;
+import matrix.Matrix1f;
 import quaternion.Complexf;
 import vector.Vector2f;
 
 public abstract class CollisionShape2 extends
-		CollisionShape<Vector2f, Complexf> {
+		CollisionShape<Vector2f, Complexf, Matrix1f> {
 
 	public CollisionShape2() {
 		super();

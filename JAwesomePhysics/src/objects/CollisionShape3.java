@@ -6,7 +6,7 @@ import quaternion.Quaternionf;
 import vector.Vector3f;
 
 public abstract class CollisionShape3 extends
-		CollisionShape<Vector3f, Quaternionf> {
+		CollisionShape<Vector3f, Quaternionf, Quaternionf> {
 
 	public CollisionShape3() {
 		super();

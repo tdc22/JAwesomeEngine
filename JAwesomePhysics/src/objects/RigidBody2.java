@@ -69,8 +69,13 @@ public class RigidBody2 extends
 	}
 
 	@Override
+	public InertiaCalculator<Matrix1f> createInertiaCalculator() {
+		return null;
+	}
+
+	@Override
 	public SupportCalculator<Vector2f> createSupportCalculator(
-			CollisionShape<Vector2f, Complexf> cs) {
+			CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 		return null;
 	}
 
@@ -87,6 +92,13 @@ public class RigidBody2 extends
 	@Override
 	public Vector2f getGlobalMinAABB() {
 		return VecMath.addition(aabb.getMin(), getTranslation2());
+	}
+
+	@Override
+	public Matrix1f getInertia() {
+		Matrix1f inertia = new Matrix1f(invinertia);
+		inertia.invert();
+		return inertia;
 	}
 
 	private void init() {

@@ -62,8 +62,13 @@ public class RigidBody3 extends
 	}
 
 	@Override
+	public InertiaCalculator<Quaternionf> createInertiaCalculator() {
+		return null;
+	}
+
+	@Override
 	public SupportCalculator<Vector3f> createSupportCalculator(
-			CollisionShape<Vector3f, Quaternionf> cs) {
+			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		return null;
 	}
 
@@ -80,6 +85,11 @@ public class RigidBody3 extends
 	@Override
 	public Vector3f getGlobalMinAABB() {
 		return VecMath.addition(aabb.getMin(), getTranslation());
+	}
+
+	@Override
+	public Quaternionf getInertia() {
+		return QuatMath.invert(invinertia);
 	}
 
 	private void init() {

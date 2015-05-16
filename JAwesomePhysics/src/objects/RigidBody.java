@@ -11,7 +11,7 @@ import vector.Vector;
  */
 
 public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends Rotation, A3 extends Rotation>
-		extends CollisionShape<L, A2> {
+		extends CollisionShape<L, A2, A3> {
 	float invMass, staticfriction, dynamicfriction, rollingfriction,
 			restitution, lineardamping, angulardamping;
 	L linearfactor, linearvelocity, forceaccumulator;
@@ -23,7 +23,7 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 		init();
 	}
 
-	public RigidBody(CollisionShape<L, A2> cs) {
+	public RigidBody(CollisionShape<L, A2, A3> cs) {
 		super(cs);
 		init();
 	}
@@ -39,6 +39,10 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 	public abstract void applyTorque(A1 torque);
 
 	public abstract void applyTorqueImpulse(A1 torque);
+
+	public void calculateInertia() {
+		setInertia(calculateInertia(getMass()));
+	}
 
 	public void clearForces() {
 		forceaccumulator.setAll(0);
@@ -64,6 +68,8 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 	public L getForceAccumulator() {
 		return forceaccumulator;
 	}
+
+	public abstract A3 getInertia();
 
 	public A3 getInverseInertia() {
 		return invinertia;
@@ -113,8 +119,8 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 		staticfriction = 0.0f;
 		dynamicfriction = 0.0f;
 		rollingfriction = 0.0f;
-		lineardamping = 0.0f;
-		angulardamping = 0.0f;
+		lineardamping = 0.05f;
+		angulardamping = 0.05f;
 		/*
 		 * invMass = 0; restitution = 0.5f; staticfriction = 0.3f;
 		 * dynamicfriction = 0.2f; rollingfriction = 0.01f; lineardamping =
