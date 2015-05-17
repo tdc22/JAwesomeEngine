@@ -111,6 +111,14 @@ public class RigidBody2 extends
 		invinertia = new Matrix1f(0);
 	}
 
+	public void setAngularVelocity(float velocity) {
+		angularvelocity.set(velocity);
+	}
+
+	public void setLinearVelocity(float velocityX, float velocityY) {
+		linearvelocity.set(velocityX, velocityY);
+	}
+
 	@Override
 	public Vector2f supportPoint(Vector2f direction) {
 		return VecMath.addition(supportPointRelative(direction),

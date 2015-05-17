@@ -22,6 +22,7 @@ public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> 
 		super(integrationsolver, broadphase, narrowphase, collisionresolution,
 				positionalcorrection, manifoldmanager);
 		globalForce = new Vector3f();
+		globalGravitation = new Vector3f();
 	}
 
 	@Override
@@ -33,7 +34,8 @@ public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> 
 	@Override
 	protected void integrate(float delta) {
 		for (RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> o : objects)
-			integrationsolver.integrate3((RigidBody3) o, delta);
+			integrationsolver.integrate3((RigidBody3) o, delta,
+					globalGravitation);
 	}
 
 	@Override

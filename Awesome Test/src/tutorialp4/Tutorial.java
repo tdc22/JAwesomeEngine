@@ -74,7 +74,7 @@ public class Tutorial extends StandardGame {
 				new EPA()), new LinearImpulseResolution(),
 				new ProjectionCorrection(0.02f, 0.0f),
 				new MultiPointManifoldManager());
-		space.setGlobalForce(new Vector3f(0, -8, 0));
+		space.setGlobalGravitation(new Vector3f(0, -0.01f, 0));
 
 		playerbody = new RigidBody3(PhysicsShapeCreator.create(player));
 		playerbody.setMass(1f);

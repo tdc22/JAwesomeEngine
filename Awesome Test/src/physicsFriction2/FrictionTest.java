@@ -43,7 +43,7 @@ public class FrictionTest extends StandardGame {
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
 				new EPA()), new ImpulseResolution(), new ProjectionCorrection(
 				0.01f), new MultiPointManifoldManager());
-		space.setGlobalForce(new Vector3f(0, -5, 0));
+		space.setGlobalGravitation(new Vector3f(0, -0.08f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, font, cam);
@@ -83,7 +83,7 @@ public class FrictionTest extends StandardGame {
 			if (inputs.isMouseButtonDown("0")) {
 				Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(q));
-				rb.setMass(1f);
+				rb.setMass(0.1f);
 				rb.setInertia(new Quaternionf(0.1f, 0, 0, 0));
 				space.addRigidBody(q, rb);
 				addObject(q);
@@ -92,7 +92,7 @@ public class FrictionTest extends StandardGame {
 			if (inputs.isMouseButtonDown("1")) {
 				Sphere q = new Sphere(0, 10, 0, 0.5f, 36, 36);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(q));
-				rb.setMass(1f);
+				rb.setMass(0.1f);
 				rb.setInertia(new Quaternionf(0.1f, 0, 0, 0));
 				space.addRigidBody(q, rb);
 				addObject(q);

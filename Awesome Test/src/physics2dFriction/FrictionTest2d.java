@@ -34,7 +34,7 @@ public class FrictionTest2d extends StandardGame {
 				new EPA2()), new LinearImpulseResolution(),
 				new ProjectionCorrection(),
 				new SimpleManifoldManager<Vector2f>());
-		space.setGlobalForce(new Vector2f(0, 100));
+		space.setGlobalGravitation(new Vector2f(0, 2));
 
 		Quad ground = new Quad(400, 550, 300, 20);
 		RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(ground));

@@ -24,6 +24,7 @@ public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 		super(integrationsolver, broadphase, narrowphase, collisionresolution,
 				positionalcorrection, manifoldmanager);
 		globalForce = new Vector2f();
+		globalGravitation = new Vector2f();
 	}
 
 	@Override
@@ -35,7 +36,8 @@ public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 	@Override
 	protected void integrate(float delta) {
 		for (RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> o : objects)
-			integrationsolver.integrate2((RigidBody2) o, delta);
+			integrationsolver.integrate2((RigidBody2) o, delta,
+					globalGravitation);
 	}
 
 	@Override

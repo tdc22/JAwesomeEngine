@@ -176,6 +176,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		globalForce = force;
 	}
 
+	public void setGlobalGravitation(L gravitation) {
+		globalGravitation = gravitation;
+	}
+
 	public void setResolutionIterations(int count) {
 		resolutionIterations = count;
 	}

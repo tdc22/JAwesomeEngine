@@ -18,23 +18,24 @@ import vector.Vector3f;
 
 public class EulerIntegration implements IntegrationSolver {
 	@Override
-	public void integrate2(RigidBody2 obj, float delta) {
-		Vector2f lv = obj.getLinearVelocity();
-		Vector2f fa = obj.getForceAccumulator();
-		float linearDampingValue = 1 / (1 + obj.getLinearDamping() * delta);
-		obj.setLinearVelocity(new Vector2f((lv.x + fa.x * delta
-				* obj.getInverseMass())
-				* linearDampingValue, (lv.y + fa.y * delta
-				* obj.getInverseMass())
-				* linearDampingValue));
+	public void integrate2(RigidBody2 obj, float delta, Vector2f gravitation) {
+		if (obj.getInverseMass() != 0) {
+			Vector2f lv = obj.getLinearVelocity();
+			Vector2f fa = obj.getForceAccumulator();
+			float linearDampingValue = 1 / (1 + obj.getLinearDamping() * delta);
+			obj.setLinearVelocity(
+					(lv.x + fa.x * delta * obj.getInverseMass() + gravitation.x)
+							* linearDampingValue,
+					(lv.y + fa.y * delta * obj.getInverseMass() + gravitation.y)
+							* linearDampingValue);
+		}
 
 		Vector1f av = obj.getAngularVelocity();
 		Vector1f ta = obj.getTorqueAccumulator();
 		Matrix1f ii = obj.getInverseInertia();
 		float angularDampingValue = 1 / (1 + obj.getAngularDamping() * delta);
-		obj.setAngularVelocity(new Vector1f((av.x + ii.getf(0, 0) * ta.x
-				* delta)
-				* angularDampingValue));
+		obj.setAngularVelocity((av.x + ii.getf(0, 0) * ta.x * delta)
+				* angularDampingValue);
 
 		// obj.setLinearVelocity(VecMath.scale(
 		// VecMath.addition(obj.getLinearVelocity(), VecMath.scale(
@@ -55,27 +56,29 @@ public class EulerIntegration implements IntegrationSolver {
 	}
 
 	@Override
-	public void integrate3(RigidBody3 obj, float delta) {
-		Vector3f lv = obj.getLinearVelocity();
-		Vector3f fa = obj.getForceAccumulator();
-		float linearDampingValue = 1 / (1 + obj.getLinearDamping() * delta);
-		obj.setLinearVelocity(new Vector3f((lv.x + fa.x * delta
-				* obj.getInverseMass())
-				* linearDampingValue, (lv.y + fa.y * delta
-				* obj.getInverseMass())
-				* linearDampingValue, (lv.z + fa.z * delta
-				* obj.getInverseMass())
-				* linearDampingValue));
+	public void integrate3(RigidBody3 obj, float delta, Vector3f gravitation) {
+		if (obj.getInverseMass() != 0) {
+			Vector3f lv = obj.getLinearVelocity();
+			Vector3f fa = obj.getForceAccumulator();
+			float linearDampingValue = 1 / (1 + obj.getLinearDamping() * delta);
+			obj.setLinearVelocity(
+					(lv.x + fa.x * delta * obj.getInverseMass() + gravitation.x)
+							* linearDampingValue,
+					(lv.y + fa.y * delta * obj.getInverseMass() + gravitation.y)
+							* linearDampingValue,
+					(lv.z + fa.z * delta * obj.getInverseMass() + gravitation.z)
+							* linearDampingValue);
+		}
 
 		Vector3f av = obj.getAngularVelocity();
 		Vector3f ta = obj.getTorqueAccumulator();
 		Quaternionf ii = obj.getInverseInertia();
 		float angularDampingValue = 1 / (1 + obj.getAngularDamping() * delta);
 		Vector3f transformedTorque = QuatMath.transform(ii, ta);
-		obj.setAngularVelocity(new Vector3f(
-				(av.x + transformedTorque.x * delta) * angularDampingValue,
-				(av.y + transformedTorque.y * delta) * angularDampingValue,
-				(av.z + transformedTorque.z * delta) * angularDampingValue));
+		obj.setAngularVelocity((av.x + transformedTorque.x * delta)
+				* angularDampingValue, (av.y + transformedTorque.y * delta)
+				* angularDampingValue, (av.z + transformedTorque.z * delta)
+				* angularDampingValue);
 
 		// obj.setLinearVelocity(VecMath.scale(
 		// VecMath.addition(obj.getLinearVelocity(), VecMath.scale(

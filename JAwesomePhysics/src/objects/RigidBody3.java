@@ -102,6 +102,16 @@ public class RigidBody3 extends
 		invinertia = new Quaternionf(0);
 	}
 
+	public void setAngularVelocity(float velocityX, float velocityY,
+			float velocityZ) {
+		angularvelocity.set(velocityX, velocityY, velocityZ);
+	}
+
+	public void setLinearVelocity(float velocityX, float velocityY,
+			float velocityZ) {
+		linearvelocity.set(velocityX, velocityY, velocityZ);
+	}
+
 	@Override
 	public Vector3f supportPoint(Vector3f direction) {
 		return VecMath.addition(supportPointRelative(direction),

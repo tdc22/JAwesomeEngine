@@ -52,7 +52,7 @@ public class BasicTest extends StandardGame {
 				new EPA()), new ImpulseResolution(), new ProjectionCorrection(
 				0.01f), new SimpleManifoldManager<Vector3f>()); // new
 																// MultiPointManifoldManager();
-		space.setGlobalForce(new Vector3f(0, -5, 0));
+		space.setGlobalGravitation(new Vector3f(0, -0.08f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, font, cam);
@@ -66,21 +66,19 @@ public class BasicTest extends StandardGame {
 		addObject(ground);
 
 		// Some walls
-		Box w1 = new Box(10, -1f, 0, 1, 5, 10);
-		space.addRigidBody(w1, new RigidBody3(PhysicsShapeCreator.create(w1)));
-		addObject(w1);
-
-		Box w2 = new Box(-10, -1f, 0, 1, 5, 10);
-		space.addRigidBody(w2, new RigidBody3(PhysicsShapeCreator.create(w2)));
-		addObject(w2);
-
-		Box w3 = new Box(0, -1f, 10, 10, 5, 1);
-		space.addRigidBody(w3, new RigidBody3(PhysicsShapeCreator.create(w3)));
-		addObject(w3);
-
-		Box w4 = new Box(0, -1f, -10, 10, 5, 1);
-		space.addRigidBody(w4, new RigidBody3(PhysicsShapeCreator.create(w4)));
-		addObject(w4);
+		/*
+		 * Box w1 = new Box(10, -1f, 0, 1, 5, 10); space.addRigidBody(w1, new
+		 * RigidBody3(PhysicsShapeCreator.create(w1))); addObject(w1);
+		 * 
+		 * Box w2 = new Box(-10, -1f, 0, 1, 5, 10); space.addRigidBody(w2, new
+		 * RigidBody3(PhysicsShapeCreator.create(w2))); addObject(w2);
+		 * 
+		 * Box w3 = new Box(0, -1f, 10, 10, 5, 1); space.addRigidBody(w3, new
+		 * RigidBody3(PhysicsShapeCreator.create(w3))); addObject(w3);
+		 * 
+		 * Box w4 = new Box(0, -1f, -10, 10, 5, 1); space.addRigidBody(w4, new
+		 * RigidBody3(PhysicsShapeCreator.create(w4))); addObject(w4);
+		 */
 
 		// End walls
 
@@ -131,7 +129,7 @@ public class BasicTest extends StandardGame {
 				// q.rotate(45f, 0f, 45f);
 				q.setColor(Color.BLUE);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(q));
-				rb.setMass(1f);
+				rb.setMass(0.1f);
 				rb.setInertia(new Quaternionf());
 				space.addRigidBody(q, rb);
 				addObject(q);
@@ -150,7 +148,7 @@ public class BasicTest extends StandardGame {
 				Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
 				c.setColor(Color.RED);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(c));
-				rb.setMass(1f);
+				rb.setMass(0.1f);
 				rb.setInertia(new Quaternionf());
 				space.addRigidBody(c, rb);
 				addObject(c);

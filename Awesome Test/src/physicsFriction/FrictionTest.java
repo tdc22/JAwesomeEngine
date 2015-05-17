@@ -43,7 +43,7 @@ public class FrictionTest extends StandardGame {
 				new EPA()), new LinearImpulseResolution(),
 				new ProjectionCorrection(0.01f),
 				new SimpleManifoldManager<Vector3f>());
-		space.setGlobalForce(new Vector3f(0, -5, 0));
+		space.setGlobalGravitation(new Vector3f(0, -0.08f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, font, cam);
@@ -56,9 +56,9 @@ public class FrictionTest extends StandardGame {
 
 		Box q = new Box(-12, 0, 0, 1, 1, 1);
 		RigidBody3 rb1 = new RigidBody3(PhysicsShapeCreator.create(q));
-		rb1.setMass(1f);
+		rb1.setMass(0.1f);
 		rb1.setInertia(new Quaternionf());
-		rb1.applyCentralImpulse(new Vector3f(5, 0, 0));
+		rb1.applyCentralImpulse(new Vector3f(0.5f, 0, 0));
 		space.addRigidBody(q, rb1);
 		addObject(q);
 		tempdelta = 0;
@@ -86,9 +86,9 @@ public class FrictionTest extends StandardGame {
 			if (inputs.isMouseButtonDown("0")) {
 				Box q = new Box(-12, 0, 0, 1, 1, 1);
 				RigidBody3 rb1 = new RigidBody3(PhysicsShapeCreator.create(q));
-				rb1.setMass(1f);
+				rb1.setMass(0.1f);
 				rb1.setInertia(new Quaternionf());
-				rb1.applyCentralImpulse(new Vector3f(5, 0, 0));
+				rb1.applyCentralImpulse(new Vector3f(0.5f, 0, 0));
 				space.addRigidBody(q, rb1);
 				addObject(q);
 				tempdelta = 0;
@@ -96,9 +96,9 @@ public class FrictionTest extends StandardGame {
 			if (inputs.isMouseButtonDown("1")) {
 				Box q = new Box(12, 0, 0, 1, 1, 1);
 				RigidBody3 rb1 = new RigidBody3(PhysicsShapeCreator.create(q));
-				rb1.setMass(1f);
+				rb1.setMass(0.1f);
 				rb1.setInertia(new Quaternionf());
-				rb1.applyCentralImpulse(new Vector3f(-5, 0, 0));
+				rb1.applyCentralImpulse(new Vector3f(-0.5f, 0, 0));
 				space.addRigidBody(q, rb1);
 				addObject(q);
 				tempdelta = 0;
