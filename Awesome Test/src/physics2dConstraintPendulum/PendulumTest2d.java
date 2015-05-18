@@ -47,7 +47,7 @@ public class PendulumTest2d extends StandardGame {
 		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(),
 				new GJK2(new EPA2()), new ImpulseResolution(),
 				new ProjectionCorrection(1), new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
-		space.setGlobalGravitation(new Vector2f(0, 2));
+		space.setGlobalGravitation(new Vector2f(0, 120));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, font, cam);

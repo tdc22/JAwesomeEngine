@@ -43,7 +43,7 @@ public class FrictionTest extends StandardGame {
 				new EPA()), new LinearImpulseResolution(),
 				new ProjectionCorrection(0.01f),
 				new SimpleManifoldManager<Vector3f>());
-		space.setGlobalGravitation(new Vector3f(0, -0.08f, 0));
+		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, font, cam);
