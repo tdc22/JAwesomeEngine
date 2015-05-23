@@ -8,6 +8,8 @@ public class DefaultValues {
 	public static final int DEFAULT_DISPLAY_RESOLUTION_X = 800;
 	public static final int DEFAULT_DISPLAY_RESOLUTION_Y = 600;
 	public static final String DEFAULT_DISPLAY_TITLE = "JAwesomeEngine";
+	public static final boolean DEFAULT_DISPLAY_RESIZEABLE = true;
+	public static final boolean DEFAULT_DISPLAY_VSYNC = true;
 	// PixelFormat values
 	public static final int DEFAULT_PIXELFORMAT_BPP = 8;
 	public static final int DEFAULT_PIXELFORMAT_ALPHA = 8;

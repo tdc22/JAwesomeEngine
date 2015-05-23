@@ -206,6 +206,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 				// optional
 				if (narrowphase.isColliding(overlap.getFirst(),
 						overlap.getSecond())) {
+					System.out.println(overlap.getFirst().getTranslation()
+							+ "; " + overlap.getFirst().getRotation()
+							+ "; | ; " + overlap.getSecond().getTranslation()
+							+ "; " + overlap.getSecond().getRotation());
 					ContactManifold<L> contactManifold = narrowphase
 							.computeCollision(overlap.getFirst(),
 									overlap.getSecond());

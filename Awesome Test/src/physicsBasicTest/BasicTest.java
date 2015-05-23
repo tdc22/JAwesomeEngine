@@ -50,8 +50,10 @@ public class BasicTest extends StandardGame {
 
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
 				new EPA()), new ImpulseResolution(), new ProjectionCorrection(
-				0.01f), new SimpleManifoldManager<Vector3f>()); // new
-																// MultiPointManifoldManager();
+				0.01f), new SimpleManifoldManager<Vector3f>());// new
+																// MultiPointManifoldManager());
+																// //new
+																// SimpleManifoldManager<Vector3f>());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
@@ -130,7 +132,7 @@ public class BasicTest extends StandardGame {
 				q.setColor(Color.BLUE);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(q));
 				rb.setMass(0.1f);
-				rb.setInertia(new Quaternionf());
+				rb.setInertia(new Quaternionf(0.1f, 0, 0, 0));
 				space.addRigidBody(q, rb);
 				addObject(q);
 				tempdelta = 0;
@@ -149,7 +151,7 @@ public class BasicTest extends StandardGame {
 				c.setColor(Color.RED);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(c));
 				rb.setMass(0.1f);
-				rb.setInertia(new Quaternionf());
+				rb.setInertia(new Quaternionf(0.03f, 0, 0, 0));
 				space.addRigidBody(c, rb);
 				addObject(c);
 				tempdelta = 0;
@@ -159,8 +161,8 @@ public class BasicTest extends StandardGame {
 		}
 
 		debugger.update();
-		// if (run.isActive() || step.isActive())
-		space.update(delta);
+		if (run.isActive() || step.isActive())
+			space.update(delta);
 		physicsdebug.update();
 		cam.update(delta);
 	}

@@ -10,19 +10,25 @@ public class DisplayMode {
 	public DisplayMode() {
 		init(DefaultValues.DEFAULT_DISPLAY_RESOLUTION_X,
 				DefaultValues.DEFAULT_DISPLAY_RESOLUTION_Y,
-				DefaultValues.DEFAULT_DISPLAY_TITLE, true, true);
+				DefaultValues.DEFAULT_DISPLAY_TITLE,
+				DefaultValues.DEFAULT_DISPLAY_RESIZEABLE,
+				DefaultValues.DEFAULT_DISPLAY_VSYNC);
 	}
 
 	public DisplayMode(int width, int height) {
-		init(width, height, DefaultValues.DEFAULT_DISPLAY_TITLE, false, true);
+		init(width, height, DefaultValues.DEFAULT_DISPLAY_TITLE,
+				DefaultValues.DEFAULT_DISPLAY_RESIZEABLE,
+				DefaultValues.DEFAULT_DISPLAY_VSYNC);
 	}
 
 	public DisplayMode(int width, int height, String title) {
-		init(width, height, title, false, true);
+		init(width, height, title, DefaultValues.DEFAULT_DISPLAY_RESIZEABLE,
+				DefaultValues.DEFAULT_DISPLAY_VSYNC);
 	}
 
 	public DisplayMode(int width, int height, String title, boolean vsync) {
-		init(width, height, title, false, vsync);
+		init(width, height, title, DefaultValues.DEFAULT_DISPLAY_RESIZEABLE,
+				vsync);
 	}
 
 	public DisplayMode(int width, int height, String title, boolean resizeable,

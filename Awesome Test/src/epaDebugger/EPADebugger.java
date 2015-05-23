@@ -214,7 +214,7 @@ public class EPADebugger extends StandardGame {
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		cam.setFlyCam(true);
 		cam.translateTo(0, 1, 3);
-		cam.setFlySpeed(0.001f);
+		cam.setFlySpeed(0.01f);
 
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
 				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
@@ -271,14 +271,25 @@ public class EPADebugger extends StandardGame {
 		 */
 
 		// Test 4
-		Box s1 = new Box(8.088608f, -3.203665f, -7.5166597f, 0.5f, 0.5f, 0.5f);
-		s1.setRotation(new Quaternionf(0.8605771, 0.37082738, 0.0139486715,
-				-0.34885654));
+		/*
+		 * Box s1 = new Box(8.088608f, -3.203665f, -7.5166597f, 0.5f, 0.5f,
+		 * 0.5f); s1.setRotation(new Quaternionf(0.8605771, 0.37082738,
+		 * 0.0139486715, -0.34885654)); rb1 = new
+		 * RigidBody3(PhysicsShapeCreator.create(s1));
+		 * 
+		 * Box s2 = new Box(8.280044f, -3.325496f, -6.407919f, 0.5f, 0.5f,
+		 * 0.5f); s2.setRotation(new Quaternionf(0.9584382, 0.028309878,
+		 * 0.061130494, -0.27723733)); rb2 = new
+		 * RigidBody3(PhysicsShapeCreator.create(s2));
+		 */
+
+		// Test 5
+		Box s1 = new Box(0.0f, -3.6325386f, 0.0f, 0.5f, 0.5f, 0.5f);
+		s1.setRotation(new Quaternionf(1.0, 0.0, 0.0, 0.0));
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
-		Box s2 = new Box(8.280044f, -3.325496f, -6.407919f, 0.5f, 0.5f, 0.5f);
-		s2.setRotation(new Quaternionf(0.9584382, 0.028309878, 0.061130494,
-				-0.27723733));
+		Box s2 = new Box(0, -5, 0, 10, 1, 10);
+		s2.setRotation(new Quaternionf(1.0, 0.0, 0.0, 0.0));
 		rb2 = new RigidBody3(PhysicsShapeCreator.create(s2));
 
 		// Fix transformation (usually done in PhysicsSpace-class of Engine
