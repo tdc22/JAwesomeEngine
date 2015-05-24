@@ -37,12 +37,6 @@ public class GJKDebugger extends StandardGame {
 			c = Color.CYAN;
 		}
 
-		public Line(Vector3f start, Vector3f end) {
-			setRenderMode(GLConstants.LINES);
-			c = Color.WHITE;
-			update(start, end);
-		}
-
 		public void update(Vector3f start, Vector3f end) {
 			delete();
 			addVertex(start, c);

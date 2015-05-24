@@ -162,7 +162,7 @@ public class BasicTest extends StandardGame {
 
 		debugger.update();
 		if (run.isActive() || step.isActive())
-			space.update(delta);
+			space.update(5); //TODO: Delta
 		physicsdebug.update();
 		cam.update(delta);
 	}

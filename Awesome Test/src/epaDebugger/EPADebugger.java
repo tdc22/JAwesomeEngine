@@ -58,7 +58,6 @@ public class EPADebugger extends StandardGame {
 	SupportMap<Vector3f> Sa;
 	SupportMap<Vector3f> Sb;
 	private final float TOLERANCE = 0.001f;
-	private final int MAX_ITERATIONS = 50;
 
 	public void epaInit(List<Vector3f> gjksimplex) {
 		Sa = rb1;
@@ -77,6 +76,9 @@ public class EPADebugger extends StandardGame {
 		faces.add(new Triangle(A, D, B));
 		faces.add(new Triangle(A, C, D));
 		faces.add(new Triangle(D, C, B));
+		
+		System.out.println("------------------------------------");
+		System.out.println(A + "; " + B + "; " + C + "; " + D);
 
 		simplex = new Simplex(faces, findClosestTriangle(faces));
 	}
@@ -91,7 +93,7 @@ public class EPADebugger extends StandardGame {
 			Vector3f p = support(Sa, Sb, t.normal);
 			// System.out.println(t.normal);
 			double d = VecMath.dotproduct(p, t.normal);
-			System.out.println(d - t.distance + "; " + p);
+			System.out.println(d - t.distance + "; " + p + "; " + t.normal);
 			if (d - t.distance < TOLERANCE) {
 				normal = t.normal;
 				depth = (float) d;
@@ -284,8 +286,8 @@ public class EPADebugger extends StandardGame {
 		 */
 
 		// Test 5
-		Box s1 = new Box(0.0f, -3.6325386f, 0.0f, 0.5f, 0.5f, 0.5f);
-		s1.setRotation(new Quaternionf(1.0, 0.0, 0.0, 0.0));
+		Box s1 = new Box(0.0f, -3.513634f, 0.0f, 0.5f, 0.5f, 0.5f);
+		s1.setRotation(new Quaternionf(0.9998758, -0.011145344, -2.5039499E-5, 0.011145378));
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
 		Box s2 = new Box(0, -5, 0, 10, 1, 10);
@@ -351,7 +353,7 @@ public class EPADebugger extends StandardGame {
 	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
 			Vector3f dir) {
 		return VecMath.subtraction(Sa.supportPoint(dir),
-				Sb.supportPoint(VecMath.negate(dir)));
+				Sb.supportPointNegative(dir));
 	}
 
 	@Override
