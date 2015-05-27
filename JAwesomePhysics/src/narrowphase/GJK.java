@@ -25,12 +25,12 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 				// Region 1
 				direction = edgeDirection(AB, AO);
 				// System.out.print(AB.toString() + "; " + AO.toString());
-				// System.out.print("line region 1");
+//				System.out.print("line region 1");
 			} else {
 				// Region 2
 				simplex.remove(1);
 				direction = AO;
-				// System.out.print("line region 2");
+//				System.out.print("line region 2");
 			}
 			// System.out.println(" " + A + "; " + B + "; " + direction);
 		}
@@ -50,20 +50,20 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 					// Region 1
 					simplex.remove(1);
 					direction = edgeDirection(AC, AO);
-					// System.out.print("r 1");
+//					System.out.print("r 1");
 				} else {
 					// *
 					if (VecMath.dotproduct(AB, AO) > 0) {
 						// Region 4
 						simplex.remove(0);
 						direction = edgeDirection(AB, AO);
-						// System.out.print("r 4");
+//						System.out.print("r 4");
 					} else {
 						// Region 5
 						simplex.remove(2);
 						simplex.remove(1);
 						direction = AO;
-						// System.out.print("r 5");
+//						System.out.print("r 5");
 					}
 				}
 			} else {
@@ -73,26 +73,26 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 						// Region 4
 						simplex.remove(0);
 						direction = edgeDirection(AB, AO);
-						// System.out.print("r 4(2)");
+//						System.out.print("r 4(2)");
 					} else {
 						// Region 5
 						simplex.remove(2);
 						simplex.remove(1);
 						direction = AO;
-						// System.out.print("r 5(2)");
+//						System.out.print("r 5(2)");
 					}
 				} else {
 					if (VecMath.dotproduct(ABC, AO) >= 0) {
 						// Region 2
 						direction = ABC;
-						// System.out.print("r 2");
+//						System.out.print("r 2");
 					} else {
 						// Region 3
 						Vector3f temp = simplex.get(0);
 						simplex.set(0, simplex.get(1));
 						simplex.set(1, temp);
 						direction = VecMath.negate(ABC);
-						// System.out.print("r 3");
+//						System.out.print("r 3");
 					}
 				}
 			}
@@ -151,13 +151,13 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 						simplex.remove(1);
 						simplex.remove(0);
 						direction = AO;
-						// System.out.print("top");
+//						System.out.print("top");
 					} else {
 						// Edge 1
 						simplex.remove(1);
 						simplex.remove(0);
 						direction = edgeDirection(AB, AO);
-						// System.out.print("edge 1");
+//						System.out.print("edge 1");
 					}
 				} else {
 					if (VecMath.dotproduct(ACD, AO) > 0) {
@@ -165,12 +165,12 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 						simplex.remove(2);
 						simplex.remove(0);
 						direction = edgeDirection(AC, AO);
-						// System.out.print("edge 2");
+//						System.out.print("edge 2");
 					} else {
 						// Face 1
 						simplex.remove(0);
 						direction = ABC;
-						// System.out.print("face 1");
+//						System.out.print("face 1");
 					}
 				}
 			} else {
@@ -180,7 +180,7 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 						simplex.remove(2);
 						simplex.remove(1);
 						direction = edgeDirection(AD, AO);
-						// System.out.print("edge 3");
+//						System.out.print("edge 3");
 					} else {
 						// Face 2
 						simplex.remove(1); // CHANGE ORIENTATION?????
@@ -188,17 +188,17 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 						simplex.set(0, simplex.get(1));
 						simplex.set(1, temp);
 						direction = ADB;
-						// System.out.print("face 2");
+//						System.out.print("face 2");
 					}
 				} else {
 					if (VecMath.dotproduct(ACD, AO) > 0) {
 						// Face 3
 						simplex.remove(2);
 						direction = ACD;
-						// System.out.print("face 3");
+//						System.out.print("face 3");
 					} else {
 						// Center
-						// System.out.print("center");
+//						System.out.print("center");
 						// System.out.println(" " + A + "; " + B + "; " + C +
 						// "; " + D);
 						return true;

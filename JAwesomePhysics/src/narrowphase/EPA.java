@@ -56,7 +56,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 
 			if (isOriginInsideTriangleArea(t)) {
 				Vector3f p = support(Sa, Sb, t.normal);
-				// System.out.println(t.normal);
+//				System.out.println(t.normal);
 				double d = VecMath.dotproduct(p, t.normal);
 				// System.out.println(d - t.distance + "; " + p);
 				if (d - t.distance < TOLERANCE) {

@@ -65,9 +65,6 @@ public class EPADebugger extends StandardGame {
 
 		faces = new ArrayList<Triangle>();
 
-		System.out.println(gjksimplex.get(0) + "; " + gjksimplex.get(1) + "; "
-				+ gjksimplex.get(2));
-
 		Vector3f A = gjksimplex.get(3);
 		Vector3f B = gjksimplex.get(2);
 		Vector3f C = gjksimplex.get(1);
@@ -143,6 +140,7 @@ public class EPADebugger extends StandardGame {
 			}
 		}
 		faces.remove(t);
+		System.out.println("Simplexsize: " + faces.size());
 		if (faces.size() == 0) {
 			System.out.println("ERROR");
 			return; // break replaced with return
@@ -300,6 +298,9 @@ public class EPADebugger extends StandardGame {
 
 		rb2.setRotation(s2.getRotation());
 		rb2.setTranslation(s2.getTranslation());
+		
+		rb1.updateInverseRotation();
+		rb2.updateInverseRotation();
 
 		// Visualize the support functions
 		support1 = new SupportDifferenceObject(s1, rb1, s2, rb2);
@@ -318,15 +319,23 @@ public class EPADebugger extends StandardGame {
 	}
 
 	private boolean isOriginInsideTriangleArea(Triangle t) {
+		System.out.println("a");
+		System.out.println(t.normal + "; " + t.a + "; " + t.b);
+		System.out.println(VecMath.dotproduct(
+				VecMath.crossproduct(VecMath.subtraction(t.b, t.a), t.normal),
+				VecMath.negate(t.a)));
 		if (VecMath.dotproduct(
 				VecMath.crossproduct(VecMath.subtraction(t.b, t.a), t.normal),
 				VecMath.negate(t.a)) <= 0) {
+			System.out.println("b");
 			if (VecMath.dotproduct(VecMath.crossproduct(
 					VecMath.subtraction(t.c, t.b), t.normal), VecMath
 					.negate(t.b)) <= 0) {
+				System.out.println("c");
 				if (VecMath.dotproduct(VecMath.crossproduct(
 						VecMath.subtraction(t.a, t.c), t.normal), VecMath
 						.negate(t.c)) <= 0) {
+					System.out.println("d");
 					return true;
 				}
 			}
@@ -352,6 +361,7 @@ public class EPADebugger extends StandardGame {
 
 	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
 			Vector3f dir) {
+		System.out.println("DIRECTION: " + dir);
 		return VecMath.subtraction(Sa.supportPoint(dir),
 				Sb.supportPointNegative(dir));
 	}
