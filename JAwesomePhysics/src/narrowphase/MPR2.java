@@ -24,8 +24,8 @@ public class MPR2 extends MinkowskiPortalRefinement<Vector2f> {
 
 	@Override
 	public boolean isColliding(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb) {
-		//1b
-//		Vector2f deep =
+		// 1b
+		// Vector2f deep =
 		return false;
 	}
 }

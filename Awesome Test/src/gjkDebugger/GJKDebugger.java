@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import loader.FontLoader;
-import math.QuatMath;
 import math.VecMath;
 import objects.RigidBody3;
 import objects.ShapedObject;
@@ -46,26 +45,6 @@ public class GJKDebugger extends StandardGame {
 		}
 	}
 
-	private class Point extends ShapedObject {
-		public Point(Vector3f point, Color col) {
-			setRenderMode(GLConstants.POINTS);
-			addVertex(point, col);
-			addIndex(0);
-			prerender();
-		}
-	}
-
-	private class TriangleShape extends ShapedObject {
-		public TriangleShape(Vector3f a, Vector3f b, Vector3f c, Color col) {
-			setRenderMode(GLConstants.TRIANGLES);
-			addVertex(a, col);
-			addVertex(b, col);
-			addVertex(c, col);
-			addIndices(0, 1, 2);
-			prerender();
-		}
-	}
-
 	Simplex GJKsimplex;
 	boolean rebuildsimplex = false;
 	Debugger debugger;
@@ -84,24 +63,24 @@ public class GJKDebugger extends StandardGame {
 
 	Vector3f direction;
 
-//	public void BRUTEFORCE(RigidBody3 r1, RigidBody3 r2, Color c) {
-//		for (int i = 0; i < 500; i++) {
-//			Vector3f v1 = randomVec();
-//			Vector3f v2 = randomVec();
-//			Vector3f v3 = randomVec();
-//			addObject(new TriangleShape(support(r1, r2, v1),
-//					support(r1, r2, v2), support(r1, r2, v3), c));
-//			// addObject(new Line(new Vector3f(), v1));
-//			// addObject(new Line(new Vector3f(), v2));
-//			// addObject(new Line(new Vector3f(), v3));
-//		}
-//		for (int i = 0; i < 1000; i++) {
-//			Vector3f v1 = randomVec();
-//			Vector3f v2 = randomVec();
-//			addObject(new Point(VecMath.subtraction(r1.supportPoint(v1),
-//					r2.supportPointNegative(v2)), c));
-//		}
-//	}
+	// public void BRUTEFORCE(RigidBody3 r1, RigidBody3 r2, Color c) {
+	// for (int i = 0; i < 500; i++) {
+	// Vector3f v1 = randomVec();
+	// Vector3f v2 = randomVec();
+	// Vector3f v3 = randomVec();
+	// addObject(new TriangleShape(support(r1, r2, v1),
+	// support(r1, r2, v2), support(r1, r2, v3), c));
+	// // addObject(new Line(new Vector3f(), v1));
+	// // addObject(new Line(new Vector3f(), v2));
+	// // addObject(new Line(new Vector3f(), v3));
+	// }
+	// for (int i = 0; i < 1000; i++) {
+	// Vector3f v1 = randomVec();
+	// Vector3f v2 = randomVec();
+	// addObject(new Point(VecMath.subtraction(r1.supportPoint(v1),
+	// r2.supportPointNegative(v2)), c));
+	// }
+	// }
 
 	private boolean doSimplex() {
 		int simplexsize = simplex.size();
@@ -116,12 +95,12 @@ public class GJKDebugger extends StandardGame {
 				// Region 1
 				direction = edgeDirection(AB, AO);
 				// System.out.print(AB.toString() + "; " + AO.toString());
-//				System.out.print("line region 1");
+				// System.out.print("line region 1");
 			} else {
 				// Region 2
 				simplex.remove(1);
 				direction = AO;
-//				System.out.print("line region 2");
+				// System.out.print("line region 2");
 			}
 			// System.out.println(" " + A + "; " + B + "; " + direction);
 		}
@@ -141,20 +120,20 @@ public class GJKDebugger extends StandardGame {
 					// Region 1
 					simplex.remove(1);
 					direction = edgeDirection(AC, AO);
-//					System.out.print("r 1");
+					// System.out.print("r 1");
 				} else {
 					// *
 					if (VecMath.dotproduct(AB, AO) > 0) {
 						// Region 4
 						simplex.remove(0);
 						direction = edgeDirection(AB, AO);
-//						System.out.print("r 4");
+						// System.out.print("r 4");
 					} else {
 						// Region 5
 						simplex.remove(2);
 						simplex.remove(1);
 						direction = AO;
-//						System.out.print("r 5");
+						// System.out.print("r 5");
 					}
 				}
 			} else {
@@ -164,26 +143,26 @@ public class GJKDebugger extends StandardGame {
 						// Region 4
 						simplex.remove(0);
 						direction = edgeDirection(AB, AO);
-//						System.out.print("r 4(2)");
+						// System.out.print("r 4(2)");
 					} else {
 						// Region 5
 						simplex.remove(2);
 						simplex.remove(1);
 						direction = AO;
-//						System.out.print("r 5(2)");
+						// System.out.print("r 5(2)");
 					}
 				} else {
 					if (VecMath.dotproduct(ABC, AO) >= 0) {
 						// Region 2
 						direction = ABC;
-//						System.out.print("r 2");
+						// System.out.print("r 2");
 					} else {
 						// Region 3
 						Vector3f temp = simplex.get(0);
 						simplex.set(0, simplex.get(1));
 						simplex.set(1, temp);
 						direction = VecMath.negate(ABC);
-//						System.out.print("r 3");
+						// System.out.print("r 3");
 					}
 				}
 			}
@@ -242,13 +221,13 @@ public class GJKDebugger extends StandardGame {
 						simplex.remove(1);
 						simplex.remove(0);
 						direction = AO;
-//						System.out.print("top");
+						// System.out.print("top");
 					} else {
 						// Edge 1
 						simplex.remove(1);
 						simplex.remove(0);
 						direction = edgeDirection(AB, AO);
-//						System.out.print("edge 1");
+						// System.out.print("edge 1");
 					}
 				} else {
 					if (VecMath.dotproduct(ACD, AO) > 0) {
@@ -256,12 +235,12 @@ public class GJKDebugger extends StandardGame {
 						simplex.remove(2);
 						simplex.remove(0);
 						direction = edgeDirection(AC, AO);
-//						System.out.print("edge 2");
+						// System.out.print("edge 2");
 					} else {
 						// Face 1
 						simplex.remove(0);
 						direction = ABC;
-//						System.out.print("face 1");
+						// System.out.print("face 1");
 					}
 				}
 			} else {
@@ -271,7 +250,7 @@ public class GJKDebugger extends StandardGame {
 						simplex.remove(2);
 						simplex.remove(1);
 						direction = edgeDirection(AD, AO);
-//						System.out.print("edge 3");
+						// System.out.print("edge 3");
 					} else {
 						// Face 2
 						simplex.remove(1); // CHANGE ORIENTATION?????
@@ -279,17 +258,17 @@ public class GJKDebugger extends StandardGame {
 						simplex.set(0, simplex.get(1));
 						simplex.set(1, temp);
 						direction = ADB;
-//						System.out.print("face 2");
+						// System.out.print("face 2");
 					}
 				} else {
 					if (VecMath.dotproduct(ACD, AO) > 0) {
 						// Face 3
 						simplex.remove(2);
 						direction = ACD;
-//						System.out.print("face 3");
+						// System.out.print("face 3");
 					} else {
 						// Center
-//						System.out.print("center");
+						// System.out.print("center");
 						// System.out.println(" " + A + "; " + B + "; " + C +
 						// "; " + D);
 						return true;
@@ -328,17 +307,18 @@ public class GJKDebugger extends StandardGame {
 		// Sphere s1 = new Sphere(-10, 10, 0, 1, 36, 36);
 		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
-//		Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
-//		Quaternionf falsecase = new Quaternionf(0.25023422f, -0.09507953f,
-//				-0.8314483f, -0.48689112f);
-//		b1.setRotation(falsecase);
-//		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
-//
-//		Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
-//		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
-		
+		// Box b1 = new Box(4.1700006f, 2.1599996f, 0.0f, 1f, 1f, 1f);
+		// Quaternionf falsecase = new Quaternionf(0.25023422f, -0.09507953f,
+		// -0.8314483f, -0.48689112f);
+		// b1.setRotation(falsecase);
+		// rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
+		//
+		// Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
+		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+
 		Box b1 = new Box(0.0f, -3.513634f, 0.0f, 0.5f, 0.5f, 0.5f);
-		Quaternionf falsecase = new Quaternionf(0.9998758, -0.011145344, -2.5039499E-5, 0.011145378);
+		Quaternionf falsecase = new Quaternionf(0.9998758, -0.011145344,
+				-2.5039499E-5, 0.011145378);
 		b1.setRotation(falsecase);
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
 
@@ -359,7 +339,7 @@ public class GJKDebugger extends StandardGame {
 
 		rb2.setRotation(s1.getRotation());
 		rb2.setTranslation(s1.getTranslation());
-		
+
 		rb1.updateInverseRotation();
 		rb2.updateInverseRotation();
 
@@ -372,13 +352,13 @@ public class GJKDebugger extends StandardGame {
 		line = new Line();
 		line.update(new Vector3f(), direction);
 
-//		BRUTEFORCE(rb1, rb2, Color.GRAY);
-//		rb1.setRotation(new Quaternionf());
-//		BRUTEFORCE(rb1, rb2, Color.RED);
-//		Quaternionf interpolation = QuatMath.slerp(new Quaternionf(),
-//				falsecase, 0.5f);
-//		rb1.setRotation(interpolation);
-//		BRUTEFORCE(rb1, rb2, Color.GREEN);
+		// BRUTEFORCE(rb1, rb2, Color.GRAY);
+		// rb1.setRotation(new Quaternionf());
+		// BRUTEFORCE(rb1, rb2, Color.RED);
+		// Quaternionf interpolation = QuatMath.slerp(new Quaternionf(),
+		// falsecase, 0.5f);
+		// rb1.setRotation(interpolation);
+		// BRUTEFORCE(rb1, rb2, Color.GREEN);
 
 		InputEvent stepGJK = new InputEvent("Step GJK", new Input(
 				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
@@ -396,13 +376,13 @@ public class GJKDebugger extends StandardGame {
 		direction = VecMath.negate(direction);
 	}
 
-//	private Vector3f randomVec() {
-//		Quaternionf quat = new Quaternionf();
-//		quat.rotate(Math.random() * 360, new Vector3f(0, 0, 1));
-//		quat.rotate(Math.random() * 360, new Vector3f(0, 1, 0));
-//		quat.rotate(Math.random() * 360, new Vector3f(1, 0, 0));
-//		return QuatMath.transform(quat, new Vector3f(0, 1, 0));
-//	}
+	// private Vector3f randomVec() {
+	// Quaternionf quat = new Quaternionf();
+	// quat.rotate(Math.random() * 360, new Vector3f(0, 0, 1));
+	// quat.rotate(Math.random() * 360, new Vector3f(0, 1, 0));
+	// quat.rotate(Math.random() * 360, new Vector3f(1, 0, 0));
+	// return QuatMath.transform(quat, new Vector3f(0, 1, 0));
+	// }
 
 	// private Vector3f randomvector() {
 	// return new Vector3f((int) (Math.random() * 2) * 2 - 1,

@@ -209,10 +209,11 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 					ContactManifold<L> contactManifold = narrowphase
 							.computeCollision(overlap.getFirst(),
 									overlap.getSecond());
-//					System.out.println(contactManifold.getCollisionNormal() + ":   " + overlap.getFirst().getTranslation()
-//							+ "; " + overlap.getFirst().getRotation()
-//							+ "; | ; " + overlap.getSecond().getTranslation()
-//							+ "; " + overlap.getSecond().getRotation());
+					// System.out.println(contactManifold.getCollisionNormal() +
+					// ":   " + overlap.getFirst().getTranslation()
+					// + "; " + overlap.getFirst().getRotation()
+					// + "; | ; " + overlap.getSecond().getTranslation()
+					// + "; " + overlap.getSecond().getRotation());
 					manifoldmanager.add(new CollisionManifold<L>(overlap,
 							contactManifold));
 				}

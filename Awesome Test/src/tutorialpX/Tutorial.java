@@ -22,7 +22,7 @@ import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import positionalcorrection.ProjectionCorrection;
-import resolution.LinearImpulseResolution;
+import resolution.SimpleLinearImpulseResolution;
 import shader.Shader;
 import shape.Box;
 import shape.Cylinder;
@@ -143,7 +143,7 @@ public class Tutorial extends StandardGame {
 		inputs.addEvent(jump);
 
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
-				new EPA()), new LinearImpulseResolution(),
+				new EPA()), new SimpleLinearImpulseResolution(),
 				new ProjectionCorrection(0.02f, 0.0f),
 				new MultiPointManifoldManager());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));

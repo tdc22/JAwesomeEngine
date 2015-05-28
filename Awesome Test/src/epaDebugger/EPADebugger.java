@@ -58,6 +58,7 @@ public class EPADebugger extends StandardGame {
 	SupportMap<Vector3f> Sa;
 	SupportMap<Vector3f> Sb;
 	private final float TOLERANCE = 0.001f;
+	private final float EPSILON = 0.001f;
 
 	public void epaInit(List<Vector3f> gjksimplex) {
 		Sa = rb1;
@@ -73,9 +74,9 @@ public class EPADebugger extends StandardGame {
 		faces.add(new Triangle(A, D, B));
 		faces.add(new Triangle(A, C, D));
 		faces.add(new Triangle(D, C, B));
-		
-		System.out.println("------------------------------------");
-		System.out.println(A + "; " + B + "; " + C + "; " + D);
+
+		// System.out.println("------------------------------------");
+		// System.out.println(A + "; " + B + "; " + C + "; " + D);
 
 		simplex = new Simplex(faces, findClosestTriangle(faces));
 	}
@@ -90,7 +91,7 @@ public class EPADebugger extends StandardGame {
 			Vector3f p = support(Sa, Sb, t.normal);
 			// System.out.println(t.normal);
 			double d = VecMath.dotproduct(p, t.normal);
-			System.out.println(d - t.distance + "; " + p + "; " + t.normal);
+			// System.out.println(d - t.distance + "; " + p + "; " + t.normal);
 			if (d - t.distance < TOLERANCE) {
 				normal = t.normal;
 				depth = (float) d;
@@ -100,11 +101,11 @@ public class EPADebugger extends StandardGame {
 			} else {
 				// Check if convex!!!
 				Triangle[] adjacents = findAdjacentTriangles(t, faces);
-				for (Triangle a : adjacents) {
-					if (a != null)
-						System.out.println("NOTNULL " + a.a + "; " + a.b + "; "
-								+ a.c);
-				}
+				// for (Triangle a : adjacents) {
+				// if (a != null)
+				// System.out.println("NOTNULL " + a.a + "; " + a.b + "; "
+				// + a.c);
+				// }
 				if (adjacents[0] != null
 						&& VecMath.dotproduct(VecMath.subtraction(p, t.a),
 								adjacents[0].normal) > 0) {
@@ -284,8 +285,9 @@ public class EPADebugger extends StandardGame {
 		 */
 
 		// Test 5
-		Box s1 = new Box(0.0f, -3.513634f, 0.0f, 0.5f, 0.5f, 0.5f);
-		s1.setRotation(new Quaternionf(0.9998758, -0.011145344, -2.5039499E-5, 0.011145378));
+		Box s1 = new Box(0.0f, -3.5513985f, 0.0f, 0.5f, 0.5f, 0.5f);
+		s1.setRotation(new Quaternionf(0.99940574, -0.02437632, -1.1991114E-4,
+				0.024376713));
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
 		Box s2 = new Box(0, -5, 0, 10, 1, 10);
@@ -298,7 +300,7 @@ public class EPADebugger extends StandardGame {
 
 		rb2.setRotation(s2.getRotation());
 		rb2.setTranslation(s2.getTranslation());
-		
+
 		rb1.updateInverseRotation();
 		rb2.updateInverseRotation();
 
@@ -319,28 +321,17 @@ public class EPADebugger extends StandardGame {
 	}
 
 	private boolean isOriginInsideTriangleArea(Triangle t) {
-		System.out.println("a");
-		System.out.println(t.normal + "; " + t.a + "; " + t.b);
-		System.out.println(VecMath.dotproduct(
-				VecMath.crossproduct(VecMath.subtraction(t.b, t.a), t.normal),
-				VecMath.negate(t.a)));
-		if (VecMath.dotproduct(
-				VecMath.crossproduct(VecMath.subtraction(t.b, t.a), t.normal),
-				VecMath.negate(t.a)) <= 0) {
-			System.out.println("b");
-			if (VecMath.dotproduct(VecMath.crossproduct(
-					VecMath.subtraction(t.c, t.b), t.normal), VecMath
-					.negate(t.b)) <= 0) {
-				System.out.println("c");
-				if (VecMath.dotproduct(VecMath.crossproduct(
-						VecMath.subtraction(t.a, t.c), t.normal), VecMath
-						.negate(t.c)) <= 0) {
-					System.out.println("d");
-					return true;
-				}
-			}
-		}
-		return false;
+		return (checkPlane(t.a, t.b, t.normal)
+				&& checkPlane(t.b, t.c, t.normal) && checkPlane(t.c, t.a,
+					t.normal));
+	}
+
+	// (b - a) x normal * a <= EPSILON
+	private boolean checkPlane(Vector3f a, Vector3f b, Vector3f normal) {
+		Vector3f cross = VecMath
+				.crossproduct(VecMath.subtraction(b, a), normal);
+		System.out.println((cross.x * -a.x + cross.y * -a.y + cross.z * -a.z));
+		return ((cross.x * -a.x + cross.y * -a.y + cross.z * -a.z) <= EPSILON);
 	}
 
 	@Override
@@ -361,7 +352,7 @@ public class EPADebugger extends StandardGame {
 
 	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
 			Vector3f dir) {
-		System.out.println("DIRECTION: " + dir);
+		// System.out.println("DIRECTION: " + dir);
 		return VecMath.subtraction(Sa.supportPoint(dir),
 				Sb.supportPointNegative(dir));
 	}

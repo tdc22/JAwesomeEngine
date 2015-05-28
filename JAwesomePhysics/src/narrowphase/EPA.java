@@ -17,7 +17,8 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 			this.a = a;
 			this.b = b;
 			this.c = c;
-			normal = VecMath.normalize(VecMath.computeNormal(a, b, c));
+			normal = VecMath.computeNormal(a, b, c);
+			normal.normalize();
 		}
 	}
 
@@ -27,6 +28,9 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 	// http://allenchou.net/2013/12/game-physics-contact-generation-epa/
 
 	private final float TOLERANCE = 0.001f;
+	private final float EPSILON = 0.001f; // FOR THE LOVE OF GOD DON'T FKING
+											// TOUCH THIS IF YOU AREN'T 100
+											// PERCENT SURE WHAT YOU'RE DOING!!!
 	private final int MAX_ITERATIONS = 50;
 
 	@Override
@@ -43,27 +47,17 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		faces.add(new Triangle(A, C, D));
 		faces.add(new Triangle(D, C, B));
 
-//		System.out.println("------------------------------------");
-//		System.out.println(A + "; " + B + "; " + C + "; " + D);
-
 		Vector3f normal = new Vector3f();
 		float depth = 0;
 		for (int i = 0; i < MAX_ITERATIONS; i++) {
 			Triangle t = findClosestTriangle(faces);
-			// System.out.println(faces.size() + "; " + t.normal + "; "
-			// + VecMath.dotproduct(t.normal, VecMath.negate(t.a)));
-			// System.out.println(t.normal);
 
 			if (isOriginInsideTriangleArea(t)) {
 				Vector3f p = support(Sa, Sb, t.normal);
-//				System.out.println(t.normal);
 				double d = VecMath.dotproduct(p, t.normal);
-				// System.out.println(d - t.distance + "; " + p);
 				if (d - t.distance < TOLERANCE) {
 					normal = t.normal;
 					depth = (float) d;
-					// System.out.println("res: " + normal + "; " + depth + "; "
-					// + t.a + "; " + t.b + "; " + t.c);
 					break;
 				} else {
 					// Check if convex!!!
@@ -110,7 +104,6 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 				break;
 			}
 		}
-		// System.out.println(normal);
 
 		// source:
 		// http://allenchou.net/2013/12/game-physics-contact-generation-epa/
@@ -125,8 +118,6 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		tangentB = VecMath.crossproduct(normal, tangentA);
 
 		Vector3f negnormal = VecMath.negate(normal);
-		// System.out.println(depth + "; " + normal);
-		// System.out.println(normal);
 		return new ContactManifold<Vector3f>(depth, normal,
 				Sa.supportPoint(normal), Sb.supportPoint(negnormal),
 				Sa.supportPointRelative(normal),
@@ -195,38 +186,32 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 	}
 
 	private boolean isOriginInsideTriangleArea(Triangle t) {
-		if (VecMath.dotproduct(
-				VecMath.crossproduct(VecMath.subtraction(t.b, t.a), t.normal),
-				VecMath.negate(t.a)) <= 0) {
-			if (VecMath.dotproduct(VecMath.crossproduct(
-					VecMath.subtraction(t.c, t.b), t.normal), VecMath
-					.negate(t.b)) <= 0) {
-				if (VecMath.dotproduct(VecMath.crossproduct(
-						VecMath.subtraction(t.a, t.c), t.normal), VecMath
-						.negate(t.c)) <= 0) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return (checkPlane(t.a, t.b, t.normal)
+				&& checkPlane(t.b, t.c, t.normal) && checkPlane(t.c, t.a,
+					t.normal));
+		// if (VecMath.dotproduct(
+		// VecMath.crossproduct(VecMath.subtraction(t.b, t.a), t.normal),
+		// VecMath.negate(t.a)) <= EPSILON) {
+		// if (VecMath.dotproduct(VecMath.crossproduct(
+		// VecMath.subtraction(t.c, t.b), t.normal), VecMath
+		// .negate(t.b)) <= EPSILON) {
+		// if (VecMath.dotproduct(VecMath.crossproduct(
+		// VecMath.subtraction(t.a, t.c), t.normal), VecMath
+		// .negate(t.c)) <= EPSILON) {
+		// return true;
+		// }
+		// }
+		// }
 	}
 
-	// private List<Triangle> removeSeenTriangles(List<Triangle> faces, Vector3f
-	// p) {
-	// List<Triangle> result = new ArrayList<Triangle>();
-	// for(Triangle t : faces) {
-	// if(VecMath.dotproduct(t.normal, p) > 0) {
-	// result.add(new Triangle(t.a, t.b, p));
-	// result.add(new Triangle(t.b, t.c, p));
-	// result.add(new Triangle(t.c, t.a, p));
-	// // faces.remove(f);
-	// System.out.println("removed!");
-	// } else {
-	// result.add(t);
-	// }
-	// }
-	// return result;
-	// }
+	// (b - a) x normal * a <= EPSILON
+	private boolean checkPlane(Vector3f a, Vector3f b, Vector3f normal) {
+		Vector3f cross = VecMath
+				.crossproduct(VecMath.subtraction(b, a), normal);
+		// System.out.println((cross.x * -a.x + cross.y * -a.y + cross.z
+		// * -a.z));
+		return ((cross.x * -a.x + cross.y * -a.y + cross.z * -a.z) <= EPSILON);
+	}
 
 	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
 			Vector3f dir) {
