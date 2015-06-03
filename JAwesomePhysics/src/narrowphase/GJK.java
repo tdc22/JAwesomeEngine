@@ -211,14 +211,15 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 		return false;
 	}
 
-	// private Vector3f randomvector() {
-	// return new Vector3f((int) (Math.random() * 2) * 2 - 1,
-	// (int) (Math.random() * 2) * 2 - 1,
-	// (int) (Math.random() * 2) * 2 - 1);
-	// }
-
 	private Vector3f edgeDirection(Vector3f edge, Vector3f origin) {
-		return VecMath.crossproduct(VecMath.crossproduct(edge, origin), edge);
+		// return VecMath.crossproduct(VecMath.crossproduct(edge, origin),
+		// edge);
+		return new Vector3f((edge.z * origin.x - edge.x * origin.z) * edge.z
+				- (edge.x * origin.y - edge.y * origin.x) * edge.y, (edge.x
+				* origin.y - edge.y * origin.x)
+				* edge.x - (edge.y * origin.z - edge.z * origin.y) * edge.z,
+				(edge.y * origin.z - edge.z * origin.y) * edge.y
+						- (edge.z * origin.x - edge.x * origin.z) * edge.x);
 	}
 
 	@Override
@@ -249,11 +250,6 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 			}
 		}
 		// System.out.println("MAX ITERATIONS!!");
-		// while(simplex.size() < 4) {
-		// Vector3f rv = randomvector();
-		// if(!simplex.contains(rv))
-		// simplex.add(rv);
-		// }
 		return false;
 	}
 

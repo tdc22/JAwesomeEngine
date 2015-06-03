@@ -84,13 +84,28 @@ public class ImpulseResolution implements CollisionResolution {
 		// Rolling friction
 		float rollingFriction = pythagoreanSolve(A.getRollingFriction(),
 				B.getRollingFriction());
+		Vector3f rav = VecMath.subtraction(B.getAngularVelocity(),
+				A.getAngularVelocity());
+		rav.scale(rollingFriction);
+		A.applyTorqueImpulse(rav);
+		B.applyTorqueImpulse(VecMath.negate(rav));
+
 		// TODO: change!!!
-		Vector3f directionA = VecMath.crossproduct(A.getAngularVelocity(),
-				VecMath.normalize(contactA));
-		Vector3f directionB = VecMath.crossproduct(B.getAngularVelocity(),
-				VecMath.normalize(contactB));
-		A.applyImpulse(VecMath.scale(directionA, -rollingFriction), contactA);
-		B.applyImpulse(VecMath.scale(directionB, rollingFriction), contactB);
+		/*
+		 * Vector3f directionA = VecMath.crossproduct(A.getAngularVelocity(),
+		 * VecMath.normalize(contactA)); Vector3f directionB =
+		 * VecMath.crossproduct(B.getAngularVelocity(),
+		 * VecMath.normalize(contactB)); //System.out.println(rollingFriction +
+		 * "; " + directionA + "; " + directionB + "; " + contactA + "; " +
+		 * contactB); A.applyImpulse(VecMath.scale(directionA,
+		 * -rollingFriction), contactA);
+		 * B.applyImpulse(VecMath.scale(directionB, rollingFriction), contactB);
+		 */
+
+		// directionA.scale(rollingFriction);
+		// directionB.scale(-rollingFriction);
+		// A.applyTorqueImpulse(directionA);
+		// B.applyTorqueImpulse(directionB);
 	}
 
 	@Override

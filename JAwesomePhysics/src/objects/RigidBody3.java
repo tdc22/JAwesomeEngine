@@ -100,6 +100,8 @@ public class RigidBody3 extends
 		angularvelocity = new Vector3f();
 		torqueaccumulator = new Vector3f();
 		invinertia = new Quaternionf(0);
+		dynamicfriction = 0.05f;
+		rollingfriction = 0.000001f;
 	}
 
 	public void setAngularVelocity(float velocityX, float velocityY,

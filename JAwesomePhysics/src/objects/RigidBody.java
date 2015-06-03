@@ -115,14 +115,13 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 
 	private void init() {
 		invMass = 0;
-		restitution = 0.5f;
-		staticfriction = 0.0f;
-		dynamicfriction = 0.0f;
-		rollingfriction = 0.0f;
+		restitution = 0.2f;// 0.5f;
+		staticfriction = 0.3f;
+		// Dynamic and rolling frictin in RigidBody2 and RigidBody3
 		lineardamping = 0.05f;
 		angulardamping = 0.05f;
 		/*
-		 * invMass = 0; restitution = 0.5f; staticfriction = 0.3f;
+		 * 2d: invMass = 0; restitution = 0.5f; staticfriction = 0.3f;
 		 * dynamicfriction = 0.2f; rollingfriction = 0.01f; lineardamping =
 		 * 0.05f; angulardamping = 0.05f;
 		 */

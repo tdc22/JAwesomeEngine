@@ -109,6 +109,8 @@ public class RigidBody2 extends
 		angularvelocity = new Vector1f();
 		torqueaccumulator = new Vector1f();
 		invinertia = new Matrix1f(0);
+		dynamicfriction = 0.2f;
+		rollingfriction = 0.01f;
 	}
 
 	public void setAngularVelocity(float velocity) {
