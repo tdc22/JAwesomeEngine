@@ -5,20 +5,12 @@ import math.VecMath;
 import matrix.Matrix1f;
 import objects.CollisionShape;
 import objects.CollisionShape2;
-import objects.InertiaCalculator;
 import objects.SupportCalculator;
 import quaternion.Complexf;
 import shapedata2d.QuadStructure;
 import vector.Vector2f;
 
 public class QuadShape extends CollisionShape2 implements QuadStructure {
-	protected class QuadInertia implements InertiaCalculator<Matrix1f> {
-		@Override
-		public Matrix1f calculateInertia(float mass) {
-			return new Matrix1f(1);
-		}
-	}
-
 	protected class QuadSupport implements SupportCalculator<Vector2f> {
 		private CollisionShape<Vector2f, Complexf, Matrix1f> collisionshape;
 
@@ -71,11 +63,6 @@ public class QuadShape extends CollisionShape2 implements QuadStructure {
 		translate(pos);
 		this.halfsize = halfsize;
 		init();
-	}
-
-	@Override
-	public InertiaCalculator<Matrix1f> createInertiaCalculator() {
-		return new QuadInertia();
 	}
 
 	@Override

@@ -2,31 +2,14 @@ package collisionshape;
 
 import math.QuatMath;
 import math.VecMath;
-import matrix.Matrix3f;
 import objects.CollisionShape;
 import objects.CollisionShape3;
-import objects.InertiaCalculator;
 import objects.SupportCalculator;
 import quaternion.Quaternionf;
 import shapedata.BoxStructure;
 import vector.Vector3f;
 
 public class BoxShape extends CollisionShape3 implements BoxStructure {
-	protected class BoxInertia implements InertiaCalculator<Quaternionf> {
-		@Override
-		public Quaternionf calculateInertia(float mass) {
-			float fmass = mass / 12f;
-			Matrix3f inertiaMatrix = new Matrix3f(fmass
-					* (halfsize.y * halfsize.y * 4 + halfsize.z * halfsize.z
-							* 4), 0, 0, 0, fmass
-					* (halfsize.x * halfsize.x * 4 + halfsize.z * halfsize.z
-							* 4), 0, 0, 0, fmass
-					* (halfsize.x * halfsize.x * 4 + halfsize.y * halfsize.y
-							* 4));
-			return inertiaMatrix.toQuaternionDiagonalf();
-		}
-	}
-
 	protected class BoxSupport implements SupportCalculator<Vector3f> {
 		private CollisionShape<Vector3f, Quaternionf, Quaternionf> collisionshape;
 
@@ -81,11 +64,6 @@ public class BoxShape extends CollisionShape3 implements BoxStructure {
 		translate(pos);
 		this.halfsize = halfsize;
 		init();
-	}
-
-	@Override
-	public InertiaCalculator<Quaternionf> createInertiaCalculator() {
-		return new BoxInertia();
 	}
 
 	@Override

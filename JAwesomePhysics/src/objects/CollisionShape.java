@@ -15,7 +15,6 @@ public abstract class CollisionShape<L extends Vector, A1 extends Rotation, A2 e
 	AABB<L> aabb;
 	A1 invrotation;
 	protected SupportCalculator<L> supportcalculator;
-	protected InertiaCalculator<A2> inertiacalculator;
 
 	public CollisionShape() {
 
@@ -25,14 +24,7 @@ public abstract class CollisionShape<L extends Vector, A1 extends Rotation, A2 e
 		aabb = cs.getAABB();
 		invrotation = cs.getInverseRotation();
 		supportcalculator = cs.createSupportCalculator(this);
-		inertiacalculator = cs.createInertiaCalculator();
 	}
-
-	public A2 calculateInertia(float mass) {
-		return inertiacalculator.calculateInertia(mass);
-	}
-
-	public abstract InertiaCalculator<A2> createInertiaCalculator();
 
 	public abstract SupportCalculator<L> createSupportCalculator(
 			CollisionShape<L, A1, A2> cs);
@@ -46,10 +38,6 @@ public abstract class CollisionShape<L extends Vector, A1 extends Rotation, A2 e
 	public abstract L getGlobalMaxAABB();
 
 	public abstract L getGlobalMinAABB();
-
-	public InertiaCalculator<A2> getInertiaCalculator() {
-		return inertiacalculator;
-	}
 
 	public A1 getInverseRotation() {
 		return invrotation;

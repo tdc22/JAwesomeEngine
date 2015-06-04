@@ -69,11 +69,6 @@ public class RigidBody2 extends
 	}
 
 	@Override
-	public InertiaCalculator<Matrix1f> createInertiaCalculator() {
-		return null;
-	}
-
-	@Override
 	public SupportCalculator<Vector2f> createSupportCalculator(
 			CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 		return null;

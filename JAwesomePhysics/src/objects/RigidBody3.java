@@ -62,11 +62,6 @@ public class RigidBody3 extends
 	}
 
 	@Override
-	public InertiaCalculator<Quaternionf> createInertiaCalculator() {
-		return null;
-	}
-
-	@Override
 	public SupportCalculator<Vector3f> createSupportCalculator(
 			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		return null;

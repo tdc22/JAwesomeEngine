@@ -1,28 +1,14 @@
 package collisionshape;
 
 import math.QuatMath;
-import matrix.Matrix3f;
 import objects.CollisionShape;
 import objects.CollisionShape3;
-import objects.InertiaCalculator;
 import objects.SupportCalculator;
 import quaternion.Quaternionf;
 import shapedata.CapsuleStructure;
 import vector.Vector3f;
 
 public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
-	protected class CapsuleInertia implements InertiaCalculator<Quaternionf> {
-		@Override
-		public Quaternionf calculateInertia(float mass) {
-			float fmass = mass / 5f;
-			Matrix3f inertiaMatrix = new Matrix3f(fmass
-					* (height * height + radius * radius), 0, 0, 0, fmass
-					* (radius * radius * 2), 0, 0, 0, fmass
-					* (radius * radius + height * height));
-			return inertiaMatrix.toQuaternionDiagonalf();
-		}
-	}
-
 	protected class CapsuleSupport implements SupportCalculator<Vector3f> {
 		private CollisionShape<Vector3f, Quaternionf, Quaternionf> collisionshape;
 
@@ -68,11 +54,6 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 		this.radius = radius;
 		this.height = height;
 		init();
-	}
-
-	@Override
-	public InertiaCalculator<Quaternionf> createInertiaCalculator() {
-		return new CapsuleInertia();
 	}
 
 	@Override

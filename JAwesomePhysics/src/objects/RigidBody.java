@@ -40,10 +40,6 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 
 	public abstract void applyTorqueImpulse(A1 torque);
 
-	public void calculateInertia() {
-		setInertia(calculateInertia(getMass()));
-	}
-
 	public void clearForces() {
 		forceaccumulator.setAll(0);
 		torqueaccumulator.setAll(0);

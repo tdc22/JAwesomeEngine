@@ -4,20 +4,12 @@ import math.ComplexMath;
 import matrix.Matrix1f;
 import objects.CollisionShape;
 import objects.CollisionShape2;
-import objects.InertiaCalculator;
 import objects.SupportCalculator;
 import quaternion.Complexf;
 import shapedata2d.EllipseStructure;
 import vector.Vector2f;
 
 public class EllipseShape extends CollisionShape2 implements EllipseStructure {
-	protected class EllipseInertia implements InertiaCalculator<Matrix1f> {
-		@Override
-		public Matrix1f calculateInertia(float mass) {
-			return new Matrix1f(1);
-		}
-	}
-
 	protected class EllipseSupport implements SupportCalculator<Vector2f> {
 		private CollisionShape<Vector2f, Complexf, Matrix1f> collisionshape;
 
@@ -62,11 +54,6 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 		this.radius = radius;
 		this.height = height;
 		init();
-	}
-
-	@Override
-	public InertiaCalculator<Matrix1f> createInertiaCalculator() {
-		return new EllipseInertia();
 	}
 
 	@Override
