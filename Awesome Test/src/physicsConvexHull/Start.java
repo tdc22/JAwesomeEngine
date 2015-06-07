@@ -1,8 +1,8 @@
-package epaDebugger;
+package physicsConvexHull;
 
 public class Start {
 	public static void main(String[] args) {
-		EPADebugger dt = new EPADebugger();
+		ConvexHullTest dt = new ConvexHullTest();
 		dt.start();
 	}
 }

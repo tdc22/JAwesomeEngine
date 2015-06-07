@@ -1,4 +1,4 @@
-package epaDebuggerRegionTest;
+package debug_EPARegion;
 
 import game.StandardGame;
 import input.Input;

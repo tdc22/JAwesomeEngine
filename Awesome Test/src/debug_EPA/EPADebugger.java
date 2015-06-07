@@ -1,4 +1,4 @@
-package epaDebugger;
+package debug_EPA;
 
 import game.StandardGame;
 import input.Input;

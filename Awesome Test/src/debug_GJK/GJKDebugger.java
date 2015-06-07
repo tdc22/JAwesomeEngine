@@ -1,4 +1,4 @@
-package gjkDebugger;
+package debug_GJK;
 
 import game.StandardGame;
 import input.Input;

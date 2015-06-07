@@ -1,4 +1,4 @@
-package gjkDebuggerRegionTest;
+package debug_GJKRegion;
 
 import game.StandardGame;
 import input.Input;

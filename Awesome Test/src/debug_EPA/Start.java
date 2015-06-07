@@ -1,8 +1,8 @@
-package gjkDebugger;
+package debug_EPA;
 
 public class Start {
 	public static void main(String[] args) {
-		GJKDebugger dt = new GJKDebugger();
+		EPADebugger dt = new EPADebugger();
 		dt.start();
 	}
 }

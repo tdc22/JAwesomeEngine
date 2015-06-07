@@ -1,4 +1,4 @@
-package epaDebuggerRegionTest;
+package debug_GJKRegion;
 
 public class Start {
 	public static void main(String[] args) {

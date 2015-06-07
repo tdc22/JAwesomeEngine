@@ -1,4 +1,4 @@
-package epaDebugger;
+package debug_EPA;
 
 import java.awt.Color;
 import java.util.List;
@@ -7,7 +7,7 @@ import math.VecMath;
 import objects.ShapedObject;
 import utils.GLConstants;
 import vector.Vector3f;
-import epaDebugger.EPADebugger.Triangle;
+import debug_EPA.EPADebugger.Triangle;
 
 public class Simplex extends ShapedObject {
 	public Simplex(List<Triangle> triangles, Triangle closest) {

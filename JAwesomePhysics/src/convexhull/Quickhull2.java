@@ -11,6 +11,7 @@ public class Quickhull2 {
 	// source:
 	// http://www.sanfoundry.com/java-program-implement-quick-hull-algorithm-find-convex-hull/
 	public static ConvexShape2 computeConvexHull(List<Vector2f> points) {
+		points = new ArrayList<Vector2f>(points);
 		List<Vector2f> vertices = new ArrayList<Vector2f>();
 
 		if (points.size() > 0) {
@@ -69,8 +70,9 @@ public class Quickhull2 {
 		return shape;
 	}
 
-	private static float distance(Vector2f A, Vector2f B, Vector2f C) {
-		return Math.abs((B.x - A.x) * (A.y - C.y) - (B.y - A.y) * (A.x - C.x));
+	private static float distance(Vector2f A, Vector2f B, Vector2f P) {
+		// |(B - A) x (A - P)|
+		return Math.abs((B.x - A.x) * (A.y - P.y) - (B.y - A.y) * (A.x - P.x));
 	}
 
 	private static int pointLocation(Vector2f A, Vector2f B, Vector2f P) {

@@ -1,4 +1,4 @@
-package gjkDebugger;
+package debug_GJK;
 
 import java.awt.Color;
 import java.util.List;
