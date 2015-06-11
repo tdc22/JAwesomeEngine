@@ -1,19 +1,19 @@
-package physicsBasicTest;
+package physicsConvexTest;
 
 import game.StandardGame;
 import gui.Font;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
 import integration.VerletIntegration;
 
 import java.awt.Color;
 
 import loader.FontLoader;
+import loader.ModelLoader;
 import manifold.SimpleManifoldManager;
+import math.VecMath;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import objects.RigidBody3;
+import objects.ShapedObject;
 import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
@@ -30,16 +30,13 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 
-public class BasicTest extends StandardGame {
+public class ConvexTest extends StandardGame {
 	PhysicsSpace space;
 	RigidBody3 rb1;
 	int tempdelta = 0;
 	boolean impulseapplied = false;
 	Debugger debugger;
 	PhysicsDebug physicsdebug;
-	InputEvent run, step;
-
-	InputEvent toggleMouseBind;
 
 	@Override
 	public void init() {
@@ -52,8 +49,7 @@ public class BasicTest extends StandardGame {
 
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
 				new EPA()), new ImpulseResolution(), new ProjectionCorrection(
-				0.01f), new SimpleManifoldManager<Vector3f>());// new
-																// MultiPointManifoldManager());
+				0.01f), new SimpleManifoldManager<Vector3f>());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
@@ -66,51 +62,12 @@ public class BasicTest extends StandardGame {
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 
-		// Some walls
+		ShapedObject bunny = ModelLoader.load("res/models/bunny.mobj");
+		RigidBody3 bunnyBody = new RigidBody3(
+				PhysicsShapeCreator.createHull(bunny));
 
-		Box w1 = new Box(10, -1f, 0, 1, 5, 10);
-		space.addRigidBody(w1, new RigidBody3(PhysicsShapeCreator.create(w1)));
-		addObject(w1);
-
-		Box w2 = new Box(-10, -1f, 0, 1, 5, 10);
-		space.addRigidBody(w2, new RigidBody3(PhysicsShapeCreator.create(w2)));
-		addObject(w2);
-
-		Box w3 = new Box(0, -1f, 10, 10, 5, 1);
-		space.addRigidBody(w3, new RigidBody3(PhysicsShapeCreator.create(w3)));
-		addObject(w3);
-
-		Box w4 = new Box(0, -1f, -10, 10, 5, 1);
-		space.addRigidBody(w4, new RigidBody3(PhysicsShapeCreator.create(w4)));
-		addObject(w4);
-
-		// End walls
-
-		// Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
-		// rb1 = PhysicsShapeCreator.create(q);
-		// rb1.setMass(1f);
-		// rb1.setInertia(new Quaternionf());
-		// space.addRigidBody(q, rb1);
-		// addObject(q);
-
-		// Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
-		// c.setColor(Color.RED);
-		// rb1 = new RigidBody3(PhysicsShapeCreator.create(c));
-		// rb1.setMass(1f);
-		// rb1.setInertia(new Quaternionf());
-		// space.addRigidBody(c, rb1);
-		// addObject(c);
-
-		step = new InputEvent("Step", new Input(Input.KEYBOARD_EVENT, " ",
-				KeyInput.KEY_PRESSED));
-		run = new InputEvent("Run", new Input(Input.KEYBOARD_EVENT, "X",
-				KeyInput.KEY_DOWN));
-		inputs.addEvent(step);
-		inputs.addEvent(run);
-
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
-		inputs.addEvent(toggleMouseBind);
+		space.addRigidBody(bunny, bunnyBody);
+		addObject(bunny);
 	}
 
 	@Override
@@ -133,32 +90,24 @@ public class BasicTest extends StandardGame {
 		// System.out.println(rb1.getLinearVelocity());
 		if (tempdelta > 200) {
 			if (inputs.isMouseButtonDown("0")) {
-				Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
-				// q.rotate(45f, 0f, 45f);
+				Box q = new Box(cam.getTranslation(), 0.5f, 0.5f, 0.5f);
 				q.setColor(Color.BLUE);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(q));
 				rb.setMass(0.1f);
 				rb.setInertia(new Quaternionf(0.1f, 0, 0, 0));
 				space.addRigidBody(q, rb);
+				rb.applyCentralImpulse(VecMath.scale(cam.getDirection(), 3));
 				addObject(q);
 				tempdelta = 0;
-				System.out.println("Box added.");
-				// Box q = new Box(cam.getTranslation(), 0.5f, 0.5f, 0.5f);
-				// RigidBody3 rb = PhysicsShapeCreator.create(q);
-				// rb.setMass(1f);
-				// rb.setInertia(new Quaternionf());
-				// rb.applyCentralImpulse(VecMath.scale(cam.getDirection(), 5));
-				// space.addRigidBody(q, rb);
-				// addObject(q);
-				// tempdelta = 0;
 			}
 			if (inputs.isMouseButtonDown("1")) {
-				Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
+				Sphere c = new Sphere(cam.getTranslation(), 0.5f, 36, 36);
 				c.setColor(Color.RED);
 				RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(c));
 				rb.setMass(0.1f);
 				rb.setInertia(new Quaternionf(0.03f, 0, 0, 0));
 				space.addRigidBody(c, rb);
+				rb.applyCentralImpulse(VecMath.scale(cam.getDirection(), 3));
 				addObject(c);
 				tempdelta = 0;
 			}
@@ -166,15 +115,7 @@ public class BasicTest extends StandardGame {
 			tempdelta += delta;
 		}
 
-		if (toggleMouseBind.isActive()) {
-			if (!display.isMouseBound())
-				display.bindMouse();
-			else
-				display.unbindMouse();
-		}
-
 		debugger.update();
-		// if (run.isActive() || step.isActive())
 		space.update(delta);
 		physicsdebug.update();
 

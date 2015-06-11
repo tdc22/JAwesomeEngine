@@ -107,8 +107,22 @@ public class ConvexShape2 extends CollisionShape2 {
 	}
 
 	private void init() {
-		float diag = 0;
-		setAABB(new Vector2f(-diag, -diag), new Vector2f(diag, diag));
+		float minX = Float.MAX_VALUE;
+		float minY = Float.MAX_VALUE;
+		float maxX = -Float.MAX_VALUE;
+		float maxY = -Float.MAX_VALUE;
+		for (Vector2f v : vertices) {
+			if (v.x < minX)
+				minX = v.x;
+			if (v.y < minY)
+				minY = v.y;
+			if (v.x > maxX)
+				maxX = v.x;
+			if (v.y > maxY)
+				maxY = v.y;
+		}
+
+		setAABB(new Vector2f(minX, minY), new Vector2f(maxX, maxY));
 		supportcalculator = createSupportCalculator(this);
 	}
 }

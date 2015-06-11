@@ -7,6 +7,7 @@ import input.KeyInput;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import loader.FontLoader;
@@ -87,6 +88,65 @@ public class ConvexHullDebugger extends StandardGame {
 		// removePoints(faces, points);
 		if (currT == faces.size()) {
 			System.out.println("DONE");
+			System.out.println("-------------------");
+
+			HashMap<Integer, Integer[]> adjacentsMap = new HashMap<Integer, Integer[]>();
+			List<Integer> adjs = new ArrayList<Integer>();
+			for (Triangle f : faces) {
+				if (!vertices.contains(f.a))
+					vertices.add(f.a);
+				if (!vertices.contains(f.b))
+					vertices.add(f.b);
+				if (!vertices.contains(f.c))
+					vertices.add(f.c);
+			}
+			for (int i = 0; i < vertices.size(); i++) {
+				Vector3f v = vertices.get(i);
+				for (Triangle f : faces) {
+					if (f.a.equals(v)) {
+						int b = vertices.indexOf(f.b);
+						if (!adjs.contains(b))
+							adjs.add(b);
+						int c = vertices.indexOf(f.c);
+						if (!adjs.contains(c))
+							adjs.add(c);
+					} else if (f.b.equals(v)) {
+						int a = vertices.indexOf(f.a);
+						if (!adjs.contains(a))
+							adjs.add(a);
+						int c = vertices.indexOf(f.c);
+						if (!adjs.contains(c))
+							adjs.add(c);
+					} else if (f.c.equals(v)) {
+						int a = vertices.indexOf(f.a);
+						if (!adjs.contains(a))
+							adjs.add(a);
+						int b = vertices.indexOf(f.b);
+						if (!adjs.contains(b))
+							adjs.add(b);
+					}
+				}
+				Integer[] adjacents = new Integer[adjs.size()];
+				adjs.toArray(adjacents);
+				adjacentsMap.put(i, adjacents);
+				adjs.clear();
+			}
+
+			for (Vector3f v : vertices)
+				System.out.println(v);
+			for (int i = 0; i < vertices.size(); i++) {
+				for (Integer a : adjacentsMap.get(i))
+					System.out.print(a + "; ");
+				System.out.println();
+			}
+			System.out.println("---");
+			for (Triangle t : faces) {
+				System.out
+						.println(vertices.indexOf(t.a) + " | "
+								+ vertices.indexOf(t.b) + " | "
+								+ vertices.indexOf(t.c));
+			}
+
 			System.exit(0);
 		}
 		Triangle t = faces.get(currT);
@@ -95,36 +155,9 @@ public class ConvexHullDebugger extends StandardGame {
 			Vector3f p = points.get(furthest);
 			points.remove(furthest);
 
-			Triangle[] adjacents = findAdjacentTriangles(t, faces);
-			if (VecMath.dotproduct(VecMath.subtraction(p, t.a),
-					adjacents[0].normal) > 0) {
-				Vector3f adjD = findTheD(t.a, t.b, adjacents[0]);
-				faces.add(new Triangle(p, t.a, adjD));
-				faces.add(new Triangle(t.b, p, adjD));
-				faces.remove(adjacents[0]);
-			} else {
-				faces.add(new Triangle(t.a, t.b, p));
-			}
-
-			if (VecMath.dotproduct(VecMath.subtraction(p, t.b),
-					adjacents[1].normal) > 0) {
-				Vector3f adjD = findTheD(t.b, t.c, adjacents[1]);
-				faces.add(new Triangle(p, t.b, adjD));
-				faces.add(new Triangle(t.c, p, adjD));
-				faces.remove(adjacents[1]);
-			} else {
-				faces.add(new Triangle(t.b, t.c, p));
-			}
-
-			if (VecMath.dotproduct(VecMath.subtraction(p, t.c),
-					adjacents[2].normal) > 0) {
-				Vector3f adjD = findTheD(t.c, t.a, adjacents[2]);
-				faces.add(new Triangle(p, t.c, adjD));
-				faces.add(new Triangle(t.a, p, adjD));
-				faces.remove(adjacents[2]);
-			} else {
-				faces.add(new Triangle(t.c, t.a, p));
-			}
+			faces.add(new Triangle(t.a, t.b, p));
+			faces.add(new Triangle(t.b, t.c, p));
+			faces.add(new Triangle(t.c, t.a, p));
 
 			faces.remove(t);
 
@@ -292,10 +325,15 @@ public class ConvexHullDebugger extends StandardGame {
 		inputs.addEvent(stepEPA);
 
 		points = new ArrayList<Vector3f>();
-		for (int i = 0; i < 100; i++) {
-			points.add(new Vector3f(Math.random() * 10 - 5,
-					Math.random() * 10 - 5, Math.random() * 10 - 5));
-		}
+		// for (int i = 0; i < 100; i++) {
+		// points.add(new Vector3f(Math.random() * 10 - 5,
+		// Math.random() * 10 - 5, Math.random() * 10 - 5));
+		// }
+		points.add(new Vector3f(11.404785, 10.446343, -2.761249));
+		points.add(new Vector3f(5.6260934, 5.6621804, 11.700975));
+		points.add(new Vector3f(6.812222, -1.6368495, 9.790112));
+		points.add(new Vector3f(2.2193725, -1.7034389, -4.2405186));
+		points.add(new Vector3f(-0.8538285, 3.822501, 4.7598157));
 		vertices = new ArrayList<Vector3f>();
 
 		hullInit();
