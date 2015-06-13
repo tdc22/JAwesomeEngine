@@ -107,28 +107,16 @@ public class ConvexShape extends CollisionShape3 {
 	}
 
 	private void init() {
-		float minX = Float.MAX_VALUE;
-		float minY = Float.MAX_VALUE;
-		float minZ = Float.MAX_VALUE;
-		float maxX = -Float.MAX_VALUE;
-		float maxY = -Float.MAX_VALUE;
-		float maxZ = -Float.MAX_VALUE;
+		float maxLength = 0;
 		for (Vector3f v : vertices) {
-			if (v.x < minX)
-				minX = v.x;
-			if (v.y < minY)
-				minY = v.y;
-			if (v.z < minZ)
-				minZ = v.z;
-			if (v.x > maxX)
-				maxX = v.x;
-			if (v.y > maxY)
-				maxY = v.y;
-			if (v.z > maxZ)
-				maxZ = v.z;
+			float l = (float) v.lengthSquared();
+			if (l > maxLength)
+				maxLength = l;
 		}
+		maxLength = (float) Math.sqrt(maxLength);
 
-		setAABB(new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ));
+		setAABB(new Vector3f(-maxLength, -maxLength, -maxLength), new Vector3f(
+				maxLength, maxLength, maxLength));
 		supportcalculator = createSupportCalculator(this);
 	}
 }
