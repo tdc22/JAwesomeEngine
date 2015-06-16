@@ -1,5 +1,7 @@
 package collisionshape2d;
 
+import java.util.List;
+
 import math.ComplexMath;
 import math.VecMath;
 import matrix.Matrix1f;
@@ -32,6 +34,21 @@ public class QuadShape extends CollisionShape2 implements QuadStructure {
 					collisionshape.getInverseRotation(), direction);
 			return new Vector2f((v.x < 0 ? 1 : -1) * halfsize.x, (v.y < 0 ? 1
 					: -1) * halfsize.y);
+		}
+
+		@Override
+		public List<Vector2f> supportPointLocalList(Vector2f direction) {
+			return null;
+		}
+
+		@Override
+		public List<Vector2f> supportPointLocalNegativeList(Vector2f direction) {
+			return null;
+		}
+
+		@Override
+		public boolean hasMultipleSupportPoints() {
+			return false;
 		}
 	}
 

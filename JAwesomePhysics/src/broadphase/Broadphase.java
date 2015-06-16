@@ -2,18 +2,18 @@ package broadphase;
 
 import java.util.Set;
 
-import objects.RigidBody;
+import objects.CollisionShape;
 import utils.Pair;
 import vector.Vector;
 
-public interface Broadphase<L extends Vector> {
-	public void add(RigidBody<L, ?, ?, ?> object);
+public interface Broadphase<L extends Vector, ObjectType extends CollisionShape<L, ?, ?>> {
+	public void add(ObjectType object);
 
-	public Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> getOverlaps();
+	public Set<Pair<ObjectType, ObjectType>> getOverlaps();
 
-	public Set<RigidBody<L, ?, ?, ?>> raycast();
+	public Set<ObjectType> raycast();
 
-	public void remove(RigidBody<L, ?, ?, ?> object);
+	public void remove(ObjectType object);
 
 	public void update();
 }

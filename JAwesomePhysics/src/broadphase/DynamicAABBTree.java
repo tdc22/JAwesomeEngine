@@ -12,7 +12,8 @@ import objects.RigidBody;
 import utils.Pair;
 import vector.Vector3f;
 
-public class DynamicAABBTree implements Broadphase<Vector3f> {
+public class DynamicAABBTree implements
+		Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> {
 
 	// main source:
 	// http://allenchou.net/2014/02/game-physics-broadphase-dynamic-aabb-tree/

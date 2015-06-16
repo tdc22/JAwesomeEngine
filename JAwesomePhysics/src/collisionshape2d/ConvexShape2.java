@@ -69,6 +69,21 @@ public class ConvexShape2 extends CollisionShape2 {
 				}
 			}
 		}
+
+		@Override
+		public List<Vector2f> supportPointLocalList(Vector2f direction) {
+			return null;
+		}
+
+		@Override
+		public List<Vector2f> supportPointLocalNegativeList(Vector2f direction) {
+			return null;
+		}
+
+		@Override
+		public boolean hasMultipleSupportPoints() {
+			return false;
+		}
 	}
 
 	List<Vector2f> vertices;

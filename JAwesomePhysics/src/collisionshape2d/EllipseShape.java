@@ -1,5 +1,7 @@
 package collisionshape2d;
 
+import java.util.List;
+
 import math.ComplexMath;
 import matrix.Matrix1f;
 import objects.CollisionShape;
@@ -35,6 +37,21 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 			Vector2f v = ComplexMath.transform(
 					collisionshape.getInverseRotation(), direction);
 			return new Vector2f(v.x * -radius, v.y * -height);
+		}
+
+		@Override
+		public List<Vector2f> supportPointLocalList(Vector2f direction) {
+			return null;
+		}
+
+		@Override
+		public List<Vector2f> supportPointLocalNegativeList(Vector2f direction) {
+			return null;
+		}
+
+		@Override
+		public boolean hasMultipleSupportPoints() {
+			return false;
 		}
 	}
 

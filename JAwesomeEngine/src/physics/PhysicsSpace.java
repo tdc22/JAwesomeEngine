@@ -21,7 +21,8 @@ public class PhysicsSpace extends Space3 {
 	List<GameObject> addedobjects;
 
 	public PhysicsSpace(IntegrationSolver integrationsolver,
-			Broadphase<Vector3f> broadphase, Narrowphase<Vector3f> narrowphase,
+			Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> broadphase,
+			Narrowphase<Vector3f> narrowphase,
 			CollisionResolution collisionresolution,
 			PositionalCorrection positionalcorrection,
 			ManifoldManager<Vector3f> manifoldmanager) {

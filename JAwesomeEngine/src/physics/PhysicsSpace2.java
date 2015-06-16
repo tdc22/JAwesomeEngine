@@ -23,7 +23,8 @@ public class PhysicsSpace2 extends Space2 {
 	List<GameObject> addedobjects;
 
 	public PhysicsSpace2(IntegrationSolver integrationsolver,
-			Broadphase<Vector2f> broadphase, Narrowphase<Vector2f> narrowphase,
+			Broadphase<Vector2f, RigidBody<Vector2f, ?, ?, ?>> broadphase,
+			Narrowphase<Vector2f> narrowphase,
 			CollisionResolution collisionresolution,
 			PositionalCorrection positionalcorrection,
 			ManifoldManager<Vector2f> manifoldmanager) {

@@ -17,7 +17,8 @@ import broadphase.Broadphase;
 public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 
 	public Space2(IntegrationSolver integrationsolver,
-			Broadphase<Vector2f> broadphase, Narrowphase<Vector2f> narrowphase,
+			Broadphase<Vector2f, RigidBody<Vector2f, ?, ?, ?>> broadphase,
+			Narrowphase<Vector2f> narrowphase,
 			CollisionResolution collisionresolution,
 			PositionalCorrection positionalcorrection,
 			ManifoldManager<Vector2f> manifoldmanager) {

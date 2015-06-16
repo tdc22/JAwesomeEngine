@@ -1,5 +1,7 @@
 package collisionshape;
 
+import java.util.List;
+
 import math.QuatMath;
 import math.VecMath;
 import objects.CollisionShape;
@@ -31,6 +33,21 @@ public class BoxShape extends CollisionShape3 implements BoxStructure {
 					collisionshape.getInverseRotation(), direction);
 			return VecMath.multiplication(new Vector3f(v.x < 0 ? 1 : -1,
 					v.y < 0 ? 1 : -1, v.z < 0 ? 1 : -1), halfsize);
+		}
+
+		@Override
+		public List<Vector3f> supportPointLocalList(Vector3f direction) {
+			return null;
+		}
+
+		@Override
+		public List<Vector3f> supportPointLocalNegativeList(Vector3f direction) {
+			return null;
+		}
+
+		@Override
+		public boolean hasMultipleSupportPoints() {
+			return false;
 		}
 	}
 

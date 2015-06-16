@@ -24,7 +24,7 @@ import broadphase.Broadphase;
 public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rotation, A3 extends Rotation>
 		implements Updateable {
 	final IntegrationSolver integrationsolver;
-	final Broadphase<L> broadphase;
+	final Broadphase<L, RigidBody<L, ?, ?, ?>> broadphase;
 	final Narrowphase<L> narrowphase;
 	final CollisionResolution collisionresolution;
 	final PositionalCorrection positionalcorrection;
@@ -38,7 +38,8 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected int constraintResolutionIterations = 25;
 	protected boolean cullStaticOverlaps = true;
 
-	public Space(IntegrationSolver integrationsolver, Broadphase<L> broadphase,
+	public Space(IntegrationSolver integrationsolver,
+			Broadphase<L, RigidBody<L, ?, ?, ?>> broadphase,
 			Narrowphase<L> narrowphase,
 			CollisionResolution collisionresolution,
 			PositionalCorrection positionalcorrection,
@@ -75,7 +76,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	protected abstract void correct();
 
-	public Broadphase<L> getBroadphase() {
+	public Broadphase<L, RigidBody<L, ?, ?, ?>> getBroadphase() {
 		return broadphase;
 	}
 
@@ -200,23 +201,31 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps) {
 			if (overlap.getFirst().getMass() != 0
 					|| overlap.getSecond().getMass() != 0
-					|| !cullStaticOverlaps) // TODO: check if
+					|| !cullStaticOverlaps) { // TODO: check if
 				// there's a better
 				// way or make this
 				// optional
-				if (narrowphase.isColliding(overlap.getFirst(),
-						overlap.getSecond())) {
-					ContactManifold<L> contactManifold = narrowphase
-							.computeCollision(overlap.getFirst(),
-									overlap.getSecond());
-					// System.out.println(contactManifold.getCollisionNormal() +
-					// ":   " + overlap.getFirst().getTranslation()
-					// + "; " + overlap.getFirst().getRotation()
-					// + "; | ; " + overlap.getSecond().getTranslation()
-					// + "; " + overlap.getSecond().getRotation());
-					manifoldmanager.add(new CollisionManifold<L>(overlap,
-							contactManifold));
+				if (!overlap.getFirst().hasMultipleSupportPoints()) {
+					if (!overlap.getSecond().hasMultipleSupportPoints()) {
+						if (narrowphase.isColliding(overlap.getFirst(),
+								overlap.getSecond())) {
+							ContactManifold<L> contactManifold = narrowphase
+									.computeCollision(overlap.getFirst(),
+											overlap.getSecond());
+							manifoldmanager.add(new CollisionManifold<L>(
+									overlap, contactManifold));
+						}
+					} else {
+						// for(overlap.getSecond().getSupportCalculator())
+					}
+				} else {
+					if (!overlap.getSecond().hasMultipleSupportPoints()) {
+
+					} else {
+						System.err.println("Not implemented yet! :(");
+					}
 				}
+			}
 		}
 		for (int i = 0; i < resolutionIterations; i++)
 			resolve();

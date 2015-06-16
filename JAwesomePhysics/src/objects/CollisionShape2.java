@@ -1,5 +1,7 @@
 package objects;
 
+import java.util.List;
+
 import math.ComplexMath;
 import math.VecMath;
 import matrix.Matrix1f;
@@ -65,4 +67,27 @@ public abstract class CollisionShape2 extends
 		invrotation = c;
 	}
 
+	@Override
+	public List<Vector2f> supportPointList(Vector2f direction) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Vector2f> supportPointNegativeList(Vector2f direction) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Vector2f> supportPointRelativeList(Vector2f direction) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Vector2f> supportPointRelativeNegativeList(Vector2f direction) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

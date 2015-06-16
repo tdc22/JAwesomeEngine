@@ -15,7 +15,8 @@ import broadphase.Broadphase;
 public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> {
 
 	public Space3(IntegrationSolver integrationsolver,
-			Broadphase<Vector3f> broadphase, Narrowphase<Vector3f> narrowphase,
+			Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> broadphase,
+			Narrowphase<Vector3f> narrowphase,
 			CollisionResolution collisionresolution,
 			PositionalCorrection positionalcorrection,
 			ManifoldManager<Vector3f> manifoldmanager) {

@@ -7,11 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import objects.RigidBody;
+import objects.CollisionShape;
 import utils.Pair;
 import vector.Vector;
 
-public abstract class SweepAndPrune<L extends Vector> implements Broadphase<L> {
+public abstract class SweepAndPrune<L extends Vector, ObjectType extends CollisionShape<L, ?, ?>>
+		implements Broadphase<L, ObjectType> {
 	protected final class Counter {
 		public boolean wasOverlapping = false;
 		public int overlaps;
@@ -20,9 +21,9 @@ public abstract class SweepAndPrune<L extends Vector> implements Broadphase<L> {
 	protected class SweepPoint {
 		public boolean begin;
 		int axis;
-		public RigidBody<L, ?, ?, ?> object;
+		public ObjectType object;
 
-		public SweepPoint(RigidBody<L, ?, ?, ?> obj, boolean begin, int axis) {
+		public SweepPoint(ObjectType obj, boolean begin, int axis) {
 			this.object = obj;
 			this.begin = begin;
 			this.axis = axis;
@@ -36,22 +37,21 @@ public abstract class SweepAndPrune<L extends Vector> implements Broadphase<L> {
 		}
 	}
 
-	List<RigidBody<L, ?, ?, ?>> objects;
+	List<ObjectType> objects;
 
-	List<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> overlaps;
+	List<Pair<ObjectType, ObjectType>> overlaps;
 
-	Map<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>, Counter> counters;
+	Map<Pair<ObjectType, ObjectType>, Counter> counters;
 
 	public SweepAndPrune() {
-		objects = new ArrayList<RigidBody<L, ?, ?, ?>>();
-		overlaps = new ArrayList<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
-		counters = new LinkedHashMap<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>, Counter>();
+		objects = new ArrayList<ObjectType>();
+		overlaps = new ArrayList<Pair<ObjectType, ObjectType>>();
+		counters = new LinkedHashMap<Pair<ObjectType, ObjectType>, Counter>();
 	}
 
 	@Override
-	public Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> getOverlaps() {
-		return new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>(
-				overlaps);
+	public Set<Pair<ObjectType, ObjectType>> getOverlaps() {
+		return new LinkedHashSet<Pair<ObjectType, ObjectType>>(overlaps);
 	}
 
 	protected void sortAxis(List<SweepPoint> axis) {
@@ -65,7 +65,7 @@ public abstract class SweepAndPrune<L extends Vector> implements Broadphase<L> {
 				SweepPoint swapper = axis.get(i);
 
 				if (keyelement.begin && !swapper.begin) {
-					Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> pair = new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
+					Pair<ObjectType, ObjectType> pair = new Pair<ObjectType, ObjectType>(
 							keyelement.object, swapper.object);
 					if (counters.containsKey(pair)) {
 						counters.get(pair).overlaps++;
@@ -77,7 +77,7 @@ public abstract class SweepAndPrune<L extends Vector> implements Broadphase<L> {
 				}
 
 				if (!keyelement.begin && swapper.begin) {
-					Pair<RigidBody<?, ?, ?, ?>, RigidBody<?, ?, ?, ?>> pair = new Pair<RigidBody<?, ?, ?, ?>, RigidBody<?, ?, ?, ?>>(
+					Pair<ObjectType, ObjectType> pair = new Pair<ObjectType, ObjectType>(
 							keyelement.object, swapper.object);
 					if (counters.containsKey(pair)) {
 						counters.get(pair).overlaps--;

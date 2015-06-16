@@ -1,5 +1,7 @@
 package collisionshape;
 
+import java.util.List;
+
 import math.QuatMath;
 import objects.CollisionShape;
 import objects.CollisionShape3;
@@ -35,6 +37,21 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 			Vector3f v = QuatMath.transform(
 					collisionshape.getInverseRotation(), direction);
 			return new Vector3f(-v.x * radius, -v.y * height, -v.z * radius);
+		}
+
+		@Override
+		public List<Vector3f> supportPointLocalList(Vector3f direction) {
+			return null;
+		}
+
+		@Override
+		public List<Vector3f> supportPointLocalNegativeList(Vector3f direction) {
+			return null;
+		}
+
+		@Override
+		public boolean hasMultipleSupportPoints() {
+			return false;
 		}
 	}
 
