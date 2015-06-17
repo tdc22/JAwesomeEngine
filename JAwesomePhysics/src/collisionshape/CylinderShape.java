@@ -1,7 +1,5 @@
 package collisionshape;
 
-import java.util.List;
-
 import math.QuatMath;
 import objects.CollisionShape;
 import objects.CollisionShape3;
@@ -43,17 +41,7 @@ public class CylinderShape extends CollisionShape3 implements CylinderStructure 
 		}
 
 		@Override
-		public List<Vector3f> supportPointLocalList(Vector3f direction) {
-			return null;
-		}
-
-		@Override
-		public List<Vector3f> supportPointLocalNegativeList(Vector3f direction) {
-			return null;
-		}
-
-		@Override
-		public boolean hasMultipleSupportPoints() {
+		public boolean isCompound() {
 			return false;
 		}
 	}

@@ -26,7 +26,6 @@ import display.VideoSettings;
 
 public class BasicTest2d extends StandardGame {
 	PhysicsSpace2 space;
-	RigidBody2 rb1;
 	int tempdelta = 0;
 	Debugger debugger;
 	PhysicsDebug2 physicsdebug;
@@ -100,8 +99,6 @@ public class BasicTest2d extends StandardGame {
 				space.addRigidBody(c, rb);
 				add2dObject(c);
 				tempdelta = 0;
-
-				rb1 = rb;
 			}
 		} else {
 			tempdelta += delta;

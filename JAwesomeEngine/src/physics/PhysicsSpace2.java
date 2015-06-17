@@ -8,6 +8,7 @@ import java.util.List;
 import manifold.ManifoldManager;
 import matrix.Matrix1f;
 import narrowphase.Narrowphase;
+import objects.CompoundObject2;
 import objects.DataGameObject;
 import objects.GameObject;
 import objects.RigidBody;
@@ -42,6 +43,17 @@ public class PhysicsSpace2 extends Space2 {
 		body.setRotation(obj.getRotation());
 		body.setTranslation(obj.getTranslation());
 		addRigidBody(body);
+		addedobjects.add(obj);
+	}
+
+	// TODO: Think about that..........
+	// 1. where to put the compound object when having multiple GameObjects
+	// 2. how to bind each of the GameObjects to their location
+	// 3. how to update the location
+	public void addCompoundObject(CompoundObject2 compoundobject) {
+		compoundobject.setRotation(obj.getRotation());
+		compoundobject.setTranslation(obj.getTranslation());
+		addCompoundObject(compoundobject);
 		addedobjects.add(obj);
 	}
 

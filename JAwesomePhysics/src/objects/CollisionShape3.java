@@ -1,7 +1,5 @@
 package objects;
 
-import java.util.List;
-
 import math.QuatMath;
 import math.VecMath;
 import quaternion.Quaternionf;
@@ -64,29 +62,5 @@ public abstract class CollisionShape3 extends
 		Quaternionf q = new Quaternionf(this.getRotation());
 		q.invert();
 		invrotation = q;
-	}
-
-	@Override
-	public List<Vector3f> supportPointList(Vector3f direction) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Vector3f> supportPointNegativeList(Vector3f direction) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Vector3f> supportPointRelativeList(Vector3f direction) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Vector3f> supportPointRelativeNegativeList(Vector3f direction) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

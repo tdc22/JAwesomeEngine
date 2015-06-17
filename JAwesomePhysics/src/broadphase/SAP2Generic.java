@@ -57,12 +57,21 @@ public class SAP2Generic<ObjectType extends CollisionShape<Vector2f, ?, ?>>
 				if (c.overlaps < 2) {
 					overlaps.remove(pair);
 					c.wasOverlapping = false;
+
+					for (BroadphaseListener<Vector2f, ObjectType> listener : listeners) {
+						listener.overlapEnded(pair.getFirst(), pair.getSecond());
+					}
 				}
 			} else {
 				// report overlap
 				if (c.overlaps > 1) {
 					overlaps.add(pair);
 					c.wasOverlapping = true;
+
+					for (BroadphaseListener<Vector2f, ObjectType> listener : listeners) {
+						listener.overlapStarted(pair.getFirst(),
+								pair.getSecond());
+					}
 				}
 			}
 

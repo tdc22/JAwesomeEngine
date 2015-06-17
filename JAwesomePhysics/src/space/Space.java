@@ -11,6 +11,8 @@ import manifold.CollisionManifold;
 import manifold.ContactManifold;
 import manifold.ManifoldManager;
 import narrowphase.Narrowphase;
+import objects.CollisionShape;
+import objects.CompoundObject;
 import objects.Constraint;
 import objects.RigidBody;
 import objects.Updateable;
@@ -20,6 +22,7 @@ import resolution.CollisionResolution;
 import utils.Pair;
 import vector.Vector;
 import broadphase.Broadphase;
+import broadphase.BroadphaseListener;
 
 public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rotation, A3 extends Rotation>
 		implements Updateable {
@@ -30,6 +33,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	final PositionalCorrection positionalcorrection;
 	final ManifoldManager<L> manifoldmanager;
 	protected List<RigidBody<L, A1, A2, A3>> objects;
+	protected List<CompoundObject<L>> compoundObjects;
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> overlaps;
 	protected List<Constraint<L>> constraints;
 	protected L globalForce;
@@ -37,6 +41,34 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected int resolutionIterations = 25;
 	protected int constraintResolutionIterations = 25;
 	protected boolean cullStaticOverlaps = true;
+
+	protected class CompoundListener implements
+			BroadphaseListener<L, RigidBody<L, ?, ?, ?>> {
+
+		@Override
+		public void overlapStarted(RigidBody<L, ?, ?, ?> objA,
+				RigidBody<L, ?, ?, ?> objB) {
+		}
+
+		@Override
+		public void overlapEnded(RigidBody<L, ?, ?, ?> objA,
+				RigidBody<L, ?, ?, ?> objB) {
+			if (objA.isCompound()) {
+				if (objB.isCompound()) {
+
+				} else {
+					objA.getCompound().getCompoundBroadphase().remove(objB);
+				}
+			} else {
+				if (objB.isCompound()) {
+					objB.getCompound().getCompoundBroadphase().remove(objA);
+				} else {
+
+				}
+			}
+		}
+
+	}
 
 	public Space(IntegrationSolver integrationsolver,
 			Broadphase<L, RigidBody<L, ?, ?, ?>> broadphase,
@@ -51,8 +83,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		this.positionalcorrection = positionalcorrection;
 		this.manifoldmanager = manifoldmanager;
 		objects = new ArrayList<RigidBody<L, A1, A2, A3>>();
+		compoundObjects = new ArrayList<CompoundObject<L>>();
 		overlaps = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
 		constraints = new ArrayList<Constraint<L>>();
+		broadphase.addListener(new CompoundListener());
 	}
 
 	public void addConstraint(Constraint<L> constraint) {
@@ -196,17 +230,16 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 		broadphase.update();
 		overlaps = broadphase.getOverlaps();
+		for (CompoundObject<L> co : compoundObjects)
+			co.getCompoundBroadphase().update();
 
 		manifoldmanager.clear();
 		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps) {
 			if (overlap.getFirst().getMass() != 0
 					|| overlap.getSecond().getMass() != 0
-					|| !cullStaticOverlaps) { // TODO: check if
-				// there's a better
-				// way or make this
-				// optional
-				if (!overlap.getFirst().hasMultipleSupportPoints()) {
-					if (!overlap.getSecond().hasMultipleSupportPoints()) {
+					|| !cullStaticOverlaps) {
+				if (!overlap.getFirst().isCompound()) {
+					if (!overlap.getSecond().isCompound()) {
 						if (narrowphase.isColliding(overlap.getFirst(),
 								overlap.getSecond())) {
 							ContactManifold<L> contactManifold = narrowphase
@@ -216,17 +249,21 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 									overlap, contactManifold));
 						}
 					} else {
-						// for(overlap.getSecond().getSupportCalculator())
+						handleCompoundAndNonCompound(overlap.getSecond()
+								.getCompound(), overlap.getFirst());
 					}
 				} else {
-					if (!overlap.getSecond().hasMultipleSupportPoints()) {
-
+					if (!overlap.getSecond().isCompound()) {
+						handleCompoundAndNonCompound(overlap.getFirst()
+								.getCompound(), overlap.getSecond());
 					} else {
+						// both Compound
 						System.err.println("Not implemented yet! :(");
 					}
 				}
 			}
 		}
+
 		for (int i = 0; i < resolutionIterations; i++)
 			resolve();
 		applyGlobalForce();
@@ -234,5 +271,31 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 			resolveConstraints(delta);
 		integrate(delta);
 		correct();
+	}
+
+	private void handleCompoundAndNonCompound(CompoundObject<L> co,
+			RigidBody<L, ?, ?, ?> rb) {
+		/*
+		 * Steps: 1. Add to broadphase if not done yet (TODO: delete it again)
+		 * 2. Get Overlaps and perform a narrowphase per overlap with rb 3.
+		 * Generate Manifolds
+		 */
+		Broadphase<L, CollisionShape<L, ?, ?>> compoundBroadphase = co
+				.getCompoundBroadphase();
+		if (!compoundBroadphase.contains(rb)) {
+			compoundBroadphase.add(rb);
+		}
+		for (Pair<CollisionShape<L, ?, ?>, CollisionShape<L, ?, ?>> overlap : compoundBroadphase
+				.getOverlaps()) {
+			if (narrowphase
+					.isColliding(overlap.getFirst(), overlap.getSecond())) {
+				ContactManifold<L> contactManifold = narrowphase
+						.computeCollision(overlap.getFirst(),
+								overlap.getSecond());
+				manifoldmanager.add(new CollisionManifold<L>(
+						new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
+								co.getRigidBody(), rb), contactManifold));
+			}
+		}
 	}
 }

@@ -5,6 +5,7 @@ import manifold.CollisionManifold;
 import manifold.ManifoldManager;
 import matrix.Matrix1f;
 import narrowphase.Narrowphase;
+import objects.CompoundObject2;
 import objects.RigidBody;
 import objects.RigidBody2;
 import positionalcorrection.PositionalCorrection;
@@ -45,5 +46,10 @@ public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 	protected void resolve() {
 		for (CollisionManifold<Vector2f> manifold : getCollisionManifolds())
 			collisionresolution.resolve2(manifold);
+	}
+
+	public void addCompoundObject(CompoundObject2 compoundobject) {
+		addRigidBody(compoundobject);
+		compoundObjects.add(compoundobject);
 	}
 }

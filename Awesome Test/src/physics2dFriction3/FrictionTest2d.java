@@ -25,7 +25,6 @@ import display.VideoSettings;
 
 public class FrictionTest2d extends StandardGame {
 	PhysicsSpace2 space;
-	RigidBody2 rb1, rb2;
 	int tempdelta = 0;
 	Debugger debugger;
 	PhysicsDebug2 physicsdebug;
@@ -49,7 +48,7 @@ public class FrictionTest2d extends StandardGame {
 		physicsdebug = new PhysicsDebug2(inputs, font, space);
 
 		Circle c1 = new Circle(100, 200, 20, 6);
-		rb1 = new RigidBody2(PhysicsShapeCreator.create(c1));
+		RigidBody2 rb1 = new RigidBody2(PhysicsShapeCreator.create(c1));
 		rb1.setAngularDamping(0);
 		rb1.setMass(1);
 		rb1.setInertia(new Matrix1f(1));
@@ -57,7 +56,7 @@ public class FrictionTest2d extends StandardGame {
 		add2dObject(c1);
 
 		Circle c2 = new Circle(400, 200, 20, 6);
-		rb2 = new RigidBody2(PhysicsShapeCreator.create(c2));
+		RigidBody2 rb2 = new RigidBody2(PhysicsShapeCreator.create(c2));
 		rb2.setAngularDamping(0);
 		rb2.setMass(1);
 		rb2.setInertia(new Matrix1f(1));
@@ -83,8 +82,8 @@ public class FrictionTest2d extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		System.out.println(rb1.getAngularVelocity() + "; "
-				+ rb2.getAngularVelocity());
+		// System.out.println(rb1.getAngularVelocity() + "; "
+		// + rb2.getAngularVelocity());
 		debugger.update();
 		physicsdebug.update();
 		space.update(delta);

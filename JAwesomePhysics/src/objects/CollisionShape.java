@@ -1,7 +1,5 @@
 package objects;
 
-import java.util.List;
-
 import quaternion.Rotation;
 import vector.Vector;
 
@@ -84,18 +82,12 @@ public abstract class CollisionShape<L extends Vector, A1 extends Rotation, A2 e
 	}
 
 	@Override
-	public List<L> supportPointLocalList(L direction) {
-		return supportcalculator.supportPointLocalList(direction);
+	public boolean isCompound() {
+		return supportcalculator.isCompound();
 	}
 
-	@Override
-	public List<L> supportPointLocalNegativeList(L direction) {
-		return supportcalculator.supportPointLocalNegativeList(direction);
-	}
-
-	@Override
-	public boolean hasMultipleSupportPoints() {
-		return supportcalculator.hasMultipleSupportPoints();
+	public CompoundObject<L> getCompound() {
+		return null;
 	}
 
 	public abstract void updateInverseRotation();

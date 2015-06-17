@@ -71,17 +71,7 @@ public class ConvexShape extends CollisionShape3 {
 		}
 
 		@Override
-		public List<Vector3f> supportPointLocalList(Vector3f direction) {
-			return null;
-		}
-
-		@Override
-		public List<Vector3f> supportPointLocalNegativeList(Vector3f direction) {
-			return null;
-		}
-
-		@Override
-		public boolean hasMultipleSupportPoints() {
+		public boolean isCompound() {
 			return false;
 		}
 	}

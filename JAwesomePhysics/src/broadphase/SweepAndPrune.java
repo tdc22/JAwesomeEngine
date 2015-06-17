@@ -43,15 +43,34 @@ public abstract class SweepAndPrune<L extends Vector, ObjectType extends Collisi
 
 	Map<Pair<ObjectType, ObjectType>, Counter> counters;
 
+	List<BroadphaseListener<L, ObjectType>> listeners;
+
 	public SweepAndPrune() {
 		objects = new ArrayList<ObjectType>();
 		overlaps = new ArrayList<Pair<ObjectType, ObjectType>>();
 		counters = new LinkedHashMap<Pair<ObjectType, ObjectType>, Counter>();
+		listeners = new ArrayList<BroadphaseListener<L, ObjectType>>();
+	}
+
+	public void addListener(BroadphaseListener<L, ObjectType> listener) {
+		listeners.add(listener);
+	}
+
+	public void removeListener(BroadphaseListener<L, ObjectType> listener) {
+		listeners.remove(listener);
 	}
 
 	@Override
 	public Set<Pair<ObjectType, ObjectType>> getOverlaps() {
 		return new LinkedHashSet<Pair<ObjectType, ObjectType>>(overlaps);
+	}
+
+	public List<ObjectType> getObjects() {
+		return objects;
+	}
+
+	public boolean contains(ObjectType obj) {
+		return objects.contains(obj);
 	}
 
 	protected void sortAxis(List<SweepPoint> axis) {

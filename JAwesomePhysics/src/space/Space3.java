@@ -4,6 +4,7 @@ import integration.IntegrationSolver;
 import manifold.CollisionManifold;
 import manifold.ManifoldManager;
 import narrowphase.Narrowphase;
+import objects.CompoundObject3;
 import objects.RigidBody;
 import objects.RigidBody3;
 import positionalcorrection.PositionalCorrection;
@@ -43,5 +44,10 @@ public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> 
 	protected void resolve() {
 		for (CollisionManifold<Vector3f> manifold : getCollisionManifolds())
 			collisionresolution.resolve(manifold);
+	}
+
+	public void addCompoundObject(CompoundObject3 compoundobject) {
+		addRigidBody(compoundobject);
+		compoundObjects.add(compoundobject);
 	}
 }

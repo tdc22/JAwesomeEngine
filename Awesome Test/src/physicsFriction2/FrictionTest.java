@@ -26,7 +26,6 @@ import display.VideoSettings;
 
 public class FrictionTest extends StandardGame {
 	PhysicsSpace space;
-	RigidBody3 rb1;
 	int tempdelta = 0;
 	Debugger debugger;
 	PhysicsDebug physicsdebug;

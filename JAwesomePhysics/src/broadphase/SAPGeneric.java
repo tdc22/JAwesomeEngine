@@ -62,10 +62,9 @@ public class SAPGeneric<ObjectType extends CollisionShape<Vector3f, ?, ?>>
 					overlaps.remove(pair);
 					c.wasOverlapping = false;
 
-					// notify handlers
-					// for (Handler h: handlers) {
-					// h.separation(pair);
-					// }
+					for (BroadphaseListener<Vector3f, ObjectType> listener : listeners) {
+						listener.overlapEnded(pair.getFirst(), pair.getSecond());
+					}
 				}
 			} else {
 				// report overlap
@@ -73,11 +72,10 @@ public class SAPGeneric<ObjectType extends CollisionShape<Vector3f, ?, ?>>
 					overlaps.add(pair);
 					c.wasOverlapping = true;
 
-					// notify handlers
-					// for (Handler h: handlers) {
-					// h.overlap(pair);
-					// }
-
+					for (BroadphaseListener<Vector3f, ObjectType> listener : listeners) {
+						listener.overlapStarted(pair.getFirst(),
+								pair.getSecond());
+					}
 				}
 			}
 

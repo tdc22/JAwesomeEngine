@@ -1,18 +1,14 @@
-package physics2dConstraint;
+package physics2dCompound;
 
 import game.StandardGame;
 import gui.Font;
 import integration.VerletIntegration;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import loader.FontLoader;
 import manifold.MultiPointManifoldManager2;
 import matrix.Matrix1f;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
-import objects.Constraint2;
+import objects.CompoundObject2;
 import objects.RigidBody2;
 import physics.PhysicsDebug2;
 import physics.PhysicsShapeCreator;
@@ -24,18 +20,16 @@ import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
 import broadphase.SAP2;
-import constraints.DistanceConstraint2;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 
-public class ConstraintTest2d extends StandardGame {
+public class BasicTest2d extends StandardGame {
 	PhysicsSpace2 space;
 	int tempdelta = 0;
 	Debugger debugger;
 	PhysicsDebug2 physicsdebug;
-	List<RigidBody2> bodies;
 
 	@Override
 	public void init() {
@@ -60,27 +54,12 @@ public class ConstraintTest2d extends StandardGame {
 		space.addRigidBody(ground, rb);
 		add2dObject(ground);
 
-		bodies = new ArrayList<RigidBody2>();
-
-		// Distance constraint
-		Circle leftCircle = new Circle(370, 50, 20, 10);
-		RigidBody2 rbL = new RigidBody2(PhysicsShapeCreator.create(leftCircle));
-		rbL.setMass(1f);
-		rbL.setInertia(new Matrix1f(1));
-		bodies.add(rbL);
-		space.addRigidBody(leftCircle, rbL);
-		add2dObject(leftCircle);
-
-		Circle rightCircle = new Circle(430, 50, 20, 10);
-		RigidBody2 rbR = new RigidBody2(PhysicsShapeCreator.create(rightCircle));
-		rbR.setMass(1f);
-		rbR.setInertia(new Matrix1f(1));
-		bodies.add(rbR);
-		space.addRigidBody(rightCircle, rbR);
-		add2dObject(rightCircle);
-
-		Constraint2 constraint = new DistanceConstraint2(rbL, rbR, 60);
-		space.addConstraint(constraint);
+		// Quad q = new Quad(400, 80, 20, 20);
+		// rb1 = new RigidBody2(PhysicsShapeCreator.create(q));
+		// rb1.setMass(1f);
+		// rb1.setInertia(new Matrix1f(1));
+		// space.addRigidBody(q, rb1);
+		// add2dObject(q);
 	}
 
 	@Override
@@ -99,10 +78,35 @@ public class ConstraintTest2d extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		if (inputs.isKeyDown("1"))
-			bodies.get(0).applyCentralImpulse(new Vector2f(0, -20));
-		if (inputs.isKeyDown("2"))
-			bodies.get(1).applyCentralImpulse(new Vector2f(0, -20));
+		// if (rb1 != null)
+		// System.out.println(rb1.getMatrix());
+		// System.out.println(rb1.getTranslation2() + ";      "
+		// + rb1.getLinearVelocity());
+		if (tempdelta > 200) {
+			if (inputs.isMouseButtonDown("0")) {
+				Quad q = new Quad(400, 80, 20, 20);
+				Circle c = new Circle(400, 80, 20, 10);
+				CompoundObject2 rb = new CompoundObject2();
+				rb.addCollisionShape(PhysicsShapeCreator.create(q));
+				rb.addCollisionShape(PhysicsShapeCreator.create(c));
+				rb.setMass(1f);
+				rb.setInertia(new Matrix1f(1));
+				space.addRigidBody(q, rb);
+				add2dObject(q);
+				tempdelta = 0;
+			}
+			if (inputs.isMouseButtonDown("1")) {
+				Circle c = new Circle(400, 80, 20, 10);
+				RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(c));
+				rb.setMass(1f);
+				rb.setInertia(new Matrix1f(1));
+				space.addRigidBody(c, rb);
+				add2dObject(c);
+				tempdelta = 0;
+			}
+		} else {
+			tempdelta += delta;
+		}
 
 		debugger.update();
 		space.update(delta);

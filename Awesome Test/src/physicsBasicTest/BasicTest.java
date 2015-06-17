@@ -32,7 +32,6 @@ import display.VideoSettings;
 
 public class BasicTest extends StandardGame {
 	PhysicsSpace space;
-	RigidBody3 rb1;
 	int tempdelta = 0;
 	boolean impulseapplied = false;
 	Debugger debugger;
