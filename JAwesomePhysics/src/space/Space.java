@@ -55,7 +55,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 				RigidBody<L, ?, ?, ?> objB) {
 			if (objA.isCompound()) {
 				if (objB.isCompound()) {
-
+					for (CollisionShape<L, ?, ?> cs : objB.getCompound()
+							.getCollisionShapes()) {
+						objA.getCompound().getCompoundBroadphase().remove(cs);
+					}
 				} else {
 					objA.getCompound().getCompoundBroadphase().remove(objB);
 				}
@@ -140,6 +143,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	public List<RigidBody<L, A1, A2, A3>> getObjects() {
 		return objects;
+	}
+
+	public List<CompoundObject<L, A2>> getCompoundObjects() {
+		return compoundObjects;
 	}
 
 	public Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> getOverlaps() {
@@ -271,19 +278,14 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 						}
 						for (Pair<CollisionShape<L, ?, ?>, CollisionShape<L, ?, ?>> compoundoverlap : compoundBroadphase
 								.getOverlaps()) {
-							boolean firstInFirst = co1.getCollisionShapes()
-									.contains(compoundoverlap.getFirst());
-							boolean firstInSecond = co2.getCollisionShapes()
-									.contains(compoundoverlap.getFirst());
-							boolean secondInFirst = co1.getCollisionShapes()
-									.contains(compoundoverlap.getSecond());
-							boolean secondInSecond = co2.getCollisionShapes()
-									.contains(compoundoverlap.getSecond());
-							if (firstInFirst && secondInSecond) {
+							// first in first && second in second
+							if (co1.getCollisionShapes().contains(
+									compoundoverlap.getFirst())
+									&& co2.getCollisionShapes().contains(
+											compoundoverlap.getSecond())) {
 								if (narrowphase.isColliding(
 										compoundoverlap.getFirst(),
 										compoundoverlap.getSecond())) {
-									System.out.println("B1");
 									ContactManifold<L> contactManifold = narrowphase
 											.computeCollision(
 													compoundoverlap.getFirst(),
@@ -291,16 +293,19 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 									manifoldmanager
 											.add(new CollisionManifold<L>(
 													new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
-															co2.getRigidBody(),
-															co1.getRigidBody()),
+															co1.getRigidBody(),
+															co2.getRigidBody()),
 													contactManifold));
 								}
 							} else {
-								if (firstInSecond && secondInFirst) {
+								// first in second && second in first
+								if (co2.getCollisionShapes().contains(
+										compoundoverlap.getFirst())
+										&& co1.getCollisionShapes().contains(
+												compoundoverlap.getSecond())) {
 									if (narrowphase.isColliding(
 											compoundoverlap.getFirst(),
 											compoundoverlap.getSecond())) {
-										System.out.println("B2");
 										ContactManifold<L> contactManifold = narrowphase
 												.computeCollision(
 														compoundoverlap
@@ -310,8 +315,8 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 										manifoldmanager
 												.add(new CollisionManifold<L>(
 														new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
-																co1.getRigidBody(),
-																co2.getRigidBody()),
+																co2.getRigidBody(),
+																co1.getRigidBody()),
 														contactManifold));
 									}
 								}
@@ -341,23 +346,22 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		for (Pair<CollisionShape<L, ?, ?>, CollisionShape<L, ?, ?>> overlap : compoundBroadphase
 				.getOverlaps()) {
 			if (overlap.contains(rb)) {
-				if (!co.getCollisionShapes().contains(overlap.getFirst())
-						|| !co.getCollisionShapes().contains(
-								overlap.getSecond())) {
+				if ((co.getCollisionShapes().contains(overlap.getFirst())
+						&& rb.equals(overlap.getSecond()) || (co
+						.getCollisionShapes().contains(overlap.getSecond()) && rb
+						.equals(overlap.getFirst())))) {
 					if (narrowphase.isColliding(overlap.getFirst(),
 							overlap.getSecond())) {
 						ContactManifold<L> contactManifold = narrowphase
 								.computeCollision(overlap.getFirst(),
 										overlap.getSecond());
 						if (overlap.getFirst().equals(rb)) {
-							System.out.println("A1");
 							manifoldmanager
 									.add(new CollisionManifold<L>(
 											new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
 													rb, co.getRigidBody()),
 											contactManifold));
 						} else {
-							System.out.println("A2");
 							manifoldmanager
 									.add(new CollisionManifold<L>(
 											new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(

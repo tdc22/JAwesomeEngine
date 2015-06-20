@@ -107,9 +107,19 @@ public class CompoundTest2d extends StandardGame {
 				add2dObject(c);
 				tempdelta = 0;
 			}
+			if (inputs.isMouseButtonDown("2")) {
+				space.getObjects().get(space.getObjects().size() - 1)
+						.applyCentralImpulse(new Vector2f(100, 100));
+				tempdelta = 0;
+			}
 		} else {
 			tempdelta += delta;
 		}
+
+		// for(CompoundObject<?, ?> co : space.getCompoundObjects()) {
+		// System.out.println(co.getCompoundBroadphase().getObjects().size() +
+		// "; " + co.getCompoundBroadphase().getOverlaps().size());
+		// }
 
 		// System.out.println(rb1.getCompoundBroadphase().getObjects().size() +
 		// "; " + rb1.getCompoundBroadphase().getOverlaps().size());
