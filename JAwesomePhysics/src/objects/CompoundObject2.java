@@ -12,7 +12,7 @@ import broadphase.Broadphase;
 import broadphase.SAP2Generic;
 
 public class CompoundObject2 extends RigidBody2 implements
-		CompoundObject<Vector2f> {
+		CompoundObject<Vector2f, Complexf> {
 	protected class CompoundSupport implements SupportCalculator<Vector2f> {
 
 		public CompoundSupport() {
@@ -34,29 +34,31 @@ public class CompoundObject2 extends RigidBody2 implements
 		}
 	}
 
-	List<CollisionShape2> collisionshapes;
+	List<CollisionShape<Vector2f, Complexf, ?>> collisionshapes;
 	List<Vector2f> translations;
 	List<Quaternionf> rotations;
 	Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broadphase;
 	boolean updated = false;
 
 	public CompoundObject2() {
-		collisionshapes = new ArrayList<CollisionShape2>();
+		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
 		translations = new ArrayList<Vector2f>();
 		rotations = new ArrayList<Quaternionf>();
 		broadphase = new SAP2Generic<CollisionShape<Vector2f, ?, ?>>();
+		supportcalculator = createSupportCalculator(this);
 	}
 
 	public CompoundObject2(
 			Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broad) {
-		collisionshapes = new ArrayList<CollisionShape2>();
+		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
 		translations = new ArrayList<Vector2f>();
 		rotations = new ArrayList<Quaternionf>();
 		broadphase = broad;
+		supportcalculator = createSupportCalculator(this);
 	}
 
 	public CompoundObject2(CollisionShape2... shapes) {
-		collisionshapes = new ArrayList<CollisionShape2>();
+		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
 		translations = new ArrayList<Vector2f>();
 		rotations = new ArrayList<Quaternionf>();
 		broadphase = new SAP2Generic<CollisionShape<Vector2f, ?, ?>>();
@@ -64,12 +66,13 @@ public class CompoundObject2 extends RigidBody2 implements
 		for (CollisionShape2 cs : shapes) {
 			addCollisionShape(cs);
 		}
+		supportcalculator = createSupportCalculator(this);
 	}
 
 	public CompoundObject2(
 			Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broad,
 			CollisionShape2... shapes) {
-		collisionshapes = new ArrayList<CollisionShape2>();
+		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
 		translations = new ArrayList<Vector2f>();
 		rotations = new ArrayList<Quaternionf>();
 		broadphase = broad;
@@ -77,9 +80,13 @@ public class CompoundObject2 extends RigidBody2 implements
 		for (CollisionShape2 cs : shapes) {
 			addCollisionShape(cs);
 		}
+		supportcalculator = createSupportCalculator(this);
 	}
 
 	public void addCollisionShape(CollisionShape2 collisionshape) {
+		collisionshape.setTranslation(getTranslation());
+		collisionshape.setRotation(getRotation());
+		collisionshape.invrotation = this.invrotation;
 		broadphase.add(collisionshape);
 		collisionshapes.add(collisionshape);
 		translations.add(new Vector2f());
@@ -89,6 +96,9 @@ public class CompoundObject2 extends RigidBody2 implements
 
 	public void addCollisionShape(CollisionShape2 collisionshape,
 			Vector2f translation) {
+		collisionshape.setTranslation(getTranslation());
+		collisionshape.setRotation(getRotation());
+		collisionshape.invrotation = this.invrotation;
 		broadphase.add(collisionshape);
 		collisionshapes.add(collisionshape);
 		translations.add(translation);
@@ -98,6 +108,9 @@ public class CompoundObject2 extends RigidBody2 implements
 
 	public void addCollisionShape(CollisionShape2 collisionshape,
 			Vector2f translation, Quaternionf rotation) {
+		collisionshape.setTranslation(getTranslation());
+		collisionshape.setRotation(getRotation());
+		collisionshape.invrotation = this.invrotation;
 		broadphase.add(collisionshape);
 		collisionshapes.add(collisionshape);
 		translations.add(translation);
@@ -108,7 +121,7 @@ public class CompoundObject2 extends RigidBody2 implements
 	private void updateAABB() {
 		float maxLength = 0;
 		for (int i = 0; i < collisionshapes.size(); i++) {
-			CollisionShape2 cs = collisionshapes.get(i);
+			CollisionShape<Vector2f, ?, ?> cs = collisionshapes.get(i);
 			Vector2f trans = translations.get(i);
 			Vector2f min = VecMath.addition(cs.getAABB().getMin(), trans);
 			Vector2f max = VecMath.addition(cs.getAABB().getMax(), trans);
@@ -126,7 +139,7 @@ public class CompoundObject2 extends RigidBody2 implements
 	}
 
 	@Override
-	public CompoundObject<Vector2f> getCompound() {
+	public CompoundObject<Vector2f, Complexf> getCompound() {
 		return this;
 	}
 
@@ -144,5 +157,18 @@ public class CompoundObject2 extends RigidBody2 implements
 	@Override
 	public RigidBody<Vector2f, ?, ?, ?> getRigidBody() {
 		return this;
+	}
+
+	@Override
+	public List<CollisionShape<Vector2f, Complexf, ?>> getCollisionShapes() {
+		return collisionshapes;
+	}
+
+	@Override
+	public void updateInverseRotation() {
+		super.updateInverseRotation();
+		for (CollisionShape<Vector2f, Complexf, ?> cs : collisionshapes) {
+			cs.invrotation = this.invrotation;
+		}
 	}
 }

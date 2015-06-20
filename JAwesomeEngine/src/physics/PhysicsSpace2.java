@@ -46,15 +46,20 @@ public class PhysicsSpace2 extends Space2 {
 		addedobjects.add(obj);
 	}
 
-	// TODO: Think about that..........
-	// 1. where to put the compound object when having multiple GameObjects
-	// 2. how to bind each of the GameObjects to their location
-	// 3. how to update the location
-	public void addCompoundObject(CompoundObject2 compoundobject) {
-		compoundobject.setRotation(obj.getRotation());
-		compoundobject.setTranslation(obj.getTranslation());
+	public void addCompoundObject(CompoundObject2 compoundobject,
+			DataGameObject... obj) {
+		DataGameObject base;
+		if (obj.length > 0) {
+			base = obj[0];
+			compoundobject.rotateTo(base.getRotation());
+			compoundobject.translateTo(base.getTranslation2());
+		}
+		for (DataGameObject dgo : obj) {
+			dgo.setRotation(compoundobject.getRotation());
+			dgo.setTranslation(compoundobject.getTranslation());
+			addedobjects.add(dgo);
+		}
 		addCompoundObject(compoundobject);
-		addedobjects.add(obj);
 	}
 
 	@Override

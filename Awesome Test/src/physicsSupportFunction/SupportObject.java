@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import math.QuatMath;
-import objects.RigidBody;
+import objects.CollisionShape;
 import objects.ShapedObject;
 import utils.GLConstants;
 import vector.Vector2f;
@@ -13,9 +13,9 @@ import vector.Vector3f;
 
 public class SupportObject extends ShapedObject {
 	ShapedObject so;
-	RigidBody<Vector3f, ?, ?, ?> rb;
+	CollisionShape<Vector3f, ?, ?> rb;
 
-	public SupportObject(ShapedObject s, RigidBody<Vector3f, ?, ?, ?> r) {
+	public SupportObject(ShapedObject s, CollisionShape<Vector3f, ?, ?> r) {
 		rendermode = GLConstants.POINTS;
 		so = s;
 		rb = r;

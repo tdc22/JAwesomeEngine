@@ -25,11 +25,12 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 
-public class BasicTest2d extends StandardGame {
+public class CompoundTest2d extends StandardGame {
 	PhysicsSpace2 space;
 	int tempdelta = 0;
 	Debugger debugger;
 	PhysicsDebug2 physicsdebug;
+	CompoundObject2 rb1;
 
 	@Override
 	public void init() {
@@ -54,12 +55,17 @@ public class BasicTest2d extends StandardGame {
 		space.addRigidBody(ground, rb);
 		add2dObject(ground);
 
-		// Quad q = new Quad(400, 80, 20, 20);
-		// rb1 = new RigidBody2(PhysicsShapeCreator.create(q));
-		// rb1.setMass(1f);
-		// rb1.setInertia(new Matrix1f(1));
-		// space.addRigidBody(q, rb1);
-		// add2dObject(q);
+		Quad q = new Quad(400, 80, 20, 20);
+		Circle c = new Circle(400, 80, 24, 10);
+		rb1 = new CompoundObject2();
+		rb1.addCollisionShape(PhysicsShapeCreator.create(q));
+		rb1.addCollisionShape(PhysicsShapeCreator.create(c));
+		rb1.setMass(1f);
+		rb1.setInertia(new Matrix1f(1));
+		space.addCompoundObject(rb1, q, c);
+		add2dObject(q);
+		add2dObject(c);
+		tempdelta = 0;
 	}
 
 	@Override
@@ -78,21 +84,18 @@ public class BasicTest2d extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		// if (rb1 != null)
-		// System.out.println(rb1.getMatrix());
-		// System.out.println(rb1.getTranslation2() + ";      "
-		// + rb1.getLinearVelocity());
 		if (tempdelta > 200) {
 			if (inputs.isMouseButtonDown("0")) {
 				Quad q = new Quad(400, 80, 20, 20);
-				Circle c = new Circle(400, 80, 20, 10);
+				Circle c = new Circle(400, 80, 24, 10);
 				CompoundObject2 rb = new CompoundObject2();
 				rb.addCollisionShape(PhysicsShapeCreator.create(q));
 				rb.addCollisionShape(PhysicsShapeCreator.create(c));
 				rb.setMass(1f);
 				rb.setInertia(new Matrix1f(1));
-				space.addRigidBody(q, rb);
+				space.addCompoundObject(rb, q, c);
 				add2dObject(q);
+				add2dObject(c);
 				tempdelta = 0;
 			}
 			if (inputs.isMouseButtonDown("1")) {
@@ -108,8 +111,15 @@ public class BasicTest2d extends StandardGame {
 			tempdelta += delta;
 		}
 
+		// System.out.println(rb1.getCompoundBroadphase().getObjects().size() +
+		// "; " + rb1.getCompoundBroadphase().getOverlaps().size());
+		// for(int i = 0; i < rb1.getCollisionShapes().size(); i++)
+		// System.out.println(i + "; " +
+		// rb1.getCollisionShapes().get(i).getTranslation());
+
 		debugger.update();
-		space.update(delta);
+		if (inputs.isKeyDown("O"))
+			space.update(delta);
 		physicsdebug.update();
 		cam.update(delta);
 	}

@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import objects.RigidBody;
+import objects.CollisionShape;
 import objects.ShapedObject2;
 import utils.GLConstants;
 import vector.Vector2f;
@@ -12,9 +12,9 @@ import vector.Vector3f;
 
 public class SupportObject extends ShapedObject2 {
 	ShapedObject2 so;
-	RigidBody<Vector2f, ?, ?, ?> rb;
+	CollisionShape<Vector2f, ?, ?> rb;
 
-	public SupportObject(ShapedObject2 s, RigidBody<Vector2f, ?, ?, ?> r) {
+	public SupportObject(ShapedObject2 s, CollisionShape<Vector2f, ?, ?> r) {
 		rendermode = GLConstants.POINTS;
 		so = s;
 		rb = r;

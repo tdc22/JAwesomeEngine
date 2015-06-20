@@ -7,6 +7,7 @@ import java.util.List;
 
 import manifold.ManifoldManager;
 import narrowphase.Narrowphase;
+import objects.CompoundObject3;
 import objects.DataGameObject;
 import objects.GameObject;
 import objects.RigidBody;
@@ -41,6 +42,22 @@ public class PhysicsSpace extends Space3 {
 		body.setTranslation(obj.getTranslation());
 		addRigidBody(body);
 		addedobjects.add(obj);
+	}
+
+	public void addCompoundObject(CompoundObject3 compoundobject,
+			DataGameObject... obj) {
+		DataGameObject base;
+		if (obj.length > 0) {
+			base = obj[0];
+			compoundobject.rotateTo(base.getRotation());
+			compoundobject.translateTo(base.getTranslation2());
+		}
+		for (DataGameObject dgo : obj) {
+			dgo.setRotation(compoundobject.getRotation());
+			dgo.setTranslation(compoundobject.getTranslation());
+			addedobjects.add(dgo);
+		}
+		addCompoundObject(compoundobject);
 	}
 
 	@Override

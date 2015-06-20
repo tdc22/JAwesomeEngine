@@ -11,8 +11,10 @@ import loader.InputLoader;
 import loader.ShaderLoader;
 import manifold.CollisionManifold;
 import manifold.SimpleManifoldManager;
+import matrix.Matrix1f;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
+import objects.CompoundObject2;
 import objects.RigidBody;
 import objects.RigidBody2;
 import physics.PhysicsShapeCreator;
@@ -37,8 +39,9 @@ public class CollisionDetectionTest2d extends StandardGame {
 	Quad q1, q2, q3;
 	Circle c1;
 	Ellipse e1;
-	Shader s1, s2, s3, s4, s5;
+	Shader s1, s2, s3, s4, s5, s6;
 	RigidBody2 rb1, rb2, rb3, rb4, rb5;
+	CompoundObject2 rb6;
 	List<ManifoldVisualization> manifolds;
 
 	@Override
@@ -57,12 +60,14 @@ public class CollisionDetectionTest2d extends StandardGame {
 		s3 = new Shader(shaderprogram);
 		s4 = new Shader(shaderprogram);
 		s5 = new Shader(shaderprogram);
+		s6 = new Shader(shaderprogram);
 
 		s1.addArgument("color", new Vector4f(1f, 1f, 1f, 1f));
 		s2.addArgument("color", new Vector4f(1f, 1f, 1f, 1f));
 		s3.addArgument("color", new Vector4f(1f, 1f, 1f, 1f));
 		s4.addArgument("color", new Vector4f(1f, 1f, 1f, 1f));
 		s5.addArgument("color", new Vector4f(1f, 1f, 1f, 1f));
+		s6.addArgument("color", new Vector4f(1f, 1f, 1f, 1f));
 
 		manifolds = new ArrayList<ManifoldVisualization>();
 
@@ -100,6 +105,19 @@ public class CollisionDetectionTest2d extends StandardGame {
 		rb5 = new RigidBody2(PhysicsShapeCreator.create(e1));
 		space.addRigidBody(e1, rb5);
 		add2dObject(e1);
+
+		Quad q = new Quad(500, 500, 20, 20);
+		Circle c = new Circle(500, 500, 20, 10);
+		q.setShader(s6);
+		c.setShader(s6);
+		rb6 = new CompoundObject2();
+		rb6.addCollisionShape(PhysicsShapeCreator.create(q));
+		rb6.addCollisionShape(PhysicsShapeCreator.create(c));
+		rb6.setMass(1f);
+		rb6.setInertia(new Matrix1f(1));
+		space.addCompoundObject(rb6, q, c);
+		add2dObject(q);
+		add2dObject(c);
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
 	}
@@ -150,6 +168,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 		s3.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s4.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s5.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
+		s6.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 
 		Set<Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>>> overlaps = space
 				.getBroadphase().getOverlaps();
@@ -164,6 +183,8 @@ public class CollisionDetectionTest2d extends StandardGame {
 				s4.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 			if (o.contains(rb5))
 				s5.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
+			if (o.contains(rb6))
+				s6.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 		}
 
 		for (CollisionManifold<Vector2f> cm : space.getCollisionManifolds()) {
@@ -180,7 +201,12 @@ public class CollisionDetectionTest2d extends StandardGame {
 				s4.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 			if (o.contains(rb5))
 				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
+			if (o.contains(rb6))
+				s6.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 		}
+
+		System.out.println(rb6.getCompoundBroadphase().getObjects().size()
+				+ "; " + rb6.getCompoundBroadphase().getOverlaps().size());
 
 		cam.update(delta);
 	}

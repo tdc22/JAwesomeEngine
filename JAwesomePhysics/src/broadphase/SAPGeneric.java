@@ -33,14 +33,40 @@ public class SAPGeneric<ObjectType extends CollisionShape<Vector3f, ?, ?>>
 
 	@Override
 	public Set<ObjectType> raycast() {
-		// TODO Auto-generated method stub
+		System.err.println("No raycasts possible in SAP.");
 		return null;
 	}
 
 	@Override
 	public void remove(ObjectType object) {
-		// TODO Auto-generated method stub
-
+		for (int i = 0; i < axisX.size();)
+			if (axisX.get(i).object.equals(object))
+				axisX.remove(i);
+			else
+				i++;
+		for (int i = 0; i < axisY.size();)
+			if (axisY.get(i).object.equals(object))
+				axisY.remove(i);
+			else
+				i++;
+		for (int i = 0; i < axisZ.size();)
+			if (axisZ.get(i).object.equals(object))
+				axisZ.remove(i);
+			else
+				i++;
+		Iterator<Entry<Pair<ObjectType, ObjectType>, SweepAndPrune<Vector3f, ObjectType>.Counter>> it = counters
+				.entrySet().iterator();
+		while (it.hasNext()) {
+			if (it.next().getKey().contains(object)) {
+				it.remove();
+			}
+		}
+		for (int i = 0; i < overlaps.size();)
+			if (overlaps.get(i).contains(object))
+				overlaps.remove(i);
+			else
+				i++;
+		objects.remove(object);
 	}
 
 	@Override

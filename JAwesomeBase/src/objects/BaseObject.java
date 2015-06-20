@@ -236,6 +236,14 @@ public class BaseObject {
 	}
 
 	/**
+	 * @see BaseObject#rotateTo(Vector1)
+	 */
+	public void rotateTo(Quaternion rot) {
+		rotation.setIdentity();
+		rotate(rot);
+	}
+
+	/**
 	 * Scales the object by a factor.
 	 * 
 	 * @param factor

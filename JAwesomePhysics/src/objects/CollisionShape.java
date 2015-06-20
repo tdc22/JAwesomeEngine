@@ -86,7 +86,7 @@ public abstract class CollisionShape<L extends Vector, A1 extends Rotation, A2 e
 		return supportcalculator.isCompound();
 	}
 
-	public CompoundObject<L> getCompound() {
+	public CompoundObject<L, A1> getCompound() {
 		return null;
 	}
 
