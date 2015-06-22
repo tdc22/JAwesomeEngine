@@ -22,6 +22,7 @@ public abstract class CollisionShape<L extends Vector, A1 extends Rotation, A2 e
 
 	public CollisionShape(CollisionShape<L, A1, A2> cs) {
 		aabb = cs.getAABB();
+		translation = cs.getTranslation();
 		invrotation = cs.getInverseRotation();
 		supportcalculator = cs.createSupportCalculator(this);
 	}

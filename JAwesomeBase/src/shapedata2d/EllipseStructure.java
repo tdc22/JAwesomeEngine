@@ -7,7 +7,7 @@ package shapedata2d;
  * 
  */
 
-public interface EllipseStructure {
+public interface EllipseStructure extends ShapeStructure2 {
 	/**
 	 * Gets the height of the ellipse.
 	 * 

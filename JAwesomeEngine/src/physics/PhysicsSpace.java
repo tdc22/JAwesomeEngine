@@ -38,8 +38,8 @@ public class PhysicsSpace extends Space3 {
 
 	public void addRigidBody(DataGameObject obj,
 			RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
-		body.setRotation(obj.getRotation());
-		body.setTranslation(obj.getTranslation());
+		obj.setRotation(body.getRotation());
+		obj.setTranslation(body.getTranslation());
 		addRigidBody(body);
 		addedobjects.add(obj);
 	}

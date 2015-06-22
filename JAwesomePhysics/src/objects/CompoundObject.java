@@ -12,4 +12,6 @@ public interface CompoundObject<L extends Vector, A extends Rotation> {
 	public RigidBody<L, ?, ?, ?> getRigidBody();
 
 	public List<CollisionShape<L, A, ?>> getCollisionShapes();
+
+	public void updateTransformations();
 }

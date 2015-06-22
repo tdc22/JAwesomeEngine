@@ -7,7 +7,7 @@ package shapedata;
  * 
  */
 
-public interface SphereStructure {
+public interface SphereStructure extends ShapeStructure {
 	/**
 	 * Gets the radius of the sphere.
 	 * 

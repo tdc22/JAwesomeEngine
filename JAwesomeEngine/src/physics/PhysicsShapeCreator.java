@@ -24,35 +24,41 @@ import convexhull.Quickhull2;
 
 public class PhysicsShapeCreator {
 	public static BoxShape create(BoxStructure box) {
-		return new BoxShape(0, 0, 0, box.getHalfSize());
+		return new BoxShape(box.getTranslation(), box.getHalfSize());
 	}
 
 	public static CapsuleShape create(CapsuleStructure capsule) {
-		return new CapsuleShape(0, 0, 0, capsule.getRadius(),
+		return new CapsuleShape(capsule.getTranslation(), capsule.getRadius(),
 				capsule.getHeight());
 	}
 
 	public static CylinderShape create(CylinderStructure cylinder) {
-		return new CylinderShape(0, 0, 0, cylinder.getRadius(),
-				cylinder.getHalfHeight());
+		return new CylinderShape(cylinder.getTranslation(),
+				cylinder.getRadius(), cylinder.getHalfHeight());
 	}
 
 	public static EllipseShape create(EllipseStructure ellipse) {
-		return new EllipseShape(0, 0, ellipse.getRadius(), ellipse.getHeight());
+		return new EllipseShape(ellipse.getTranslation2(), ellipse.getRadius(),
+				ellipse.getHeight());
 	}
 
 	public static QuadShape create(QuadStructure quad) {
-		return new QuadShape(0, 0, quad.getHalfSize());
+		return new QuadShape(quad.getTranslation2(), quad.getHalfSize());
 	}
 
 	public static ConvexShape createHull(ShapedObject shapedobject) {
-		return Quickhull.computeConvexHull(shapedobject.getVertices());
+		ConvexShape hull = Quickhull.computeConvexHull(shapedobject
+				.getVertices());
+		hull.translateTo(shapedobject.getTranslation());
+		return hull;
 	}
 
 	public static ConvexShape2 createHull(ShapedObject2 shapedobject) {
 		List<Vector2f> vertices = new ArrayList<Vector2f>();
 		for (Vector3f v : shapedobject.getVertices())
 			vertices.add(new Vector2f(v.x, v.y));
-		return Quickhull2.computeConvexHull(vertices);
+		ConvexShape2 hull = Quickhull2.computeConvexHull(vertices);
+		hull.translateTo(shapedobject.getTranslation2());
+		return hull;
 	}
 }

@@ -9,7 +9,7 @@ import vector.Vector3f;
  * 
  */
 
-public interface BoxStructure {
+public interface BoxStructure extends ShapeStructure {
 	/**
 	 * Gets the half size vector of the box.
 	 * 

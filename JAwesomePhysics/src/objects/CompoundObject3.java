@@ -92,29 +92,29 @@ public class CompoundObject3 extends RigidBody3 implements
 		updateAABB();
 	}
 
-	public void addCollisionShape(CollisionShape3 collisionshape,
-			Vector3f translation) {
-		collisionshape.setTranslation(getTranslation());
-		collisionshape.setRotation(getRotation());
-		collisionshape.invrotation = this.invrotation;
-		broadphase.add(collisionshape);
-		collisionshapes.add(collisionshape);
-		translations.add(translation);
-		rotations.add(new Quaternionf());
-		updateAABB();
-	}
-
-	public void addCollisionShape(CollisionShape3 collisionshape,
-			Vector3f translation, Quaternionf rotation) {
-		collisionshape.setTranslation(getTranslation());
-		collisionshape.setRotation(getRotation());
-		collisionshape.invrotation = this.invrotation;
-		broadphase.add(collisionshape);
-		collisionshapes.add(collisionshape);
-		translations.add(translation);
-		rotations.add(rotation);
-		updateAABB();
-	}
+	// public void addCollisionShape(CollisionShape3 collisionshape,
+	// Vector3f translation) {
+	// collisionshape.setTranslation(getTranslation());
+	// collisionshape.setRotation(getRotation());
+	// collisionshape.invrotation = this.invrotation;
+	// broadphase.add(collisionshape);
+	// collisionshapes.add(collisionshape);
+	// translations.add(translation);
+	// rotations.add(new Quaternionf());
+	// updateAABB();
+	// }
+	//
+	// public void addCollisionShape(CollisionShape3 collisionshape,
+	// Vector3f translation, Quaternionf rotation) {
+	// collisionshape.setTranslation(getTranslation());
+	// collisionshape.setRotation(getRotation());
+	// collisionshape.invrotation = this.invrotation;
+	// broadphase.add(collisionshape);
+	// collisionshapes.add(collisionshape);
+	// translations.add(translation);
+	// rotations.add(rotation);
+	// updateAABB();
+	// }
 
 	private void updateAABB() {
 		float maxLength = 0;

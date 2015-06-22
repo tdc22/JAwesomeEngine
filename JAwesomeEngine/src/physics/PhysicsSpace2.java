@@ -8,6 +8,7 @@ import java.util.List;
 import manifold.ManifoldManager;
 import matrix.Matrix1f;
 import narrowphase.Narrowphase;
+import objects.CollisionShape;
 import objects.CompoundObject2;
 import objects.DataGameObject;
 import objects.GameObject;
@@ -40,23 +41,20 @@ public class PhysicsSpace2 extends Space2 {
 
 	public void addRigidBody(DataGameObject obj,
 			RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> body) {
-		body.setRotation(obj.getRotation());
-		body.setTranslation(obj.getTranslation());
+		obj.setRotation(body.getRotation());
+		obj.setTranslation(body.getTranslation());
 		addRigidBody(body);
 		addedobjects.add(obj);
 	}
 
 	public void addCompoundObject(CompoundObject2 compoundobject,
 			DataGameObject... obj) {
-		DataGameObject base;
-		if (obj.length > 0) {
-			base = obj[0];
-			compoundobject.rotateTo(base.getRotation());
-			compoundobject.translateTo(base.getTranslation2());
-		}
-		for (DataGameObject dgo : obj) {
-			dgo.setRotation(compoundobject.getRotation());
-			dgo.setTranslation(compoundobject.getTranslation());
+		for (int i = 0; i < obj.length; i++) {
+			DataGameObject dgo = obj[i];
+			CollisionShape<Vector2f, Complexf, ?> cs = compoundobject
+					.getCollisionShapes().get(i);
+			dgo.setRotation(cs.getRotation());
+			dgo.setTranslation(cs.getTranslation());
 			addedobjects.add(dgo);
 		}
 		addCompoundObject(compoundobject);

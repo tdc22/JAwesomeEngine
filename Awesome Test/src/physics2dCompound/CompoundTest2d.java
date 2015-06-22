@@ -108,8 +108,16 @@ public class CompoundTest2d extends StandardGame {
 				tempdelta = 0;
 			}
 			if (inputs.isMouseButtonDown("2")) {
-				space.getObjects().get(space.getObjects().size() - 1)
-						.applyCentralImpulse(new Vector2f(100, 100));
+				Circle c1 = new Circle(380, 80, 20, 10);
+				Circle c2 = new Circle(420, 80, 20, 10);
+				CompoundObject2 rb = new CompoundObject2();
+				rb.addCollisionShape(PhysicsShapeCreator.create(c1));
+				rb.addCollisionShape(PhysicsShapeCreator.create(c2));
+				rb.setMass(1f);
+				rb.setInertia(new Matrix1f(1));
+				space.addCompoundObject(rb, c1, c2);
+				add2dObject(c1);
+				add2dObject(c2);
 				tempdelta = 0;
 			}
 		} else {

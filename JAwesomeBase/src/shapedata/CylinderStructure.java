@@ -7,7 +7,7 @@ package shapedata;
  * 
  */
 
-public interface CylinderStructure {
+public interface CylinderStructure extends ShapeStructure {
 	/**
 	 * Gets the half height of the cylinder.
 	 * 

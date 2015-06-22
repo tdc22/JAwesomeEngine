@@ -9,7 +9,7 @@ import vector.Vector2f;
  * 
  */
 
-public interface QuadStructure {
+public interface QuadStructure extends ShapeStructure2 {
 	/**
 	 * Gets the half size of the quad.
 	 * 

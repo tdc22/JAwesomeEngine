@@ -8,6 +8,7 @@ import matrix.Matrix1f;
 import quaternion.Complexf;
 import quaternion.Quaternionf;
 import vector.Vector2f;
+import vector.Vector3f;
 import broadphase.Broadphase;
 import broadphase.SAP2Generic;
 
@@ -35,6 +36,7 @@ public class CompoundObject2 extends RigidBody2 implements
 	}
 
 	List<CollisionShape<Vector2f, Complexf, ?>> collisionshapes;
+	CollisionShape<Vector2f, Complexf, ?> base;
 	List<Vector2f> translations;
 	List<Quaternionf> rotations;
 	Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broadphase;
@@ -84,39 +86,63 @@ public class CompoundObject2 extends RigidBody2 implements
 	}
 
 	public void addCollisionShape(CollisionShape2 collisionshape) {
-		collisionshape.setTranslation(getTranslation());
-		collisionshape.setRotation(getRotation());
-		collisionshape.invrotation = this.invrotation;
-		broadphase.add(collisionshape);
-		collisionshapes.add(collisionshape);
-		translations.add(new Vector2f());
-		rotations.add(new Quaternionf());
-		updateAABB();
-	}
-
-	public void addCollisionShape(CollisionShape2 collisionshape,
-			Vector2f translation) {
-		collisionshape.setTranslation(getTranslation());
-		collisionshape.setRotation(getRotation());
-		collisionshape.invrotation = this.invrotation;
-		broadphase.add(collisionshape);
-		collisionshapes.add(collisionshape);
-		translations.add(translation);
-		rotations.add(new Quaternionf());
-		updateAABB();
-	}
-
-	public void addCollisionShape(CollisionShape2 collisionshape,
-			Vector2f translation, Quaternionf rotation) {
-		collisionshape.setTranslation(getTranslation());
+		Vector2f translation;
+		if (base == null) {
+			base = collisionshape;
+			translateTo(base.getTranslation());
+			base.setTranslation(getTranslation());
+			rotateTo(base.getRotation());
+			translation = new Vector2f();
+		} else {
+			translation = VecMath.subtraction(collisionshape.getTranslation2(),
+					base.getTranslation2());
+			Vector2f negtranslation = VecMath.negate(translation);
+			collisionshape.setRotationCenter(new Vector3f(negtranslation.x,
+					negtranslation.y, 0));
+			collisionshape.translateTo(VecMath.addition(getTranslation2(),
+					translation));
+		}
 		collisionshape.setRotation(getRotation());
 		collisionshape.invrotation = this.invrotation;
 		broadphase.add(collisionshape);
 		collisionshapes.add(collisionshape);
 		translations.add(translation);
-		rotations.add(rotation);
+		rotations.add(new Quaternionf());
 		updateAABB();
 	}
+
+	public void updateTransformations() {
+		for (int i = 1; i < collisionshapes.size(); i++) {
+			CollisionShape<Vector2f, Complexf, ?> cs = collisionshapes.get(i);
+			System.out.println(translations.get(i));
+			cs.translateTo(VecMath.addition(getTranslation2(),
+					translations.get(i)));
+		}
+	}
+
+	// public void addCollisionShape(CollisionShape2 collisionshape,
+	// Vector2f translation) {
+	// collisionshape.setTranslation(getTranslation());
+	// collisionshape.setRotation(getRotation());
+	// collisionshape.invrotation = this.invrotation;
+	// broadphase.add(collisionshape);
+	// collisionshapes.add(collisionshape);
+	// translations.add(translation);
+	// rotations.add(new Quaternionf());
+	// updateAABB();
+	// }
+	//
+	// public void addCollisionShape(CollisionShape2 collisionshape,
+	// Vector2f translation, Quaternionf rotation) {
+	// collisionshape.setTranslation(getTranslation());
+	// collisionshape.setRotation(getRotation());
+	// collisionshape.invrotation = this.invrotation;
+	// broadphase.add(collisionshape);
+	// collisionshapes.add(collisionshape);
+	// translations.add(translation);
+	// rotations.add(rotation);
+	// updateAABB();
+	// }
 
 	private void updateAABB() {
 		float maxLength = 0;

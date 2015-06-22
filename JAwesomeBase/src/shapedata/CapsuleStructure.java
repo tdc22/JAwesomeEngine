@@ -7,7 +7,7 @@ package shapedata;
  * 
  */
 
-public interface CapsuleStructure {
+public interface CapsuleStructure extends ShapeStructure {
 	/**
 	 * Gets the height of the capsule.
 	 * 

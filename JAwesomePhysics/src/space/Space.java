@@ -334,6 +334,9 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 			resolveConstraints(delta);
 		integrate(delta);
 		correct();
+
+		for (CompoundObject<L, A2> co : compoundObjects)
+			co.updateTransformations();
 	}
 
 	private void handleCompoundAndNonCompound(CompoundObject<L, ?> co,

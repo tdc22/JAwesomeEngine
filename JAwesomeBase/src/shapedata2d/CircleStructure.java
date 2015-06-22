@@ -7,7 +7,7 @@ package shapedata2d;
  * 
  */
 
-public interface CircleStructure {
+public interface CircleStructure extends ShapeStructure2 {
 	/**
 	 * Gets the radius of the circle.
 	 * 
