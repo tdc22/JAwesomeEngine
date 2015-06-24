@@ -53,4 +53,6 @@ public abstract class AABB<L extends Vector> {
 	public abstract AABB<L> union(AABB<L> aabb);
 
 	public abstract float volume();
+
+	public abstract L getCenter();
 }

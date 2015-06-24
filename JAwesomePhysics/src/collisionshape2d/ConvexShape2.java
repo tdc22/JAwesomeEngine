@@ -112,14 +112,29 @@ public class ConvexShape2 extends CollisionShape2 {
 	}
 
 	private void init() {
+		Vector2f min = new Vector2f(Float.MAX_VALUE, Float.MAX_VALUE);
+		Vector2f max = new Vector2f(-Float.MAX_VALUE, -Float.MAX_VALUE);
+		for (Vector2f v : vertices) {
+			if (v.x < min.x)
+				min.x = v.x;
+			if (v.y < min.y)
+				min.y = v.y;
+			if (v.x > max.x)
+				max.x = v.x;
+			if (v.y > max.y)
+				max.y = v.y;
+		}
+		Vector2f center = VecMath.addition(min,
+				VecMath.scale(VecMath.subtraction(max, min), 0.5f));
 		float maxLength = 0;
 		for (Vector2f v : vertices) {
-			float l = (float) v.lengthSquared();
+			float l = (float) VecMath.subtraction(v, center).lengthSquared();
 			if (l > maxLength)
 				maxLength = l;
 		}
 		maxLength = (float) Math.sqrt(maxLength);
 
+		setRotationCenter(center);
 		setAABB(new Vector2f(-maxLength, -maxLength), new Vector2f(maxLength,
 				maxLength));
 		supportcalculator = createSupportCalculator(this);

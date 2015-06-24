@@ -42,4 +42,10 @@ public class AABB2 extends AABB<Vector2f> {
 		return size.x * size.y;
 	}
 
+	@Override
+	public Vector2f getCenter() {
+		return new Vector2f(min.x + (max.x - min.x) / 2f, min.y
+				+ (max.y - min.y) / 2f);
+	}
+
 }

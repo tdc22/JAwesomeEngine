@@ -319,6 +319,14 @@ public class BaseObject {
 	}
 
 	/**
+	 * @see BaseObject#translate(Vector2)
+	 * @param center
+	 */
+	public void setRotationCenter(Vector2f center) {
+		rotcenter = new Vector3f(center.x, center.y, 0);
+	}
+
+	/**
 	 * Sets the object translation.
 	 * 
 	 * @param trans
@@ -371,7 +379,7 @@ public class BaseObject {
 	 *            translation vector
 	 */
 	public void translate(Vector2 trans) {
-		translation.translate(trans.getX(), trans.getY(), 0);
+		translation.translate(trans.getXf(), trans.getYf(), 0);
 	}
 
 	/**
@@ -460,8 +468,8 @@ public class BaseObject {
 	 *            new translation vector
 	 */
 	public void translateTo(Vector2 pos) {
-		translation.setX(pos.getX());
-		translation.setY(pos.getY());
+		translation.setX(pos.getXf());
+		translation.setY(pos.getYf());
 	}
 
 	/**

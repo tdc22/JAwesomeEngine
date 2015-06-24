@@ -3,12 +3,11 @@ package objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import math.ComplexMath;
 import math.VecMath;
 import matrix.Matrix1f;
 import quaternion.Complexf;
-import quaternion.Quaternionf;
 import vector.Vector2f;
-import vector.Vector3f;
 import broadphase.Broadphase;
 import broadphase.SAP2Generic;
 
@@ -36,123 +35,124 @@ public class CompoundObject2 extends RigidBody2 implements
 	}
 
 	List<CollisionShape<Vector2f, Complexf, ?>> collisionshapes;
-	CollisionShape<Vector2f, Complexf, ?> base;
-	List<Vector2f> translations;
-	List<Quaternionf> rotations;
+	Vector2f center;
+	List<Vector2f> localtranslations;
 	Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broadphase;
 	boolean updated = false;
 
 	public CompoundObject2() {
 		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
-		translations = new ArrayList<Vector2f>();
-		rotations = new ArrayList<Quaternionf>();
+		localtranslations = new ArrayList<Vector2f>();
 		broadphase = new SAP2Generic<CollisionShape<Vector2f, ?, ?>>();
 		supportcalculator = createSupportCalculator(this);
+		center = new Vector2f();
 	}
 
 	public CompoundObject2(
 			Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broad) {
 		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
-		translations = new ArrayList<Vector2f>();
-		rotations = new ArrayList<Quaternionf>();
+		localtranslations = new ArrayList<Vector2f>();
 		broadphase = broad;
 		supportcalculator = createSupportCalculator(this);
+		center = new Vector2f();
 	}
 
 	public CompoundObject2(CollisionShape2... shapes) {
 		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
-		translations = new ArrayList<Vector2f>();
-		rotations = new ArrayList<Quaternionf>();
+		localtranslations = new ArrayList<Vector2f>();
 		broadphase = new SAP2Generic<CollisionShape<Vector2f, ?, ?>>();
 
 		for (CollisionShape2 cs : shapes) {
 			addCollisionShape(cs);
 		}
 		supportcalculator = createSupportCalculator(this);
+		center = new Vector2f();
 	}
 
 	public CompoundObject2(
 			Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broad,
 			CollisionShape2... shapes) {
 		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
-		translations = new ArrayList<Vector2f>();
-		rotations = new ArrayList<Quaternionf>();
+		localtranslations = new ArrayList<Vector2f>();
 		broadphase = broad;
 
 		for (CollisionShape2 cs : shapes) {
 			addCollisionShape(cs);
 		}
 		supportcalculator = createSupportCalculator(this);
+		center = new Vector2f();
 	}
 
 	public void addCollisionShape(CollisionShape2 collisionshape) {
-		Vector2f translation;
-		if (base == null) {
-			base = collisionshape;
-			translateTo(base.getTranslation());
-			base.setTranslation(getTranslation());
-			rotateTo(base.getRotation());
-			translation = new Vector2f();
-		} else {
-			translation = VecMath.subtraction(collisionshape.getTranslation2(),
-					base.getTranslation2());
-			Vector2f negtranslation = VecMath.negate(translation);
-			collisionshape.setRotationCenter(new Vector3f(negtranslation.x,
-					negtranslation.y, 0));
-			collisionshape.translateTo(VecMath.addition(getTranslation2(),
-					translation));
-		}
-		collisionshape.setRotation(getRotation());
-		collisionshape.invrotation = this.invrotation;
+		addCollisionShape(collisionshape, collisionshape.getTranslation2());
+	}
+
+	public void addCollisionShape(CollisionShape2 collisionshape,
+			Vector2f translation) {
+		translation.translate(-center.x, -center.y);
 		broadphase.add(collisionshape);
 		collisionshapes.add(collisionshape);
-		translations.add(translation);
-		rotations.add(new Quaternionf());
-		updateAABB();
+		localtranslations.add(translation);
+		updateCenterAndAABB();
+
+		collisionshape.translateTo(VecMath.addition(getTranslation2(),
+				translation));
+		collisionshape.setRotation(getRotation());
+		collisionshape.invrotation = this.invrotation;
+		for (CollisionShape<Vector2f, Complexf, ?> cs : collisionshapes)
+			cs.setRotationCenter(aabb.getCenter());
 	}
 
 	public void updateTransformations() {
-		for (int i = 1; i < collisionshapes.size(); i++) {
-			CollisionShape<Vector2f, Complexf, ?> cs = collisionshapes.get(i);
-			System.out.println(translations.get(i));
-			cs.translateTo(VecMath.addition(getTranslation2(),
-					translations.get(i)));
+		for (int i = 0; i < collisionshapes.size(); i++) {
+			collisionshapes.get(i).translateTo(
+					VecMath.addition(getTranslation2(), ComplexMath.transform(
+							this.getRotation().get2dRotationf(),
+							localtranslations.get(i))));
 		}
 	}
 
-	// public void addCollisionShape(CollisionShape2 collisionshape,
-	// Vector2f translation) {
-	// collisionshape.setTranslation(getTranslation());
-	// collisionshape.setRotation(getRotation());
-	// collisionshape.invrotation = this.invrotation;
-	// broadphase.add(collisionshape);
-	// collisionshapes.add(collisionshape);
-	// translations.add(translation);
-	// rotations.add(new Quaternionf());
-	// updateAABB();
-	// }
-	//
-	// public void addCollisionShape(CollisionShape2 collisionshape,
-	// Vector2f translation, Quaternionf rotation) {
-	// collisionshape.setTranslation(getTranslation());
-	// collisionshape.setRotation(getRotation());
-	// collisionshape.invrotation = this.invrotation;
-	// broadphase.add(collisionshape);
-	// collisionshapes.add(collisionshape);
-	// translations.add(translation);
-	// rotations.add(rotation);
-	// updateAABB();
-	// }
+	private void updateCenterAndAABB() {
 
-	private void updateAABB() {
+		/*
+		 * Plan: 1. Calculate Center 1.1 Calculate global min and max for
+		 * Collisionshape AABBs 1.2 Calculate center from global min and max 1.3
+		 * Recalculate local translations 2. Update AABB
+		 */
+
+		Vector2f min = new Vector2f(Float.MAX_VALUE, Float.MAX_VALUE);
+		Vector2f max = new Vector2f(-Float.MAX_VALUE, -Float.MAX_VALUE);
+		for (int i = 0; i < collisionshapes.size(); i++) {
+			CollisionShape<Vector2f, ?, ?> cs = collisionshapes.get(i);
+			Vector2f trans = cs.getTranslation2();
+			Vector2f csmin = VecMath.addition(cs.getAABB().getMin(), trans);
+			Vector2f csmax = VecMath.addition(cs.getAABB().getMax(), trans);
+			if (csmin.x < min.x)
+				min.x = csmin.x;
+			if (csmin.y < min.y)
+				min.y = csmin.y;
+			if (csmax.x > max.x)
+				max.x = csmax.x;
+			if (csmax.y > max.y)
+				max.y = csmax.y;
+		}
+		Vector2f newcenter = new Vector2f(min.x + (max.x - min.x) / 2f, min.y
+				+ (max.y - min.y) / 2f);
+		Vector2f centerDifference = VecMath.subtraction(center, newcenter);
+		center = newcenter;
+		translateTo(center);
+		for (Vector2f translation : localtranslations) {
+			translation.translate(centerDifference);
+		}
+
 		float maxLength = 0;
 		for (int i = 0; i < collisionshapes.size(); i++) {
 			CollisionShape<Vector2f, ?, ?> cs = collisionshapes.get(i);
-			Vector2f trans = translations.get(i);
-			Vector2f min = VecMath.addition(cs.getAABB().getMin(), trans);
-			Vector2f max = VecMath.addition(cs.getAABB().getMax(), trans);
-			float minL = (float) min.lengthSquared();
-			float maxL = (float) max.lengthSquared();
+			Vector2f trans = localtranslations.get(i);
+			Vector2f csmin = VecMath.addition(cs.getAABB().getMin(), trans);
+			Vector2f csmax = VecMath.addition(cs.getAABB().getMax(), trans);
+			float minL = (float) csmin.lengthSquared();
+			float maxL = (float) csmax.lengthSquared();
 			if (minL > maxLength)
 				maxLength = minL;
 			if (maxL > maxLength)
@@ -193,7 +193,8 @@ public class CompoundObject2 extends RigidBody2 implements
 	@Override
 	public void updateInverseRotation() {
 		super.updateInverseRotation();
-		for (CollisionShape<Vector2f, Complexf, ?> cs : collisionshapes) {
+		for (int i = 0; i < collisionshapes.size(); i++) {
+			CollisionShape<Vector2f, Complexf, ?> cs = collisionshapes.get(i);
 			cs.invrotation = this.invrotation;
 		}
 	}

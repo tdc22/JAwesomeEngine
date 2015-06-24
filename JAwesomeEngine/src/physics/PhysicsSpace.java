@@ -7,6 +7,7 @@ import java.util.List;
 
 import manifold.ManifoldManager;
 import narrowphase.Narrowphase;
+import objects.CollisionShape;
 import objects.CompoundObject3;
 import objects.DataGameObject;
 import objects.GameObject;
@@ -46,15 +47,13 @@ public class PhysicsSpace extends Space3 {
 
 	public void addCompoundObject(CompoundObject3 compoundobject,
 			DataGameObject... obj) {
-		DataGameObject base;
-		if (obj.length > 0) {
-			base = obj[0];
-			compoundobject.rotateTo(base.getRotation());
-			compoundobject.translateTo(base.getTranslation2());
-		}
-		for (DataGameObject dgo : obj) {
-			dgo.setRotation(compoundobject.getRotation());
-			dgo.setTranslation(compoundobject.getTranslation());
+		for (int i = 0; i < obj.length; i++) {
+			DataGameObject dgo = obj[i];
+			CollisionShape<Vector3f, Quaternionf, ?> cs = compoundobject
+					.getCollisionShapes().get(i);
+			dgo.setRotation(cs.getRotation());
+			dgo.setTranslation(cs.getTranslation());
+			dgo.setRotationCenter(cs.getRotationCenter());
 			addedobjects.add(dgo);
 		}
 		addCompoundObject(compoundobject);

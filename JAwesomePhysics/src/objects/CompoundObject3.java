@@ -3,6 +3,7 @@ package objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import math.QuatMath;
 import math.VecMath;
 import quaternion.Quaternionf;
 import vector.Vector3f;
@@ -33,104 +34,138 @@ public class CompoundObject3 extends RigidBody3 implements
 	}
 
 	List<CollisionShape<Vector3f, Quaternionf, ?>> collisionshapes;
-	List<Vector3f> translations;
-	List<Quaternionf> rotations;
+	Vector3f center;
+	List<Vector3f> localtranslations;
 	Broadphase<Vector3f, CollisionShape<Vector3f, ?, ?>> broadphase;
 	boolean updated = false;
 
 	public CompoundObject3() {
 		collisionshapes = new ArrayList<CollisionShape<Vector3f, Quaternionf, ?>>();
-		translations = new ArrayList<Vector3f>();
-		rotations = new ArrayList<Quaternionf>();
+		localtranslations = new ArrayList<Vector3f>();
 		broadphase = new SAPGeneric<CollisionShape<Vector3f, ?, ?>>();
 		supportcalculator = createSupportCalculator(this);
+		center = new Vector3f();
 	}
 
 	public CompoundObject3(
 			Broadphase<Vector3f, CollisionShape<Vector3f, ?, ?>> broad) {
 		collisionshapes = new ArrayList<CollisionShape<Vector3f, Quaternionf, ?>>();
-		translations = new ArrayList<Vector3f>();
-		rotations = new ArrayList<Quaternionf>();
+		localtranslations = new ArrayList<Vector3f>();
 		broadphase = broad;
 		supportcalculator = createSupportCalculator(this);
+		center = new Vector3f();
 	}
 
 	public CompoundObject3(CollisionShape3... shapes) {
 		collisionshapes = new ArrayList<CollisionShape<Vector3f, Quaternionf, ?>>();
-		translations = new ArrayList<Vector3f>();
-		rotations = new ArrayList<Quaternionf>();
+		localtranslations = new ArrayList<Vector3f>();
 		broadphase = new SAPGeneric<CollisionShape<Vector3f, ?, ?>>();
 
 		for (CollisionShape3 cs : shapes) {
 			addCollisionShape(cs);
 		}
 		supportcalculator = createSupportCalculator(this);
+		center = new Vector3f();
 	}
 
 	public CompoundObject3(
 			Broadphase<Vector3f, CollisionShape<Vector3f, ?, ?>> broad,
 			CollisionShape3... shapes) {
 		collisionshapes = new ArrayList<CollisionShape<Vector3f, Quaternionf, ?>>();
-		translations = new ArrayList<Vector3f>();
-		rotations = new ArrayList<Quaternionf>();
+		localtranslations = new ArrayList<Vector3f>();
 		broadphase = broad;
 
 		for (CollisionShape3 cs : shapes) {
 			addCollisionShape(cs);
 		}
 		supportcalculator = createSupportCalculator(this);
+		center = new Vector3f();
 	}
 
 	public void addCollisionShape(CollisionShape3 collisionshape) {
-		collisionshape.setTranslation(getTranslation());
-		collisionshape.setRotation(getRotation());
-		collisionshape.invrotation = this.invrotation;
-		broadphase.add(collisionshape);
-		collisionshapes.add(collisionshape);
-		translations.add(new Vector3f());
-		rotations.add(new Quaternionf());
-		updateAABB();
+		addCollisionShape(collisionshape, collisionshape.getTranslation());
 	}
 
-	// public void addCollisionShape(CollisionShape3 collisionshape,
-	// Vector3f translation) {
-	// collisionshape.setTranslation(getTranslation());
-	// collisionshape.setRotation(getRotation());
-	// collisionshape.invrotation = this.invrotation;
-	// broadphase.add(collisionshape);
-	// collisionshapes.add(collisionshape);
-	// translations.add(translation);
-	// rotations.add(new Quaternionf());
-	// updateAABB();
-	// }
-	//
-	// public void addCollisionShape(CollisionShape3 collisionshape,
-	// Vector3f translation, Quaternionf rotation) {
-	// collisionshape.setTranslation(getTranslation());
-	// collisionshape.setRotation(getRotation());
-	// collisionshape.invrotation = this.invrotation;
-	// broadphase.add(collisionshape);
-	// collisionshapes.add(collisionshape);
-	// translations.add(translation);
-	// rotations.add(rotation);
-	// updateAABB();
-	// }
+	public void addCollisionShape(CollisionShape3 collisionshape,
+			Vector3f translation) {
+		translation.translate(-center.x, -center.y, -center.z);
+		broadphase.add(collisionshape);
+		collisionshapes.add(collisionshape);
+		localtranslations.add(translation);
+		updateCenterAndAABB();
 
-	private void updateAABB() {
+		collisionshape.translateTo(VecMath.addition(getTranslation(),
+				translation));
+		collisionshape.setRotation(getRotation());
+		collisionshape.invrotation = this.invrotation;
+		for (CollisionShape<Vector3f, Quaternionf, ?> cs : collisionshapes)
+			cs.setRotationCenter(aabb.getCenter());
+	}
+
+	public void updateTransformations() {
+		for (int i = 0; i < collisionshapes.size(); i++) {
+			collisionshapes.get(i).translateTo(
+					VecMath.addition(getTranslation(), QuatMath.transform(
+							this.getRotation(), localtranslations.get(i))));
+		}
+	}
+
+	private void updateCenterAndAABB() {
+
+		/*
+		 * Plan: 1. Calculate Center 1.1 Calculate global min and max for
+		 * Collisionshape AABBs 1.2 Calculate center from global min and max 1.3
+		 * Recalculate local translations 2. Update AABB
+		 */
+
+		Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE,
+				Float.MAX_VALUE);
+		Vector3f max = new Vector3f(-Float.MAX_VALUE, -Float.MAX_VALUE,
+				-Float.MAX_VALUE);
+		for (int i = 0; i < collisionshapes.size(); i++) {
+			CollisionShape<Vector3f, ?, ?> cs = collisionshapes.get(i);
+			Vector3f trans = cs.getTranslation();
+			Vector3f csmin = VecMath.addition(cs.getAABB().getMin(), trans);
+			Vector3f csmax = VecMath.addition(cs.getAABB().getMax(), trans);
+			if (csmin.x < min.x)
+				min.x = csmin.x;
+			if (csmin.y < min.y)
+				min.y = csmin.y;
+			if (csmin.z < min.z)
+				min.z = csmin.z;
+			if (csmax.x > max.x)
+				max.x = csmax.x;
+			if (csmax.y > max.y)
+				max.y = csmax.y;
+			if (csmax.z > max.z)
+				max.z = csmax.z;
+		}
+		Vector3f newcenter = new Vector3f(min.x + (max.x - min.x) / 2f, min.y
+				+ (max.y - min.y) / 2f, min.z + (max.z - min.z) / 2f);
+		Vector3f centerDifference = VecMath.subtraction(center, newcenter);
+		center = newcenter;
+		translateTo(center);
+		for (Vector3f translation : localtranslations) {
+			translation.translate(centerDifference);
+		}
+
 		float maxLength = 0;
 		for (int i = 0; i < collisionshapes.size(); i++) {
 			CollisionShape<Vector3f, ?, ?> cs = collisionshapes.get(i);
-			Vector3f trans = translations.get(i);
-			Vector3f min = VecMath.addition(cs.getAABB().getMin(), trans);
-			Vector3f max = VecMath.addition(cs.getAABB().getMax(), trans);
-			float minL = (float) min.lengthSquared();
-			float maxL = (float) max.lengthSquared();
+			Vector3f trans = localtranslations.get(i);
+			Vector3f csmin = VecMath.addition(cs.getAABB().getMin(), trans);
+			Vector3f csmax = VecMath.addition(cs.getAABB().getMax(), trans);
+			float minL = (float) csmin.lengthSquared();
+			float maxL = (float) csmax.lengthSquared();
 			if (minL > maxLength)
 				maxLength = minL;
 			if (maxL > maxLength)
 				maxLength = maxL;
 		}
 		maxLength = (float) Math.sqrt(maxLength);
+
+		System.out.println(getTranslation() + "; " + min + "; " + max + "; "
+				+ maxLength + "; " + center);
 
 		setAABB(new Vector3f(-maxLength, -maxLength, -maxLength), new Vector3f(
 				maxLength, maxLength, maxLength));
@@ -165,7 +200,9 @@ public class CompoundObject3 extends RigidBody3 implements
 	@Override
 	public void updateInverseRotation() {
 		super.updateInverseRotation();
-		for (CollisionShape<Vector3f, Quaternionf, ?> cs : collisionshapes) {
+		for (int i = 0; i < collisionshapes.size(); i++) {
+			CollisionShape<Vector3f, Quaternionf, ?> cs = collisionshapes
+					.get(i);
 			cs.invrotation = this.invrotation;
 		}
 	}

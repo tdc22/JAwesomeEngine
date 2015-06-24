@@ -234,6 +234,8 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public void updateTimestep(float delta) {
 		for (RigidBody<?, ?, ?, ?> o : objects)
 			o.updateInverseRotation();
+		for (CompoundObject<L, A2> co : compoundObjects)
+			co.updateTransformations();
 
 		broadphase.update();
 		overlaps = broadphase.getOverlaps();

@@ -63,7 +63,7 @@ public class PendulumTest2d extends StandardGame {
 		add2dObject(base2);
 
 		Quad base3 = new Quad(1000, 20, 5, 5);
-		RigidBody2 rb3 = new RigidBody2(PhysicsShapeCreator.create(base2));
+		RigidBody2 rb3 = new RigidBody2(PhysicsShapeCreator.create(base3));
 		space.addRigidBody(base3, rb3);
 		add2dObject(base3);
 

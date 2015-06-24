@@ -46,4 +46,10 @@ public class AABB3 extends AABB<Vector3f> {
 		return size.x * size.y * size.z;
 	}
 
+	@Override
+	public Vector3f getCenter() {
+		return new Vector3f(min.x + (max.x - min.x) / 2f, min.y
+				+ (max.y - min.y) / 2f, min.z + (max.z - min.z) / 2f);
+	}
+
 }

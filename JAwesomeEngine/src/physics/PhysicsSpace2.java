@@ -55,6 +55,7 @@ public class PhysicsSpace2 extends Space2 {
 					.getCollisionShapes().get(i);
 			dgo.setRotation(cs.getRotation());
 			dgo.setTranslation(cs.getTranslation());
+			dgo.setRotationCenter(cs.getRotationCenter());
 			addedobjects.add(dgo);
 		}
 		addCompoundObject(compoundobject);

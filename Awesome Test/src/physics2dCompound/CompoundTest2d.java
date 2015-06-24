@@ -136,8 +136,7 @@ public class CompoundTest2d extends StandardGame {
 		// rb1.getCollisionShapes().get(i).getTranslation());
 
 		debugger.update();
-		if (inputs.isKeyDown("O"))
-			space.update(delta);
+		space.update(delta);
 		physicsdebug.update();
 		cam.update(delta);
 	}
