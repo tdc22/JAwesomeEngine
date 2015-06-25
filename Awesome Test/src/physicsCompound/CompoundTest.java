@@ -91,7 +91,7 @@ public class CompoundTest extends StandardGame {
 		if (tempdelta > 200) {
 			if (inputs.isMouseButtonDown("0")) {
 				Box b = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
-				Sphere s = new Sphere(0, 10, 0, 0.5f, 36, 36);
+				Sphere s = new Sphere(0, 10, 0, 0.7f, 36, 36);
 				b.setColor(Color.BLUE);
 				s.setColor(Color.RED);
 				CompoundObject3 rb = new CompoundObject3();
@@ -100,8 +100,8 @@ public class CompoundTest extends StandardGame {
 				rb.setMass(0.1f);
 				rb.setInertia(new Quaternionf(0.1f, 0, 0, 0));
 				space.addCompoundObject(rb, b, s);
-				add2dObject(b);
-				add2dObject(s);
+				addObject(b);
+				addObject(s);
 				tempdelta = 0;
 			}
 			if (inputs.isMouseButtonDown("1")) {
@@ -112,6 +112,21 @@ public class CompoundTest extends StandardGame {
 				rb.setInertia(new Quaternionf(0.03f, 0, 0, 0));
 				space.addRigidBody(c, rb);
 				addObject(c);
+				tempdelta = 0;
+			}
+			if (inputs.isMouseButtonDown("2")) {
+				Sphere s1 = new Sphere(-0.5f, 10, 0, 0.5f, 36, 36);
+				Sphere s2 = new Sphere(0.5f, 10, 0, 0.5f, 36, 36);
+				s1.setColor(Color.RED);
+				s2.setColor(Color.RED);
+				CompoundObject3 rb = new CompoundObject3();
+				rb.addCollisionShape(PhysicsShapeCreator.create(s1));
+				rb.addCollisionShape(PhysicsShapeCreator.create(s2));
+				rb.setMass(0.1f);
+				rb.setInertia(new Quaternionf(0.1f, 0, 0, 0));
+				space.addCompoundObject(rb, s1, s2);
+				addObject(s1);
+				addObject(s2);
 				tempdelta = 0;
 			}
 		} else {

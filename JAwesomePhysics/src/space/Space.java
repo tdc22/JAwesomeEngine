@@ -38,7 +38,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected List<Constraint<L>> constraints;
 	protected L globalForce;
 	protected L globalGravitation;
-	protected int resolutionIterations = 25;
+	protected int resolutionIterations = 1; // TODO: Change back!!!!
 	protected int constraintResolutionIterations = 25;
 	protected boolean cullStaticOverlaps = true;
 
@@ -329,11 +329,19 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 			}
 		}
 
+		System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		for (int i = 0; i < resolutionIterations; i++)
 			resolve();
 		applyGlobalForce();
 		for (int i = 0; i < constraintResolutionIterations; i++)
 			resolveConstraints(delta);
+
+		System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+		for (RigidBody<L, A1, A2, A3> rb : objects)
+			System.out.println(rb.getTranslation2() + "; " + rb.getRotation()
+					+ "; " + rb.getLinearVelocity() + "; "
+					+ rb.getAngularVelocity());
+
 		integrate(delta);
 		correct();
 

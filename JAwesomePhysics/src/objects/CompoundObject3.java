@@ -83,7 +83,8 @@ public class CompoundObject3 extends RigidBody3 implements
 	}
 
 	public void addCollisionShape(CollisionShape3 collisionshape) {
-		addCollisionShape(collisionshape, collisionshape.getTranslation());
+		addCollisionShape(collisionshape,
+				new Vector3f(collisionshape.getTranslation()));
 	}
 
 	public void addCollisionShape(CollisionShape3 collisionshape,
@@ -163,9 +164,6 @@ public class CompoundObject3 extends RigidBody3 implements
 				maxLength = maxL;
 		}
 		maxLength = (float) Math.sqrt(maxLength);
-
-		System.out.println(getTranslation() + "; " + min + "; " + max + "; "
-				+ maxLength + "; " + center);
 
 		setAABB(new Vector3f(-maxLength, -maxLength, -maxLength), new Vector3f(
 				maxLength, maxLength, maxLength));
