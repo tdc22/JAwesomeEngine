@@ -122,9 +122,6 @@ public class ImpulseResolution implements CollisionResolution {
 
 		float velAlongNormal = VecMath.dotproduct(rv, normal);
 
-		System.out.println("manifold: " + normal + "; " + contactA + "; "
-				+ contactB);
-
 		if (velAlongNormal > 0)
 			return;
 

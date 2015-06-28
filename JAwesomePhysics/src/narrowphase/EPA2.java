@@ -19,14 +19,12 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 		}
 	}
 
-	private final float TOLERANCE = 0.001f;
+	private final float TOLERANCE = 0.05f;
 	private final int MAX_ITERATIONS = 50;
 
 	@Override
 	public ContactManifold<Vector2f> computeCollision(SupportMap<Vector2f> Sa,
 			SupportMap<Vector2f> Sb, List<Vector2f> simplex) {
-		System.out.println("----------EPA2d Start------------");
-		System.out.println(simplex.size());
 		Vector2f normal = new Vector2f();
 		float depth = 0;
 		for (int i = 0; i < MAX_ITERATIONS; i++) {
@@ -42,14 +40,15 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 			}
 		}
 
+		if (normal.lengthSquared() == 0)
+			return null;
+
 		Vector3f tmp = VecMath.crossproduct(new Vector3f(normal), new Vector3f(
 				0, 0, 1));
 		Vector2f tangentA = new Vector2f(tmp.x, tmp.y);
 		Vector2f tangentB = VecMath.negate(tangentA);
 
 		Vector2f negnormal = VecMath.negate(normal);
-		System.out.println(depth + "; " + normal + "; " + tangentA + "; "
-				+ tangentB);
 		return new ContactManifold<Vector2f>(depth, normal,
 				Sa.supportPoint(normal), Sb.supportPoint(negnormal),
 				Sa.supportPointRelative(normal),

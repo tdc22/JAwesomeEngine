@@ -38,7 +38,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected List<Constraint<L>> constraints;
 	protected L globalForce;
 	protected L globalGravitation;
-	protected int resolutionIterations = 1; // TODO: Change back!!!!
+	protected int resolutionIterations = 25;
 	protected int constraintResolutionIterations = 25;
 	protected boolean cullStaticOverlaps = true;
 
@@ -254,8 +254,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 							ContactManifold<L> contactManifold = narrowphase
 									.computeCollision(overlap.getFirst(),
 											overlap.getSecond());
-							manifoldmanager.add(new CollisionManifold<L>(
-									overlap, contactManifold));
+							if (contactManifold != null) {
+								manifoldmanager.add(new CollisionManifold<L>(
+										overlap, contactManifold));
+							}
 						}
 					} else {
 						handleCompoundAndNonCompound(overlap.getSecond()
@@ -292,12 +294,14 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 											.computeCollision(
 													compoundoverlap.getFirst(),
 													compoundoverlap.getSecond());
-									manifoldmanager
-											.add(new CollisionManifold<L>(
-													new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
-															co1.getRigidBody(),
-															co2.getRigidBody()),
-													contactManifold));
+									if (contactManifold != null) {
+										manifoldmanager
+												.add(new CollisionManifold<L>(
+														new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
+																co1.getRigidBody(),
+																co2.getRigidBody()),
+														contactManifold));
+									}
 								}
 							} else {
 								// first in second && second in first
@@ -314,12 +318,14 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 																.getFirst(),
 														compoundoverlap
 																.getSecond());
-										manifoldmanager
-												.add(new CollisionManifold<L>(
-														new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
-																co2.getRigidBody(),
-																co1.getRigidBody()),
-														contactManifold));
+										if (contactManifold != null) {
+											manifoldmanager
+													.add(new CollisionManifold<L>(
+															new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
+																	co2.getRigidBody(),
+																	co1.getRigidBody()),
+															contactManifold));
+										}
 									}
 								}
 							}
@@ -329,18 +335,11 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 			}
 		}
 
-		System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		for (int i = 0; i < resolutionIterations; i++)
 			resolve();
 		applyGlobalForce();
 		for (int i = 0; i < constraintResolutionIterations; i++)
 			resolveConstraints(delta);
-
-		System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-		for (RigidBody<L, A1, A2, A3> rb : objects)
-			System.out.println(rb.getTranslation2() + "; " + rb.getRotation()
-					+ "; " + rb.getLinearVelocity() + "; "
-					+ rb.getAngularVelocity());
 
 		integrate(delta);
 		correct();
@@ -368,18 +367,20 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 						ContactManifold<L> contactManifold = narrowphase
 								.computeCollision(overlap.getFirst(),
 										overlap.getSecond());
-						if (overlap.getFirst().equals(rb)) {
-							manifoldmanager
-									.add(new CollisionManifold<L>(
-											new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
-													rb, co.getRigidBody()),
-											contactManifold));
-						} else {
-							manifoldmanager
-									.add(new CollisionManifold<L>(
-											new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
-													co.getRigidBody(), rb),
-											contactManifold));
+						if (contactManifold != null) {
+							if (overlap.getFirst().equals(rb)) {
+								manifoldmanager
+										.add(new CollisionManifold<L>(
+												new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
+														rb, co.getRigidBody()),
+												contactManifold));
+							} else {
+								manifoldmanager
+										.add(new CollisionManifold<L>(
+												new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
+														co.getRigidBody(), rb),
+												contactManifold));
+							}
 						}
 					}
 				}

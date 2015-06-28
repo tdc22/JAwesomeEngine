@@ -105,6 +105,9 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 			}
 		}
 
+		if (normal.lengthSquared() == 0)
+			return null;
+
 		// source:
 		// http://allenchou.net/2013/12/game-physics-contact-generation-epa/
 		Vector3f tangentA, tangentB;
