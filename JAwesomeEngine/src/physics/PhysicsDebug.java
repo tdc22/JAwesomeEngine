@@ -27,16 +27,17 @@ public class PhysicsDebug {
 	Font font;
 	Space3 physics;
 	boolean showAABBs = false;
-	boolean showCollisionNormals = false;
 	boolean showVelocities = false;
-	private InputEvent toggleAABBs, toggleContractPoints,
-			toggleCollisionNormals, toggleVelocities;
+	boolean showCollisionNormals = false;
+	boolean showCollisionTangents = false;
+	private InputEvent toggleAABBs, toggleCollisionNormals, toggleVelocities,
+			toggleCollisionTangents;
 	private List<Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>> aabbObjects;
 
 	public PhysicsDebug(InputManager inputs, Font f, Space3 physics) {
 		font = f;
 		this.physics = physics;
-		setupControls(inputs);
+		setupEvents(inputs);
 	}
 
 	private void clearAABBObjects() {
@@ -77,12 +78,16 @@ public class PhysicsDebug {
 		return showAABBs;
 	}
 
+	public boolean isVelocitiesShown() {
+		return showVelocities;
+	}
+
 	public boolean isCollisionNormalsShown() {
 		return showCollisionNormals;
 	}
 
-	public boolean isVelocitiesShown() {
-		return showVelocities;
+	public boolean isCollisionTangentsShown() {
+		return showCollisionTangents;
 	}
 
 	public void render2d() {
@@ -124,6 +129,33 @@ public class PhysicsDebug {
 				normal2.delete();
 			}
 		}
+		if (showCollisionTangents) {
+			List<CollisionManifold<Vector3f>> manifolds = physics
+					.getCollisionManifolds();
+			for (CollisionManifold<Vector3f> cm : manifolds) {
+				Color c = Color.GREEN;
+				ShapedObject tangent1 = new ShapedObject();
+				ShapedObject tangent2 = new ShapedObject();
+				tangent1.setRenderMode(GL11.GL_LINES);
+				tangent2.setRenderMode(GL11.GL_LINES);
+				tangent1.addVertex(cm.getContactPointA(), c);
+				tangent1.addVertex(
+						VecMath.addition(cm.getContactPointA(),
+								VecMath.negate(cm.getContactTangentA())), c);
+				tangent2.addVertex(cm.getContactPointB(), c);
+				tangent2.addVertex(
+						VecMath.addition(cm.getContactPointB(),
+								cm.getContactTangentB()), c);
+				tangent1.addIndices(0, 1);
+				tangent2.addIndices(0, 1);
+				tangent1.prerender();
+				tangent2.prerender();
+				tangent1.render();
+				tangent2.render();
+				tangent1.delete();
+				tangent2.delete();
+			}
+		}
 		if (showVelocities) {
 			List<RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> objs = physics
 					.getObjects();
@@ -151,50 +183,60 @@ public class PhysicsDebug {
 		showAABBs = s;
 	}
 
-	public void setShowCollisionNormals(boolean s) {
-		showCollisionNormals = s;
-	}
-
 	public void setShowVelocities(boolean s) {
 		showVelocities = s;
 	}
 
-	private void setupControls(InputManager inputs) {
+	public void setShowCollisionNormals(boolean s) {
+		showCollisionNormals = s;
+	}
+
+	public void setShowCollisionTangents(boolean s) {
+		showCollisionTangents = s;
+	}
+
+	private void setupEvents(InputManager inputs) {
 		toggleAABBs = new InputEvent("debug_physics2_showAABBs", new Input(
 				Input.KEYBOARD_EVENT, "F5", KeyInput.KEY_PRESSED));
-		toggleContractPoints = new InputEvent(
-				"debug_physics2_showContactPoints", new Input(
-						Input.KEYBOARD_EVENT, "F6", KeyInput.KEY_PRESSED));
+		toggleVelocities = new InputEvent("debug_physics2_showVelocities",
+				new Input(Input.KEYBOARD_EVENT, "F6", KeyInput.KEY_PRESSED));
 		toggleCollisionNormals = new InputEvent(
 				"debug_physics2_showCollisionNormals", new Input(
 						Input.KEYBOARD_EVENT, "F7", KeyInput.KEY_PRESSED));
-		toggleVelocities = new InputEvent("debug_physics2_showVelocities",
-				new Input(Input.KEYBOARD_EVENT, "F8", KeyInput.KEY_PRESSED));
+		toggleCollisionTangents = new InputEvent(
+				"debug_physics2_showCollisionTangents", new Input(
+						Input.KEYBOARD_EVENT, "F8", KeyInput.KEY_PRESSED));
 
 		inputs.addEvent(toggleAABBs);
-		inputs.addEvent(toggleContractPoints);
-		inputs.addEvent(toggleCollisionNormals);
 		inputs.addEvent(toggleVelocities);
+		inputs.addEvent(toggleCollisionNormals);
+		inputs.addEvent(toggleCollisionTangents);
 	}
 
 	public void toggleShowAABBs() {
 		setShowAABBs(!showAABBs);
 	}
 
+	public void toggleShowVelocities() {
+		setShowVelocities(!showVelocities);
+	}
+
 	public void toggleShowCollisionNormals() {
 		setShowCollisionNormals(!showCollisionNormals);
 	}
 
-	public void toggleShowVelocities() {
-		setShowVelocities(!showVelocities);
+	public void toggleShowCollisionTangents() {
+		setShowCollisionTangents(!showCollisionTangents);
 	}
 
 	public void update() {
 		if (toggleAABBs.isActive())
 			toggleShowAABBs();
-		if (toggleCollisionNormals.isActive())
-			toggleShowCollisionNormals();
 		if (toggleVelocities.isActive())
 			toggleShowVelocities();
+		if (toggleCollisionNormals.isActive())
+			toggleShowCollisionNormals();
+		if (toggleCollisionTangents.isActive())
+			toggleShowCollisionTangents();
 	}
 }

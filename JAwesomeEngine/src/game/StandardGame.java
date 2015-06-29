@@ -53,6 +53,8 @@ import shader.Shader;
 import shape2d.Quad;
 import texture.FramebufferObject;
 import texture.Texture;
+import utils.GameProfiler;
+import utils.NullGameProfiler;
 import utils.ViewFrustum;
 import display.Display;
 import display.DisplayMode;
@@ -72,6 +74,7 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 	protected Quad screen;
 	public Display display;
 	public GameCamera cam;
+	protected GameProfiler profiler;
 
 	public InputManager inputs;
 	protected InputEvent closeEvent;
@@ -268,6 +271,8 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 		VecMath.identityMatrix().store(identity);
 		identity.flip();
 
+		profiler = new NullGameProfiler();
+
 		lastFPS = getTime();
 	}
 
@@ -364,19 +369,23 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 		getDelta();
 
 		while (isRunning()) {
+			profiler.frameStart();
 			int delta = getDelta();
 			updateFPS();
 			updateEngine();
 			update(delta);
+			profiler.updateRender3d();
 			prepareRender();
 			render();
 			end3d();
+			profiler.render3dRender2d();
 			if (render2d) {
 				start2d();
 				render2d();
 				end2d();
 			}
 			endRender();
+			profiler.frameEnd();
 		}
 		System.out.println("EXIT LOOP");
 		destroyEngine();

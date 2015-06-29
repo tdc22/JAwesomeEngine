@@ -15,7 +15,6 @@ import math.VecMath;
 import matrix.Matrix1f;
 import objects.AABB;
 import objects.RigidBody;
-import objects.RigidBody2;
 import objects.ShapedObject2;
 
 import org.lwjgl.opengl.GL11;
@@ -30,17 +29,17 @@ public class PhysicsDebug2 {
 	Font font;
 	Space2 physics;
 	boolean showAABBs = false;
-	boolean showContactPoints = false;
-	boolean showCollisionNormals = false;
 	boolean showVelocities = false;
-	private InputEvent toggleAABBs, toggleContractPoints,
-			toggleCollisionNormals, toggleVelocities;
+	boolean showCollisionNormals = false;
+	boolean showCollisionTangents = false;
+	private InputEvent toggleAABBs, toggleCollisionNormals, toggleVelocities,
+			toggleCollisionTangents;
 	private List<Pair<ShapedObject2, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>>> aabbObjects;
 
 	public PhysicsDebug2(InputManager inputs, Font f, Space2 physics) {
 		font = f;
 		this.physics = physics;
-		setupControls(inputs);
+		setupEvents(inputs);
 	}
 
 	private void clearAABBObjects() {
@@ -74,20 +73,16 @@ public class PhysicsDebug2 {
 		return showAABBs;
 	}
 
-	public boolean isCollisionNormalsShown() {
-		return showCollisionNormals;
-	}
-
-	public boolean isContactPointsShown() {
-		return showContactPoints;
-	}
-
 	public boolean isVelocitiesShown() {
 		return showVelocities;
 	}
 
-	private float pythagoreanSolve(float a, float b) {
-		return (float) Math.sqrt(a * a + b * b);
+	public boolean isCollisionNormalsShown() {
+		return showCollisionNormals;
+	}
+
+	public boolean isCollisionTangentsShown() {
+		return showCollisionTangents;
 	}
 
 	public void render2d() {
@@ -103,22 +98,21 @@ public class PhysicsDebug2 {
 					.getCollisionManifolds();
 			for (CollisionManifold<Vector2f> cm : manifolds) {
 				Color c = Color.RED;
-				Vector2f normal = VecMath.scale(cm.getCollisionNormal(), 10);
 				ShapedObject2 normal1 = new ShapedObject2();
 				ShapedObject2 normal2 = new ShapedObject2();
 				normal1.setRenderMode(GL11.GL_LINES);
 				normal2.setRenderMode(GL11.GL_LINES);
 
+				Vector2f scalednormal = VecMath.scale(cm.getCollisionNormal(),
+						10f);
 				normal1.addVertex(cm.getContactPointA(), c);
 				normal1.addVertex(
-						VecMath.addition(
-								cm.getContactPointA(),
-								VecMath.scale(VecMath.negate(normal),
-										cm.getPenetrationDepth())), c);
+						VecMath.addition(cm.getContactPointA(),
+								VecMath.negate(scalednormal)), c);
 				normal2.addVertex(cm.getContactPointB(), c);
-				normal2.addVertex(VecMath.addition(cm.getContactPointB(),
-						VecMath.scale(normal, cm.getPenetrationDepth())), c);
-
+				normal2.addVertex(
+						VecMath.addition(cm.getContactPointB(), scalednormal),
+						c);
 				normal1.addIndices(0, 1);
 				normal2.addIndices(0, 1);
 				normal1.prerender();
@@ -127,66 +121,36 @@ public class PhysicsDebug2 {
 				normal2.render();
 				normal1.delete();
 				normal2.delete();
+			}
+		}
+		if (showCollisionTangents) {
+			List<CollisionManifold<Vector2f>> manifolds = physics
+					.getCollisionManifolds();
+			for (CollisionManifold<Vector2f> cm : manifolds) {
+				Color c = Color.GREEN;
+				ShapedObject2 tangent1 = new ShapedObject2();
+				ShapedObject2 tangent2 = new ShapedObject2();
+				tangent1.setRenderMode(GL11.GL_LINES);
+				tangent2.setRenderMode(GL11.GL_LINES);
 
-				RigidBody2 A = (RigidBody2) cm.getObjects().getFirst();
-				RigidBody2 B = (RigidBody2) cm.getObjects().getSecond();
-				normal = cm.getCollisionNormal();
-				Vector2f contactA = cm.getRelativeContactPointA();
-				Vector2f contactB = cm.getRelativeContactPointB();
-				Vector2f rv = VecMath.subtraction(B.getLinearVelocity(),
-						A.getLinearVelocity());
-				float velAlongNormal = VecMath.dotproduct(rv, normal);
-				if (velAlongNormal <= 0) {
-					float e = Math.min(A.getRestitution(), B.getRestitution());
-					float ca = (float) VecMath.crossproduct(contactA, normal)
-							* VecMath.crossproduct(contactA, normal)
-							* A.getInverseInertia().getf(0, 0);
-					float cb = (float) VecMath.crossproduct(contactB, normal)
-							* VecMath.crossproduct(contactB, normal)
-							* B.getInverseInertia().getf(0, 0);
-					float j = (-(1 + e) * velAlongNormal)
-							/ (A.getInverseMass() + B.getInverseMass() + ca + cb);
-
-					// Friction
-					// Re-calculate rv after normal impulse!
-					rv = VecMath.subtraction(B.getLinearVelocity(),
-							A.getLinearVelocity());
-					Vector2f tangent = VecMath.subtraction(
-							rv,
-							VecMath.scale(normal,
-									VecMath.dotproduct(rv, normal)));
-					if (tangent.length() > 0)
-						tangent.normalize();
-					float jt = (-VecMath.dotproduct(rv, tangent))
-							/ ((A.getInverseMass() + B.getInverseMass()));
-					float mu = pythagoreanSolve(A.getStaticFriction(),
-							B.getStaticFriction());
-					Vector2f frictionImpulse = null;
-					if (Math.abs(jt) < j * mu)
-						frictionImpulse = VecMath.scale(tangent, jt);
-					else {
-						float dynamicFriction = pythagoreanSolve(
-								A.getDynamicFriction(), B.getDynamicFriction());
-						frictionImpulse = VecMath.scale(tangent, -j
-								* dynamicFriction);
-					}
-					frictionImpulse = VecMath.scale(frictionImpulse, 100);
-
-					c = Color.GREEN;
-					ShapedObject2 friction = new ShapedObject2();
-					friction.setRenderMode(GL11.GL_LINES);
-					friction.addVertex(cm.getContactPointA(), c);
-					friction.addVertex(
-							VecMath.addition(cm.getContactPointA(),
-									VecMath.negate(frictionImpulse)), c);
-					friction.addVertex(cm.getContactPointB(), c);
-					friction.addVertex(VecMath.addition(cm.getContactPointB(),
-							frictionImpulse), c);
-					friction.addIndices(0, 1);
-					friction.prerender();
-					friction.render();
-					friction.delete();
-				}
+				tangent1.addVertex(cm.getContactPointA(), c);
+				tangent1.addVertex(
+						VecMath.addition(
+								cm.getContactPointA(),
+								VecMath.negate(VecMath.scale(
+										cm.getContactTangentA(), 10f))), c);
+				tangent2.addVertex(cm.getContactPointB(), c);
+				tangent2.addVertex(
+						VecMath.addition(cm.getContactPointB(),
+								VecMath.scale(cm.getContactTangentB(), 10f)), c);
+				tangent1.addIndices(0, 1);
+				tangent2.addIndices(0, 1);
+				tangent1.prerender();
+				tangent2.prerender();
+				tangent1.render();
+				tangent2.render();
+				tangent1.delete();
+				tangent2.delete();
 			}
 		}
 		if (showVelocities) {
@@ -216,58 +180,60 @@ public class PhysicsDebug2 {
 		showAABBs = s;
 	}
 
-	public void setShowCollisionNormals(boolean s) {
-		showCollisionNormals = s;
-	}
-
-	public void setShowContactPoints(boolean s) {
-		showContactPoints = s;
-	}
-
 	public void setShowVelocities(boolean s) {
 		showVelocities = s;
 	}
 
-	private void setupControls(InputManager inputs) {
+	public void setShowCollisionNormals(boolean s) {
+		showCollisionNormals = s;
+	}
+
+	public void setShowCollisionTangents(boolean s) {
+		showCollisionTangents = s;
+	}
+
+	private void setupEvents(InputManager inputs) {
 		toggleAABBs = new InputEvent("debug_physics2_showAABBs", new Input(
 				Input.KEYBOARD_EVENT, "F5", KeyInput.KEY_PRESSED));
-		toggleContractPoints = new InputEvent(
-				"debug_physics2_showContactPoints", new Input(
-						Input.KEYBOARD_EVENT, "F6", KeyInput.KEY_PRESSED));
+		toggleVelocities = new InputEvent("debug_physics2_showVelocities",
+				new Input(Input.KEYBOARD_EVENT, "F6", KeyInput.KEY_PRESSED));
 		toggleCollisionNormals = new InputEvent(
 				"debug_physics2_showCollisionNormals", new Input(
 						Input.KEYBOARD_EVENT, "F7", KeyInput.KEY_PRESSED));
-		toggleVelocities = new InputEvent("debug_physics2_showVelocities",
-				new Input(Input.KEYBOARD_EVENT, "F8", KeyInput.KEY_PRESSED));
+		toggleCollisionTangents = new InputEvent(
+				"debug_physics2_showCollisionTangents", new Input(
+						Input.KEYBOARD_EVENT, "F8", KeyInput.KEY_PRESSED));
 
 		inputs.addEvent(toggleAABBs);
-		inputs.addEvent(toggleContractPoints);
 		inputs.addEvent(toggleCollisionNormals);
 		inputs.addEvent(toggleVelocities);
+		inputs.addEvent(toggleCollisionTangents);
 	}
 
 	public void toggleShowAABBs() {
 		setShowAABBs(!showAABBs);
 	}
 
+	public void toggleShowVelocities() {
+		setShowVelocities(!showVelocities);
+	}
+
 	public void toggleShowCollisionNormals() {
 		setShowCollisionNormals(!showCollisionNormals);
 	}
 
-	public void toggleShowContactPoints() {
-		setShowContactPoints(!showContactPoints);
-	}
-
-	public void toggleShowVelocities() {
-		setShowVelocities(!showVelocities);
+	public void toggleShowCollisionTangents() {
+		setShowCollisionTangents(!showCollisionTangents);
 	}
 
 	public void update() {
 		if (toggleAABBs.isActive())
 			toggleShowAABBs();
-		if (toggleCollisionNormals.isActive())
-			toggleShowCollisionNormals();
 		if (toggleVelocities.isActive())
 			toggleShowVelocities();
+		if (toggleCollisionNormals.isActive())
+			toggleShowCollisionNormals();
+		if (toggleCollisionTangents.isActive())
+			toggleShowCollisionTangents();
 	}
 }

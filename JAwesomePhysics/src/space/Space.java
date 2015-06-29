@@ -41,6 +41,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected int resolutionIterations = 25;
 	protected int constraintResolutionIterations = 25;
 	protected boolean cullStaticOverlaps = true;
+	protected PhysicsSpaceProfiler profiler;
 
 	protected class CompoundListener implements
 			BroadphaseListener<L, RigidBody<L, ?, ?, ?>> {
@@ -89,6 +90,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		compoundObjects = new ArrayList<CompoundObject<L, A2>>();
 		overlaps = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
 		constraints = new ArrayList<Constraint<L>>();
+		profiler = new NullSpaceProfiler();
 		broadphase.addListener(new CompoundListener());
 	}
 
@@ -226,12 +228,18 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		resolutionIterations = count;
 	}
 
+	public void setProfiler(PhysicsSpaceProfiler profiler) {
+		this.profiler = profiler;
+	}
+
 	@Override
 	public void update(int delta) {
 		updateTimestep(delta / 1000f);
 	}
 
 	public void updateTimestep(float delta) {
+		profiler.physicsStart();
+
 		for (RigidBody<?, ?, ?, ?> o : objects)
 			o.updateInverseRotation();
 		for (CompoundObject<L, A2> co : compoundObjects)
@@ -241,6 +249,8 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		overlaps = broadphase.getOverlaps();
 		for (CompoundObject<L, A2> co : compoundObjects)
 			co.getCompoundBroadphase().update();
+
+		profiler.boradphaseNarrowphase();
 
 		manifoldmanager.clear();
 		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps) {
@@ -335,17 +345,23 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 			}
 		}
 
+		profiler.narrowphaseResolution();
+
 		for (int i = 0; i < resolutionIterations; i++)
 			resolve();
 		applyGlobalForce();
 		for (int i = 0; i < constraintResolutionIterations; i++)
 			resolveConstraints(delta);
 
+		profiler.resolutionIntegration();
+
 		integrate(delta);
 		correct();
 
 		for (CompoundObject<L, A2> co : compoundObjects)
 			co.updateTransformations();
+
+		profiler.physicsEnd();
 	}
 
 	private void handleCompoundAndNonCompound(CompoundObject<L, ?> co,

@@ -10,12 +10,8 @@ import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.GL_OUT_OF_MEMORY;
 import static org.lwjgl.opengl.GL11.GL_STACK_OVERFLOW;
 import static org.lwjgl.opengl.GL11.GL_STACK_UNDERFLOW;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
-import static org.lwjgl.opengl.GL11.glVertex3f;
 import static org.lwjgl.opengl.GL30.GL_INVALID_FRAMEBUFFER_OPERATION;
 import gui.Font;
 import gui.Text;
@@ -73,7 +69,7 @@ public class Debugger {
 	Text text;
 	Camera cam;
 	Vector3f range;
-	private ShapedObject xaxis, yaxis, zaxis;
+	private ShapedObject xaxis, yaxis, zaxis, grid, gridXZAxis;
 
 	InputEvent toggledata, toggleaxis, togglegrid, togglewireframe;
 
@@ -86,12 +82,16 @@ public class Debugger {
 		xaxis = new ShapedObject();
 		yaxis = new ShapedObject();
 		zaxis = new ShapedObject();
+		grid = new ShapedObject();
+		gridXZAxis = new ShapedObject();
 		xaxis.setRenderMode(GLConstants.LINES);
 		yaxis.setRenderMode(GLConstants.LINES);
 		zaxis.setRenderMode(GLConstants.LINES);
+		grid.setRenderMode(GLConstants.LINES);
+		gridXZAxis.setRenderMode(GLConstants.LINES);
 
 		setRange(new Vector3f(1000, 1000, 1000));
-		setupControls(i);
+		setupEvents(i);
 	}
 
 	public void begin() {
@@ -169,27 +169,9 @@ public class Debugger {
 		}
 
 		if (showgrid) {
-			glColor3f(1f, 1f, 1f);
-			glBegin(GLConstants.LINES);
-			for (int x = (int) -range.x; x < range.x; x++) {
-				if (x != 0) {
-					glVertex3f(x, 0, -range.z);
-					glVertex3f(x, 0, range.z);
-				} else {
-					glVertex3f(x, 0, -range.z);
-					glVertex3f(x, 0, 0);
-				}
-			}
-			for (int z = (int) -range.z; z < range.x; z++) {
-				if (z != 0) {
-					glVertex3f(-range.x, 0, z);
-					glVertex3f(range.x, 0, z);
-				} else {
-					glVertex3f(-range.x, 0, z);
-					glVertex3f(0, 0, z);
-				}
-			}
-			glEnd();
+			grid.render();
+			if (!showaxis)
+				gridXZAxis.render();
 		}
 	}
 
@@ -198,18 +180,49 @@ public class Debugger {
 		xaxis.deleteData();
 		yaxis.deleteData();
 		zaxis.deleteData();
+		grid.deleteData();
+		gridXZAxis.deleteData();
 		xaxis.addVertex(new Vector3f(-range.x, 0, 0), Color.RED);
 		xaxis.addVertex(new Vector3f(range.x, 0, 0), Color.RED);
 		yaxis.addVertex(new Vector3f(0, -range.y, 0), Color.GREEN);
 		yaxis.addVertex(new Vector3f(0, range.y, 0), Color.GREEN);
 		zaxis.addVertex(new Vector3f(0, 0, -range.z), Color.BLUE);
 		zaxis.addVertex(new Vector3f(0, 0, range.z), Color.BLUE);
+		for (int x = (int) -range.x; x < range.x; x++) {
+			if (x != 0) {
+				grid.addVertex(new Vector3f(x, 0, -range.z), Color.WHITE);
+				grid.addVertex(new Vector3f(x, 0, range.z), Color.WHITE);
+			} else {
+				grid.addVertex(new Vector3f(x, 0, -range.z), Color.WHITE);
+				grid.addVertex(new Vector3f(x, 0, 0), Color.WHITE);
+			}
+		}
+		for (int z = (int) -range.z; z < range.z; z++) {
+			if (z != 0) {
+				grid.addVertex(new Vector3f(-range.x, 0, z), Color.WHITE);
+				grid.addVertex(new Vector3f(range.x, 0, z), Color.WHITE);
+			} else {
+				grid.addVertex(new Vector3f(-range.x, 0, z), Color.WHITE);
+				grid.addVertex(new Vector3f(0, 0, z), Color.WHITE);
+			}
+		}
+		gridXZAxis.addVertex(new Vector3f(-range.x, 0, 0), Color.WHITE);
+		gridXZAxis.addVertex(new Vector3f(range.x, 0, 0), Color.WHITE);
+		gridXZAxis.addVertex(new Vector3f(0, 0, -range.z), Color.WHITE);
+		gridXZAxis.addVertex(new Vector3f(0, 0, range.z), Color.WHITE);
+
 		xaxis.addIndices(0, 1);
 		yaxis.addIndices(0, 1);
 		zaxis.addIndices(0, 1);
+		for (int i = 0; i < (2 * (int) range.x + 2 * (int) range.z) * 2; i++)
+			grid.addIndex(i);
+		gridXZAxis.addIndices(0, 1, 2, 3);
+
 		xaxis.prerender();
 		yaxis.prerender();
 		zaxis.prerender();
+		grid.prerender();
+		gridXZAxis.prerender();
 	}
 
 	public void setRenderWireframe(boolean w) {
@@ -230,7 +243,7 @@ public class Debugger {
 		showgrid = g;
 	}
 
-	private void setupControls(InputManager inputs) {
+	private void setupEvents(InputManager inputs) {
 		toggledata = new InputEvent("debug_showdata", new Input(
 				Input.KEYBOARD_EVENT, "F1", KeyInput.KEY_PRESSED));
 		toggleaxis = new InputEvent("debug_showaxis", new Input(
