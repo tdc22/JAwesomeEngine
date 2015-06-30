@@ -10,12 +10,8 @@ import static org.lwjgl.opengl.GL11.glColorPointer;
 import static org.lwjgl.opengl.GL11.glDisableClientState;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL11.glEnableClientState;
-import static org.lwjgl.opengl.GL11.glMultMatrixf;
 import static org.lwjgl.opengl.GL11.glNormalPointer;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTexCoordPointer;
-import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertexPointer;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
@@ -79,6 +75,10 @@ public class ShapedObject extends RenderedObject {
 		indices.add(index);
 	}
 
+	public void removeIndex(int id) {
+		indices.remove(id);
+	}
+
 	public void addIndices(int... indices) {
 		for (int index : indices)
 			addIndex(index);
@@ -117,6 +117,13 @@ public class ShapedObject extends RenderedObject {
 		vertcolors.add(c);
 		texturecoords.add(texturecoord);
 		normals.add(normal);
+	}
+
+	public void removeVertex(int id) {
+		vertices.remove(id);
+		vertcolors.remove(id);
+		texturecoords.remove(id);
+		normals.remove(id);
 	}
 
 	public void computeNormals() {
@@ -171,14 +178,6 @@ public class ShapedObject extends RenderedObject {
 		glDeleteBuffers(vboNormalHandle);
 	}
 
-	protected void endRender() {
-		if (shadered && shaderactive)
-			shader.unbind();
-
-		glPopMatrix();
-		// if(isAttached()) glPopMatrix();
-	}
-
 	public Integer getIndex(int indexid) {
 		return indices.get(indexid);
 	}
@@ -205,26 +204,6 @@ public class ShapedObject extends RenderedObject {
 
 	public List<Vector3f> getVertices() {
 		return vertices;
-	}
-
-	protected void initRender() {
-		if (shadered && shaderactive)
-			shader.bind();
-
-		// if(isAttached()) {
-		// glPushMatrix();
-		// Vector3f attachedrotcenter = attachedTo.getRotationCenter();
-		// glTranslatef(attachedrotcenter.x, attachedrotcenter.y,
-		// attachedrotcenter.z);
-		// glMultMatrix(attachedTo.getMatrixBuffer());
-		// glTranslatef(-attachedrotcenter.x, -attachedrotcenter.y,
-		// -attachedrotcenter.z);
-		// }
-
-		glPushMatrix();
-		glTranslatef(rotcenter.x, rotcenter.y, rotcenter.z);
-		glMultMatrixf(buf);
-		glTranslatef(-rotcenter.x, -rotcenter.y, -rotcenter.z);
 	}
 
 	public void invertAllTriangles() {

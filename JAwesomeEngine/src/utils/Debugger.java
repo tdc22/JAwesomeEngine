@@ -59,7 +59,6 @@ public class Debugger {
 		return glerror;
 	}
 
-	Font font;
 	boolean showdata = false;
 	boolean showaxis = false;
 	boolean showgrid = false;
@@ -74,10 +73,9 @@ public class Debugger {
 	InputEvent toggledata, toggleaxis, togglegrid, togglewireframe;
 
 	public Debugger(InputManager i, Font f, Camera cam) {
-		font = f;
 		this.cam = cam;
 
-		text = new Text("", 10, 10, font);
+		text = new Text("", 10, 10, f);
 
 		xaxis = new ShapedObject();
 		yaxis = new ShapedObject();

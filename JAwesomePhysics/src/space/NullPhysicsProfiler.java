@@ -1,6 +1,6 @@
 package space;
 
-public class NullSpaceProfiler implements PhysicsSpaceProfiler {
+public class NullPhysicsProfiler implements PhysicsProfiler {
 
 	@Override
 	public void physicsStart() {
@@ -25,6 +25,11 @@ public class NullSpaceProfiler implements PhysicsSpaceProfiler {
 	@Override
 	public void physicsEnd() {
 
+	}
+
+	@Override
+	public long[] getValues() {
+		return null;
 	}
 
 }

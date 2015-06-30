@@ -1,6 +1,6 @@
 package space;
 
-public interface PhysicsSpaceProfiler {
+public interface PhysicsProfiler {
 	public void physicsStart();
 
 	public void boradphaseNarrowphase();
@@ -10,4 +10,6 @@ public interface PhysicsSpaceProfiler {
 	public void resolutionIntegration();
 
 	public void physicsEnd();
+
+	public long[] getValues();
 }

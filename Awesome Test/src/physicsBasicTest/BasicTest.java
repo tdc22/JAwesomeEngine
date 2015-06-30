@@ -22,7 +22,12 @@ import quaternion.Quaternionf;
 import resolution.ImpulseResolution;
 import shape.Box;
 import shape.Sphere;
+import space.PhysicsProfiler;
+import space.SimplePhysicsProfiler;
 import utils.Debugger;
+import utils.GameProfiler;
+import utils.Profiler;
+import utils.SimpleGameProfiler;
 import vector.Vector3f;
 import broadphase.SAP;
 import display.DisplayMode;
@@ -36,6 +41,7 @@ public class BasicTest extends StandardGame {
 	boolean impulseapplied = false;
 	Debugger debugger;
 	PhysicsDebug physicsdebug;
+	Profiler profiler;
 	InputEvent run, step;
 
 	InputEvent toggleMouseBind;
@@ -58,6 +64,11 @@ public class BasicTest extends StandardGame {
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
+		GameProfiler gp = new SimpleGameProfiler();
+		setProfiler(gp);
+		PhysicsProfiler pp = new SimplePhysicsProfiler();
+		space.setProfiler(pp);
+		profiler = new Profiler(inputs, font, gp, pp);
 
 		Box ground = new Box(0, -5, 0, 10, 1, 10);
 		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
@@ -85,21 +96,6 @@ public class BasicTest extends StandardGame {
 
 		// End walls
 
-		// Box q = new Box(0, 10, 0, 0.5f, 0.5f, 0.5f);
-		// rb1 = PhysicsShapeCreator.create(q);
-		// rb1.setMass(1f);
-		// rb1.setInertia(new Quaternionf());
-		// space.addRigidBody(q, rb1);
-		// addObject(q);
-
-		// Sphere c = new Sphere(0, 10, 0, 0.5f, 36, 36);
-		// c.setColor(Color.RED);
-		// rb1 = new RigidBody3(PhysicsShapeCreator.create(c));
-		// rb1.setMass(1f);
-		// rb1.setInertia(new Quaternionf());
-		// space.addRigidBody(c, rb1);
-		// addObject(c);
-
 		step = new InputEvent("Step", new Input(Input.KEYBOARD_EVENT, " ",
 				KeyInput.KEY_PRESSED));
 		run = new InputEvent("Run", new Input(Input.KEYBOARD_EVENT, "X",
@@ -125,6 +121,7 @@ public class BasicTest extends StandardGame {
 		render2dScene();
 		debugger.end();
 		debugger.render2d(fps, objects.size(), objects2d.size());
+		profiler.render2d();
 	}
 
 	@Override
@@ -173,7 +170,7 @@ public class BasicTest extends StandardGame {
 		}
 
 		debugger.update();
-		// if (run.isActive() || step.isActive())
+		profiler.update(delta);
 		space.update(delta);
 		physicsdebug.update();
 

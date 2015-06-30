@@ -2,10 +2,10 @@ package gui;
 
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import loader.FontLoader;
-import objects.ShapedObject2;
+import objects.RenderedObject;
 import utils.DefaultValues;
 
-public class Text extends ShapedObject2 {
+public class Text extends RenderedObject {
 	String text;
 	Font font;
 	float fontsize = 1, charactermargin, spacesize;

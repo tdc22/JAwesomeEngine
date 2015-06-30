@@ -22,4 +22,9 @@ public class NullGameProfiler implements GameProfiler {
 
 	}
 
+	@Override
+	public long[] getValues() {
+		return null;
+	}
+
 }

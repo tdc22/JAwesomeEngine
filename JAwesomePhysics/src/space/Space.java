@@ -41,7 +41,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected int resolutionIterations = 25;
 	protected int constraintResolutionIterations = 25;
 	protected boolean cullStaticOverlaps = true;
-	protected PhysicsSpaceProfiler profiler;
+	protected PhysicsProfiler profiler;
 
 	protected class CompoundListener implements
 			BroadphaseListener<L, RigidBody<L, ?, ?, ?>> {
@@ -90,7 +90,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		compoundObjects = new ArrayList<CompoundObject<L, A2>>();
 		overlaps = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
 		constraints = new ArrayList<Constraint<L>>();
-		profiler = new NullSpaceProfiler();
+		profiler = new NullPhysicsProfiler();
 		broadphase.addListener(new CompoundListener());
 	}
 
@@ -228,7 +228,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		resolutionIterations = count;
 	}
 
-	public void setProfiler(PhysicsSpaceProfiler profiler) {
+	public void setProfiler(PhysicsProfiler profiler) {
 		this.profiler = profiler;
 	}
 

@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.util.HashMap;
 
 public class Font {
@@ -15,5 +16,11 @@ public class Font {
 
 	public FontCharacter getCharacter(char character) {
 		return characters.get(character);
+	}
+
+	public void setColor(Color color) {
+		for (FontCharacter fc : characters.values()) {
+			fc.setColor(color);
+		}
 	}
 }

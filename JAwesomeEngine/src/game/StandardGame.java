@@ -361,6 +361,10 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 			o.setShaderActive(active);
 	}
 
+	public void setProfiler(GameProfiler profiler) {
+		this.profiler = profiler;
+	}
+
 	@Override
 	public void start() {
 		initEngine();
