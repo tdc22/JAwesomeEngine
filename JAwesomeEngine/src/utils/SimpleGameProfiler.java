@@ -5,7 +5,7 @@ public class SimpleGameProfiler implements GameProfiler {
 	long lastvalue;
 
 	public SimpleGameProfiler() {
-		values = new long[4];
+		values = new long[5];
 	}
 
 	@Override
@@ -29,8 +29,15 @@ public class SimpleGameProfiler implements GameProfiler {
 	}
 
 	@Override
+	public void render2dDisplay() {
+		long time = getTime();
+		values[3] = time - lastvalue;
+		lastvalue = time;
+	}
+
+	@Override
 	public void frameEnd() {
-		values[3] = getTime() - lastvalue;
+		values[4] = getTime() - lastvalue;
 	}
 
 	@Override

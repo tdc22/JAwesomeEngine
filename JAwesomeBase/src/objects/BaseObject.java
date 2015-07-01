@@ -274,6 +274,51 @@ public class BaseObject {
 		scale.scale(factors);
 	}
 
+	/**
+	 * Sets the object scale.
+	 * 
+	 * @param scalex
+	 *            new x-axis object scale
+	 * @param scaley
+	 *            new y-axis object scale
+	 */
+	public void scaleTo(float scalex, float scaley) {
+		scale.setX(scalex);
+		scale.setY(scaley);
+	}
+
+	/**
+	 * Sets the object scale.
+	 * 
+	 * @param scalex
+	 *            new x-axis object scale
+	 * @param scaley
+	 *            new y-axis object scale
+	 * @param scalez
+	 *            new z-axis object scale
+	 */
+	public void scaleTo(float scalex, float scaley, float scalez) {
+		scale.set(scalex, scaley, scalez);
+	}
+
+	/**
+	 * Sets the object scale to a vector.
+	 * 
+	 * @param scalevec
+	 *            new scale vector
+	 */
+	public void scaleTo(Vector2 scalevec) {
+		scale.setX(scalevec.getXf());
+		scale.setY(scalevec.getYf());
+	}
+
+	/**
+	 * @see BaseObject#scaleTo(Vector2)
+	 */
+	public void scaleTo(Vector3 scalevec) {
+		scale.set(scalevec);
+	}
+
 	// /**
 	// * Sets the object matrix.
 	// *

@@ -18,6 +18,11 @@ public class NullGameProfiler implements GameProfiler {
 	}
 
 	@Override
+	public void render2dDisplay() {
+
+	}
+
+	@Override
 	public void frameEnd() {
 
 	}
@@ -26,5 +31,4 @@ public class NullGameProfiler implements GameProfiler {
 	public long[] getValues() {
 		return null;
 	}
-
 }

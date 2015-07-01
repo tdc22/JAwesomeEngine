@@ -20,10 +20,13 @@ public class SimpleLinearImpulseResolution implements CollisionResolution {
 		RigidBody3 B = (RigidBody3) manifold.getObjects().getSecond();
 		Vector3f normal = manifold.getCollisionNormal();
 
-		Vector3f rv = VecMath.subtraction(B.getLinearVelocity(),
-				A.getLinearVelocity());
-
-		float velAlongNormal = VecMath.dotproduct(rv, normal);
+		// velAlongNormal = (B - A) dot normal
+		float velAlongNormal = (B.getLinearVelocity().x - A.getLinearVelocity().x)
+				* normal.x
+				+ (B.getLinearVelocity().y - A.getLinearVelocity().y)
+				* normal.y
+				+ (B.getLinearVelocity().z - A.getLinearVelocity().z)
+				* normal.z;
 
 		if (velAlongNormal > 0)
 			return;
@@ -33,8 +36,9 @@ public class SimpleLinearImpulseResolution implements CollisionResolution {
 				/ (A.getInverseMass() + B.getInverseMass());
 
 		Vector3f impulse = VecMath.scale(normal, j);
-		A.applyCentralImpulse(VecMath.negate(impulse));
 		B.applyCentralImpulse(impulse);
+		impulse.negate();
+		A.applyCentralImpulse(impulse);
 	}
 
 	@Override
@@ -43,10 +47,11 @@ public class SimpleLinearImpulseResolution implements CollisionResolution {
 		RigidBody2 B = (RigidBody2) manifold.getObjects().getSecond();
 		Vector2f normal = manifold.getCollisionNormal();
 
-		Vector2f rv = VecMath.subtraction(B.getLinearVelocity(),
-				A.getLinearVelocity());
-
-		float velAlongNormal = VecMath.dotproduct(rv, normal);
+		// velAlongNormal = (B - A) dot normal
+		float velAlongNormal = (B.getLinearVelocity().x - A.getLinearVelocity().x)
+				* normal.x
+				+ (B.getLinearVelocity().y - A.getLinearVelocity().y)
+				* normal.y;
 
 		if (velAlongNormal > 0)
 			return;
@@ -56,7 +61,8 @@ public class SimpleLinearImpulseResolution implements CollisionResolution {
 				/ (A.getInverseMass() + B.getInverseMass());
 
 		Vector2f impulse = VecMath.scale(normal, j);
-		A.applyCentralImpulse(VecMath.negate(impulse));
 		B.applyCentralImpulse(impulse);
+		impulse.negate();
+		A.applyCentralImpulse(impulse);
 	}
 }

@@ -25,10 +25,12 @@ public class LinearImpulseResolution implements CollisionResolution {
 		RigidBody3 B = (RigidBody3) manifold.getObjects().getSecond();
 		Vector3f normal = manifold.getCollisionNormal();
 
-		Vector3f rv = VecMath.subtraction(B.getLinearVelocity(),
-				A.getLinearVelocity());
-
-		float velAlongNormal = VecMath.dotproduct(rv, normal);
+		float velAlongNormal = (B.getLinearVelocity().x - A.getLinearVelocity().x)
+				* normal.x
+				+ (B.getLinearVelocity().y - A.getLinearVelocity().y)
+				* normal.y
+				+ (B.getLinearVelocity().z - A.getLinearVelocity().z)
+				* normal.z;
 
 		if (velAlongNormal > 0)
 			return;
@@ -38,15 +40,18 @@ public class LinearImpulseResolution implements CollisionResolution {
 				/ (A.getInverseMass() + B.getInverseMass());
 
 		Vector3f impulse = VecMath.scale(normal, j);
-		A.applyCentralImpulse(VecMath.negate(impulse));
 		B.applyCentralImpulse(impulse);
+		impulse.negate();
+		A.applyCentralImpulse(impulse);
 
 		// Friction
 		// Re-calculate rv after normal impulse!
-		rv = VecMath.subtraction(B.getLinearVelocity(), A.getLinearVelocity());
+		Vector3f rv = VecMath.subtraction(B.getLinearVelocity(),
+				A.getLinearVelocity());
 
-		Vector3f tangent = VecMath.subtraction(rv,
-				VecMath.scale(normal, VecMath.dotproduct(rv, normal)));
+		float rvDotNormal = VecMath.dotproduct(rv, normal);
+		Vector3f tangent = new Vector3f(rv.x - normal.x * rvDotNormal, rv.y
+				- normal.y * rvDotNormal, rv.z - normal.z * rvDotNormal);
 		if (tangent.length() > 0)
 			tangent.normalize();
 
@@ -57,16 +62,19 @@ public class LinearImpulseResolution implements CollisionResolution {
 				B.getStaticFriction());
 
 		Vector3f frictionImpulse = null;
-		if (Math.abs(jt) < j * mu)
-			frictionImpulse = VecMath.scale(tangent, jt);
-		else {
+		if (Math.abs(jt) < j * mu) {
+			tangent.scale(jt);
+			frictionImpulse = tangent;
+		} else {
 			float dynamicFriction = pythagoreanSolve(A.getDynamicFriction(),
 					B.getDynamicFriction());
-			frictionImpulse = VecMath.scale(tangent, -j * dynamicFriction);
+			tangent.scale(-j * dynamicFriction);
+			frictionImpulse = tangent;
 		}
 
-		A.applyCentralImpulse(VecMath.negate(frictionImpulse));
 		B.applyCentralImpulse(frictionImpulse);
+		frictionImpulse.negate();
+		A.applyCentralImpulse(frictionImpulse);
 	}
 
 	@Override
@@ -76,10 +84,10 @@ public class LinearImpulseResolution implements CollisionResolution {
 		RigidBody2 B = (RigidBody2) manifold.getObjects().getSecond();
 		Vector2f normal = manifold.getCollisionNormal();
 
-		Vector2f rv = VecMath.subtraction(B.getLinearVelocity(),
-				A.getLinearVelocity());
-
-		float velAlongNormal = VecMath.dotproduct(rv, normal);
+		float velAlongNormal = (B.getLinearVelocity().x - A.getLinearVelocity().x)
+				* normal.x
+				+ (B.getLinearVelocity().y - A.getLinearVelocity().y)
+				* normal.y;
 
 		if (velAlongNormal > 0)
 			return;
@@ -89,15 +97,19 @@ public class LinearImpulseResolution implements CollisionResolution {
 				/ (A.getInverseMass() + B.getInverseMass());
 
 		Vector2f impulse = VecMath.scale(normal, j);
-		A.applyCentralImpulse(VecMath.negate(impulse));
 		B.applyCentralImpulse(impulse);
+		impulse.negate();
+		A.applyCentralImpulse(impulse);
 
 		// Friction
 		// Re-calculate rv after normal impulse!
-		rv = VecMath.subtraction(B.getLinearVelocity(), A.getLinearVelocity());
+		Vector2f rv = VecMath.subtraction(B.getLinearVelocity(),
+				A.getLinearVelocity());
 
-		Vector2f tangent = VecMath.subtraction(rv,
-				VecMath.scale(normal, VecMath.dotproduct(rv, normal)));
+		float rvDotNormal = VecMath.dotproduct(rv, normal);
+		Vector2f tangent = new Vector2f(rv.x - normal.x * rvDotNormal, rv.y
+				- normal.y * rvDotNormal);
+
 		if (tangent.length() > 0)
 			tangent.normalize();
 
@@ -108,15 +120,18 @@ public class LinearImpulseResolution implements CollisionResolution {
 				B.getStaticFriction());
 
 		Vector2f frictionImpulse = null;
-		if (Math.abs(jt) < j * mu)
-			frictionImpulse = VecMath.scale(tangent, jt);
-		else {
+		if (Math.abs(jt) < j * mu) {
+			tangent.scale(jt);
+			frictionImpulse = tangent;
+		} else {
 			float dynamicFriction = pythagoreanSolve(A.getDynamicFriction(),
 					B.getDynamicFriction());
-			frictionImpulse = VecMath.scale(tangent, -j * dynamicFriction);
+			tangent.scale(-j * dynamicFriction);
+			frictionImpulse = tangent;
 		}
 
-		A.applyCentralImpulse(VecMath.negate(frictionImpulse));
 		B.applyCentralImpulse(frictionImpulse);
+		frictionImpulse.negate();
+		A.applyCentralImpulse(frictionImpulse);
 	}
 }

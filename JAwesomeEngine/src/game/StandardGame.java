@@ -388,6 +388,7 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 				render2d();
 				end2d();
 			}
+			profiler.render2dDisplay();
 			endRender();
 			profiler.frameEnd();
 		}

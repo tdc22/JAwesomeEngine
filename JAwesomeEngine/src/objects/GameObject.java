@@ -115,6 +115,32 @@ public abstract class GameObject extends BaseObject {
 		updateBuffer();
 	}
 
+	@Override
+	public void scaleTo(float scalex, float scaley) {
+		scale.setX(scalex);
+		scale.setY(scaley);
+		updateBuffer();
+	}
+
+	@Override
+	public void scaleTo(float scalex, float scaley, float scalez) {
+		scale.set(scalex, scaley, scalez);
+		updateBuffer();
+	}
+
+	@Override
+	public void scaleTo(Vector2 scalevec) {
+		scale.setX(scalevec.getX());
+		scale.setY(scalevec.getY());
+		updateBuffer();
+	}
+
+	@Override
+	public void scaleTo(Vector3 scalevec) {
+		scale.set(scalevec);
+		updateBuffer();
+	}
+
 	// @Override
 	// public void setMatrix(Matrix4f mat) {
 	// matrix = mat;
