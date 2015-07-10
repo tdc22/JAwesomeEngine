@@ -18,7 +18,8 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 			this.b = b;
 			this.c = c;
 			normal = VecMath.computeNormal(a, b, c);
-			normal.normalize();
+			if (normal.lengthSquared() > 0)
+				normal.normalize();
 		}
 	}
 

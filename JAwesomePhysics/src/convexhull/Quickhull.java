@@ -23,9 +23,53 @@ public class Quickhull {
 	}
 
 	public static ConvexShape computeConvexHull(List<Vector3f> points) {
-		points = new ArrayList<Vector3f>(points);
 		List<Triangle> faces = new ArrayList<Triangle>();
+		List<Vector3f> vertices = computeConvexHullVertices(points, faces);
+		HashMap<Integer, Integer[]> adjacentsMap = new HashMap<Integer, Integer[]>();
+		List<Integer> adjs = new ArrayList<Integer>();
+		for (int i = 0; i < vertices.size(); i++) {
+			Vector3f v = vertices.get(i);
+			for (Triangle f : faces) {
+				if (f.a.equals(v)) {
+					int b = vertices.indexOf(f.b);
+					if (!adjs.contains(b))
+						adjs.add(b);
+					int c = vertices.indexOf(f.c);
+					if (!adjs.contains(c))
+						adjs.add(c);
+				} else if (f.b.equals(v)) {
+					int a = vertices.indexOf(f.a);
+					if (!adjs.contains(a))
+						adjs.add(a);
+					int c = vertices.indexOf(f.c);
+					if (!adjs.contains(c))
+						adjs.add(c);
+				} else if (f.c.equals(v)) {
+					int a = vertices.indexOf(f.a);
+					if (!adjs.contains(a))
+						adjs.add(a);
+					int b = vertices.indexOf(f.b);
+					if (!adjs.contains(b))
+						adjs.add(b);
+				}
+			}
+			Integer[] adjacents = new Integer[adjs.size()];
+			adjs.toArray(adjacents);
+			adjacentsMap.put(i, adjacents);
+			adjs.clear();
+		}
 
+		ConvexShape shape = new ConvexShape(0, 0, 0, vertices, adjacentsMap);
+		return shape;
+	}
+
+	public static List<Vector3f> computeConvexHullVertices(List<Vector3f> points) {
+		return computeConvexHullVertices(points, new ArrayList<Triangle>());
+	}
+
+	public static List<Vector3f> computeConvexHullVertices(
+			List<Vector3f> points, List<Triangle> faces) {
+		points = new ArrayList<Vector3f>(points);
 		if (points.size() > 0) {
 			int a = getFurthestPoint(new Vector3f(-1, 0, 0), points);
 			Vector3f A = points.get(a);
@@ -111,7 +155,6 @@ public class Quickhull {
 		}
 
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
-		HashMap<Integer, Integer[]> adjacentsMap = new HashMap<Integer, Integer[]>();
 		for (Triangle f : faces) {
 			if (!vertices.contains(f.a))
 				vertices.add(f.a);
@@ -120,41 +163,7 @@ public class Quickhull {
 			if (!vertices.contains(f.c))
 				vertices.add(f.c);
 		}
-		List<Integer> adjs = new ArrayList<Integer>();
-		for (int i = 0; i < vertices.size(); i++) {
-			Vector3f v = vertices.get(i);
-			for (Triangle f : faces) {
-				if (f.a.equals(v)) {
-					int b = vertices.indexOf(f.b);
-					if (!adjs.contains(b))
-						adjs.add(b);
-					int c = vertices.indexOf(f.c);
-					if (!adjs.contains(c))
-						adjs.add(c);
-				} else if (f.b.equals(v)) {
-					int a = vertices.indexOf(f.a);
-					if (!adjs.contains(a))
-						adjs.add(a);
-					int c = vertices.indexOf(f.c);
-					if (!adjs.contains(c))
-						adjs.add(c);
-				} else if (f.c.equals(v)) {
-					int a = vertices.indexOf(f.a);
-					if (!adjs.contains(a))
-						adjs.add(a);
-					int b = vertices.indexOf(f.b);
-					if (!adjs.contains(b))
-						adjs.add(b);
-				}
-			}
-			Integer[] adjacents = new Integer[adjs.size()];
-			adjs.toArray(adjacents);
-			adjacentsMap.put(i, adjacents);
-			adjs.clear();
-		}
-
-		ConvexShape shape = new ConvexShape(0, 0, 0, vertices, adjacentsMap);
-		return shape;
+		return vertices;
 	}
 
 	private static int getFurthestPoint(Vector3f dir, List<Vector3f> points) {

@@ -45,6 +45,12 @@ public class PhysicsSpace extends Space3 {
 		addedobjects.add(obj);
 	}
 
+	public void removeRigidBody(DataGameObject obj,
+			RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
+		addedobjects.remove(obj);
+		removeRigidBody(body);
+	}
+
 	public void addCompoundObject(CompoundObject3 compoundobject,
 			DataGameObject... obj) {
 		for (int i = 0; i < obj.length; i++) {

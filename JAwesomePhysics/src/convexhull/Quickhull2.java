@@ -11,6 +11,27 @@ public class Quickhull2 {
 	// source:
 	// http://www.sanfoundry.com/java-program-implement-quick-hull-algorithm-find-convex-hull/
 	public static ConvexShape2 computeConvexHull(List<Vector2f> points) {
+		List<Vector2f> vertices = computeConvexHullVertices(points);
+
+		HashMap<Integer, Integer[]> adjacentsMap = new HashMap<Integer, Integer[]>();
+		for (int i = 0; i < vertices.size(); i++) {
+			Integer[] adjs = new Integer[2];
+			if (i == 0)
+				adjs[0] = vertices.size() - 1;
+			else
+				adjs[0] = i - 1;
+			if (i == vertices.size() - 1)
+				adjs[1] = 0;
+			else
+				adjs[1] = i + 1;
+			adjacentsMap.put(i, adjs);
+		}
+
+		ConvexShape2 shape = new ConvexShape2(0, 0, vertices, adjacentsMap);
+		return shape;
+	}
+
+	public static List<Vector2f> computeConvexHullVertices(List<Vector2f> points) {
 		points = new ArrayList<Vector2f>(points);
 		List<Vector2f> vertices = new ArrayList<Vector2f>();
 
@@ -51,23 +72,7 @@ public class Quickhull2 {
 			hullSet(A, B, rightSet, vertices);
 			hullSet(B, A, leftSet, vertices);
 		}
-
-		HashMap<Integer, Integer[]> adjacentsMap = new HashMap<Integer, Integer[]>();
-		for (int i = 0; i < vertices.size(); i++) {
-			Integer[] adjs = new Integer[2];
-			if (i == 0)
-				adjs[0] = vertices.size() - 1;
-			else
-				adjs[0] = i - 1;
-			if (i == vertices.size() - 1)
-				adjs[1] = 0;
-			else
-				adjs[1] = i + 1;
-			adjacentsMap.put(i, adjs);
-		}
-
-		ConvexShape2 shape = new ConvexShape2(0, 0, vertices, adjacentsMap);
-		return shape;
+		return vertices;
 	}
 
 	private static float distance(Vector2f A, Vector2f B, Vector2f P) {

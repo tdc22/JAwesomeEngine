@@ -160,6 +160,7 @@ public class ShapedObject extends RenderedObject {
 		// matrix = null;
 		deleteData();
 		deleteGPUData();
+		buf.clear();
 	}
 
 	public void deleteData() {

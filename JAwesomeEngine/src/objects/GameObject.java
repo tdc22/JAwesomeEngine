@@ -13,9 +13,6 @@ import vector.Vector3f;
 public abstract class GameObject extends BaseObject {
 	protected FloatBuffer buf;
 
-	protected GameObject attachedTo;
-	protected boolean isAttached = false;
-
 	public GameObject() {
 		super();
 

@@ -94,6 +94,14 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 		objects.add(obj);
 	}
 
+	public void remove2dObject(RenderedObject element) {
+		objects2d.remove(element);
+	}
+
+	public void removeObject(RenderedObject obj) {
+		objects.remove(obj);
+	}
+
 	public void addPostProcessingShader(Shader shader) {
 		postProcessing.add(shader);
 	}
@@ -240,7 +248,6 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 			float halfResX = videosettings.getResolutionX() / 2f;
 			float halfResY = videosettings.getResolutionY() / 2f;
 			screen = new Quad(halfResX, halfResY, halfResX, halfResY);
-			// screen.invertAllTriangles();
 			screen.setRenderHints(false, true, false);
 		}
 	}
@@ -342,8 +349,8 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 	}
 
 	public void renderScene() {
-		for (int i = 0; i < objects.size(); i++) {
-			objects.get(i).render();
+		for (RenderedObject o : objects) {
+			o.render();
 		}
 	}
 

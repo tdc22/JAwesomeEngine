@@ -47,6 +47,12 @@ public class PhysicsSpace2 extends Space2 {
 		addedobjects.add(obj);
 	}
 
+	public void removeRigidBody(DataGameObject obj,
+			RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> body) {
+		addedobjects.remove(obj);
+		removeRigidBody(body);
+	}
+
 	public void addCompoundObject(CompoundObject2 compoundobject,
 			DataGameObject... obj) {
 		for (int i = 0; i < obj.length; i++) {
