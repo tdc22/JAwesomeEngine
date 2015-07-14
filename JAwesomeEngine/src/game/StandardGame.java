@@ -110,11 +110,25 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 		postProcessing2.add(shader);
 	}
 
+	public void removePostProcessingShader(Shader shader) {
+		postProcessing.remove(shader);
+	}
+
+	public void removePostProcessingShader2(Shader shader) {
+		postProcessing2.remove(shader);
+	}
+
+	public void setPostProcessingIterations(int ppIterations) {
+		postProcessingIterations = ppIterations;
+	}
+
 	private void applyPostProcessing(List<Shader> ppshaders,
 			FramebufferObject fbo1, FramebufferObject fbo2) {
 		boolean p = true;
 		int tex0 = fbo1.getColorTextureID();
 		int tex1 = fbo2.getColorTextureID();
+		int tex0depth = fbo1.getDepthTextureID();
+		int tex1depth = fbo2.getDepthTextureID();
 		for (Shader s : ppshaders) {
 			// TODO: Create Multipass shader-class with integer for number of
 			// iterations.... + try to put this in there?
@@ -124,6 +138,8 @@ public abstract class StandardGame extends AbstractGame implements Renderable,
 				current.clear();
 				((Texture) s.getArgument("texture")).setTextureID(p ? tex0
 						: tex1);
+				((Texture) s.getArgument("depthTexture"))
+						.setTextureID(p ? tex0depth : tex1depth);
 				s.bind();
 				screen.render();
 				s.unbind();

@@ -1,5 +1,6 @@
 package objects;
 
+import matrix.Matrix4f;
 import quaternion.Quaternion;
 import quaternion.Quaternionf;
 import vector.Vector1;
@@ -522,5 +523,14 @@ public class BaseObject {
 	 */
 	public void translateTo(Vector3 pos) {
 		translation.set(pos);
+	}
+
+	public Matrix4f getMatrix() {
+		float[][] mat = rotation.toMatrixf().getArrayf();
+		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, mat[0][2]
+				* scale.x, 0, mat[1][0] * scale.y, mat[1][1] * scale.y,
+				mat[1][2] * scale.y, 0, mat[2][0] * scale.z, mat[2][1]
+						* scale.z, mat[2][2] * scale.z, 0, translation.getXf(),
+				translation.getYf(), translation.getZf(), 1);
 	}
 }

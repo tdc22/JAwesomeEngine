@@ -36,6 +36,8 @@ public class BlurTest extends StandardGame {
 				"res/shaders/ppBlurshader.frag"));
 		blurPPShader.addArgumentName("texture");
 		blurPPShader.addArgument(new Texture());
+		blurPPShader.addArgumentName("depthTexture");
+		blurPPShader.addArgument(new Texture());
 		blurPPShader.addArgumentName("uShift");
 		blurPPShader.addArgument(new Vector2f(0.001f, 0));
 

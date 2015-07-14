@@ -104,6 +104,15 @@ public class BasicTest2d extends StandardGame {
 			tempdelta += delta;
 		}
 
+		if (inputs.isKeyDown("O")) {
+			space.getObjects().get(space.getObjects().size() - 1)
+					.applyCentralForce(new Vector2f(100, 0));
+		}
+		if (inputs.isKeyDown("I")) {
+			space.getObjects().get(space.getObjects().size() - 1)
+					.applyCentralForce(new Vector2f(-100, 0));
+		}
+
 		debugger.update();
 		space.update(delta);
 		physicsdebug.update();

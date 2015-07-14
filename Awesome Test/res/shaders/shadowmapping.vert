@@ -1,12 +1,15 @@
-varying vec4 projCoord;
+varying vec4 shadowCoord;
+uniform mat4 lightPos;
 
 void main()
 {
 	vec4 realPos = gl_ModelViewMatrix * gl_Vertex;
   
-	projCoord = gl_TextureMatrix[0] * realPos;
-	//gl_FrontColor = vec4(0.8, 0.8, 0.8, 1.0);
-
-	gl_Position = gl_ModelViewProjectionMatrix*gl_Vertex;
+	shadowCoord = lightPos * gl_Vertex;
+	shadowCoord = gl_TextureMatrix[7] * (vec4(gl_Vertex.xyz, 1.0));
+	  
+	gl_Position = ftransform();
+	
+	gl_FrontColor = shadowCoord;
 	
 }

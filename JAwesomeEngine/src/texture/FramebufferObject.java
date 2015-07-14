@@ -169,8 +169,9 @@ public class FramebufferObject {
 	public void copyTo(int framebufferID, int w, int h) {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBufferID);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferID);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, w, h, GL_COLOR_BUFFER_BIT,
-				(w == width && h == height) ? GL_NEAREST : GL_LINEAR);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, w, h, GL_COLOR_BUFFER_BIT
+				| GL_DEPTH_BUFFER_BIT, (w == width && h == height) ? GL_NEAREST
+				: GL_LINEAR);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
