@@ -78,9 +78,11 @@ public class Tutorial extends StandardGame {
 
 		List<Shader> colorshaders = new ArrayList<Shader>();
 		for (Vector3f c : colors) {
-			colorshaders.add(new Shader(
+			Shader colorshader = new Shader(
 					ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"),
-					"color", new Vector4f(c.x, c.y, c.z, 1)));
+					"u_color", new Vector4f(c.x, c.y, c.z, 1));
+			colorshaders.add(colorshader);
+			addShader(colorshader);
 		}
 
 		while (blocknum < NUM_BLOCKS) {
@@ -95,8 +97,8 @@ public class Tutorial extends StandardGame {
 
 				Box box = new Box(posx, posy, posz, sizex, sizey, sizez);
 				box.setRenderHints(false, false, true);
-				box.setShader(colorshaders.get(color));
-				addObject(box);
+				colorshaders.get(color).addObject(box);
+				edgeshader.addObject(box);
 				RigidBody3 boxbody = new RigidBody3(PhysicsShapeCreator.create(box));
 				boxbody.translateTo(box.getTranslation());
 				space.addRigidBody(box, boxbody);
@@ -115,7 +117,6 @@ public class Tutorial extends StandardGame {
 
 		Cylinder player = new Cylinder(PLAYER_START_POSITION, PLAYER_RADIUS, PLAYER_HEIGHT / 2f, 50);
 		player.setRenderHints(false, false, true);
-		addObject(player);
 
 		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN),
 				new Input(Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN));
@@ -165,35 +166,50 @@ public class Tutorial extends StandardGame {
 		ground.setRenderHints(false, false, true);
 		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
 		space.addRigidBody(ground, rb);
-		addObject(ground);
+		// addObject(ground);
 
 		Box goalBox = new Box(LEVEL_SIZE_X - 5, MAX_Y + BLOCK_SIZE_MAX, LEVEL_SIZE_Z - 5, 0.2f, 0.2f, 0.2f);
 		goalBox.setRenderHints(false, false, true);
 		goal = new RigidBody3(PhysicsShapeCreator.create(goalBox));
 		space.addRigidBody(goalBox, goal);
-		addObject(goalBox);
 
 		Shader playershader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
-		playershader.addArgumentName("color");
+		playershader.addArgumentName("u_color");
 		playershader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
+		addShader(playershader);
+		playershader.addObject(player);
 
-		player.setShader(playershader);
+		Shader groundshader = new Shader(playershader);
+		groundshader.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
+		addShader(groundshader);
+		groundshader.addObject(ground);
 
 		Shader goalshader = new Shader(playershader);
 		goalshader.setArgument(0, new Vector4f(1f, 0f, 0f, 0.8f));
+		addShader(goalshader);
+		goalshader.addObject(goalBox);
 
-		goalBox.setShader(goalshader);
+		edgeshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/edgeshader.vert", "res/shaders/edgeshader.frag",
+						"res/shaders/edgeshader.geo", GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
+		addShader(edgeshader);
 
-		edgeshader = new Shader(ShaderLoader.loadShaderFromFile("res/shaders/edgeshader.vert",
-				"res/shaders/edgeshader.geo", GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
+		edgeshader.addObjects(player, ground, goalBox);
 
 		colors = new ArrayList<Vector3f>();
 		colors.add(new Vector3f(0.92f, 0.92f, 0.92f));
 		colors.add(new Vector3f(0.3f, 0.3f, 0.92f));
 
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		add2dShader(defaultshader2);
+
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
 
 		generateLevel();
@@ -201,23 +217,22 @@ public class Tutorial extends StandardGame {
 
 	@Override
 	public void render() {
-		debugger.update3d();
 		debugger.begin();
 		renderScene();
-		setShadersActive(false);
-		if (!debugger.isWireframeRendered()) {
-			edgeshader.bind();
-			renderScene();
-			edgeshader.unbind();
-		}
-		setShadersActive(true);
+		// setShadersActive(false);
+		// if (!debugger.isWireframeRendered()) {
+		// edgeshader.bind();
+		// renderScene();
+		// edgeshader.unbind();
+		// }
+		// setShadersActive(true);
 		physicsdebug.render3d();
 	}
 
 	@Override
 	public void render2d() {
+		render2dScene();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	public void reset() {
@@ -265,7 +280,7 @@ public class Tutorial extends StandardGame {
 
 		goal.rotate(0.05f * delta, 0.05f * delta, 0.05f * delta);
 
-		debugger.update();
+		debugger.update(fps, 0, 0);
 		space.update(delta);
 		physicsdebug.update();
 

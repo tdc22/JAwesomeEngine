@@ -45,7 +45,7 @@ public class FrictionTest2d extends StandardGame {
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
-		
+
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(new EPA2()), new ImpulseResolution(),
 				new ProjectionCorrection(1), new SimpleManifoldManager<Vector2f>());
 		space.setGlobalGravitation(new Vector2f(0, 0));

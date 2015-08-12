@@ -54,7 +54,7 @@ public class PendulumTest2d extends StandardGame {
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
-		
+
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
 		physicsdebug = new PhysicsDebug2(inputs, font, space);

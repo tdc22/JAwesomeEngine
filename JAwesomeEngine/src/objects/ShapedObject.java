@@ -1,23 +1,20 @@
 package objects;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_ARRAY;
-import static org.lwjgl.opengl.GL11.GL_DOUBLE;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_NORMAL_ARRAY;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_COORD_ARRAY;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
-import static org.lwjgl.opengl.GL11.glColorPointer;
-import static org.lwjgl.opengl.GL11.glDisableClientState;
 import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL11.glEnableClientState;
-import static org.lwjgl.opengl.GL11.glNormalPointer;
-import static org.lwjgl.opengl.GL11.glTexCoordPointer;
-import static org.lwjgl.opengl.GL11.glVertexPointer;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL21.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glDeleteBuffers;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 import java.awt.Color;
 import java.nio.FloatBuffer;
@@ -25,15 +22,9 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import math.VecMath;
-
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 
-import utils.Debugger;
+import math.VecMath;
 import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
@@ -43,7 +34,7 @@ public class ShapedObject extends RenderedObject {
 	private static final int COLOR_POSITION = 1;
 	private static final int TEXTURE_POSITION = 2;
 	private static final int NORMAL_POSITION = 3;
-	
+
 	private List<Integer> indices;
 	private List<Vector3f> vertices;
 	private List<Vector3f> normals;
@@ -95,8 +86,8 @@ public class ShapedObject extends RenderedObject {
 			addIndex(index);
 	}
 
-	public void addQuad(int index1, int adjacency1, int index2, int adjacency2,
-			int index3, int adjacency3, int index4, int adjacency4) {
+	public void addQuad(int index1, int adjacency1, int index2, int adjacency2, int index3, int adjacency3, int index4,
+			int adjacency4) {
 		addTriangle(index1, adjacency1, index2, adjacency2, index3, index4);
 		addTriangle(index1, index2, index3, adjacency3, index4, adjacency4);
 
@@ -104,8 +95,7 @@ public class ShapedObject extends RenderedObject {
 		// addTriangle(index2, adjacency2, index3, adjacency3, index4, index1);
 	}
 
-	public void addTriangle(int index1, int adjacency1, int index2,
-			int adjacency2, int index3, int adjacency3) {
+	public void addTriangle(int index1, int adjacency1, int index2, int adjacency2, int index3, int adjacency3) {
 		addIndex(index1);
 		addIndex(adjacency1);
 		addIndex(index2);
@@ -122,8 +112,7 @@ public class ShapedObject extends RenderedObject {
 		addVertex(vertex, c, new Vector2f(), new Vector3f());
 	}
 
-	public void addVertex(Vector3f vertex, Color c, Vector2f texturecoord,
-			Vector3f normal) {
+	public void addVertex(Vector3f vertex, Color c, Vector2f texturecoord, Vector3f normal) {
 		vertices.add(vertex);
 		vertcolors.add(c);
 		texturecoords.add(texturecoord);
@@ -154,14 +143,10 @@ public class ShapedObject extends RenderedObject {
 			Vector3f normal1 = getNormal(index1);
 			Vector3f normal2 = getNormal(index2);
 			Vector3f normal3 = getNormal(index3);
-			Vector3f newnormal = VecMath.computeNormal(getVertex(index1),
-					getVertex(index2), getVertex(index3));
-			setNormal(index1,
-					VecMath.normalize(VecMath.addition(normal1, newnormal)));
-			setNormal(index2,
-					VecMath.normalize(VecMath.addition(normal2, newnormal)));
-			setNormal(index3,
-					VecMath.normalize(VecMath.addition(normal3, newnormal)));
+			Vector3f newnormal = VecMath.computeNormal(getVertex(index1), getVertex(index2), getVertex(index3));
+			setNormal(index1, VecMath.normalize(VecMath.addition(normal1, newnormal)));
+			setNormal(index2, VecMath.normalize(VecMath.addition(normal2, newnormal)));
+			setNormal(index3, VecMath.normalize(VecMath.addition(normal3, newnormal)));
 			ci += 3;
 		}
 	}
@@ -253,23 +238,17 @@ public class ShapedObject extends RenderedObject {
 		renderedIndexCount = indices.size();
 		int allVertices = vertices.size();
 
-		IntBuffer indexData = BufferUtils
-				.createIntBuffer(renderedIndexCount * polysize);
-		FloatBuffer vertexData = BufferUtils.createFloatBuffer(allVertices
-				* vertexsize);
-		FloatBuffer colorData = BufferUtils.createFloatBuffer(allVertices
-				* colorsize);
-		FloatBuffer textureData = BufferUtils.createFloatBuffer(allVertices
-				* texsize);
-		FloatBuffer normalData = BufferUtils.createFloatBuffer(allVertices
-				* vertexsize);
+		IntBuffer indexData = BufferUtils.createIntBuffer(renderedIndexCount * polysize);
+		FloatBuffer vertexData = BufferUtils.createFloatBuffer(allVertices * vertexsize);
+		FloatBuffer colorData = BufferUtils.createFloatBuffer(allVertices * colorsize);
+		FloatBuffer textureData = BufferUtils.createFloatBuffer(allVertices * texsize);
+		FloatBuffer normalData = BufferUtils.createFloatBuffer(allVertices * vertexsize);
 
 		for (int v = 0; v < allVertices; v++) {
 			Vector3f vertex = vertices.get(v);
 			vertexData.put(new float[] { vertex.x, vertex.y, vertex.z, 1 });
 			Color vertcolor = vertcolors.get(v);
-			colorData.put(new float[] { vertcolor.getRed(),
-					vertcolor.getGreen(), vertcolor.getBlue() });
+			colorData.put(new float[] { vertcolor.getRed(), vertcolor.getGreen(), vertcolor.getBlue() });
 			Vector2f tex = texturecoords.get(v);
 			textureData.put(new float[] { tex.x, tex.y });
 			Vector3f normal = normals.get(v);
@@ -286,7 +265,7 @@ public class ShapedObject extends RenderedObject {
 
 		vaoID = glGenVertexArrays();
 		glBindVertexArray(vaoID);
-		
+
 		vboVertexHandle = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
 		glBufferData(GL_ARRAY_BUFFER, vertexData, GL_STATIC_DRAW);
@@ -310,9 +289,9 @@ public class ShapedObject extends RenderedObject {
 		glBufferData(GL_ARRAY_BUFFER, normalData, GL_STATIC_DRAW);
 		glVertexAttribPointer(NORMAL_POSITION, vertexsize, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
+
 		glBindVertexArray(0);
-		
+
 		vboIndexHandle = glGenBuffers();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndexHandle);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData, GL_STATIC_DRAW);
@@ -321,31 +300,31 @@ public class ShapedObject extends RenderedObject {
 
 	@Override
 	public void render() {
-		if(render) {
+		if (render) {
 			glBindVertexArray(vaoID);
-			
+
 			glEnableVertexAttribArray(VERTEX_POSITION);
 			glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
-	
+
 			if (renderColor) {
 				glEnableVertexAttribArray(COLOR_POSITION);
 				glBindBuffer(GL_ARRAY_BUFFER, vboColorHandle);
 			}
-	
+
 			if (renderTexCoords) {
 				glEnableVertexAttribArray(TEXTURE_POSITION);
 				glBindBuffer(GL_ARRAY_BUFFER, vboTextureCoordHandle);
 			}
-	
+
 			if (renderNormals) {
 				glEnableVertexAttribArray(NORMAL_POSITION);
 				glBindBuffer(GL_ARRAY_BUFFER, vboNormalHandle);
 			}
-	
+
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndexHandle);
-			
+
 			glDrawElements(rendermode, renderedIndexCount, GL_UNSIGNED_INT, 0);
-			
+
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glDisableVertexAttribArray(VERTEX_POSITION);
@@ -355,7 +334,7 @@ public class ShapedObject extends RenderedObject {
 				glDisableVertexAttribArray(TEXTURE_POSITION);
 			if (renderColor)
 				glDisableVertexAttribArray(COLOR_POSITION);
-			
+
 			glBindVertexArray(0);
 		}
 	}
@@ -375,17 +354,16 @@ public class ShapedObject extends RenderedObject {
 		normals.set(normalid, normal);
 	}
 
-	public void setRenderHints(boolean rendercolors,
-			boolean rendertexturecoords, boolean rendernormals) {
+	public void setRenderHints(boolean rendercolors, boolean rendertexturecoords, boolean rendernormals) {
 		renderColor = rendercolors;
 		renderTexCoords = rendertexturecoords;
 		renderNormals = rendernormals;
 	}
-	
+
 	public void setRendered(boolean render) {
 		this.render = render;
 	}
-	
+
 	public boolean isRendered() {
 		return render;
 	}

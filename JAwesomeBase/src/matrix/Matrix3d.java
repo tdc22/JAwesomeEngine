@@ -28,8 +28,8 @@ public class Matrix3d extends Matrix3 {
 		setAll(setAll);
 	}
 
-	public Matrix3d(double m00, double m01, double m02, double m10, double m11,
-			double m12, double m20, double m21, double m22) {
+	public Matrix3d(double m00, double m01, double m02, double m10, double m11, double m12, double m20, double m21,
+			double m22) {
 		matrix = new double[3][3];
 		matrix[0][0] = m00;
 		matrix[0][1] = m01;
@@ -61,12 +61,9 @@ public class Matrix3d extends Matrix3 {
 	 */
 	@Override
 	public double determinant() {
-		return matrix[0][0]
-				* (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1])
-				+ matrix[0][1]
-				* (matrix[1][2] * matrix[2][0] - matrix[1][0] * matrix[2][2])
-				+ matrix[0][2]
-				* (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
+		return matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1])
+				+ matrix[0][1] * (matrix[1][2] * matrix[2][0] - matrix[1][0] * matrix[2][2])
+				+ matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
 	}
 
 	/**
@@ -116,8 +113,7 @@ public class Matrix3d extends Matrix3 {
 	 */
 	@Override
 	public Vector3 getColumn(int column) {
-		return new Vector3d(matrix[0][column], matrix[1][column],
-				matrix[2][column]);
+		return new Vector3d(matrix[0][column], matrix[1][column], matrix[2][column]);
 	}
 
 	/**
@@ -145,33 +141,15 @@ public class Matrix3d extends Matrix3 {
 		if (determinant != 0) {
 			double determinant_inv = 1 / determinant;
 
-			double t00 = determinant_inv
-					* (matrix[1][1] * matrix[2][2] - matrix[1][2]
-							* matrix[2][1]);
-			double t01 = determinant_inv
-					* (matrix[0][2] * matrix[2][1] - matrix[0][1]
-							* matrix[2][2]);
-			double t02 = determinant_inv
-					* (matrix[0][1] * matrix[1][2] - matrix[0][2]
-							* matrix[1][1]);
-			double t10 = determinant_inv
-					* (matrix[1][2] * matrix[2][0] - matrix[1][0]
-							* matrix[2][2]);
-			double t11 = determinant_inv
-					* (matrix[0][0] * matrix[2][2] - matrix[0][2]
-							* matrix[2][0]);
-			double t12 = determinant_inv
-					* (matrix[0][2] * matrix[1][0] - matrix[0][0]
-							* matrix[1][2]);
-			double t20 = determinant_inv
-					* (matrix[1][0] * matrix[2][1] - matrix[1][1]
-							* matrix[2][0]);
-			double t21 = determinant_inv
-					* (matrix[0][1] * matrix[2][0] - matrix[0][0]
-							* matrix[2][1]);
-			double t22 = determinant_inv
-					* (matrix[0][0] * matrix[1][1] - matrix[0][1]
-							* matrix[1][0]);
+			double t00 = determinant_inv * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1]);
+			double t01 = determinant_inv * (matrix[0][2] * matrix[2][1] - matrix[0][1] * matrix[2][2]);
+			double t02 = determinant_inv * (matrix[0][1] * matrix[1][2] - matrix[0][2] * matrix[1][1]);
+			double t10 = determinant_inv * (matrix[1][2] * matrix[2][0] - matrix[1][0] * matrix[2][2]);
+			double t11 = determinant_inv * (matrix[0][0] * matrix[2][2] - matrix[0][2] * matrix[2][0]);
+			double t12 = determinant_inv * (matrix[0][2] * matrix[1][0] - matrix[0][0] * matrix[1][2]);
+			double t20 = determinant_inv * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
+			double t21 = determinant_inv * (matrix[0][1] * matrix[2][0] - matrix[0][0] * matrix[2][1]);
+			double t22 = determinant_inv * (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]);
 
 			matrix[0][0] = t00;
 			matrix[1][0] = t10;
@@ -363,41 +341,31 @@ public class Matrix3d extends Matrix3 {
 		double tr = matrix[0][0] + matrix[1][1] + matrix[2][2];
 		if (tr > 0) {
 			double S = Math.sqrt(tr + 1.0) * 2;
-			return new Quaterniond(0.25 * S, (matrix[2][1] - matrix[1][2]) / S,
-					(matrix[0][2] - matrix[2][0]) / S,
+			return new Quaterniond(0.25 * S, (matrix[2][1] - matrix[1][2]) / S, (matrix[0][2] - matrix[2][0]) / S,
 					(matrix[1][0] - matrix[0][1]) / S);
-		} else if ((matrix[0][0] > matrix[1][1])
-				& (matrix[0][0] > matrix[2][2])) {
-			double S = Math.sqrt(1.0 + matrix[0][0] - matrix[1][1]
-					- matrix[2][2]) * 2;
-			return new Quaterniond((matrix[2][1] - matrix[1][2]) / S, 0.25 * S,
-					(matrix[0][1] + matrix[1][0]) / S,
+		} else if ((matrix[0][0] > matrix[1][1]) & (matrix[0][0] > matrix[2][2])) {
+			double S = Math.sqrt(1.0 + matrix[0][0] - matrix[1][1] - matrix[2][2]) * 2;
+			return new Quaterniond((matrix[2][1] - matrix[1][2]) / S, 0.25 * S, (matrix[0][1] + matrix[1][0]) / S,
 					(matrix[0][2] + matrix[2][0]) / S);
 		} else if (matrix[1][1] > matrix[2][2]) {
-			double S = Math.sqrt(1.0 + matrix[1][1] - matrix[0][0]
-					- matrix[2][2]) * 2;
-			return new Quaterniond((matrix[0][2] - matrix[2][0]) / S,
-					(matrix[0][1] + matrix[1][0]) / S, 0.25 * S,
+			double S = Math.sqrt(1.0 + matrix[1][1] - matrix[0][0] - matrix[2][2]) * 2;
+			return new Quaterniond((matrix[0][2] - matrix[2][0]) / S, (matrix[0][1] + matrix[1][0]) / S, 0.25 * S,
 					(matrix[1][2] + matrix[2][1]) / S);
 		} else {
-			double S = Math.sqrt(1.0 + matrix[2][2] - matrix[0][0]
-					- matrix[1][1]) * 2;
-			return new Quaterniond((matrix[1][0] - matrix[0][1]) / S,
-					(matrix[0][2] + matrix[2][0]) / S,
+			double S = Math.sqrt(1.0 + matrix[2][2] - matrix[0][0] - matrix[1][1]) * 2;
+			return new Quaterniond((matrix[1][0] - matrix[0][1]) / S, (matrix[0][2] + matrix[2][0]) / S,
 					(matrix[1][2] + matrix[2][1]) / S, 0.25 * S);
 		}
 	}
 
 	@Override
 	public Quaternion toQuaternionDiagonal() {
-		return new Quaterniond(Math.sqrt(1 + matrix[0][0] + matrix[1][1]
-				+ matrix[2][2]) / 2, 0, 0, 0);
+		return new Quaterniond(Math.sqrt(1 + matrix[0][0] + matrix[1][1] + matrix[2][2]) / 2, 0, 0, 0);
 	}
 
 	@Override
 	public Quaternionf toQuaternionDiagonalf() {
-		return new Quaternionf(Math.sqrt(1 + matrix[0][0] + matrix[1][1]
-				+ matrix[2][2]) / 2, 0, 0, 0);
+		return new Quaternionf(Math.sqrt(1 + matrix[0][0] + matrix[1][1] + matrix[2][2]) / 2, 0, 0, 0);
 	}
 
 	@Override
@@ -405,27 +373,19 @@ public class Matrix3d extends Matrix3 {
 		float tr = (float) (matrix[0][0] + matrix[1][1] + matrix[2][2]);
 		if (tr > 0) {
 			float S = (float) Math.sqrt(tr + 1.0) * 2;
-			return new Quaternionf(0.25 * S, (matrix[2][1] - matrix[1][2]) / S,
-					(matrix[0][2] - matrix[2][0]) / S,
+			return new Quaternionf(0.25 * S, (matrix[2][1] - matrix[1][2]) / S, (matrix[0][2] - matrix[2][0]) / S,
 					(matrix[1][0] - matrix[0][1]) / S);
-		} else if ((matrix[0][0] > matrix[1][1])
-				& (matrix[0][0] > matrix[2][2])) {
-			float S = (float) Math.sqrt(1.0 + matrix[0][0] - matrix[1][1]
-					- matrix[2][2]) * 2;
-			return new Quaternionf((matrix[2][1] - matrix[1][2]) / S, 0.25 * S,
-					(matrix[0][1] + matrix[1][0]) / S,
+		} else if ((matrix[0][0] > matrix[1][1]) & (matrix[0][0] > matrix[2][2])) {
+			float S = (float) Math.sqrt(1.0 + matrix[0][0] - matrix[1][1] - matrix[2][2]) * 2;
+			return new Quaternionf((matrix[2][1] - matrix[1][2]) / S, 0.25 * S, (matrix[0][1] + matrix[1][0]) / S,
 					(matrix[0][2] + matrix[2][0]) / S);
 		} else if (matrix[1][1] > matrix[2][2]) {
-			float S = (float) Math.sqrt(1.0 + matrix[1][1] - matrix[0][0]
-					- matrix[2][2]) * 2;
-			return new Quaternionf((matrix[0][2] - matrix[2][0]) / S,
-					(matrix[0][1] + matrix[1][0]) / S, 0.25 * S,
+			float S = (float) Math.sqrt(1.0 + matrix[1][1] - matrix[0][0] - matrix[2][2]) * 2;
+			return new Quaternionf((matrix[0][2] - matrix[2][0]) / S, (matrix[0][1] + matrix[1][0]) / S, 0.25 * S,
 					(matrix[1][2] + matrix[2][1]) / S);
 		} else {
-			float S = (float) Math.sqrt(1.0 + matrix[2][2] - matrix[0][0]
-					- matrix[1][1]) * 2;
-			return new Quaternionf((matrix[1][0] - matrix[0][1]) / S,
-					(matrix[0][2] + matrix[2][0]) / S,
+			float S = (float) Math.sqrt(1.0 + matrix[2][2] - matrix[0][0] - matrix[1][1]) * 2;
+			return new Quaternionf((matrix[1][0] - matrix[0][1]) / S, (matrix[0][2] + matrix[2][0]) / S,
 					(matrix[1][2] + matrix[2][1]) / S, 0.25 * S);
 		}
 	}
@@ -437,12 +397,9 @@ public class Matrix3d extends Matrix3 {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Matrix3d[");
-		sb.append(matrix[0][0]).append(' ').append(matrix[1][0]).append(' ')
-				.append(matrix[2][0]).append('\n');
-		sb.append(matrix[0][1]).append(' ').append(matrix[1][1]).append(' ')
-				.append(matrix[2][1]).append('\n');
-		sb.append(matrix[0][2]).append(' ').append(matrix[1][2]).append(' ')
-				.append(matrix[2][2]);
+		sb.append(matrix[0][0]).append(' ').append(matrix[1][0]).append(' ').append(matrix[2][0]).append('\n');
+		sb.append(matrix[0][1]).append(' ').append(matrix[1][1]).append(' ').append(matrix[2][1]).append('\n');
+		sb.append(matrix[0][2]).append(' ').append(matrix[1][2]).append(' ').append(matrix[2][2]);
 		sb.append("]");
 		return sb.toString();
 	}
@@ -455,7 +412,7 @@ public class Matrix3d extends Matrix3 {
 		double m01 = matrix[0][1];
 		double m02 = matrix[0][2];
 		double m12 = matrix[1][2];
-		
+
 		matrix[0][1] = matrix[1][0];
 		matrix[0][2] = matrix[2][0];
 		matrix[1][2] = matrix[2][1];

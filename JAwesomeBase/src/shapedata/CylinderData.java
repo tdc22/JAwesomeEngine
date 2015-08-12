@@ -13,8 +13,7 @@ import vector.Vector3f;
 public class CylinderData extends DataObject implements CylinderStructure {
 	float radius, halfheight;
 
-	public CylinderData(float x, float y, float z, float radius,
-			float halfheight) {
+	public CylinderData(float x, float y, float z, float radius, float halfheight) {
 		super();
 		translateTo(x, y, z);
 		shapetype = SHAPE_CYLINDER;

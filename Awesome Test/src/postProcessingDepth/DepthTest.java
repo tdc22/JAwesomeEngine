@@ -11,7 +11,6 @@ import input.KeyInput;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
-import objects.RenderedObject;
 import shader.Shader;
 import shape.Box;
 import texture.Texture;
@@ -29,15 +28,16 @@ public class DepthTest extends StandardGame {
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
-		
+
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
-		
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
 
 		depthPPShader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/ppDepthshader.vert", "res/shaders/ppDepthshader.frag"));
@@ -53,7 +53,7 @@ public class DepthTest extends StandardGame {
 		addPostProcessingShader(depthPPShader);
 		setPostProcessingIterations(1);
 		depthPPActive = true;
-		
+
 		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
 		for (int i = 0; i < 200; i++) {
 			defaultshader.addObject(new Box(0, 0, i * 2, 0.5f, 0.5f, 0.5f));

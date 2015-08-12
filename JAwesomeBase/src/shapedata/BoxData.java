@@ -14,8 +14,7 @@ import vector.Vector3f;
 public class BoxData extends DataObject implements BoxStructure {
 	Vector3f halfsize;
 
-	public BoxData(float x, float y, float z, float halfsizex, float halfsizey,
-			float halfsizez) {
+	public BoxData(float x, float y, float z, float halfsizex, float halfsizey, float halfsizez) {
 		super();
 		translateTo(x, y, z);
 		shapetype = SHAPE_BOX;
@@ -29,8 +28,7 @@ public class BoxData extends DataObject implements BoxStructure {
 		this.halfsize = halfsize;
 	}
 
-	public BoxData(Vector3f pos, float halfsizex, float halfsizey,
-			float halfsizez) {
+	public BoxData(Vector3f pos, float halfsizex, float halfsizey, float halfsizez) {
 		super();
 		translateTo(pos);
 		shapetype = SHAPE_BOX;

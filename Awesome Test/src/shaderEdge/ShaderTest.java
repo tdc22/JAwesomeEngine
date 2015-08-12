@@ -19,42 +19,52 @@ public class ShaderTest extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
-		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(5, 5, 5);
 		cam.rotateTo(45, -35);
 
-		edgeshader = new Shader(ShaderLoader.loadShaderFromFile("res/shaders/edgeshader.vert",
-				"res/shaders/edgeshader.geo", GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		add2dShader(defaultshader2);
+
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
+
+		edgeshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/edgeshader.vert", "res/shaders/edgeshader.frag",
+						"res/shaders/edgeshader.geo", GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
+		addShader(edgeshader);
 
 		Box a = new Box(0, 0, 0, 1, 1, 1);
-		a.setRenderHints(false, false, true);
-		addObject(a);
+		a.setRenderHints(true, false, true);
+		defaultshader.addObject(a);
+		edgeshader.addObject(a);
 	}
 
 	@Override
 	public void render() {
-		debugger.update3d();
 		debugger.begin();
 		renderScene();
-		if (!debugger.isWireframeRendered()) {
-			edgeshader.bind();
-			renderScene();
-			edgeshader.unbind();
-		}
+		// if (!debugger.isWireframeRendered()) {
+		// edgeshader.bind();
+		// renderScene();
+		// edgeshader.unbind();
+		// }
 	}
 
 	@Override
 	public void render2d() {
+		render2dScene();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
-		debugger.update();
+		debugger.update(fps, 0, 0);
 		cam.update(delta);
 	}
 }

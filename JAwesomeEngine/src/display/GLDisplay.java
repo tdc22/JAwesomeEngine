@@ -78,8 +78,7 @@ public class GLDisplay extends Display {
 
 	@Override
 	public void clear() {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
-				| GL_STENCIL_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
 	@Override
@@ -115,34 +114,27 @@ public class GLDisplay extends Display {
 		// See: http://www.glfw.org/docs/latest/window.html#window_hints_values
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
-		glfwWindowHint(GLFW_RESIZABLE, displaymode.isResizeable() ? GL_TRUE
-				: GL_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, displaymode.isResizeable() ? GL_TRUE : GL_FALSE);
 		glfwWindowHint(GLFW_RED_BITS, pixelformat.getBitsPerPixel());
 		glfwWindowHint(GLFW_GREEN_BITS, pixelformat.getBitsPerPixel());
 		glfwWindowHint(GLFW_BLUE_BITS, pixelformat.getBitsPerPixel());
 		glfwWindowHint(GLFW_ALPHA_BITS, pixelformat.getAlpha());
 		glfwWindowHint(GLFW_DEPTH_BITS, pixelformat.getDepth());
 		glfwWindowHint(GLFW_STENCIL_BITS, pixelformat.getStencil());
-		glfwWindowHint(GLFW_ACCUM_RED_BITS,
-				pixelformat.getAccumulationBitsPerPixel());
-		glfwWindowHint(GLFW_ACCUM_GREEN_BITS,
-				pixelformat.getAccumulationBitsPerPixel());
-		glfwWindowHint(GLFW_ACCUM_BLUE_BITS,
-				pixelformat.getAccumulationBitsPerPixel());
-		glfwWindowHint(GLFW_ACCUM_ALPHA_BITS,
-				pixelformat.getAccumulationAlpha());
+		glfwWindowHint(GLFW_ACCUM_RED_BITS, pixelformat.getAccumulationBitsPerPixel());
+		glfwWindowHint(GLFW_ACCUM_GREEN_BITS, pixelformat.getAccumulationBitsPerPixel());
+		glfwWindowHint(GLFW_ACCUM_BLUE_BITS, pixelformat.getAccumulationBitsPerPixel());
+		glfwWindowHint(GLFW_ACCUM_ALPHA_BITS, pixelformat.getAccumulationAlpha());
 		glfwWindowHint(GLFW_AUX_BUFFERS, pixelformat.getAuxBuffers());
 		glfwWindowHint(GLFW_SAMPLES, pixelformat.getSamples());
 		// glfwWindowHint(GLFW_REFRESH_RATE, ???);
 		glfwWindowHint(GLFW_STEREO, pixelformat.isStereo() ? GL_TRUE : GL_FALSE);
-		glfwWindowHint(GLFW_SRGB_CAPABLE, pixelformat.isSRGB() ? GL_TRUE
-				: GL_FALSE);
+		glfwWindowHint(GLFW_SRGB_CAPABLE, pixelformat.isSRGB() ? GL_TRUE : GL_FALSE);
 
 		width = displaymode.getWidth();
 		height = displaymode.getHeight();
 
-		windowid = glfwCreateWindow(width, height, displaymode.getTitle(),
-				NULL, NULL);
+		windowid = glfwCreateWindow(width, height, displaymode.getTitle(), NULL, NULL);
 		if (windowid == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 
@@ -158,15 +150,14 @@ public class GLDisplay extends Display {
 		GLContext.createFromCurrent();
 
 		if (displaymode.isResizeable()) {
-			glfwSetFramebufferSizeCallback(windowid,
-					sizeCallback = new GLFWFramebufferSizeCallback() {
-						@Override
-						public void invoke(long arg0, int w, int h) {
-							width = w;
-							height = h;
-							glViewport(0, 0, width, height);
-						}
-					});
+			glfwSetFramebufferSizeCallback(windowid, sizeCallback = new GLFWFramebufferSizeCallback() {
+				@Override
+				public void invoke(long arg0, int w, int h) {
+					width = w;
+					height = h;
+					glViewport(0, 0, width, height);
+				}
+			});
 		}
 	}
 

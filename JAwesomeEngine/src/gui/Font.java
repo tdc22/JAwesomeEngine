@@ -9,7 +9,7 @@ public class Font {
 	public Font() {
 		characters = new HashMap<Character, FontCharacter>();
 	}
-	
+
 	public Font(Font font) {
 		characters = new HashMap<Character, FontCharacter>(font.getCharacters());
 	}
@@ -17,7 +17,7 @@ public class Font {
 	public void addCharacter(char character, FontCharacter fontcharacter) {
 		characters.put(character, fontcharacter);
 	}
-	
+
 	public HashMap<Character, FontCharacter> getCharacters() {
 		return characters;
 	}
@@ -31,7 +31,7 @@ public class Font {
 			fc.setColor(color);
 		}
 	}
-	
+
 	public void setSpaceSize(float size) {
 		getCharacter(' ').setMargin(size, size);
 	}

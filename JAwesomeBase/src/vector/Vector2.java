@@ -20,8 +20,7 @@ public abstract class Vector2 extends Vector {
 		if (other == null)
 			return false;
 		if (other instanceof Vector2) {
-			return (getX() == ((Vector2) other).getX() && getY() == ((Vector2) other)
-					.getY());
+			return (getX() == ((Vector2) other).getX() && getY() == ((Vector2) other).getY());
 		}
 		return false;
 	}

@@ -31,15 +31,16 @@ public class SimpleTerrainTest extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0, 3, 0);
 		cam.rotateTo(225, 0);
-		
+
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
-		
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
 
 		BufferedImage heightmap = null;
 		try {

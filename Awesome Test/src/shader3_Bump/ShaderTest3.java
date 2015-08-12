@@ -30,25 +30,25 @@ public class ShaderTest3 extends StandardGame {
 		// Shader Test 1
 		Shader colorshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
-		colorshader.addArgumentName("color");
+		colorshader.addArgumentName("u_color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
+		addShader(colorshader);
 
 		Box a = new Box(-2, 0, 2, 0.5f, 0.5f, 0.5f);
-		a.setShader(colorshader);
-		addObject(a);
+		colorshader.addObject(a);
 
 		// Shader Test 2
 		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
 
 		Shader textureshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
-		textureshader.addArgumentName("texture");
+		textureshader.addArgumentName("u_texture");
 		textureshader.addArgument(texture);
+		addShader(textureshader);
 
 		Box b = new Box(2, 0, 2, 0.5f, 0.5f, 0.5f);
 		b.setRenderHints(false, true, false);
-		b.setShader(textureshader);
-		addObject(b);
+		textureshader.addObject(b);
 
 		// Shader Test 3
 		diffuse = new Texture(TextureLoader.loadTexture("res/textures/diffuse.jpg"));
@@ -56,13 +56,13 @@ public class ShaderTest3 extends StandardGame {
 
 		Shader bumpmapshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/bumpmapshader.vert", "res/shaders/bumpmapshader.frag"));
-		bumpmapshader.addArgumentNames("colorTexture", "normalTexture");
+		bumpmapshader.addArgumentNames("u_texture", "u_bumpmap");
 		bumpmapshader.addArguments(diffuse, bumpmap);
+		addShader(bumpmapshader);
 
 		Box c = new Box(0, 0, 0, 0.5f, 0.5f, 0.5f);
 		c.setRenderHints(false, true, false);
-		c.setShader(bumpmapshader);
-		addObject(c);
+		bumpmapshader.addObject(c);
 
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
@@ -75,7 +75,6 @@ public class ShaderTest3 extends StandardGame {
 
 	@Override
 	public void render2d() {
-		// TODO Auto-generated method stub
 
 	}
 

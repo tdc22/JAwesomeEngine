@@ -2,7 +2,6 @@ package gui;
 
 import objects.ShapedObject2;
 import utils.GLConstants;
-
 import vector.Vector2f;
 
 public class FontCharacter extends ShapedObject2 {

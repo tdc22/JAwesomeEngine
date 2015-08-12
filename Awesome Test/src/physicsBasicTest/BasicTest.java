@@ -28,12 +28,7 @@ import resolution.ImpulseResolution;
 import shader.Shader;
 import shape.Box;
 import shape.Sphere;
-import space.PhysicsProfiler;
-import space.SimplePhysicsProfiler;
 import utils.Debugger;
-import utils.GameProfiler;
-import utils.Profiler;
-import utils.SimpleGameProfiler;
 import vector.Vector3f;
 
 public class BasicTest extends StandardGame {
@@ -42,7 +37,7 @@ public class BasicTest extends StandardGame {
 	boolean impulseapplied = false;
 	Debugger debugger;
 	PhysicsDebug physicsdebug;
-//	Profiler profiler;
+	// Profiler profiler;
 	InputEvent run, step;
 	Shader defaultshader;
 
@@ -55,7 +50,7 @@ public class BasicTest extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
-		
+
 		defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
@@ -71,11 +66,11 @@ public class BasicTest extends StandardGame {
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
-//		GameProfiler gp = new SimpleGameProfiler();
-//		setProfiler(gp);
-//		PhysicsProfiler pp = new SimplePhysicsProfiler();
-//		space.setProfiler(pp);
-//		profiler = new Profiler(inputs, font, gp, pp);
+		// GameProfiler gp = new SimpleGameProfiler();
+		// setProfiler(gp);
+		// PhysicsProfiler pp = new SimplePhysicsProfiler();
+		// space.setProfiler(pp);
+		// profiler = new Profiler(inputs, font, gp, pp);
 
 		Box ground = new Box(0, -5, 0, 10, 1, 10);
 		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
@@ -121,7 +116,7 @@ public class BasicTest extends StandardGame {
 	public void render2d() {
 		render2dScene();
 		debugger.end();
-//		profiler.render2d();
+		// profiler.render2d();
 	}
 
 	@Override
@@ -160,7 +155,7 @@ public class BasicTest extends StandardGame {
 		}
 
 		debugger.update(fps, 0, 0);
-//		profiler.update(delta);
+		// profiler.update(delta);
 		space.update(delta);
 		physicsdebug.update();
 

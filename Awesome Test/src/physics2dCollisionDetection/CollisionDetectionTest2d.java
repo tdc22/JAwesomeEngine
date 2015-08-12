@@ -50,7 +50,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
-		
+
 		int shaderprogram = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
 				"res/shaders/colorshader.frag");
 		s1 = new Shader(shaderprogram);
@@ -66,7 +66,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 		s4.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s5.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s6.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
-		
+
 		add2dShader(s1);
 		add2dShader(s2);
 		add2dShader(s3);
@@ -121,16 +121,16 @@ public class CollisionDetectionTest2d extends StandardGame {
 
 	@Override
 	public void render() {
-		
+
 	}
 
 	@Override
 	public void render2d() {
 		render2dScene();
-//		for (ManifoldVisualization mv : manifolds) {
-//			mv.render();
-//			mv.delete();
-//		}
+		// for (ManifoldVisualization mv : manifolds) {
+		// mv.render();
+		// mv.delete();
+		// }
 		manifolds.clear();
 	}
 
@@ -201,8 +201,9 @@ public class CollisionDetectionTest2d extends StandardGame {
 				s6.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 		}
 
-//		System.out.println(rb6.getCompoundBroadphase().getObjects().size() + "; "
-//				+ rb6.getCompoundBroadphase().getOverlaps().size());
+		// System.out.println(rb6.getCompoundBroadphase().getObjects().size() +
+		// "; "
+		// + rb6.getCompoundBroadphase().getOverlaps().size());
 
 		cam.update(delta);
 	}

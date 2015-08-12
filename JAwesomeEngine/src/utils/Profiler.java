@@ -1,16 +1,15 @@
 package utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import gui.Font;
 import gui.Text;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import loader.ShaderLoader;
 import objects.ShapedObject2;
 import objects.Updateable;
@@ -32,18 +31,14 @@ public class Profiler implements Updateable {
 	boolean showGameProfile = false;
 	boolean showPhysicsProfile = false;
 	InputEvent toggleScale, toggleGameProfile, togglePhysicsProfile;
-	Text gameProfileText0, gameProfileText1, gameProfileText2,
-			gameProfileText3, physicsProfileText0, physicsProfileText1,
-			physicsProfileText2, physicsProfileText3, scaleMin, scaleMid,
-			scaleMax;
+	Text gameProfileText0, gameProfileText1, gameProfileText2, gameProfileText3, physicsProfileText0,
+			physicsProfileText1, physicsProfileText2, physicsProfileText3, scaleMin, scaleMid, scaleMax;
 	Quad background;
-	ProfileLine gameProfileLine0, gameProfileLine1, gameProfileLine2,
-			gameProfileLine3, physicsProfileLine0, physicsProfileLine1,
-			physicsProfileLine2, physicsProfileLine3;
+	ProfileLine gameProfileLine0, gameProfileLine1, gameProfileLine2, gameProfileLine3, physicsProfileLine0,
+			physicsProfileLine1, physicsProfileLine2, physicsProfileLine3;
 	float sizeX = 600, sizeY = 128;
 
-	public Profiler(InputManager i, Font f, GameProfiler gameprofiler,
-			PhysicsProfiler physicsprofiler) {
+	public Profiler(InputManager i, Font f, GameProfiler gameprofiler, PhysicsProfiler physicsprofiler) {
 		this.gameprofiler = gameprofiler;
 		this.physicsprofiler = physicsprofiler;
 		setupEvents(i);
@@ -85,29 +80,24 @@ public class Profiler implements Updateable {
 
 		// TODO: Make independent from shader file!
 		Shader gameProfileColor0 = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
-						"res/shaders/colorshader.frag"), "color", new Vector4f(
-						1f, 0f, 0f, 1f));
+				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"),
+				"color", new Vector4f(1f, 0f, 0f, 1f));
 		String c = "color";
 		gameProfileText0.setShader(gameProfileColor0);
-		gameProfileText1.setShader(new Shader(gameProfileColor0
-				.getShaderProgram(), c, new Vector4f(0f, 1f, 0f, 1f)));
-		gameProfileText2.setShader(new Shader(gameProfileColor0
-				.getShaderProgram(), c, new Vector4f(0f, 0f, 1f, 1f)));
-		gameProfileText3.setShader(new Shader(gameProfileColor0
-				.getShaderProgram(), c, new Vector4f(1f, 1f, 1f, 1f)));
-		physicsProfileText0.setShader(new Shader(gameProfileColor0
-				.getShaderProgram(), c, new Vector4f(1f, 1f, 0f, 1f)));
-		physicsProfileText1.setShader(new Shader(gameProfileColor0
-				.getShaderProgram(), c, new Vector4f(0f, 1f, 1f, 1f)));
-		physicsProfileText2.setShader(new Shader(gameProfileColor0
-				.getShaderProgram(), c, new Vector4f(1f, 0f, 1f, 1f)));
-		physicsProfileText3.setShader(new Shader(gameProfileColor0
-				.getShaderProgram(), c, new Vector4f(0.5f, 0.5f, 0.5f, 1f)));
+		gameProfileText1.setShader(new Shader(gameProfileColor0.getShaderProgram(), c, new Vector4f(0f, 1f, 0f, 1f)));
+		gameProfileText2.setShader(new Shader(gameProfileColor0.getShaderProgram(), c, new Vector4f(0f, 0f, 1f, 1f)));
+		gameProfileText3.setShader(new Shader(gameProfileColor0.getShaderProgram(), c, new Vector4f(1f, 1f, 1f, 1f)));
+		physicsProfileText0
+				.setShader(new Shader(gameProfileColor0.getShaderProgram(), c, new Vector4f(1f, 1f, 0f, 1f)));
+		physicsProfileText1
+				.setShader(new Shader(gameProfileColor0.getShaderProgram(), c, new Vector4f(0f, 1f, 1f, 1f)));
+		physicsProfileText2
+				.setShader(new Shader(gameProfileColor0.getShaderProgram(), c, new Vector4f(1f, 0f, 1f, 1f)));
+		physicsProfileText3
+				.setShader(new Shader(gameProfileColor0.getShaderProgram(), c, new Vector4f(0.5f, 0.5f, 0.5f, 1f)));
 
 		background = new Quad(305, 533, sizeX / 2f, sizeY / 2f);
-		background.setShader(new Shader(gameProfileColor0.getShaderProgram(),
-				"color", new Vector4f(1f, 1f, 1f, 0.6f)));
+		background.setShader(new Shader(gameProfileColor0.getShaderProgram(), "color", new Vector4f(1f, 1f, 1f, 0.6f)));
 
 		scaleMin = new Text("0", 610, 580, f);
 		scaleMid = new Text("0", 610, 525, f);
@@ -132,8 +122,7 @@ public class Profiler implements Updateable {
 	}
 
 	private void setupEvents(InputManager inputs) {
-		toggleScale = new InputEvent("profile_showscale", new Input(
-				Input.KEYBOARD_EVENT, "F9", KeyInput.KEY_PRESSED));
+		toggleScale = new InputEvent("profile_showscale", new Input(Input.KEYBOARD_EVENT, "F9", KeyInput.KEY_PRESSED));
 		toggleGameProfile = new InputEvent("profile_showgameprofile",
 				new Input(Input.KEYBOARD_EVENT, "F10", KeyInput.KEY_PRESSED));
 		togglePhysicsProfile = new InputEvent("profile_showphysicsprofile",
@@ -221,14 +210,10 @@ public class Profiler implements Updateable {
 			gameProfileLine2.addValue(profilevalues[3]);
 			gameProfileLine3.addValue(profilevalues[4]);
 
-			gameProfileText0.setText("Update: "
-					+ values.get(0).get(values.get(0).size() - 1));
-			gameProfileText1.setText("Render 3d: "
-					+ values.get(1).get(values.get(1).size() - 1));
-			gameProfileText2.setText("Render 2d: "
-					+ values.get(2).get(values.get(2).size() - 1));
-			gameProfileText3.setText("Display: "
-					+ values.get(3).get(values.get(3).size() - 1));
+			gameProfileText0.setText("Update: " + values.get(0).get(values.get(0).size() - 1));
+			gameProfileText1.setText("Render 3d: " + values.get(1).get(values.get(1).size() - 1));
+			gameProfileText2.setText("Render 2d: " + values.get(2).get(values.get(2).size() - 1));
+			gameProfileText3.setText("Display: " + values.get(3).get(values.get(3).size() - 1));
 		}
 		if (physicsprofiler != null) {
 			long[] profilevalues = physicsprofiler.getValues();
@@ -242,14 +227,10 @@ public class Profiler implements Updateable {
 			physicsProfileLine2.addValue(profilevalues[3]);
 			physicsProfileLine3.addValue(profilevalues[4]);
 
-			physicsProfileText0.setText("Broadphase: "
-					+ values.get(4).get(values.get(4).size() - 1));
-			physicsProfileText1.setText("Narrowphase: "
-					+ values.get(5).get(values.get(5).size() - 1));
-			physicsProfileText2.setText("Resolution: "
-					+ values.get(6).get(values.get(6).size() - 1));
-			physicsProfileText3.setText("Integration: "
-					+ values.get(7).get(values.get(7).size() - 1));
+			physicsProfileText0.setText("Broadphase: " + values.get(4).get(values.get(4).size() - 1));
+			physicsProfileText1.setText("Narrowphase: " + values.get(5).get(values.get(5).size() - 1));
+			physicsProfileText2.setText("Resolution: " + values.get(6).get(values.get(6).size() - 1));
+			physicsProfileText3.setText("Integration: " + values.get(7).get(values.get(7).size() - 1));
 		}
 
 		if (times.size() > numvalues) {

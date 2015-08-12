@@ -20,10 +20,8 @@ public abstract class Vector4 extends Vector {
 		if (other == null)
 			return false;
 		if (other instanceof Vector4) {
-			return (getX() == ((Vector4) other).getX()
-					&& getY() == ((Vector4) other).getY()
-					&& getZ() == ((Vector4) other).getZ() && getW() == ((Vector4) other)
-						.getW());
+			return (getX() == ((Vector4) other).getX() && getY() == ((Vector4) other).getY()
+					&& getZ() == ((Vector4) other).getZ() && getW() == ((Vector4) other).getW());
 		}
 		return false;
 	}
@@ -108,14 +106,12 @@ public abstract class Vector4 extends Vector {
 	 * @param scalew
 	 *            w-factor
 	 */
-	public abstract void scale(double scalex, double scaley, double scalez,
-			double scalew);
+	public abstract void scale(double scalex, double scaley, double scalez, double scalew);
 
 	/**
 	 * @see Vector4#scale(double, double, double, double)
 	 */
-	public abstract void scale(float scalex, float scaley, float scalez,
-			float scalew);
+	public abstract void scale(float scalex, float scaley, float scalez, float scalew);
 
 	/**
 	 * @see Vector1#scale(Vector1)
@@ -197,14 +193,12 @@ public abstract class Vector4 extends Vector {
 	/**
 	 * @see Vector1#translate(double)
 	 */
-	public abstract void translate(double transx, double transy, double transz,
-			double transw);
+	public abstract void translate(double transx, double transy, double transz, double transw);
 
 	/**
 	 * @see Vector1#translate(float)
 	 */
-	public abstract void translate(float transx, float transy, float transz,
-			float transw);
+	public abstract void translate(float transx, float transy, float transz, float transw);
 
 	/**
 	 * @see Vector1#translate(Vector1)

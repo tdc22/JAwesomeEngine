@@ -27,8 +27,7 @@ public class Matrix3f extends Matrix3 {
 		setAll(setAll);
 	}
 
-	public Matrix3f(float m00, float m01, float m02, float m10, float m11,
-			float m12, float m20, float m21, float m22) {
+	public Matrix3f(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22) {
 		matrix = new float[3][3];
 		matrix[0][0] = m00;
 		matrix[0][1] = m01;
@@ -62,12 +61,9 @@ public class Matrix3f extends Matrix3 {
 
 	@Override
 	public float determinantf() {
-		return matrix[0][0]
-				* (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1])
-				+ matrix[0][1]
-				* (matrix[1][2] * matrix[2][0] - matrix[1][0] * matrix[2][2])
-				+ matrix[0][2]
-				* (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
+		return matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1])
+				+ matrix[0][1] * (matrix[1][2] * matrix[2][0] - matrix[1][0] * matrix[2][2])
+				+ matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
 	}
 
 	@Override
@@ -97,8 +93,7 @@ public class Matrix3f extends Matrix3 {
 
 	@Override
 	public Vector3 getColumn(int column) {
-		return new Vector3f(matrix[0][column], matrix[1][column],
-				matrix[2][column]);
+		return new Vector3f(matrix[0][column], matrix[1][column], matrix[2][column]);
 	}
 
 	@Override
@@ -117,33 +112,15 @@ public class Matrix3f extends Matrix3 {
 		if (determinant != 0) {
 			float determinant_inv = 1 / determinant;
 
-			float t00 = determinant_inv
-					* (matrix[1][1] * matrix[2][2] - matrix[1][2]
-							* matrix[2][1]);
-			float t01 = determinant_inv
-					* (matrix[0][2] * matrix[2][1] - matrix[0][1]
-							* matrix[2][2]);
-			float t02 = determinant_inv
-					* (matrix[0][1] * matrix[1][2] - matrix[0][2]
-							* matrix[1][1]);
-			float t10 = determinant_inv
-					* (matrix[1][2] * matrix[2][0] - matrix[1][0]
-							* matrix[2][2]);
-			float t11 = determinant_inv
-					* (matrix[0][0] * matrix[2][2] - matrix[0][2]
-							* matrix[2][0]);
-			float t12 = determinant_inv
-					* (matrix[0][2] * matrix[1][0] - matrix[0][0]
-							* matrix[1][2]);
-			float t20 = determinant_inv
-					* (matrix[1][0] * matrix[2][1] - matrix[1][1]
-							* matrix[2][0]);
-			float t21 = determinant_inv
-					* (matrix[0][1] * matrix[2][0] - matrix[0][0]
-							* matrix[2][1]);
-			float t22 = determinant_inv
-					* (matrix[0][0] * matrix[1][1] - matrix[0][1]
-							* matrix[1][0]);
+			float t00 = determinant_inv * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1]);
+			float t01 = determinant_inv * (matrix[0][2] * matrix[2][1] - matrix[0][1] * matrix[2][2]);
+			float t02 = determinant_inv * (matrix[0][1] * matrix[1][2] - matrix[0][2] * matrix[1][1]);
+			float t10 = determinant_inv * (matrix[1][2] * matrix[2][0] - matrix[1][0] * matrix[2][2]);
+			float t11 = determinant_inv * (matrix[0][0] * matrix[2][2] - matrix[0][2] * matrix[2][0]);
+			float t12 = determinant_inv * (matrix[0][2] * matrix[1][0] - matrix[0][0] * matrix[1][2]);
+			float t20 = determinant_inv * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
+			float t21 = determinant_inv * (matrix[0][1] * matrix[2][0] - matrix[0][0] * matrix[2][1]);
+			float t22 = determinant_inv * (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]);
 
 			matrix[0][0] = t00;
 			matrix[1][0] = t10;
@@ -303,8 +280,7 @@ public class Matrix3f extends Matrix3 {
 
 	@Override
 	public Quaternionf toQuaternionDiagonalf() {
-		return new Quaternionf(Math.sqrt(1 + matrix[0][0] + matrix[1][1]
-				+ matrix[2][2]) / 2, 0, 0, 0);
+		return new Quaternionf(Math.sqrt(1 + matrix[0][0] + matrix[1][1] + matrix[2][2]) / 2, 0, 0, 0);
 	}
 
 	@Override
@@ -312,27 +288,19 @@ public class Matrix3f extends Matrix3 {
 		float tr = matrix[0][0] + matrix[1][1] + matrix[2][2];
 		if (tr > 0) {
 			float S = (float) Math.sqrt(tr + 1.0) * 2;
-			return new Quaternionf(0.25 * S, (matrix[2][1] - matrix[1][2]) / S,
-					(matrix[0][2] - matrix[2][0]) / S,
+			return new Quaternionf(0.25 * S, (matrix[2][1] - matrix[1][2]) / S, (matrix[0][2] - matrix[2][0]) / S,
 					(matrix[1][0] - matrix[0][1]) / S);
-		} else if ((matrix[0][0] > matrix[1][1])
-				& (matrix[0][0] > matrix[2][2])) {
-			float S = (float) Math.sqrt(1.0 + matrix[0][0] - matrix[1][1]
-					- matrix[2][2]) * 2;
-			return new Quaternionf((matrix[2][1] - matrix[1][2]) / S, 0.25 * S,
-					(matrix[0][1] + matrix[1][0]) / S,
+		} else if ((matrix[0][0] > matrix[1][1]) & (matrix[0][0] > matrix[2][2])) {
+			float S = (float) Math.sqrt(1.0 + matrix[0][0] - matrix[1][1] - matrix[2][2]) * 2;
+			return new Quaternionf((matrix[2][1] - matrix[1][2]) / S, 0.25 * S, (matrix[0][1] + matrix[1][0]) / S,
 					(matrix[0][2] + matrix[2][0]) / S);
 		} else if (matrix[1][1] > matrix[2][2]) {
-			float S = (float) Math.sqrt(1.0 + matrix[1][1] - matrix[0][0]
-					- matrix[2][2]) * 2;
-			return new Quaternionf((matrix[0][2] - matrix[2][0]) / S,
-					(matrix[0][1] + matrix[1][0]) / S, 0.25 * S,
+			float S = (float) Math.sqrt(1.0 + matrix[1][1] - matrix[0][0] - matrix[2][2]) * 2;
+			return new Quaternionf((matrix[0][2] - matrix[2][0]) / S, (matrix[0][1] + matrix[1][0]) / S, 0.25 * S,
 					(matrix[1][2] + matrix[2][1]) / S);
 		} else {
-			float S = (float) Math.sqrt(1.0 + matrix[2][2] - matrix[0][0]
-					- matrix[1][1]) * 2;
-			return new Quaternionf((matrix[1][0] - matrix[0][1]) / S,
-					(matrix[0][2] + matrix[2][0]) / S,
+			float S = (float) Math.sqrt(1.0 + matrix[2][2] - matrix[0][0] - matrix[1][1]) * 2;
+			return new Quaternionf((matrix[1][0] - matrix[0][1]) / S, (matrix[0][2] + matrix[2][0]) / S,
 					(matrix[1][2] + matrix[2][1]) / S, 0.25 * S);
 		}
 	}
@@ -341,12 +309,9 @@ public class Matrix3f extends Matrix3 {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Matrix3f[");
-		sb.append(matrix[0][0]).append(' ').append(matrix[1][0]).append(' ')
-				.append(matrix[2][0]).append('\n');
-		sb.append(matrix[0][1]).append(' ').append(matrix[1][1]).append(' ')
-				.append(matrix[2][1]).append('\n');
-		sb.append(matrix[0][2]).append(' ').append(matrix[1][2]).append(' ')
-				.append(matrix[2][2]);
+		sb.append(matrix[0][0]).append(' ').append(matrix[1][0]).append(' ').append(matrix[2][0]).append('\n');
+		sb.append(matrix[0][1]).append(' ').append(matrix[1][1]).append(' ').append(matrix[2][1]).append('\n');
+		sb.append(matrix[0][2]).append(' ').append(matrix[1][2]).append(' ').append(matrix[2][2]);
 		sb.append("]");
 		return sb.toString();
 	}
@@ -356,7 +321,7 @@ public class Matrix3f extends Matrix3 {
 		float m01 = matrix[0][1];
 		float m02 = matrix[0][2];
 		float m12 = matrix[1][2];
-		
+
 		matrix[0][1] = matrix[1][0];
 		matrix[0][2] = matrix[2][0];
 		matrix[1][2] = matrix[2][1];

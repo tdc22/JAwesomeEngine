@@ -1,27 +1,20 @@
 package objects;
 
-import static org.lwjgl.opengl.GL11.glMultMatrixf;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import shader.Shader;
+public abstract class RenderedObject extends DataGameObject implements Renderable {
+	// protected Shader shader;
+	// protected boolean shadered = false;
+	// protected boolean shaderactive = true;
 
-public abstract class RenderedObject extends DataGameObject implements
-		Renderable {
-//	protected Shader shader;
-//	protected boolean shadered = false;
-//	protected boolean shaderactive = true;
-
-//	public Shader getShader() {
-//		return shader;
-//	}
-//
-//	public void setShader(Shader shader) {
-//		this.shader = shader;
-//		shadered = true;
-//	}
-//
-//	public void setShaderActive(boolean active) {
-//		shaderactive = active;
-//	}
+	// public Shader getShader() {
+	// return shader;
+	// }
+	//
+	// public void setShader(Shader shader) {
+	// this.shader = shader;
+	// shadered = true;
+	// }
+	//
+	// public void setShaderActive(boolean active) {
+	// shaderactive = active;
+	// }
 }

@@ -20,9 +20,8 @@ public abstract class Vector3 extends Vector {
 		if (other == null)
 			return false;
 		if (other instanceof Vector3) {
-			return (getX() == ((Vector3) other).getX()
-					&& getY() == ((Vector3) other).getY() && getZ() == ((Vector3) other)
-						.getZ());
+			return (getX() == ((Vector3) other).getX() && getY() == ((Vector3) other).getY()
+					&& getZ() == ((Vector3) other).getZ());
 		}
 		return false;
 	}

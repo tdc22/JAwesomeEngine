@@ -1,55 +1,68 @@
 package game;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_LEQUAL;
+import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH_HINT;
+import static org.lwjgl.opengl.GL11.GL_NICEST;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
+import static org.lwjgl.opengl.GL11.GL_POINT_SMOOTH_HINT;
+import static org.lwjgl.opengl.GL11.GL_POLYGON_SMOOTH_HINT;
+import static org.lwjgl.opengl.GL11.GL_SMOOTH;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glClearDepth;
+import static org.lwjgl.opengl.GL11.glClearStencil;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glHint;
+import static org.lwjgl.opengl.GL11.glShadeModel;
 
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.BufferUtils;
+
+import display.Display;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import input.GLFWInputReader;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
 import loader.ShaderLoader;
-
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.List;
-
 import math.VecMath;
-import matrix.Matrix2f;
 import matrix.Matrix4f;
 import objects.GameCamera;
-import objects.Renderable;
-import objects.RenderedObject;
 import objects.Updateable;
 import objects.ViewProjection;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-
 import shader.Shader;
 import shape2d.Quad;
 import texture.FramebufferObject;
 import texture.Texture;
-import utils.Debugger;
 import utils.DefaultShader;
 import utils.GameProfiler;
 import utils.NullGameProfiler;
 import utils.ProjectionHelper;
 import utils.ViewFrustum;
-import display.Display;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
-public abstract class StandardGame extends AbstractGame implements ViewProjection,
-		Updateable {
+public abstract class StandardGame extends AbstractGame implements ViewProjection, Updateable {
 	protected List<Shader> shader;
 	protected List<Shader> shader2d;
 	public VideoSettings settings;
-	protected FramebufferObject framebufferMultisample, framebuffer,
-			framebufferPostProcessing;
-	protected FramebufferObject framebuffer2Multisample, framebuffer2,
-			framebuffer2PostProcessing;
+	protected FramebufferObject framebufferMultisample, framebuffer, framebufferPostProcessing;
+	protected FramebufferObject framebuffer2Multisample, framebuffer2, framebuffer2PostProcessing;
 	protected Quad screen;
 	private Shader screenShader;
 	public Display display;
@@ -66,14 +79,14 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 	protected boolean useFBO = true;
 	protected List<Shader> postProcessing, postProcessing2;
 	protected int postProcessingIterations = 20; // TODO: Rethink that
-	
+
 	public void add2dShader(Shader s) {
 		s.addArgument("projection", projectionMatrix2);
 		s.addArgument("view", new Matrix4f());
 		s.addArgument("projectionView", new Matrix4f());
 		shader2d.add(s);
 	}
-	
+
 	public void addShader(Shader s) {
 		s.addArgument("projection", projectionMatrix);
 		s.addArgument("view", new Matrix4f());
@@ -103,8 +116,7 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		postProcessingIterations = ppIterations;
 	}
 
-	private void applyPostProcessing(List<Shader> ppshaders,
-			FramebufferObject fbo1, FramebufferObject fbo2) {
+	private void applyPostProcessing(List<Shader> ppshaders, FramebufferObject fbo1, FramebufferObject fbo2) {
 		boolean p = true;
 		int tex0 = fbo1.getColorTextureID();
 		int tex1 = fbo2.getColorTextureID();
@@ -117,13 +129,11 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 				FramebufferObject current = p ? fbo2 : fbo1;
 				current.bind();
 				current.clear();
-				((Texture) s.getArgument("u_texture")).setTextureID(p ? tex0
-						: tex1);
-				((Texture) s.getArgument("u_depthTexture"))
-						.setTextureID(p ? tex0depth : tex1depth);
-//				s.bind();
-//				screen.render();
-//				s.unbind();
+				((Texture) s.getArgument("u_texture")).setTextureID(p ? tex0 : tex1);
+				((Texture) s.getArgument("u_depthTexture")).setTextureID(p ? tex0depth : tex1depth);
+				// s.bind();
+				// screen.render();
+				// s.unbind();
 				s.render();
 				current.unbind();
 				p = !p;
@@ -131,15 +141,15 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		}
 		glBindTexture(GL_TEXTURE_2D, p ? tex0 : tex1);
 		screenShader.render();
-//		screen.render();
+		// screen.render();
 	}
 
 	@Override
 	protected void deleteAllObjects() {
-		for(Shader s : shader) {
+		for (Shader s : shader) {
 			s.delete();
 		}
-		for(Shader s : shader2d) {
+		for (Shader s : shader2d) {
 			s.delete();
 		}
 		if (screen != null)
@@ -176,11 +186,9 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 
 	protected void endRender() {
 		if (useFBO) {
-			applyPostProcessing(postProcessing, framebuffer,
-					framebufferPostProcessing);
+			applyPostProcessing(postProcessing, framebuffer, framebufferPostProcessing);
 			if (render2d) {
-				applyPostProcessing(postProcessing2, framebuffer2,
-						framebuffer2PostProcessing);
+				applyPostProcessing(postProcessing2, framebuffer2, framebuffer2PostProcessing);
 			}
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
@@ -199,50 +207,58 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		return settings;
 	}
 
-	public void initDisplay(Display display, DisplayMode displaymode,
-			PixelFormat pixelformat, VideoSettings videosettings) {
+	public void initDisplay(Display display, DisplayMode displaymode, PixelFormat pixelformat,
+			VideoSettings videosettings) {
 		this.display = display;
 		display.open(displaymode, pixelformat);
 		this.settings = videosettings;
 
 		// GLFW input fix
 		if (inputs.getInputReader() instanceof GLFWInputReader)
-			((GLFWInputReader) inputs.getInputReader())
-					.addWindowID(((GLDisplay) display).getWindowID());
+			((GLFWInputReader) inputs.getInputReader()).addWindowID(((GLDisplay) display).getWindowID());
 
 		if (useFBO) {
-			framebufferMultisample = new FramebufferObject(this,
-					settings.getResolutionX(),
-					settings.getResolutionY(), pixelformat.getSamples());
-			framebuffer = new FramebufferObject(this,
-					settings.getResolutionX(),
+			framebufferMultisample = new FramebufferObject(this, settings.getResolutionX(), settings.getResolutionY(),
+					pixelformat.getSamples());
+			framebuffer = new FramebufferObject(this, settings.getResolutionX(), settings.getResolutionY(), 0);
+			framebufferPostProcessing = new FramebufferObject(this, settings.getResolutionX(),
 					settings.getResolutionY(), 0);
-			framebufferPostProcessing = new FramebufferObject(this,
-					settings.getResolutionX(),
+			framebuffer2Multisample = new FramebufferObject(this, settings.getResolutionX(), settings.getResolutionY(),
+					pixelformat.getSamples());
+			framebuffer2 = new FramebufferObject(this, settings.getResolutionX(), settings.getResolutionY(), 0);
+			framebuffer2PostProcessing = new FramebufferObject(this, settings.getResolutionX(),
 					settings.getResolutionY(), 0);
-			framebuffer2Multisample = new FramebufferObject(this,
-					settings.getResolutionX(),
-					settings.getResolutionY(), pixelformat.getSamples());
-			framebuffer2 = new FramebufferObject(this,
-					settings.getResolutionX(),
-					settings.getResolutionY(), 0);
-			framebuffer2PostProcessing = new FramebufferObject(this,
-					settings.getResolutionX(),
-					settings.getResolutionY(), 0);
-			
+
 			screen = new Quad(0, 0, 1, -1);
 			screen.setRenderHints(false, true, false);
-			
-			screenShader = new Shader(ShaderLoader.loadShader(DefaultShader.SCREEN_SHADER_VERTEX, DefaultShader.SCREEN_SHADER_FRAGMENT));
+
+			screenShader = new Shader(
+					ShaderLoader.loadShader(DefaultShader.SCREEN_SHADER_VERTEX, DefaultShader.SCREEN_SHADER_FRAGMENT));
 			screenShader.addObject(screen);
 		}
-		
-		frustum = new ViewFrustum(settings.getResolutionX(),
-				settings.getResolutionY(), settings.getZNear(),
+
+		frustum = new ViewFrustum(settings.getResolutionX(), settings.getResolutionY(), settings.getZNear(),
 				settings.getZFar(), settings.getFOVy());
 		projectionMatrix = storeMatrix(frustum.getMatrix());
-		
-		projectionMatrix2 = storeMatrix(ProjectionHelper.ortho(0, settings.getResolutionX(), settings.getResolutionY(), 0, -1, 1));//new Matrix4f(a2, 0, 0, 0, 0, b2, 0, 0, 0, 0, c2, 0, d2, e2, 0, 1);
+
+		projectionMatrix2 = storeMatrix(
+				ProjectionHelper.ortho(0, settings.getResolutionX(), settings.getResolutionY(), 0, -1, 1));// new
+																											// Matrix4f(a2,
+																											// 0,
+																											// 0,
+																											// 0,
+																											// 0,
+																											// b2,
+																											// 0,
+																											// 0,
+																											// 0,
+																											// 0,
+																											// c2,
+																											// 0,
+																											// d2,
+																											// e2,
+																											// 0,
+																											// 1);
 	}
 
 	@Override
@@ -258,8 +274,7 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		inputs = new InputManager(new GLFWInputReader());
 		System.out.println("Using GLFW input.");
 		// }
-		closeEvent = new InputEvent("game_close", new Input(
-				Input.KEYBOARD_EVENT, "Escape", KeyInput.KEY_DOWN));
+		closeEvent = new InputEvent("game_close", new Input(Input.KEYBOARD_EVENT, "Escape", KeyInput.KEY_DOWN));
 		inputs.addEvent(closeEvent);
 
 		cam = new GameCamera(inputs);
@@ -314,13 +329,13 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 	public abstract void render2d();
 
 	public void render2dScene() {
-		for(Shader s : shader2d) {
+		for (Shader s : shader2d) {
 			s.render();
 		}
 	}
 
 	public void renderScene() {
-		for(Shader s : shader) {
+		for (Shader s : shader) {
 			s.render();
 		}
 	}
@@ -351,7 +366,7 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		init();
 		initOpenGL();
 		getDelta();
-		
+
 		while (isRunning()) {
 			profiler.frameStart();
 			int delta = getDelta();
@@ -386,12 +401,12 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 			framebuffer2Multisample.begin();
 		}
 	}
-	
+
 	protected void updateShaderMatrices() {
-		for(Shader s : shader) {
+		for (Shader s : shader) {
 			s.setArgumentDirect("view", cam.getMatrixBuffer());
 		}
-		for(Shader s : shader2d) {
+		for (Shader s : shader2d) {
 			// TODO: 2d camera
 		}
 	}
@@ -404,24 +419,24 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		if (closeEvent.isActive())
 			running = false;
 	}
-	
+
 	@Override
 	public void setViewMatrix(FloatBuffer buffer) {
-		for(Shader s : shader) {
+		for (Shader s : shader) {
 			s.setArgumentDirect("view", buffer);
 		}
 	}
 
 	@Override
 	public void setProjectionMatrix(FloatBuffer buffer) {
-		for(Shader s : shader) {
+		for (Shader s : shader) {
 			s.setArgumentDirect("projection", buffer);
 		}
 	}
 
 	@Override
 	public void setViewProjectionMatrix(FloatBuffer viewBuffer, FloatBuffer projectionBuffer) {
-		for(Shader s : shader) {
+		for (Shader s : shader) {
 			s.setArgumentDirect("view", viewBuffer);
 			s.setArgumentDirect("projection", projectionBuffer);
 		}
@@ -430,7 +445,7 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 	@Override
 	public void setViewMatrix(Matrix4f matrix) {
 		FloatBuffer buf = storeMatrix(matrix);
-		for(Shader s : shader) {
+		for (Shader s : shader) {
 			s.setArgumentDirect("view", buf);
 		}
 	}
@@ -438,16 +453,16 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 	@Override
 	public void setProjectionMatrix(Matrix4f matrix) {
 		FloatBuffer buf = storeMatrix(matrix);
-		for(Shader s : shader) {
+		for (Shader s : shader) {
 			s.setArgumentDirect("projection", buf);
 		}
 	}
-	
+
 	@Override
 	public void setViewProjectionMatrix(Matrix4f viewMatrix, Matrix4f projectionMatrix) {
 		FloatBuffer viewBuf = storeMatrix(viewMatrix);
 		FloatBuffer projBuf = storeMatrix(projectionMatrix);
-		for(Shader s : shader) {
+		for (Shader s : shader) {
 			s.setArgumentDirect("view", viewBuf);
 			s.setArgumentDirect("projection", projBuf);
 		}
@@ -462,7 +477,7 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 	public FloatBuffer getProjectionMatrixBuffer() {
 		return projectionMatrix;
 	}
-	
+
 	private FloatBuffer storeMatrix(Matrix4f mat) {
 		FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 2);
 		mat.store(buf);

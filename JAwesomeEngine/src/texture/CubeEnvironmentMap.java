@@ -22,36 +22,36 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-import game.StandardGame;
+
+import java.nio.FloatBuffer;
+
 import objects.Camera;
+import objects.ViewProjection;
 import utils.DefaultValues;
 import utils.ViewFrustum;
 import vector.Vector3f;
 
 public class CubeEnvironmentMap {
+	ViewProjection render;
 	Vector3f pos;
 	FramebufferObject top, bottom, front, back, right, left;
 	Texture cubemap;
 	int width, height;
 	ViewFrustum frustum;
 
-	public CubeEnvironmentMap(StandardGame game, Vector3f pos) {
-		init(game, pos, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_X,
-				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_Y,
-				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
+	public CubeEnvironmentMap(ViewProjection render, Vector3f pos) {
+		init(render, pos, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_X,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_Y, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
 				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR);
 	}
 
-	public CubeEnvironmentMap(StandardGame game, Vector3f pos, int resX,
-			int resY) {
-		init(game, pos, resX, resY,
-				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
+	public CubeEnvironmentMap(ViewProjection render, Vector3f pos, int resX, int resY) {
+		init(render, pos, resX, resY, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
 				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR);
 	}
 
-	public CubeEnvironmentMap(StandardGame game, Vector3f pos, int resX,
-			int resY, float zNear, float zFar) {
-		init(game, pos, resX, resY, zNear, zFar);
+	public CubeEnvironmentMap(ViewProjection render, Vector3f pos, int resX, int resY, float zNear, float zFar) {
+		init(render, pos, resX, resY, zNear, zFar);
 	}
 
 	public void delete() {
@@ -100,8 +100,8 @@ public class CubeEnvironmentMap {
 		return width;
 	}
 
-	private void init(StandardGame game, Vector3f pos, int resX, int resY,
-			float zNear, float zFar) {
+	private void init(ViewProjection render, Vector3f pos, int resX, int resY, float zNear, float zFar) {
+		this.render = render;
 		this.width = resX;
 		this.height = resY;
 		frustum = new ViewFrustum(resX, resY, zNear, zFar, 90);
@@ -109,55 +109,47 @@ public class CubeEnvironmentMap {
 		cubemap = new CubeMap();
 		cubemap.bind();
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
-				GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
-				GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
-				GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, width, height,
-				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, width, height,
-				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, width, height,
-				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, width, height,
-				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, width, height,
-				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, width, height,
-				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+				(java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+				(java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+				(java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+				(java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+				(java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+				(java.nio.ByteBuffer) null);
 
-		top = new FramebufferObject(game, resX, resY, 0,
-				new Camera(pos, 0, 90), new Texture(cubemap.getTextureID(),
-						GL_TEXTURE_CUBE_MAP_POSITIVE_Y));
-		bottom = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 0,
-				-90), new Texture(cubemap.getTextureID(),
-				GL_TEXTURE_CUBE_MAP_NEGATIVE_Y));
-		left = new FramebufferObject(game, resX, resY, 0, new Camera(pos, -90,
-				180), new Texture(cubemap.getTextureID(),
-				GL_TEXTURE_CUBE_MAP_NEGATIVE_X));
-		right = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 90,
-				180), new Texture(cubemap.getTextureID(),
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X));
-		front = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 180,
-				180), new Texture(cubemap.getTextureID(),
-				GL_TEXTURE_CUBE_MAP_NEGATIVE_Z));
-		back = new FramebufferObject(game, resX, resY, 0, new Camera(pos, 0,
-				180), new Texture(cubemap.getTextureID(),
-				GL_TEXTURE_CUBE_MAP_POSITIVE_Z));
+		top = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 0, 90),
+				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_POSITIVE_Y));
+		bottom = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 0, -90),
+				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_NEGATIVE_Y));
+		left = new FramebufferObject(render, resX, resY, 0, new Camera(pos, -90, 180),
+				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_NEGATIVE_X));
+		right = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 90, 180),
+				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X));
+		front = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 180, 180),
+				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_NEGATIVE_Z));
+		back = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 0, 180),
+				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_POSITIVE_Z));
 
 		cubemap.unbind();
 	}
 
 	public void updateTexture() {
-		frustum.begin();
+		FloatBuffer projectionTemp = render.getProjectionMatrixBuffer();
+		render.setProjectionMatrix(frustum.getMatrixBuffer());
 
 		top.updateTexture();
 		bottom.updateTexture();
@@ -166,7 +158,6 @@ public class CubeEnvironmentMap {
 		left.updateTexture();
 		right.updateTexture();
 
-		frustum.end();
+		render.setProjectionMatrix(projectionTemp);
 	}
-
 }

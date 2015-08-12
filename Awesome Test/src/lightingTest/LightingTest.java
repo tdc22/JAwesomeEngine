@@ -15,7 +15,6 @@ import objects.ShapedObject;
 import shader.Shader;
 import utils.Debugger;
 import vector.Vector3f;
-import vector.Vector4f;
 
 public class LightingTest extends StandardGame {
 	Debugger debugger;
@@ -28,18 +27,19 @@ public class LightingTest extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
 		cam.rotateTo(0, 0);
-		
+
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
-		
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
-		Shader shader = new Shader(ShaderLoader.loadShaderFromFile("res/shaders/phongshader.vert",
-				"res/shaders/phongshader.frag"));
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
+
+		Shader shader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/phongshader.vert", "res/shaders/phongshader.frag"));
 		shader.addArgumentName("u_lightpos");
 		shader.addArgument(new Vector3f(0, 0, 10));
 		shader.addArgumentName("u_ambient");

@@ -16,13 +16,11 @@ import vector.Vector2f;
 
 public class ComplexMath {
 	public static Complexd addition(Complex c1, Complex c2) {
-		return new Complexd(c1.getReal() + c2.getReal(), c1.getImaginary()
-				+ c2.getImaginary());
+		return new Complexd(c1.getReal() + c2.getReal(), c1.getImaginary() + c2.getImaginary());
 	}
 
 	public static Complexf addition(Complexf c1, Complexf c2) {
-		return new Complexf(c1.getRealf() + c2.getRealf(), c1.getImaginaryf()
-				+ c2.getImaginaryf());
+		return new Complexf(c1.getRealf() + c2.getRealf(), c1.getImaginaryf() + c2.getImaginaryf());
 	}
 
 	public static Complexd conjugate(Complex c) {
@@ -50,15 +48,13 @@ public class ComplexMath {
 	}
 
 	public static Complexd multiplication(Complex c1, Complex c2) {
-		return new Complexd(c1.getReal() * c2.getReal() - c1.getImaginary()
-				* c2.getImaginary(), c1.getReal() * c2.getImaginary()
-				+ c1.getImaginary() * c2.getReal());
+		return new Complexd(c1.getReal() * c2.getReal() - c1.getImaginary() * c2.getImaginary(),
+				c1.getReal() * c2.getImaginary() + c1.getImaginary() * c2.getReal());
 	}
 
 	public static Complexf multiplication(Complexf c1, Complexf c2) {
-		return new Complexf(c1.getRealf() * c2.getRealf() - c1.getImaginaryf()
-				* c2.getImaginaryf(), c1.getRealf() * c2.getImaginaryf()
-				+ c1.getImaginaryf() * c2.getRealf());
+		return new Complexf(c1.getRealf() * c2.getRealf() - c1.getImaginaryf() * c2.getImaginaryf(),
+				c1.getRealf() * c2.getImaginaryf() + c1.getImaginaryf() * c2.getRealf());
 	}
 
 	public static Complexd normalize(Complex c) {
@@ -80,27 +76,26 @@ public class ComplexMath {
 	}
 
 	public static Complexd substraction(Complex c1, Complex c2) {
-		return new Complexd(c1.getReal() - c2.getReal(), c1.getImaginary()
-				- c2.getImaginary());
+		return new Complexd(c1.getReal() - c2.getReal(), c1.getImaginary() - c2.getImaginary());
 	}
 
 	public static Complexf substraction(Complexf c1, Complexf c2) {
-		return new Complexf(c1.getRealf() - c2.getRealf(), c1.getImaginaryf()
-				- c2.getImaginaryf());
+		return new Complexf(c1.getRealf() - c2.getRealf(), c1.getImaginaryf() - c2.getImaginaryf());
 	}
 
 	public static Vector2 transform(Complex c, Vector2 v) {
-		return new Vector2d((1 - 2 * c.getImaginary() * c.getImaginary())
-				* v.getX() + (-2 * c.getImaginary() * c.getReal()) * v.getY(),
+		return new Vector2d(
+				(1 - 2 * c.getImaginary() * c.getImaginary()) * v.getX()
+						+ (-2 * c.getImaginary() * c.getReal()) * v.getY(),
 				(2 * c.getImaginary() * c.getReal()) * v.getX()
-						+ (1 - 2 * c.getImaginary() * c.getImaginary())
-						* v.getY());
+						+ (1 - 2 * c.getImaginary() * c.getImaginary()) * v.getY());
 	}
 
 	public static Vector2f transform(Complexf c, Vector2f v) {
-		return new Vector2f((1 - 2 * c.getImaginaryf() * c.getImaginaryf())
-				* v.getXf() + (-2 * c.getImaginaryf() * c.getRealf())
-				* v.getYf(), (2 * c.getImaginaryf() * c.getRealf()) * v.getXf()
-				+ (1 - 2 * c.getImaginaryf() * c.getImaginaryf()) * v.getYf());
+		return new Vector2f(
+				(1 - 2 * c.getImaginaryf() * c.getImaginaryf()) * v.getXf()
+						+ (-2 * c.getImaginaryf() * c.getRealf()) * v.getYf(),
+				(2 * c.getImaginaryf() * c.getRealf()) * v.getXf()
+						+ (1 - 2 * c.getImaginaryf() * c.getImaginaryf()) * v.getYf());
 	}
 }

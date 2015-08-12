@@ -55,7 +55,7 @@ public class CollisionDetectionTest extends StandardGame {
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 		// mouse.setGrabbed(false);
-		
+
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
@@ -76,7 +76,7 @@ public class CollisionDetectionTest extends StandardGame {
 		s3.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s4.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s5.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
-		
+
 		addShader(s1);
 		addShader(s2);
 		addShader(s3);
@@ -115,7 +115,8 @@ public class CollisionDetectionTest extends StandardGame {
 		s5.addObject(c1);
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "R", KeyInput.KEY_PRESSED));
 		giveMeData = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "P", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);

@@ -288,11 +288,9 @@ public class Quaterniond extends Quaternion {
 	 */
 	@Override
 	public Matrix3d toMatrix() {
-		return new Matrix3d(1 - 2 * q2 * q2 - 2 * q3 * q3, 2 * q1 * q2 + 2 * q3
-				* q0, 2 * q1 * q3 - 2 * q2 * q0, 2 * q1 * q2 - 2 * q3 * q0, 1
-				- 2 * q1 * q1 - 2 * q3 * q3, 2 * q2 * q3 + 2 * q1 * q0, 2 * q1
-				* q3 + 2 * q2 * q0, 2 * q2 * q3 - 2 * q1 * q0, 1 - 2 * q1 * q1
-				- 2 * q2 * q2);
+		return new Matrix3d(1 - 2 * q2 * q2 - 2 * q3 * q3, 2 * q1 * q2 + 2 * q3 * q0, 2 * q1 * q3 - 2 * q2 * q0,
+				2 * q1 * q2 - 2 * q3 * q0, 1 - 2 * q1 * q1 - 2 * q3 * q3, 2 * q2 * q3 + 2 * q1 * q0,
+				2 * q1 * q3 + 2 * q2 * q0, 2 * q2 * q3 - 2 * q1 * q0, 1 - 2 * q1 * q1 - 2 * q2 * q2);
 	}
 
 	/**
@@ -300,12 +298,10 @@ public class Quaterniond extends Quaternion {
 	 */
 	@Override
 	public Matrix3f toMatrixf() {
-		return new Matrix3f((float) (1 - 2 * q2 * q2 - 2 * q3 * q3), (float) (2
-				* q1 * q2 + 2 * q3 * q0), (float) (2 * q1 * q3 - 2 * q2 * q0),
-				(float) (2 * q1 * q2 - 2 * q3 * q0),
-				(float) (1 - 2 * q1 * q1 - 2 * q3 * q3),
-				(float) (2 * q2 * q3 + 2 * q1 * q0), (float) (2 * q1 * q3 + 2
-						* q2 * q0), (float) (2 * q2 * q3 - 2 * q1 * q0),
+		return new Matrix3f((float) (1 - 2 * q2 * q2 - 2 * q3 * q3), (float) (2 * q1 * q2 + 2 * q3 * q0),
+				(float) (2 * q1 * q3 - 2 * q2 * q0), (float) (2 * q1 * q2 - 2 * q3 * q0),
+				(float) (1 - 2 * q1 * q1 - 2 * q3 * q3), (float) (2 * q2 * q3 + 2 * q1 * q0),
+				(float) (2 * q1 * q3 + 2 * q2 * q0), (float) (2 * q2 * q3 - 2 * q1 * q0),
 				(float) (1 - 2 * q1 * q1 - 2 * q2 * q2));
 	}
 

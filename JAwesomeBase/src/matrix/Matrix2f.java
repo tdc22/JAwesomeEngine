@@ -316,7 +316,7 @@ public class Matrix2f extends Matrix2 {
 	@Override
 	public void transpose() {
 		float m01 = matrix[0][1];
-		
+
 		matrix[0][1] = matrix[1][0];
 		matrix[1][0] = m01;
 	}

@@ -15,7 +15,7 @@ public class LoaderTest extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
-		//display.bindMouse();
+		// display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0.5f, 5);
 		cam.rotateTo(0, 0);
@@ -23,7 +23,7 @@ public class LoaderTest extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		
+
 		ShapedObject obj = ModelLoader.load("res/models/bunny.obj");
 		defaultshader.addObject(obj);
 		System.out.println("Finished loading!");

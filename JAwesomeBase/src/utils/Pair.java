@@ -42,10 +42,9 @@ public class Pair<A, B> {
 		if (other == null)
 			return false;
 		if (other instanceof Pair) {
-			return ((first.equals(((Pair<?, ?>) other).getFirst()) && second
-					.equals(((Pair<?, ?>) other).getSecond())) || (first
-					.equals(((Pair<?, ?>) other).getSecond()) && second
-					.equals(((Pair<?, ?>) other).getFirst())));
+			return ((first.equals(((Pair<?, ?>) other).getFirst()) && second.equals(((Pair<?, ?>) other).getSecond()))
+					|| (first.equals(((Pair<?, ?>) other).getSecond())
+							&& second.equals(((Pair<?, ?>) other).getFirst())));
 		}
 		return false;
 	}

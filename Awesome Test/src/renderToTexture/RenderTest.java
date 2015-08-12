@@ -39,6 +39,7 @@ public class RenderTest extends StandardGame {
 				cam);
 
 		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
+		defaultshader.addObject(new Box(0, 0, -20, 100, 100, 1));
 
 		rtt = new FramebufferObject(this, 1024, 1024, 0, new Camera(new Vector3f(0, 0, 12), 0, 0));
 		rtt.updateTexture();
@@ -50,7 +51,7 @@ public class RenderTest extends StandardGame {
 																		// framebuffer.getTextureID()
 		addShader(screenshader);
 
-		Box screen = new Box(2, 3, 12, 2, 1, 0.1f);
+		Box screen = new Box(2, 3, 12, 2, 2, 0.1f);
 		screen.setRenderHints(false, true, false);
 		screenshader.addObject(screen);
 	}

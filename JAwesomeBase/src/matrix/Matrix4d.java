@@ -30,10 +30,8 @@ public class Matrix4d extends Matrix4 {
 		setAll(setAll);
 	}
 
-	public Matrix4d(double m00, double m01, double m02, double m03, double m10,
-			double m11, double m12, double m13, double m20, double m21,
-			double m22, double m23, double m30, double m31, double m32,
-			double m33) {
+	public Matrix4d(double m00, double m01, double m02, double m03, double m10, double m11, double m12, double m13,
+			double m20, double m21, double m22, double m23, double m30, double m31, double m32, double m33) {
 		matrix = new double[4][4];
 		matrix[0][0] = m00;
 		matrix[0][1] = m01;
@@ -73,41 +71,18 @@ public class Matrix4d extends Matrix4 {
 	@Override
 	public double determinant() {
 		return matrix[0][0]
-				* (matrix[1][1]
-						* (matrix[2][2] * matrix[3][3] - matrix[2][3]
-								* matrix[3][2])
-						+ matrix[1][2]
-						* (matrix[2][3] * matrix[3][1] - matrix[2][1]
-								* matrix[3][3]) + matrix[1][3]
-						* (matrix[2][1] * matrix[3][2] - matrix[2][2]
-								* matrix[3][1]))
-				- matrix[0][1]
-				* (matrix[1][0]
-						* (matrix[2][2] * matrix[3][3] - matrix[2][3]
-								* matrix[3][2])
-						+ matrix[1][2]
-						* (matrix[2][3] * matrix[3][0] - matrix[2][0]
-								* matrix[3][3]) + matrix[1][3]
-						* (matrix[2][0] * matrix[3][2] - matrix[2][2]
-								* matrix[3][0]))
-				+ matrix[0][2]
-				* (matrix[1][0]
-						* (matrix[2][1] * matrix[3][3] - matrix[2][3]
-								* matrix[3][1])
-						+ matrix[1][1]
-						* (matrix[2][3] * matrix[3][0] - matrix[2][0]
-								* matrix[3][3]) + matrix[1][3]
-						* (matrix[2][0] * matrix[3][1] - matrix[2][1]
-								* matrix[3][0]))
-				- matrix[0][3]
-				* (matrix[1][0]
-						* (matrix[2][1] * matrix[3][2] - matrix[2][2]
-								* matrix[3][2])
-						+ matrix[1][1]
-						* (matrix[2][2] * matrix[3][0] - matrix[2][0]
-								* matrix[3][2]) + matrix[1][2]
-						* (matrix[2][0] * matrix[3][1] - matrix[2][1]
-								* matrix[3][0]));
+				* (matrix[1][1] * (matrix[2][2] * matrix[3][3] - matrix[2][3] * matrix[3][2])
+						+ matrix[1][2] * (matrix[2][3] * matrix[3][1] - matrix[2][1] * matrix[3][3])
+						+ matrix[1][3] * (matrix[2][1] * matrix[3][2] - matrix[2][2] * matrix[3][1]))
+				- matrix[0][1] * (matrix[1][0] * (matrix[2][2] * matrix[3][3] - matrix[2][3] * matrix[3][2])
+						+ matrix[1][2] * (matrix[2][3] * matrix[3][0] - matrix[2][0] * matrix[3][3])
+						+ matrix[1][3] * (matrix[2][0] * matrix[3][2] - matrix[2][2] * matrix[3][0]))
+				+ matrix[0][2] * (matrix[1][0] * (matrix[2][1] * matrix[3][3] - matrix[2][3] * matrix[3][1])
+						+ matrix[1][1] * (matrix[2][3] * matrix[3][0] - matrix[2][0] * matrix[3][3])
+						+ matrix[1][3] * (matrix[2][0] * matrix[3][1] - matrix[2][1] * matrix[3][0]))
+				- matrix[0][3] * (matrix[1][0] * (matrix[2][1] * matrix[3][2] - matrix[2][2] * matrix[3][2])
+						+ matrix[1][1] * (matrix[2][2] * matrix[3][0] - matrix[2][0] * matrix[3][2])
+						+ matrix[1][2] * (matrix[2][0] * matrix[3][1] - matrix[2][1] * matrix[3][0]));
 	}
 
 	/**
@@ -115,12 +90,9 @@ public class Matrix4d extends Matrix4 {
 	 */
 	@Override
 	public double determinant3() {
-		return matrix[0][0]
-				* (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1])
-				+ matrix[0][1]
-				* (matrix[1][2] * matrix[2][0] - matrix[1][0] * matrix[2][2])
-				+ matrix[0][2]
-				* (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
+		return matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1])
+				+ matrix[0][1] * (matrix[1][2] * matrix[2][0] - matrix[1][0] * matrix[2][2])
+				+ matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
 	}
 
 	/**
@@ -134,11 +106,9 @@ public class Matrix4d extends Matrix4 {
 	/**
 	 * {@inheritDoc}
 	 */
-	private double determinant3x3(double t00, double t01, double t02,
-			double t10, double t11, double t12, double t20, double t21,
-			double t22) {
-		return t00 * (t11 * t22 - t12 * t21) + t01 * (t12 * t20 - t10 * t22)
-				+ t02 * (t10 * t21 - t11 * t20);
+	private double determinant3x3(double t00, double t01, double t02, double t10, double t11, double t12, double t20,
+			double t21, double t22) {
+		return t00 * (t11 * t22 - t12 * t21) + t01 * (t12 * t20 - t10 * t22) + t02 * (t10 * t21 - t11 * t20);
 	}
 
 	/**
@@ -195,8 +165,7 @@ public class Matrix4d extends Matrix4 {
 	 */
 	@Override
 	public Vector4 getColumn(int column) {
-		return new Vector4d(matrix[column][0], matrix[column][1],
-				matrix[column][2], matrix[column][3]);
+		return new Vector4d(matrix[column][0], matrix[column][1], matrix[column][2], matrix[column][3]);
 	}
 
 	/**
@@ -212,8 +181,7 @@ public class Matrix4d extends Matrix4 {
 	 */
 	@Override
 	public Vector4 getRow(int row) {
-		return new Vector4d(matrix[0][row], matrix[1][row], matrix[2][row],
-				matrix[3][row]);
+		return new Vector4d(matrix[0][row], matrix[1][row], matrix[2][row], matrix[3][row]);
 	}
 
 	/**
@@ -221,9 +189,8 @@ public class Matrix4d extends Matrix4 {
 	 */
 	@Override
 	public Matrix3 getSubMatrix() {
-		return new Matrix3d(matrix[0][0], matrix[0][1], matrix[0][2],
-				matrix[1][0], matrix[1][1], matrix[1][2], matrix[2][0],
-				matrix[2][1], matrix[2][2]);
+		return new Matrix3d(matrix[0][0], matrix[0][1], matrix[0][2], matrix[1][0], matrix[1][1], matrix[1][2],
+				matrix[2][0], matrix[2][1], matrix[2][2]);
 	}
 
 	/**
@@ -231,8 +198,7 @@ public class Matrix4d extends Matrix4 {
 	 */
 	@Override
 	public Matrix2 getSubMatrix2() {
-		return new Matrix2d(matrix[0][0], matrix[0][1], matrix[1][0],
-				matrix[1][1]);
+		return new Matrix2d(matrix[0][0], matrix[0][1], matrix[1][0], matrix[1][1]);
 	}
 
 	/**
@@ -260,73 +226,41 @@ public class Matrix4d extends Matrix4 {
 		if (determinant != 0) {
 			double determinant_inv = 1 / determinant;
 
-			double t00 = determinant3x3(matrix[1][1], matrix[1][2],
-					matrix[1][3], matrix[2][1], matrix[2][2], matrix[2][3],
-					matrix[3][1], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			double t10 = -determinant3x3(matrix[1][0], matrix[1][2],
-					matrix[1][3], matrix[2][0], matrix[2][2], matrix[2][3],
-					matrix[3][0], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			double t20 = determinant3x3(matrix[1][0], matrix[1][1],
-					matrix[1][3], matrix[2][0], matrix[2][1], matrix[2][3],
-					matrix[3][0], matrix[3][1], matrix[3][3])
-					* determinant_inv;
-			double t30 = -determinant3x3(matrix[1][0], matrix[1][1],
-					matrix[1][2], matrix[2][0], matrix[2][1], matrix[2][2],
-					matrix[3][0], matrix[3][1], matrix[3][2])
-					* determinant_inv;
+			double t00 = determinant3x3(matrix[1][1], matrix[1][2], matrix[1][3], matrix[2][1], matrix[2][2],
+					matrix[2][3], matrix[3][1], matrix[3][2], matrix[3][3]) * determinant_inv;
+			double t10 = -determinant3x3(matrix[1][0], matrix[1][2], matrix[1][3], matrix[2][0], matrix[2][2],
+					matrix[2][3], matrix[3][0], matrix[3][2], matrix[3][3]) * determinant_inv;
+			double t20 = determinant3x3(matrix[1][0], matrix[1][1], matrix[1][3], matrix[2][0], matrix[2][1],
+					matrix[2][3], matrix[3][0], matrix[3][1], matrix[3][3]) * determinant_inv;
+			double t30 = -determinant3x3(matrix[1][0], matrix[1][1], matrix[1][2], matrix[2][0], matrix[2][1],
+					matrix[2][2], matrix[3][0], matrix[3][1], matrix[3][2]) * determinant_inv;
 
-			double t01 = -determinant3x3(matrix[0][1], matrix[0][2],
-					matrix[0][3], matrix[2][1], matrix[2][2], matrix[2][3],
-					matrix[3][1], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			double t11 = determinant3x3(matrix[0][0], matrix[0][2],
-					matrix[0][3], matrix[2][0], matrix[2][2], matrix[2][3],
-					matrix[3][0], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			double t21 = -determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][3], matrix[2][0], matrix[2][1], matrix[2][3],
-					matrix[3][0], matrix[3][1], matrix[3][3])
-					* determinant_inv;
-			double t31 = determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][2], matrix[2][0], matrix[2][1], matrix[2][2],
-					matrix[3][0], matrix[3][1], matrix[3][2])
-					* determinant_inv;
+			double t01 = -determinant3x3(matrix[0][1], matrix[0][2], matrix[0][3], matrix[2][1], matrix[2][2],
+					matrix[2][3], matrix[3][1], matrix[3][2], matrix[3][3]) * determinant_inv;
+			double t11 = determinant3x3(matrix[0][0], matrix[0][2], matrix[0][3], matrix[2][0], matrix[2][2],
+					matrix[2][3], matrix[3][0], matrix[3][2], matrix[3][3]) * determinant_inv;
+			double t21 = -determinant3x3(matrix[0][0], matrix[0][1], matrix[0][3], matrix[2][0], matrix[2][1],
+					matrix[2][3], matrix[3][0], matrix[3][1], matrix[3][3]) * determinant_inv;
+			double t31 = determinant3x3(matrix[0][0], matrix[0][1], matrix[0][2], matrix[2][0], matrix[2][1],
+					matrix[2][2], matrix[3][0], matrix[3][1], matrix[3][2]) * determinant_inv;
 
-			double t02 = determinant3x3(matrix[0][1], matrix[0][2],
-					matrix[0][3], matrix[1][1], matrix[1][2], matrix[1][3],
-					matrix[3][1], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			double t12 = -determinant3x3(matrix[0][0], matrix[0][2],
-					matrix[0][3], matrix[1][0], matrix[1][2], matrix[1][3],
-					matrix[3][0], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			double t22 = determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][3], matrix[1][0], matrix[1][1], matrix[1][3],
-					matrix[3][0], matrix[3][1], matrix[3][3])
-					* determinant_inv;
-			double t32 = -determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][2], matrix[1][0], matrix[1][1], matrix[1][2],
-					matrix[3][0], matrix[3][1], matrix[3][2])
-					* determinant_inv;
+			double t02 = determinant3x3(matrix[0][1], matrix[0][2], matrix[0][3], matrix[1][1], matrix[1][2],
+					matrix[1][3], matrix[3][1], matrix[3][2], matrix[3][3]) * determinant_inv;
+			double t12 = -determinant3x3(matrix[0][0], matrix[0][2], matrix[0][3], matrix[1][0], matrix[1][2],
+					matrix[1][3], matrix[3][0], matrix[3][2], matrix[3][3]) * determinant_inv;
+			double t22 = determinant3x3(matrix[0][0], matrix[0][1], matrix[0][3], matrix[1][0], matrix[1][1],
+					matrix[1][3], matrix[3][0], matrix[3][1], matrix[3][3]) * determinant_inv;
+			double t32 = -determinant3x3(matrix[0][0], matrix[0][1], matrix[0][2], matrix[1][0], matrix[1][1],
+					matrix[1][2], matrix[3][0], matrix[3][1], matrix[3][2]) * determinant_inv;
 
-			double t03 = -determinant3x3(matrix[0][1], matrix[0][2],
-					matrix[0][3], matrix[1][1], matrix[1][2], matrix[1][3],
-					matrix[2][1], matrix[2][2], matrix[2][3])
-					* determinant_inv;
-			double t13 = determinant3x3(matrix[0][0], matrix[0][2],
-					matrix[0][3], matrix[1][0], matrix[1][2], matrix[1][3],
-					matrix[2][0], matrix[2][2], matrix[2][3])
-					* determinant_inv;
-			double t23 = -determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][3], matrix[1][0], matrix[1][1], matrix[1][3],
-					matrix[2][0], matrix[2][1], matrix[2][3])
-					* determinant_inv;
-			double t33 = determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][2], matrix[1][0], matrix[1][1], matrix[1][2],
-					matrix[2][0], matrix[2][1], matrix[2][2])
-					* determinant_inv;
+			double t03 = -determinant3x3(matrix[0][1], matrix[0][2], matrix[0][3], matrix[1][1], matrix[1][2],
+					matrix[1][3], matrix[2][1], matrix[2][2], matrix[2][3]) * determinant_inv;
+			double t13 = determinant3x3(matrix[0][0], matrix[0][2], matrix[0][3], matrix[1][0], matrix[1][2],
+					matrix[1][3], matrix[2][0], matrix[2][2], matrix[2][3]) * determinant_inv;
+			double t23 = -determinant3x3(matrix[0][0], matrix[0][1], matrix[0][3], matrix[1][0], matrix[1][1],
+					matrix[1][3], matrix[2][0], matrix[2][1], matrix[2][3]) * determinant_inv;
+			double t33 = determinant3x3(matrix[0][0], matrix[0][1], matrix[0][2], matrix[1][0], matrix[1][1],
+					matrix[1][2], matrix[2][0], matrix[2][1], matrix[2][2]) * determinant_inv;
 
 			matrix[0][0] = t00;
 			matrix[1][0] = t10;
@@ -432,30 +366,18 @@ public class Matrix4d extends Matrix4 {
 		double f21 = yz * oneminusc - xs;
 		double f22 = axis.getZ() * axis.getZ() * oneminusc + c;
 
-		double t00 = matrix[0][0] * f00 + matrix[1][0] * f01 + matrix[2][0]
-				* f02;
-		double t01 = matrix[0][1] * f00 + matrix[1][1] * f01 + matrix[2][1]
-				* f02;
-		double t02 = matrix[0][2] * f00 + matrix[1][2] * f01 + matrix[2][2]
-				* f02;
-		double t03 = matrix[0][3] * f00 + matrix[1][3] * f01 + matrix[2][3]
-				* f02;
-		double t10 = matrix[0][0] * f10 + matrix[1][0] * f11 + matrix[2][0]
-				* f12;
-		double t11 = matrix[0][1] * f10 + matrix[1][1] * f11 + matrix[2][1]
-				* f12;
-		double t12 = matrix[0][2] * f10 + matrix[1][2] * f11 + matrix[2][2]
-				* f12;
-		double t13 = matrix[0][3] * f10 + matrix[1][3] * f11 + matrix[2][3]
-				* f12;
-		matrix[2][0] = matrix[0][0] * f20 + matrix[1][0] * f21 + matrix[2][0]
-				* f22;
-		matrix[2][1] = matrix[0][1] * f20 + matrix[1][1] * f21 + matrix[2][1]
-				* f22;
-		matrix[2][2] = matrix[0][2] * f20 + matrix[1][2] * f21 + matrix[2][2]
-				* f22;
-		matrix[2][3] = matrix[0][3] * f20 + matrix[1][3] * f21 + matrix[2][3]
-				* f22;
+		double t00 = matrix[0][0] * f00 + matrix[1][0] * f01 + matrix[2][0] * f02;
+		double t01 = matrix[0][1] * f00 + matrix[1][1] * f01 + matrix[2][1] * f02;
+		double t02 = matrix[0][2] * f00 + matrix[1][2] * f01 + matrix[2][2] * f02;
+		double t03 = matrix[0][3] * f00 + matrix[1][3] * f01 + matrix[2][3] * f02;
+		double t10 = matrix[0][0] * f10 + matrix[1][0] * f11 + matrix[2][0] * f12;
+		double t11 = matrix[0][1] * f10 + matrix[1][1] * f11 + matrix[2][1] * f12;
+		double t12 = matrix[0][2] * f10 + matrix[1][2] * f11 + matrix[2][2] * f12;
+		double t13 = matrix[0][3] * f10 + matrix[1][3] * f11 + matrix[2][3] * f12;
+		matrix[2][0] = matrix[0][0] * f20 + matrix[1][0] * f21 + matrix[2][0] * f22;
+		matrix[2][1] = matrix[0][1] * f20 + matrix[1][1] * f21 + matrix[2][1] * f22;
+		matrix[2][2] = matrix[0][2] * f20 + matrix[1][2] * f21 + matrix[2][2] * f22;
+		matrix[2][3] = matrix[0][3] * f20 + matrix[1][3] * f21 + matrix[2][3] * f22;
 		matrix[0][0] = t00;
 		matrix[0][1] = t01;
 		matrix[0][2] = t02;
@@ -494,24 +416,15 @@ public class Matrix4d extends Matrix4 {
 	@Override
 	public void rotate(Matrix3 mat) {
 		double[][] m1 = mat.getArray();
-		double t00 = matrix[0][0] * m1[0][0] + matrix[1][0] * m1[0][1]
-				+ matrix[2][0] * m1[0][2];
-		double t01 = matrix[0][0] * m1[1][0] + matrix[1][0] * m1[1][1]
-				+ matrix[2][0] * m1[1][2];
-		double t02 = matrix[0][0] * m1[2][0] + matrix[1][0] * m1[2][1]
-				+ matrix[2][0] * m1[2][2];
-		double t10 = matrix[0][1] * m1[0][0] + matrix[1][1] * m1[0][1]
-				+ matrix[2][1] * m1[0][2];
-		double t11 = matrix[0][1] * m1[1][0] + matrix[1][1] * m1[1][1]
-				+ matrix[2][1] * m1[1][2];
-		double t12 = matrix[0][1] * m1[2][0] + matrix[1][1] * m1[2][1]
-				+ matrix[2][1] * m1[2][2];
-		matrix[2][0] = matrix[0][2] * m1[0][0] + matrix[1][2] * m1[0][1]
-				+ matrix[2][2] * m1[0][2];
-		matrix[2][1] = matrix[0][2] * m1[1][0] + matrix[1][2] * m1[1][1]
-				+ matrix[2][2] * m1[1][2];
-		matrix[2][2] = matrix[0][2] * m1[2][0] + matrix[1][2] * m1[2][1]
-				+ matrix[2][2] * m1[2][2];
+		double t00 = matrix[0][0] * m1[0][0] + matrix[1][0] * m1[0][1] + matrix[2][0] * m1[0][2];
+		double t01 = matrix[0][0] * m1[1][0] + matrix[1][0] * m1[1][1] + matrix[2][0] * m1[1][2];
+		double t02 = matrix[0][0] * m1[2][0] + matrix[1][0] * m1[2][1] + matrix[2][0] * m1[2][2];
+		double t10 = matrix[0][1] * m1[0][0] + matrix[1][1] * m1[0][1] + matrix[2][1] * m1[0][2];
+		double t11 = matrix[0][1] * m1[1][0] + matrix[1][1] * m1[1][1] + matrix[2][1] * m1[1][2];
+		double t12 = matrix[0][1] * m1[2][0] + matrix[1][1] * m1[2][1] + matrix[2][1] * m1[2][2];
+		matrix[2][0] = matrix[0][2] * m1[0][0] + matrix[1][2] * m1[0][1] + matrix[2][2] * m1[0][2];
+		matrix[2][1] = matrix[0][2] * m1[1][0] + matrix[1][2] * m1[1][1] + matrix[2][2] * m1[1][2];
+		matrix[2][2] = matrix[0][2] * m1[2][0] + matrix[1][2] * m1[2][1] + matrix[2][2] * m1[2][2];
 		matrix[0][0] = t00;
 		matrix[0][1] = t01;
 		matrix[0][2] = t02;
@@ -855,17 +768,14 @@ public class Matrix4d extends Matrix4 {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Matrix4d[");
-		sb.append(matrix[0][0]).append(' ').append(matrix[1][0]).append(' ')
-				.append(matrix[2][0]).append(' ').append(matrix[3][0])
-				.append('\n');
-		sb.append(matrix[0][1]).append(' ').append(matrix[1][1]).append(' ')
-				.append(matrix[2][1]).append(' ').append(matrix[3][1])
-				.append('\n');
-		sb.append(matrix[0][2]).append(' ').append(matrix[1][2]).append(' ')
-				.append(matrix[2][2]).append(' ').append(matrix[3][2])
-				.append('\n');
-		sb.append(matrix[0][3]).append(' ').append(matrix[1][3]).append(' ')
-				.append(matrix[2][3]).append(' ').append(matrix[3][3]);
+		sb.append(matrix[0][0]).append(' ').append(matrix[1][0]).append(' ').append(matrix[2][0]).append(' ')
+				.append(matrix[3][0]).append('\n');
+		sb.append(matrix[0][1]).append(' ').append(matrix[1][1]).append(' ').append(matrix[2][1]).append(' ')
+				.append(matrix[3][1]).append('\n');
+		sb.append(matrix[0][2]).append(' ').append(matrix[1][2]).append(' ').append(matrix[2][2]).append(' ')
+				.append(matrix[3][2]).append('\n');
+		sb.append(matrix[0][3]).append(' ').append(matrix[1][3]).append(' ').append(matrix[2][3]).append(' ')
+				.append(matrix[3][3]);
 		sb.append("]");
 		return sb.toString();
 	}
@@ -905,14 +815,10 @@ public class Matrix4d extends Matrix4 {
 	 */
 	@Override
 	public void translateRelative(Vector3 v) {
-		matrix[3][0] += matrix[0][0] * v.getX() + matrix[1][0] * v.getY()
-				+ matrix[2][0] * v.getZ();
-		matrix[3][1] += matrix[0][1] * v.getX() + matrix[1][1] * v.getY()
-				+ matrix[2][1] * v.getZ();
-		matrix[3][2] += matrix[0][2] * v.getX() + matrix[1][2] * v.getY()
-				+ matrix[2][2] * v.getZ();
-		matrix[3][3] += matrix[0][3] * v.getX() + matrix[1][3] * v.getY()
-				+ matrix[2][3] * v.getZ();
+		matrix[3][0] += matrix[0][0] * v.getX() + matrix[1][0] * v.getY() + matrix[2][0] * v.getZ();
+		matrix[3][1] += matrix[0][1] * v.getX() + matrix[1][1] * v.getY() + matrix[2][1] * v.getZ();
+		matrix[3][2] += matrix[0][2] * v.getX() + matrix[1][2] * v.getY() + matrix[2][2] * v.getZ();
+		matrix[3][3] += matrix[0][3] * v.getX() + matrix[1][3] * v.getY() + matrix[2][3] * v.getZ();
 	}
 
 	/**
@@ -945,7 +851,7 @@ public class Matrix4d extends Matrix4 {
 		double m12 = matrix[1][2];
 		double m13 = matrix[1][3];
 		double m23 = matrix[2][3];
-		
+
 		matrix[0][1] = matrix[1][0];
 		matrix[0][2] = matrix[2][0];
 		matrix[0][3] = matrix[3][0];

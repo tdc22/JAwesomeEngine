@@ -301,8 +301,7 @@ public class Vector4d extends Vector4 {
 	}
 
 	@Override
-	public void translate(double transx, double transy, double transz,
-			double transw) {
+	public void translate(double transx, double transy, double transz, double transw) {
 		x += transx;
 		y += transy;
 		z += transz;

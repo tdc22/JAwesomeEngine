@@ -54,7 +54,7 @@ public class ConvexTest extends StandardGame {
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
-		
+
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(new EPA()), new ImpulseResolution(),
 				new ProjectionCorrection(0.01f), new SimpleManifoldManager<Vector3f>());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));

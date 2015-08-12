@@ -45,8 +45,9 @@ public class ImpulseTest extends StandardGame {
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
-		
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
 
 		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(new EPA()), new NullResolution(),
 				new NullCorrection(), new SimpleManifoldManager<Vector3f>());

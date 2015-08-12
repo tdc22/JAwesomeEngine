@@ -67,8 +67,7 @@ public class VecMath {
 	 * @see math.VecMath#addition(Vector1, Vector1)
 	 */
 	public static Vector3d addition(Vector3 v1, Vector3 v2) {
-		return new Vector3d(v1.getX() + v2.getX(), v1.getY() + v2.getY(),
-				v1.getZ() + v2.getZ());
+		return new Vector3d(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
 	}
 
 	/**
@@ -93,8 +92,8 @@ public class VecMath {
 		Vector3d dif1 = subtraction(p2, p1);
 		Vector3d dif2 = subtraction(p3, p1);
 
-		return new Vector3d(dif1.y * dif2.z - dif1.z * dif2.y, dif1.z * dif2.x
-				- dif1.x * dif2.z, dif1.x * dif2.y - dif1.y * dif2.x);
+		return new Vector3d(dif1.y * dif2.z - dif1.z * dif2.y, dif1.z * dif2.x - dif1.x * dif2.z,
+				dif1.x * dif2.y - dif1.y * dif2.x);
 	}
 
 	/**
@@ -104,8 +103,8 @@ public class VecMath {
 		Vector3f dif1 = subtraction(p2, p1);
 		Vector3f dif2 = subtraction(p3, p1);
 
-		return new Vector3f(dif1.y * dif2.z - dif1.z * dif2.y, dif1.z * dif2.x
-				- dif1.x * dif2.z, dif1.x * dif2.y - dif1.y * dif2.x);
+		return new Vector3f(dif1.y * dif2.z - dif1.z * dif2.y, dif1.z * dif2.x - dif1.x * dif2.z,
+				dif1.x * dif2.y - dif1.y * dif2.x);
 	}
 
 	/**
@@ -133,8 +132,7 @@ public class VecMath {
 	 */
 	public static Vector3d crossproduct(Vector3 v1, Vector3 v2) {
 		return new Vector3d(v1.getY() * v2.getZ() - v1.getZ() * v2.getY(),
-				v1.getZ() * v2.getX() - v1.getX() * v2.getZ(), v1.getX()
-						* v2.getY() - v1.getY() * v2.getX());
+				v1.getZ() * v2.getX() - v1.getX() * v2.getZ(), v1.getX() * v2.getY() - v1.getY() * v2.getX());
 	}
 
 	/**
@@ -142,8 +140,7 @@ public class VecMath {
 	 */
 	public static Vector3f crossproduct(Vector3f v1, Vector3f v2) {
 		return new Vector3f(v1.getYf() * v2.getZf() - v1.getZf() * v2.getYf(),
-				v1.getZf() * v2.getXf() - v1.getXf() * v2.getZf(), v1.getXf()
-						* v2.getYf() - v1.getYf() * v2.getXf());
+				v1.getZf() * v2.getXf() - v1.getXf() * v2.getZf(), v1.getXf() * v2.getYf() - v1.getYf() * v2.getXf());
 	}
 
 	/**
@@ -184,32 +181,28 @@ public class VecMath {
 	 * @see math.VecMath#dotproduct(Vector1, Vector1)
 	 */
 	public static double dotproduct(Vector3 v1, Vector3 v2) {
-		return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ()
-				* v2.getZ();
+		return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ();
 	}
 
 	/**
 	 * @see math.VecMath#dotproduct(Vector1, Vector1)
 	 */
 	public static float dotproduct(Vector3f v1, Vector3f v2) {
-		return v1.getXf() * v2.getXf() + v1.getYf() * v2.getYf() + v1.getZf()
-				* v2.getZf();
+		return v1.getXf() * v2.getXf() + v1.getYf() * v2.getYf() + v1.getZf() * v2.getZf();
 	}
 
 	/**
 	 * @see math.VecMath#dotproduct(Vector1, Vector1)
 	 */
 	public static double dotproduct(Vector4 v1, Vector4 v2) {
-		return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ()
-				* v2.getZ() + v1.getW() * v2.getW();
+		return v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ() + v1.getW() * v2.getW();
 	}
 
 	/**
 	 * @see math.VecMath#dotproduct(Vector1, Vector1)
 	 */
 	public static float dotproduct(Vector4f v1, Vector4f v2) {
-		return v1.getXf() * v2.getXf() + v1.getYf() * v2.getYf() + v1.getZf()
-				* v2.getZf() + v1.getWf() * v2.getWf();
+		return v1.getXf() * v2.getXf() + v1.getYf() * v2.getYf() + v1.getZf() * v2.getZf() + v1.getWf() * v2.getWf();
 	}
 
 	/**
@@ -278,8 +271,7 @@ public class VecMath {
 	 * @see math.VecMath#multiplication(Vector1, Vector1)
 	 */
 	public static Vector3d multiplication(Vector3 v1, Vector3 v2) {
-		return new Vector3d(v1.getX() * v2.getX(), v1.getY() * v2.getY(),
-				v1.getZ() * v2.getZ());
+		return new Vector3d(v1.getX() * v2.getX(), v1.getY() * v2.getY(), v1.getZ() * v2.getZ());
 	}
 
 	/**
@@ -374,8 +366,7 @@ public class VecMath {
 	 */
 	public static Vector3d normalize(Vector3 v1) {
 		double length = v1.length();
-		return new Vector3d(v1.getX() / length, v1.getY() / length, v1.getZ()
-				/ length);
+		return new Vector3d(v1.getX() / length, v1.getY() / length, v1.getZ() / length);
 	}
 
 	/**
@@ -424,8 +415,7 @@ public class VecMath {
 	 * @see math.VecMath#scale(Vector1, double)
 	 */
 	public static Vector3d scale(Vector3 v, double factor) {
-		return new Vector3d(v.getX() * factor, v.getY() * factor, v.getZ()
-				* factor);
+		return new Vector3d(v.getX() * factor, v.getY() * factor, v.getZ() * factor);
 	}
 
 	/**
@@ -519,8 +509,7 @@ public class VecMath {
 	 * @see math.VecMath#subtraction(Vector1, Vector1)
 	 */
 	public static Vector3d subtraction(Vector3 v1, Vector3 v2) {
-		return new Vector3d(v1.getX() - v2.getX(), v1.getY() - v2.getY(),
-				v1.getZ() - v2.getZ());
+		return new Vector3d(v1.getX() - v2.getX(), v1.getY() - v2.getY(), v1.getZ() - v2.getZ());
 	}
 
 	// public static Vector2f crossproduct(Vector2f v, float s) {
@@ -560,57 +549,41 @@ public class VecMath {
 		float[][] matrix2 = m2.matrix;
 		float[][] result = new float[4][4];
 
-		result[0][0] = matrix1[0][0] * matrix2[0][0] + matrix1[0][1]
-				* matrix2[1][0] + matrix1[0][2] * matrix2[2][0] + matrix1[0][3]
-				* matrix2[3][0];
-		result[0][1] = matrix1[0][0] * matrix2[0][1] + matrix1[0][1]
-				* matrix2[1][1] + matrix1[0][2] * matrix2[2][1] + matrix1[0][3]
-				* matrix2[3][1];
-		result[0][2] = matrix1[0][0] * matrix2[0][2] + matrix1[0][1]
-				* matrix2[1][2] + matrix1[0][2] * matrix2[2][2] + matrix1[0][3]
-				* matrix2[3][2];
-		result[0][3] = matrix1[0][0] * matrix2[0][3] + matrix1[0][1]
-				* matrix2[1][3] + matrix1[0][2] * matrix2[2][3] + matrix1[0][3]
-				* matrix2[3][3];
+		result[0][0] = matrix1[0][0] * matrix2[0][0] + matrix1[0][1] * matrix2[1][0] + matrix1[0][2] * matrix2[2][0]
+				+ matrix1[0][3] * matrix2[3][0];
+		result[0][1] = matrix1[0][0] * matrix2[0][1] + matrix1[0][1] * matrix2[1][1] + matrix1[0][2] * matrix2[2][1]
+				+ matrix1[0][3] * matrix2[3][1];
+		result[0][2] = matrix1[0][0] * matrix2[0][2] + matrix1[0][1] * matrix2[1][2] + matrix1[0][2] * matrix2[2][2]
+				+ matrix1[0][3] * matrix2[3][2];
+		result[0][3] = matrix1[0][0] * matrix2[0][3] + matrix1[0][1] * matrix2[1][3] + matrix1[0][2] * matrix2[2][3]
+				+ matrix1[0][3] * matrix2[3][3];
 
-		result[1][0] = matrix1[1][0] * matrix2[0][0] + matrix1[1][1]
-				* matrix2[1][0] + matrix1[1][2] * matrix2[2][0] + matrix1[1][3]
-				* matrix2[3][0];
-		result[1][1] = matrix1[1][0] * matrix2[0][1] + matrix1[1][1]
-				* matrix2[1][1] + matrix1[1][2] * matrix2[2][1] + matrix1[1][3]
-				* matrix2[3][1];
-		result[1][2] = matrix1[1][0] * matrix2[0][2] + matrix1[1][1]
-				* matrix2[1][2] + matrix1[1][2] * matrix2[2][2] + matrix1[1][3]
-				* matrix2[3][2];
-		result[1][3] = matrix1[1][0] * matrix2[0][3] + matrix1[1][1]
-				* matrix2[1][3] + matrix1[1][2] * matrix2[2][3] + matrix1[1][3]
-				* matrix2[3][3];
+		result[1][0] = matrix1[1][0] * matrix2[0][0] + matrix1[1][1] * matrix2[1][0] + matrix1[1][2] * matrix2[2][0]
+				+ matrix1[1][3] * matrix2[3][0];
+		result[1][1] = matrix1[1][0] * matrix2[0][1] + matrix1[1][1] * matrix2[1][1] + matrix1[1][2] * matrix2[2][1]
+				+ matrix1[1][3] * matrix2[3][1];
+		result[1][2] = matrix1[1][0] * matrix2[0][2] + matrix1[1][1] * matrix2[1][2] + matrix1[1][2] * matrix2[2][2]
+				+ matrix1[1][3] * matrix2[3][2];
+		result[1][3] = matrix1[1][0] * matrix2[0][3] + matrix1[1][1] * matrix2[1][3] + matrix1[1][2] * matrix2[2][3]
+				+ matrix1[1][3] * matrix2[3][3];
 
-		result[2][0] = matrix1[2][0] * matrix2[0][0] + matrix1[2][1]
-				* matrix2[1][0] + matrix1[2][2] * matrix2[2][0] + matrix1[2][3]
-				* matrix2[3][0];
-		result[2][1] = matrix1[2][0] * matrix2[0][1] + matrix1[2][1]
-				* matrix2[1][1] + matrix1[2][2] * matrix2[2][1] + matrix1[2][3]
-				* matrix2[3][1];
-		result[2][2] = matrix1[2][0] * matrix2[0][2] + matrix1[2][1]
-				* matrix2[1][2] + matrix1[2][2] * matrix2[2][2] + matrix1[2][3]
-				* matrix2[3][2];
-		result[2][3] = matrix1[2][0] * matrix2[0][3] + matrix1[2][1]
-				* matrix2[1][3] + matrix1[2][2] * matrix2[2][3] + matrix1[2][3]
-				* matrix2[3][3];
+		result[2][0] = matrix1[2][0] * matrix2[0][0] + matrix1[2][1] * matrix2[1][0] + matrix1[2][2] * matrix2[2][0]
+				+ matrix1[2][3] * matrix2[3][0];
+		result[2][1] = matrix1[2][0] * matrix2[0][1] + matrix1[2][1] * matrix2[1][1] + matrix1[2][2] * matrix2[2][1]
+				+ matrix1[2][3] * matrix2[3][1];
+		result[2][2] = matrix1[2][0] * matrix2[0][2] + matrix1[2][1] * matrix2[1][2] + matrix1[2][2] * matrix2[2][2]
+				+ matrix1[2][3] * matrix2[3][2];
+		result[2][3] = matrix1[2][0] * matrix2[0][3] + matrix1[2][1] * matrix2[1][3] + matrix1[2][2] * matrix2[2][3]
+				+ matrix1[2][3] * matrix2[3][3];
 
-		result[3][0] = matrix1[3][0] * matrix2[0][0] + matrix1[3][1]
-				* matrix2[1][0] + matrix1[3][2] * matrix2[2][0] + matrix1[3][3]
-				* matrix2[3][0];
-		result[3][1] = matrix1[3][0] * matrix2[0][1] + matrix1[3][1]
-				* matrix2[1][1] + matrix1[3][2] * matrix2[2][1] + matrix1[3][3]
-				* matrix2[3][1];
-		result[3][2] = matrix1[3][0] * matrix2[0][2] + matrix1[3][1]
-				* matrix2[1][2] + matrix1[3][2] * matrix2[2][2] + matrix1[3][3]
-				* matrix2[3][2];
-		result[3][3] = matrix1[3][0] * matrix2[0][3] + matrix1[3][1]
-				* matrix2[1][3] + matrix1[3][2] * matrix2[2][3] + matrix1[3][3]
-				* matrix2[3][3];
+		result[3][0] = matrix1[3][0] * matrix2[0][0] + matrix1[3][1] * matrix2[1][0] + matrix1[3][2] * matrix2[2][0]
+				+ matrix1[3][3] * matrix2[3][0];
+		result[3][1] = matrix1[3][0] * matrix2[0][1] + matrix1[3][1] * matrix2[1][1] + matrix1[3][2] * matrix2[2][1]
+				+ matrix1[3][3] * matrix2[3][1];
+		result[3][2] = matrix1[3][0] * matrix2[0][2] + matrix1[3][1] * matrix2[1][2] + matrix1[3][2] * matrix2[2][2]
+				+ matrix1[3][3] * matrix2[3][2];
+		result[3][3] = matrix1[3][0] * matrix2[0][3] + matrix1[3][1] * matrix2[1][3] + matrix1[3][2] * matrix2[2][3]
+				+ matrix1[3][3] * matrix2[3][3];
 
 		return new Matrix4f(result);
 	}
@@ -678,12 +651,9 @@ public class VecMath {
 		Vector3d result = new Vector3d();
 		double[][] matrix = m.getArray();
 
-		result.x = matrix[0][0] * v.getX() + matrix[1][0] * v.getY()
-				+ matrix[2][0] * v.getZ();
-		result.y = matrix[0][1] * v.getX() + matrix[1][1] * v.getY()
-				+ matrix[2][1] * v.getZ();
-		result.z = matrix[0][2] * v.getX() + matrix[1][2] * v.getY()
-				+ matrix[2][2] * v.getZ();
+		result.x = matrix[0][0] * v.getX() + matrix[1][0] * v.getY() + matrix[2][0] * v.getZ();
+		result.y = matrix[0][1] * v.getX() + matrix[1][1] * v.getY() + matrix[2][1] * v.getZ();
+		result.z = matrix[0][2] * v.getX() + matrix[1][2] * v.getY() + matrix[2][2] * v.getZ();
 
 		return result;
 	}
@@ -722,12 +692,9 @@ public class VecMath {
 		Vector3f result = new Vector3f();
 		float[][] matrix = m.matrix;
 
-		result.x = matrix[0][0] * v.x + matrix[1][0] * v.y + matrix[2][0] * v.z
-				+ matrix[3][0];
-		result.y = matrix[0][1] * v.x + matrix[1][1] * v.y + matrix[2][1] * v.z
-				+ matrix[3][1];
-		result.z = matrix[0][2] * v.x + matrix[1][2] * v.y + matrix[2][2] * v.z
-				+ matrix[3][2];
+		result.x = matrix[0][0] * v.x + matrix[1][0] * v.y + matrix[2][0] * v.z + matrix[3][0];
+		result.y = matrix[0][1] * v.x + matrix[1][1] * v.y + matrix[2][1] * v.z + matrix[3][1];
+		result.z = matrix[0][2] * v.x + matrix[1][2] * v.y + matrix[2][2] * v.z + matrix[3][2];
 
 		return result;
 	}
@@ -739,14 +706,10 @@ public class VecMath {
 		Vector4f result = new Vector4f();
 		float[][] matrix = m.matrix;
 
-		result.x = matrix[0][0] * v.x + matrix[1][0] * v.y + matrix[2][0] * v.z
-				+ matrix[3][0] * v.w;
-		result.y = matrix[0][1] * v.x + matrix[1][1] * v.y + matrix[2][1] * v.z
-				+ matrix[3][1] * v.w;
-		result.z = matrix[0][2] * v.x + matrix[1][2] * v.y + matrix[2][2] * v.z
-				+ matrix[3][2] * v.w;
-		result.w = matrix[0][3] * v.x + matrix[1][3] * v.y + matrix[2][3] * v.z
-				+ matrix[3][3] * v.w;
+		result.x = matrix[0][0] * v.x + matrix[1][0] * v.y + matrix[2][0] * v.z + matrix[3][0] * v.w;
+		result.y = matrix[0][1] * v.x + matrix[1][1] * v.y + matrix[2][1] * v.z + matrix[3][1] * v.w;
+		result.z = matrix[0][2] * v.x + matrix[1][2] * v.y + matrix[2][2] * v.z + matrix[3][2] * v.w;
+		result.w = matrix[0][3] * v.x + matrix[1][3] * v.y + matrix[2][3] * v.z + matrix[3][3] * v.w;
 
 		return result;
 	}

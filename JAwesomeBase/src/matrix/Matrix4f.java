@@ -30,9 +30,8 @@ public class Matrix4f extends Matrix4 {
 		setAll(setAll);
 	}
 
-	public Matrix4f(float m00, float m01, float m02, float m03, float m10,
-			float m11, float m12, float m13, float m20, float m21, float m22,
-			float m23, float m30, float m31, float m32, float m33) {
+	public Matrix4f(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20,
+			float m21, float m22, float m23, float m30, float m31, float m32, float m33) {
 		matrix = new float[4][4];
 		matrix[0][0] = m00;
 		matrix[0][1] = m01;
@@ -87,21 +86,17 @@ public class Matrix4f extends Matrix4 {
 	 */
 	@Override
 	public float determinant3f() {
-		return matrix[0][0]
-				* (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1])
-				+ matrix[0][1]
-				* (matrix[1][2] * matrix[2][0] - matrix[1][0] * matrix[2][2])
-				+ matrix[0][2]
-				* (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
+		return matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1])
+				+ matrix[0][1] * (matrix[1][2] * matrix[2][0] - matrix[1][0] * matrix[2][2])
+				+ matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	private float determinant3x3(float t00, float t01, float t02, float t10,
-			float t11, float t12, float t20, float t21, float t22) {
-		return t00 * (t11 * t22 - t12 * t21) + t01 * (t12 * t20 - t10 * t22)
-				+ t02 * (t10 * t21 - t11 * t20);
+	private float determinant3x3(float t00, float t01, float t02, float t10, float t11, float t12, float t20, float t21,
+			float t22) {
+		return t00 * (t11 * t22 - t12 * t21) + t01 * (t12 * t20 - t10 * t22) + t02 * (t10 * t21 - t11 * t20);
 	}
 
 	/**
@@ -110,41 +105,18 @@ public class Matrix4f extends Matrix4 {
 	@Override
 	public float determinantf() {
 		return matrix[0][0]
-				* (matrix[1][1]
-						* (matrix[2][2] * matrix[3][3] - matrix[2][3]
-								* matrix[3][2])
-						+ matrix[1][2]
-						* (matrix[2][3] * matrix[3][1] - matrix[2][1]
-								* matrix[3][3]) + matrix[1][3]
-						* (matrix[2][1] * matrix[3][2] - matrix[2][2]
-								* matrix[3][1]))
-				- matrix[0][1]
-				* (matrix[1][0]
-						* (matrix[2][2] * matrix[3][3] - matrix[2][3]
-								* matrix[3][2])
-						+ matrix[1][2]
-						* (matrix[2][3] * matrix[3][0] - matrix[2][0]
-								* matrix[3][3]) + matrix[1][3]
-						* (matrix[2][0] * matrix[3][2] - matrix[2][2]
-								* matrix[3][0]))
-				+ matrix[0][2]
-				* (matrix[1][0]
-						* (matrix[2][1] * matrix[3][3] - matrix[2][3]
-								* matrix[3][1])
-						+ matrix[1][1]
-						* (matrix[2][3] * matrix[3][0] - matrix[2][0]
-								* matrix[3][3]) + matrix[1][3]
-						* (matrix[2][0] * matrix[3][1] - matrix[2][1]
-								* matrix[3][0]))
-				- matrix[0][3]
-				* (matrix[1][0]
-						* (matrix[2][1] * matrix[3][2] - matrix[2][2]
-								* matrix[3][2])
-						+ matrix[1][1]
-						* (matrix[2][2] * matrix[3][0] - matrix[2][0]
-								* matrix[3][2]) + matrix[1][2]
-						* (matrix[2][0] * matrix[3][1] - matrix[2][1]
-								* matrix[3][0]));
+				* (matrix[1][1] * (matrix[2][2] * matrix[3][3] - matrix[2][3] * matrix[3][2])
+						+ matrix[1][2] * (matrix[2][3] * matrix[3][1] - matrix[2][1] * matrix[3][3])
+						+ matrix[1][3] * (matrix[2][1] * matrix[3][2] - matrix[2][2] * matrix[3][1]))
+				- matrix[0][1] * (matrix[1][0] * (matrix[2][2] * matrix[3][3] - matrix[2][3] * matrix[3][2])
+						+ matrix[1][2] * (matrix[2][3] * matrix[3][0] - matrix[2][0] * matrix[3][3])
+						+ matrix[1][3] * (matrix[2][0] * matrix[3][2] - matrix[2][2] * matrix[3][0]))
+				+ matrix[0][2] * (matrix[1][0] * (matrix[2][1] * matrix[3][3] - matrix[2][3] * matrix[3][1])
+						+ matrix[1][1] * (matrix[2][3] * matrix[3][0] - matrix[2][0] * matrix[3][3])
+						+ matrix[1][3] * (matrix[2][0] * matrix[3][1] - matrix[2][1] * matrix[3][0]))
+				- matrix[0][3] * (matrix[1][0] * (matrix[2][1] * matrix[3][2] - matrix[2][2] * matrix[3][2])
+						+ matrix[1][1] * (matrix[2][2] * matrix[3][0] - matrix[2][0] * matrix[3][2])
+						+ matrix[1][2] * (matrix[2][0] * matrix[3][1] - matrix[2][1] * matrix[3][0]));
 	}
 
 	/**
@@ -193,8 +165,7 @@ public class Matrix4f extends Matrix4 {
 	 */
 	@Override
 	public Vector4 getColumn(int column) {
-		return new Vector4f(matrix[column][0], matrix[column][1],
-				matrix[column][2], matrix[column][3]);
+		return new Vector4f(matrix[column][0], matrix[column][1], matrix[column][2], matrix[column][3]);
 	}
 
 	/**
@@ -210,8 +181,7 @@ public class Matrix4f extends Matrix4 {
 	 */
 	@Override
 	public Vector4 getRow(int row) {
-		return new Vector4f(matrix[0][row], matrix[1][row], matrix[2][row],
-				matrix[3][row]);
+		return new Vector4f(matrix[0][row], matrix[1][row], matrix[2][row], matrix[3][row]);
 	}
 
 	/**
@@ -219,9 +189,8 @@ public class Matrix4f extends Matrix4 {
 	 */
 	@Override
 	public Matrix3 getSubMatrix() {
-		return new Matrix3f(matrix[0][0], matrix[0][1], matrix[0][2],
-				matrix[1][0], matrix[1][1], matrix[1][2], matrix[2][0],
-				matrix[2][1], matrix[2][2]);
+		return new Matrix3f(matrix[0][0], matrix[0][1], matrix[0][2], matrix[1][0], matrix[1][1], matrix[1][2],
+				matrix[2][0], matrix[2][1], matrix[2][2]);
 	}
 
 	/**
@@ -229,8 +198,7 @@ public class Matrix4f extends Matrix4 {
 	 */
 	@Override
 	public Matrix2 getSubMatrix2() {
-		return new Matrix2f(matrix[0][0], matrix[0][1], matrix[1][0],
-				matrix[1][1]);
+		return new Matrix2f(matrix[0][0], matrix[0][1], matrix[1][0], matrix[1][1]);
 	}
 
 	/**
@@ -258,73 +226,41 @@ public class Matrix4f extends Matrix4 {
 		if (determinant != 0) {
 			float determinant_inv = 1 / determinant;
 
-			float t00 = determinant3x3(matrix[1][1], matrix[1][2],
-					matrix[1][3], matrix[2][1], matrix[2][2], matrix[2][3],
-					matrix[3][1], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			float t10 = -determinant3x3(matrix[1][0], matrix[1][2],
-					matrix[1][3], matrix[2][0], matrix[2][2], matrix[2][3],
-					matrix[3][0], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			float t20 = determinant3x3(matrix[1][0], matrix[1][1],
-					matrix[1][3], matrix[2][0], matrix[2][1], matrix[2][3],
-					matrix[3][0], matrix[3][1], matrix[3][3])
-					* determinant_inv;
-			float t30 = -determinant3x3(matrix[1][0], matrix[1][1],
-					matrix[1][2], matrix[2][0], matrix[2][1], matrix[2][2],
-					matrix[3][0], matrix[3][1], matrix[3][2])
-					* determinant_inv;
+			float t00 = determinant3x3(matrix[1][1], matrix[1][2], matrix[1][3], matrix[2][1], matrix[2][2],
+					matrix[2][3], matrix[3][1], matrix[3][2], matrix[3][3]) * determinant_inv;
+			float t10 = -determinant3x3(matrix[1][0], matrix[1][2], matrix[1][3], matrix[2][0], matrix[2][2],
+					matrix[2][3], matrix[3][0], matrix[3][2], matrix[3][3]) * determinant_inv;
+			float t20 = determinant3x3(matrix[1][0], matrix[1][1], matrix[1][3], matrix[2][0], matrix[2][1],
+					matrix[2][3], matrix[3][0], matrix[3][1], matrix[3][3]) * determinant_inv;
+			float t30 = -determinant3x3(matrix[1][0], matrix[1][1], matrix[1][2], matrix[2][0], matrix[2][1],
+					matrix[2][2], matrix[3][0], matrix[3][1], matrix[3][2]) * determinant_inv;
 
-			float t01 = -determinant3x3(matrix[0][1], matrix[0][2],
-					matrix[0][3], matrix[2][1], matrix[2][2], matrix[2][3],
-					matrix[3][1], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			float t11 = determinant3x3(matrix[0][0], matrix[0][2],
-					matrix[0][3], matrix[2][0], matrix[2][2], matrix[2][3],
-					matrix[3][0], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			float t21 = -determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][3], matrix[2][0], matrix[2][1], matrix[2][3],
-					matrix[3][0], matrix[3][1], matrix[3][3])
-					* determinant_inv;
-			float t31 = determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][2], matrix[2][0], matrix[2][1], matrix[2][2],
-					matrix[3][0], matrix[3][1], matrix[3][2])
-					* determinant_inv;
+			float t01 = -determinant3x3(matrix[0][1], matrix[0][2], matrix[0][3], matrix[2][1], matrix[2][2],
+					matrix[2][3], matrix[3][1], matrix[3][2], matrix[3][3]) * determinant_inv;
+			float t11 = determinant3x3(matrix[0][0], matrix[0][2], matrix[0][3], matrix[2][0], matrix[2][2],
+					matrix[2][3], matrix[3][0], matrix[3][2], matrix[3][3]) * determinant_inv;
+			float t21 = -determinant3x3(matrix[0][0], matrix[0][1], matrix[0][3], matrix[2][0], matrix[2][1],
+					matrix[2][3], matrix[3][0], matrix[3][1], matrix[3][3]) * determinant_inv;
+			float t31 = determinant3x3(matrix[0][0], matrix[0][1], matrix[0][2], matrix[2][0], matrix[2][1],
+					matrix[2][2], matrix[3][0], matrix[3][1], matrix[3][2]) * determinant_inv;
 
-			float t02 = determinant3x3(matrix[0][1], matrix[0][2],
-					matrix[0][3], matrix[1][1], matrix[1][2], matrix[1][3],
-					matrix[3][1], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			float t12 = -determinant3x3(matrix[0][0], matrix[0][2],
-					matrix[0][3], matrix[1][0], matrix[1][2], matrix[1][3],
-					matrix[3][0], matrix[3][2], matrix[3][3])
-					* determinant_inv;
-			float t22 = determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][3], matrix[1][0], matrix[1][1], matrix[1][3],
-					matrix[3][0], matrix[3][1], matrix[3][3])
-					* determinant_inv;
-			float t32 = -determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][2], matrix[1][0], matrix[1][1], matrix[1][2],
-					matrix[3][0], matrix[3][1], matrix[3][2])
-					* determinant_inv;
+			float t02 = determinant3x3(matrix[0][1], matrix[0][2], matrix[0][3], matrix[1][1], matrix[1][2],
+					matrix[1][3], matrix[3][1], matrix[3][2], matrix[3][3]) * determinant_inv;
+			float t12 = -determinant3x3(matrix[0][0], matrix[0][2], matrix[0][3], matrix[1][0], matrix[1][2],
+					matrix[1][3], matrix[3][0], matrix[3][2], matrix[3][3]) * determinant_inv;
+			float t22 = determinant3x3(matrix[0][0], matrix[0][1], matrix[0][3], matrix[1][0], matrix[1][1],
+					matrix[1][3], matrix[3][0], matrix[3][1], matrix[3][3]) * determinant_inv;
+			float t32 = -determinant3x3(matrix[0][0], matrix[0][1], matrix[0][2], matrix[1][0], matrix[1][1],
+					matrix[1][2], matrix[3][0], matrix[3][1], matrix[3][2]) * determinant_inv;
 
-			float t03 = -determinant3x3(matrix[0][1], matrix[0][2],
-					matrix[0][3], matrix[1][1], matrix[1][2], matrix[1][3],
-					matrix[2][1], matrix[2][2], matrix[2][3])
-					* determinant_inv;
-			float t13 = determinant3x3(matrix[0][0], matrix[0][2],
-					matrix[0][3], matrix[1][0], matrix[1][2], matrix[1][3],
-					matrix[2][0], matrix[2][2], matrix[2][3])
-					* determinant_inv;
-			float t23 = -determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][3], matrix[1][0], matrix[1][1], matrix[1][3],
-					matrix[2][0], matrix[2][1], matrix[2][3])
-					* determinant_inv;
-			float t33 = determinant3x3(matrix[0][0], matrix[0][1],
-					matrix[0][2], matrix[1][0], matrix[1][1], matrix[1][2],
-					matrix[2][0], matrix[2][1], matrix[2][2])
-					* determinant_inv;
+			float t03 = -determinant3x3(matrix[0][1], matrix[0][2], matrix[0][3], matrix[1][1], matrix[1][2],
+					matrix[1][3], matrix[2][1], matrix[2][2], matrix[2][3]) * determinant_inv;
+			float t13 = determinant3x3(matrix[0][0], matrix[0][2], matrix[0][3], matrix[1][0], matrix[1][2],
+					matrix[1][3], matrix[2][0], matrix[2][2], matrix[2][3]) * determinant_inv;
+			float t23 = -determinant3x3(matrix[0][0], matrix[0][1], matrix[0][3], matrix[1][0], matrix[1][1],
+					matrix[1][3], matrix[2][0], matrix[2][1], matrix[2][3]) * determinant_inv;
+			float t33 = determinant3x3(matrix[0][0], matrix[0][1], matrix[0][2], matrix[1][0], matrix[1][1],
+					matrix[1][2], matrix[2][0], matrix[2][1], matrix[2][2]) * determinant_inv;
 
 			matrix[0][0] = t00;
 			matrix[1][0] = t10;
@@ -438,30 +374,18 @@ public class Matrix4f extends Matrix4 {
 		float f21 = yz * oneminusc - xs;
 		float f22 = axis.getZf() * axis.getZf() * oneminusc + c;
 
-		float t00 = matrix[0][0] * f00 + matrix[1][0] * f01 + matrix[2][0]
-				* f02;
-		float t01 = matrix[0][1] * f00 + matrix[1][1] * f01 + matrix[2][1]
-				* f02;
-		float t02 = matrix[0][2] * f00 + matrix[1][2] * f01 + matrix[2][2]
-				* f02;
-		float t03 = matrix[0][3] * f00 + matrix[1][3] * f01 + matrix[2][3]
-				* f02;
-		float t10 = matrix[0][0] * f10 + matrix[1][0] * f11 + matrix[2][0]
-				* f12;
-		float t11 = matrix[0][1] * f10 + matrix[1][1] * f11 + matrix[2][1]
-				* f12;
-		float t12 = matrix[0][2] * f10 + matrix[1][2] * f11 + matrix[2][2]
-				* f12;
-		float t13 = matrix[0][3] * f10 + matrix[1][3] * f11 + matrix[2][3]
-				* f12;
-		matrix[2][0] = matrix[0][0] * f20 + matrix[1][0] * f21 + matrix[2][0]
-				* f22;
-		matrix[2][1] = matrix[0][1] * f20 + matrix[1][1] * f21 + matrix[2][1]
-				* f22;
-		matrix[2][2] = matrix[0][2] * f20 + matrix[1][2] * f21 + matrix[2][2]
-				* f22;
-		matrix[2][3] = matrix[0][3] * f20 + matrix[1][3] * f21 + matrix[2][3]
-				* f22;
+		float t00 = matrix[0][0] * f00 + matrix[1][0] * f01 + matrix[2][0] * f02;
+		float t01 = matrix[0][1] * f00 + matrix[1][1] * f01 + matrix[2][1] * f02;
+		float t02 = matrix[0][2] * f00 + matrix[1][2] * f01 + matrix[2][2] * f02;
+		float t03 = matrix[0][3] * f00 + matrix[1][3] * f01 + matrix[2][3] * f02;
+		float t10 = matrix[0][0] * f10 + matrix[1][0] * f11 + matrix[2][0] * f12;
+		float t11 = matrix[0][1] * f10 + matrix[1][1] * f11 + matrix[2][1] * f12;
+		float t12 = matrix[0][2] * f10 + matrix[1][2] * f11 + matrix[2][2] * f12;
+		float t13 = matrix[0][3] * f10 + matrix[1][3] * f11 + matrix[2][3] * f12;
+		matrix[2][0] = matrix[0][0] * f20 + matrix[1][0] * f21 + matrix[2][0] * f22;
+		matrix[2][1] = matrix[0][1] * f20 + matrix[1][1] * f21 + matrix[2][1] * f22;
+		matrix[2][2] = matrix[0][2] * f20 + matrix[1][2] * f21 + matrix[2][2] * f22;
+		matrix[2][3] = matrix[0][3] * f20 + matrix[1][3] * f21 + matrix[2][3] * f22;
 		matrix[0][0] = t00;
 		matrix[0][1] = t01;
 		matrix[0][2] = t02;
@@ -492,24 +416,15 @@ public class Matrix4f extends Matrix4 {
 	@Override
 	public void rotate(Matrix3 mat) {
 		float[][] m1 = mat.getArrayf();
-		float t00 = matrix[0][0] * m1[0][0] + matrix[1][0] * m1[0][1]
-				+ matrix[2][0] * m1[0][2];
-		float t01 = matrix[0][0] * m1[1][0] + matrix[1][0] * m1[1][1]
-				+ matrix[2][0] * m1[1][2];
-		float t02 = matrix[0][0] * m1[2][0] + matrix[1][0] * m1[2][1]
-				+ matrix[2][0] * m1[2][2];
-		float t10 = matrix[0][1] * m1[0][0] + matrix[1][1] * m1[0][1]
-				+ matrix[2][1] * m1[0][2];
-		float t11 = matrix[0][1] * m1[1][0] + matrix[1][1] * m1[1][1]
-				+ matrix[2][1] * m1[1][2];
-		float t12 = matrix[0][1] * m1[2][0] + matrix[1][1] * m1[2][1]
-				+ matrix[2][1] * m1[2][2];
-		matrix[2][0] = matrix[0][2] * m1[0][0] + matrix[1][2] * m1[0][1]
-				+ matrix[2][2] * m1[0][2];
-		matrix[2][1] = matrix[0][2] * m1[1][0] + matrix[1][2] * m1[1][1]
-				+ matrix[2][2] * m1[1][2];
-		matrix[2][2] = matrix[0][2] * m1[2][0] + matrix[1][2] * m1[2][1]
-				+ matrix[2][2] * m1[2][2];
+		float t00 = matrix[0][0] * m1[0][0] + matrix[1][0] * m1[0][1] + matrix[2][0] * m1[0][2];
+		float t01 = matrix[0][0] * m1[1][0] + matrix[1][0] * m1[1][1] + matrix[2][0] * m1[1][2];
+		float t02 = matrix[0][0] * m1[2][0] + matrix[1][0] * m1[2][1] + matrix[2][0] * m1[2][2];
+		float t10 = matrix[0][1] * m1[0][0] + matrix[1][1] * m1[0][1] + matrix[2][1] * m1[0][2];
+		float t11 = matrix[0][1] * m1[1][0] + matrix[1][1] * m1[1][1] + matrix[2][1] * m1[1][2];
+		float t12 = matrix[0][1] * m1[2][0] + matrix[1][1] * m1[2][1] + matrix[2][1] * m1[2][2];
+		matrix[2][0] = matrix[0][2] * m1[0][0] + matrix[1][2] * m1[0][1] + matrix[2][2] * m1[0][2];
+		matrix[2][1] = matrix[0][2] * m1[1][0] + matrix[1][2] * m1[1][1] + matrix[2][2] * m1[1][2];
+		matrix[2][2] = matrix[0][2] * m1[2][0] + matrix[1][2] * m1[2][1] + matrix[2][2] * m1[2][2];
 		matrix[0][0] = t00;
 		matrix[0][1] = t01;
 		matrix[0][2] = t02;
@@ -853,17 +768,14 @@ public class Matrix4f extends Matrix4 {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Matrix4f[");
-		sb.append(matrix[0][0]).append(' ').append(matrix[1][0]).append(' ')
-				.append(matrix[2][0]).append(' ').append(matrix[3][0])
-				.append('\n');
-		sb.append(matrix[0][1]).append(' ').append(matrix[1][1]).append(' ')
-				.append(matrix[2][1]).append(' ').append(matrix[3][1])
-				.append('\n');
-		sb.append(matrix[0][2]).append(' ').append(matrix[1][2]).append(' ')
-				.append(matrix[2][2]).append(' ').append(matrix[3][2])
-				.append('\n');
-		sb.append(matrix[0][3]).append(' ').append(matrix[1][3]).append(' ')
-				.append(matrix[2][3]).append(' ').append(matrix[3][3]);
+		sb.append(matrix[0][0]).append(' ').append(matrix[1][0]).append(' ').append(matrix[2][0]).append(' ')
+				.append(matrix[3][0]).append('\n');
+		sb.append(matrix[0][1]).append(' ').append(matrix[1][1]).append(' ').append(matrix[2][1]).append(' ')
+				.append(matrix[3][1]).append('\n');
+		sb.append(matrix[0][2]).append(' ').append(matrix[1][2]).append(' ').append(matrix[2][2]).append(' ')
+				.append(matrix[3][2]).append('\n');
+		sb.append(matrix[0][3]).append(' ').append(matrix[1][3]).append(' ').append(matrix[2][3]).append(' ')
+				.append(matrix[3][3]);
 		sb.append("]");
 		return sb.toString();
 	}
@@ -903,14 +815,10 @@ public class Matrix4f extends Matrix4 {
 	 */
 	@Override
 	public void translateRelative(Vector3 v) {
-		matrix[3][0] += matrix[0][0] * v.getXf() + matrix[1][0] * v.getYf()
-				+ matrix[2][0] * v.getZf();
-		matrix[3][1] += matrix[0][1] * v.getXf() + matrix[1][1] * v.getYf()
-				+ matrix[2][1] * v.getZf();
-		matrix[3][2] += matrix[0][2] * v.getXf() + matrix[1][2] * v.getYf()
-				+ matrix[2][2] * v.getZf();
-		matrix[3][3] += matrix[0][3] * v.getXf() + matrix[1][3] * v.getYf()
-				+ matrix[2][3] * v.getZf();
+		matrix[3][0] += matrix[0][0] * v.getXf() + matrix[1][0] * v.getYf() + matrix[2][0] * v.getZf();
+		matrix[3][1] += matrix[0][1] * v.getXf() + matrix[1][1] * v.getYf() + matrix[2][1] * v.getZf();
+		matrix[3][2] += matrix[0][2] * v.getXf() + matrix[1][2] * v.getYf() + matrix[2][2] * v.getZf();
+		matrix[3][3] += matrix[0][3] * v.getXf() + matrix[1][3] * v.getYf() + matrix[2][3] * v.getZf();
 	}
 
 	/**
@@ -943,7 +851,7 @@ public class Matrix4f extends Matrix4 {
 		float m12 = matrix[1][2];
 		float m13 = matrix[1][3];
 		float m23 = matrix[2][3];
-		
+
 		matrix[0][1] = matrix[1][0];
 		matrix[0][2] = matrix[2][0];
 		matrix[0][3] = matrix[3][0];

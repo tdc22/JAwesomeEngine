@@ -1,9 +1,5 @@
 package objects;
 
-import static org.lwjgl.opengl.GL11.glMultMatrixf;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTranslatef;
 import math.QuatMath;
 import matrix.Matrix4f;
 import utils.DefaultValues;
@@ -15,30 +11,28 @@ public class Camera extends GameObject {
 
 	public Camera() {
 		super();
-		init(DefaultValues.DEFAULT_CAMERA_POSITION,
-				DefaultValues.DEFAULT_CAMERA_HORIZONTAL_ROTATION,
+		init(DefaultValues.DEFAULT_CAMERA_POSITION, DefaultValues.DEFAULT_CAMERA_HORIZONTAL_ROTATION,
 				DefaultValues.DEFAULT_CAMERA_VERTICAL_ROTATION);
 	}
 
 	public Camera(Vector3f pos) {
-		init(pos, DefaultValues.DEFAULT_CAMERA_HORIZONTAL_ROTATION,
-				DefaultValues.DEFAULT_CAMERA_VERTICAL_ROTATION);
+		init(pos, DefaultValues.DEFAULT_CAMERA_HORIZONTAL_ROTATION, DefaultValues.DEFAULT_CAMERA_VERTICAL_ROTATION);
 	}
 
 	public Camera(Vector3f pos, float hRotation, float vRotation) {
 		init(pos, hRotation, vRotation);
 	}
 
-//	public void begin() {
-//		glPushMatrix();
-//		glTranslatef(rotcenter.x, rotcenter.y, rotcenter.z);
-//		glMultMatrixf(buf);
-//		glTranslatef(-rotcenter.x, -rotcenter.y, -rotcenter.z);
-//	}
+	// public void begin() {
+	// glPushMatrix();
+	// glTranslatef(rotcenter.x, rotcenter.y, rotcenter.z);
+	// glMultMatrixf(buf);
+	// glTranslatef(-rotcenter.x, -rotcenter.y, -rotcenter.z);
+	// }
 
-//	public void end() {
-//		glPopMatrix();
-//	}
+	// public void end() {
+	// glPopMatrix();
+	// }
 
 	public Vector3f getDirection() {
 		return direction;

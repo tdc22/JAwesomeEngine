@@ -63,8 +63,7 @@ public class Matrix2d extends Matrix2 {
 	 */
 	@Override
 	public float determinantf() {
-		return (float) (matrix[0][0] * matrix[1][1] - matrix[0][1]
-				* matrix[1][0]);
+		return (float) (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]);
 	}
 
 	/**
@@ -325,7 +324,7 @@ public class Matrix2d extends Matrix2 {
 	@Override
 	public void transpose() {
 		double m01 = matrix[0][1];
-		
+
 		matrix[0][1] = matrix[1][0];
 		matrix[1][0] = m01;
 	}
