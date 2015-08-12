@@ -15,14 +15,14 @@ public class CircleData extends DataObject implements CircleStructure {
 
 	public CircleData(float x, float y, float radius) {
 		super();
-		translate(x, y);
+		translateTo(x, y);
 		shapetype = SHAPE_CIRCLE;
 		this.radius = radius;
 	}
 
 	public CircleData(Vector2f pos, float radius) {
 		super();
-		translate(pos);
+		translateTo(pos);
 		shapetype = SHAPE_CIRCLE;
 		this.radius = radius;
 	}

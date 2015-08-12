@@ -1,5 +1,9 @@
 package reflectionRefraction;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -12,10 +16,6 @@ import texture.CubeMap;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector4f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ReflectionRefractionTest extends StandardGame {
 	Debugger debugger;
@@ -24,19 +24,25 @@ public class ReflectionRefractionTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		display.bindMouse();
-		debugger = new Debugger(inputs,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		cam.setFlyCam(true);
 		cam.setFlySpeed(0.002f);
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
 
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		add2dShader(defaultshader2);
+		
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		
 		// Shader Test 1
-		Shader colorshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader colorshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 
@@ -45,12 +51,10 @@ public class ReflectionRefractionTest extends StandardGame {
 		addObject(a);
 
 		// Shader Test 2
-		Texture texture = new Texture(
-				TextureLoader.loadTexture("res/textures/cobblestone.png"));
+		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
 
-		Shader textureshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/textureshader.vert",
-				"res/shaders/textureshader.frag"));
+		Shader textureshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
 		textureshader.addArgumentName("texture");
 		textureshader.addArgument(texture);
 
@@ -66,13 +70,10 @@ public class ReflectionRefractionTest extends StandardGame {
 
 		cubemapper0 = new CubeEnvironmentMap(this, s1.getTranslation());
 
-		Shader cubemapreflectionshader = new Shader(
-				ShaderLoader.loadShaderFromFile(
-						"res/shaders/cubemapreflectrefract.vert",
-						"res/shaders/cubemapreflection.frag"));
+		Shader cubemapreflectionshader = new Shader(ShaderLoader
+				.loadShaderFromFile("res/shaders/cubemapreflectrefract.vert", "res/shaders/cubemapreflection.frag"));
 		cubemapreflectionshader.addArgumentNames("cubeMap");
-		cubemapreflectionshader.addArguments(new CubeMap(cubemapper0
-				.getTextureID()));
+		cubemapreflectionshader.addArguments(new CubeMap(cubemapper0.getTextureID()));
 		s1.setShader(cubemapreflectionshader);
 
 		// Reflection Box
@@ -82,11 +83,9 @@ public class ReflectionRefractionTest extends StandardGame {
 
 		cubemapper1 = new CubeEnvironmentMap(this, b1.getTranslation());
 
-		Shader cubemapreflectionshader2 = new Shader(
-				cubemapreflectionshader.getShaderProgram());
+		Shader cubemapreflectionshader2 = new Shader(cubemapreflectionshader.getShaderProgram());
 		cubemapreflectionshader2.addArgumentNames("cubeMap");
-		cubemapreflectionshader2.addArguments(new CubeMap(cubemapper1
-				.getTextureID()));
+		cubemapreflectionshader2.addArguments(new CubeMap(cubemapper1.getTextureID()));
 		b1.setShader(cubemapreflectionshader2);
 
 		// Refraction Sphere
@@ -96,13 +95,10 @@ public class ReflectionRefractionTest extends StandardGame {
 
 		cubemapper2 = new CubeEnvironmentMap(this, s2.getTranslation());
 
-		Shader cubemaprefractionshader = new Shader(
-				ShaderLoader.loadShaderFromFile(
-						"res/shaders/cubemapreflectrefract.vert",
-						"res/shaders/cubemaprefraction.frag"));
+		Shader cubemaprefractionshader = new Shader(ShaderLoader
+				.loadShaderFromFile("res/shaders/cubemapreflectrefract.vert", "res/shaders/cubemaprefraction.frag"));
 		cubemaprefractionshader.addArgumentNames("cubeMap");
-		cubemaprefractionshader.addArguments(new CubeMap(cubemapper2
-				.getTextureID()));
+		cubemaprefractionshader.addArguments(new CubeMap(cubemapper2.getTextureID()));
 		cubemaprefractionshader.addArgumentNames("refractionIndex");
 		cubemaprefractionshader.addArguments(0.5f);
 		s2.setShader(cubemaprefractionshader);
@@ -114,11 +110,9 @@ public class ReflectionRefractionTest extends StandardGame {
 
 		cubemapper3 = new CubeEnvironmentMap(this, b2.getTranslation());
 
-		Shader cubemaprefractionshader2 = new Shader(
-				cubemaprefractionshader.getShaderProgram());
+		Shader cubemaprefractionshader2 = new Shader(cubemaprefractionshader.getShaderProgram());
 		cubemaprefractionshader2.addArgumentNames("cubeMap");
-		cubemaprefractionshader2.addArguments(new CubeMap(cubemapper3
-				.getTextureID()));
+		cubemaprefractionshader2.addArguments(new CubeMap(cubemapper3.getTextureID()));
 		cubemaprefractionshader.addArgumentNames("refractionIndex");
 		cubemaprefractionshader.addArguments(0.5f);
 		b2.setShader(cubemaprefractionshader2);
@@ -131,7 +125,6 @@ public class ReflectionRefractionTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugger.render3d();
 		debugger.begin();
 		renderScene();
 	}
@@ -139,12 +132,11 @@ public class ReflectionRefractionTest extends StandardGame {
 	@Override
 	public void render2d() {
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
-		debugger.update();
+		debugger.update(fps, 0, 0);
 		cam.update(delta);
 		camball.translateTo(cam.getTranslation());
 		cubemapper0.updateTexture();

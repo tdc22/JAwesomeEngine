@@ -48,9 +48,13 @@ public class HACD {
 			Integer[] triangles) {
 		m_barycenter = new Vector3d();
 		m_rot = new Matrix3d();
+		System.out.println("START ALIGNMESH");
 		alignMesh((Vector3d[]) vertices, triangles, 1, 1);
+		System.out.println("START VOXELIZEMESH");
 		voxelizeMesh((Vector3d[]) vertices, triangles, 1, 1);
+		System.out.println("START COMPUTEPRIMITIVESET");
 		computePrimitiveSet();
+		System.out.println("START COMPUTEACD");
 		computeACD();
 		// mergeConvexHulls();
 		// simplifyConvexHulls();
@@ -75,6 +79,7 @@ public class HACD {
 		boolean firstIteration = true;
 		double m_volumeCH0 = 1;
 		while (sub++ < m_depth && inputParts.size() > 0 && !m_cancel) {
+			System.out.println(sub + "; " + m_depth + "; " + inputParts.size());
 			double maxConcavity = 0;
 			int nInputParts = inputParts.size();
 
@@ -250,16 +255,21 @@ public class HACD {
 		int iteration = 0;
 		int maxIteration = 5;
 		while (iteration++ < maxIteration && !m_cancel) {
-			System.out.println("A " + iteration);
+			System.out.println("Iteration: " + iteration + "; maxIteration: " + maxIteration);
+			System.out.println("0");
 			m_volume = new HACDVolume();
+			System.out.println("1");
 			m_volume.voxelize(points, triangles, stridePoints, strideTriangles,
 					m_barycenter, m_rot.getArray(), m_dim);
+			System.out.println("a");
 
 			int n = m_volume.getNPrimitivesOnSurf()
 					+ m_volume.getNPrimitivesInsideSurf();
+			System.out.println("b");
 
 			double a = Math.pow((double) (m_resolution) / n, 0.33);
 			int dim_next = (int) (m_dim * a + 0.5);
+			System.out.println("c");
 			if (n < m_resolution && iteration < maxIteration
 					&& m_volume.getNPrimitivesOnSurf() < m_resolution / 8
 					&& m_dim != dim_next) {
@@ -268,6 +278,7 @@ public class HACD {
 			} else {
 				break;
 			}
+			System.out.println("d");
 		}
 	}
 
@@ -2206,7 +2217,9 @@ public class HACD {
 		}
 
 		public int getVoxel(int i, int j, int k) {
-			return m_data[(int) (i + j * m_dim.x + k * m_dim.x * m_dim.y)];
+			int id = (int) (i + j * m_dim.x + k * m_dim.x * m_dim.y) % m_data.length;
+//			if (id < 0) System.out.println((i + j * m_dim.x + k * m_dim.x * m_dim.y) + " (" + i + "; " + j + "; " + k + "); " + m_data.length);
+			return m_data[Math.abs(id)];
 		}
 
 		public void setVoxel(int i, int j, int k, int set) {
@@ -2215,9 +2228,9 @@ public class HACD {
 
 		public Vector3d computeAlignedPoint(Vector3d[] points, int idx,
 				Vector3d barycenter, double[][] rot) {
-			double x = points[idx + 0].x - barycenter.x;
-			double y = points[idx + 1].y - barycenter.y;
-			double z = points[idx + 2].z - barycenter.z;
+			double x = points[(idx + 0)%points.length].x - barycenter.x;
+			double y = points[(idx + 1)%points.length].y - barycenter.y;
+			double z = points[(idx + 2)%points.length].z - barycenter.z;
 			return new Vector3d(rot[0][0] * x + rot[1][0] * y + rot[2][0] * z,
 					rot[0][1] * x + rot[1][1] * y + rot[2][1] * z, rot[0][2]
 							* x + rot[1][2] * y + rot[2][2] * z);
@@ -2229,7 +2242,6 @@ public class HACD {
 			m_maxBB = pt;
 			m_minBB = pt;
 			for (int v = 1; v < points.length; ++v) {
-				System.out.println("B " + v);
 				pt = computeAlignedPoint(points, v * stridePoints, barycenter,
 						rot);
 				if (pt.x < m_minBB.x)
@@ -2289,20 +2301,25 @@ public class HACD {
 			Vector3d boxcenter = new Vector3d();
 			Vector3d pt;
 			Vector3d boxhalfsize = new Vector3d(0.5, 0.5, 0.5);
+			System.out.println("start for");
 			for (int t = 0, ti = 0; t < triangles.length; ++t, ti += strideTriangles) {
+				System.out.println(t + "; " + triangles.length);
 				int[] tri = new int[] { triangles[ti + 0], triangles[ti + 1],
 						triangles[ti + 2] };
 				for (int c = 0; c < 3; ++c) {
+					System.out.println("h");
 					pt = computeAlignedPoint(points, tri[c] * stridePoints,
 							barycenter, rot);
+					System.out.println("h2");
+					p[c] = new Vector3d();
 					p[c].x = (pt.x - m_minBB.x) * invScale;
 					p[c].y = (pt.y - m_minBB.y) * invScale;
 					p[c].z = (pt.z - m_minBB.z) * invScale;
 					i = (int) (p[c].x + 0.5);
 					j = (int) (p[c].y + 0.5);
 					k = (int) (p[c].z + 0.5);
-					assert (i < m_dim.x && i >= 0 && j < m_dim.y && j >= 0
-							&& k < m_dim.z && k >= 0);
+//					assert (i < m_dim.x && i >= 0 && j < m_dim.y && j >= 0
+//							&& k < m_dim.z && k >= 0);
 
 					if (c == 0) {
 						i0 = i1 = i;
@@ -2341,6 +2358,7 @@ public class HACD {
 						boxcenter.y = (double) j;
 						for (k = k0; k < k1; ++k) {
 							boxcenter.z = (double) k;
+							// System.out.println("i " + boxcenter);
 							int res = triBoxOverlap(boxcenter, boxhalfsize,
 									p[0], p[1], p[2]);
 							int value = getVoxel(i, j, k);

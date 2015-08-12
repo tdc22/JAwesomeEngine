@@ -1,9 +1,16 @@
 package physics2dConstraintPendulum;
 
+import broadphase.SAP2;
+import constraints.DistanceConstraint2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import integration.VerletIntegration;
 import loader.FontLoader;
+import loader.ShaderLoader;
 import manifold.MultiPointManifoldManager2;
 import matrix.Matrix1f;
 import narrowphase.EPA2;
@@ -15,16 +22,11 @@ import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
 import positionalcorrection.ProjectionCorrection;
 import resolution.ImpulseResolution;
+import shader.Shader;
 import shape2d.Circle;
 import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
-import broadphase.SAP2;
-import constraints.DistanceConstraint2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class PendulumTest2d extends StandardGame {
 	PhysicsSpace2 space;
@@ -36,36 +38,41 @@ public class PendulumTest2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(1400, 600),
-				new PixelFormat(), new VideoSettings(1400, 600));
+		initDisplay(new GLDisplay(), new DisplayMode(1400, 600), new PixelFormat(), new VideoSettings(1400, 600));
 		// display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(),
-				new GJK2(new EPA2()), new ImpulseResolution(),
+		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(), new GJK2(new EPA2()), new ImpulseResolution(),
 				new ProjectionCorrection(1), new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
 		space.setGlobalGravitation(new Vector2f(0, 120));
 
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		add2dShader(defaultshader2);
+		
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
 		physicsdebug = new PhysicsDebug2(inputs, font, space);
 
 		Quad base1 = new Quad(200, 20, 5, 5);
 		RigidBody2 rb1 = new RigidBody2(PhysicsShapeCreator.create(base1));
 		space.addRigidBody(base1, rb1);
-		add2dObject(base1);
+		defaultshader2.addObject(base1);
 
 		Quad base2 = new Quad(600, 20, 5, 5);
 		RigidBody2 rb2 = new RigidBody2(PhysicsShapeCreator.create(base2));
 		space.addRigidBody(base2, rb2);
-		add2dObject(base2);
+		defaultshader2.addObject(base2);
 
 		Quad base3 = new Quad(1000, 20, 5, 5);
 		RigidBody2 rb3 = new RigidBody2(PhysicsShapeCreator.create(base3));
 		space.addRigidBody(base3, rb3);
-		add2dObject(base3);
+		defaultshader2.addObject(base3);
 
 		// Pendulum 1
 		Circle body1 = new Circle(0, 0, 20, 100);
@@ -74,7 +81,7 @@ public class PendulumTest2d extends StandardGame {
 		rbB1.setInertia(new Matrix1f(1));
 		rbB1.setLinearDamping(0.0f);
 		space.addRigidBody(body1, rbB1);
-		add2dObject(body1);
+		defaultshader2.addObject(body1);
 
 		Constraint2 constraint = new DistanceConstraint2(rb1, rbB1, 180);
 		space.addConstraint(constraint);
@@ -86,7 +93,7 @@ public class PendulumTest2d extends StandardGame {
 		rbB21.setInertia(new Matrix1f(1));
 		rbB21.setLinearDamping(0.0f);
 		space.addRigidBody(body21, rbB21);
-		add2dObject(body21);
+		defaultshader2.addObject(body21);
 
 		Circle body22 = new Circle(400, 180, 20, 100);
 		rbB22 = new RigidBody2(PhysicsShapeCreator.create(body22));
@@ -94,7 +101,7 @@ public class PendulumTest2d extends StandardGame {
 		rbB22.setInertia(new Matrix1f(1));
 		rbB22.setLinearDamping(0.0f);
 		space.addRigidBody(body22, rbB22);
-		add2dObject(body22);
+		defaultshader2.addObject(body22);
 
 		Constraint2 constraint21 = new DistanceConstraint2(rb2, rbB21, 180);
 		Constraint2 constraint22 = new DistanceConstraint2(rbB21, rbB22, 180);
@@ -108,7 +115,7 @@ public class PendulumTest2d extends StandardGame {
 		rbB31.setInertia(new Matrix1f(1));
 		rbB31.setLinearDamping(0.0f);
 		space.addRigidBody(body31, rbB31);
-		add2dObject(body31);
+		defaultshader2.addObject(body31);
 
 		Circle body32 = new Circle(800, 180, 20, 100);
 		rbB32 = new RigidBody2(PhysicsShapeCreator.create(body32));
@@ -116,7 +123,7 @@ public class PendulumTest2d extends StandardGame {
 		rbB32.setInertia(new Matrix1f(1));
 		rbB32.setLinearDamping(0.0f);
 		space.addRigidBody(body32, rbB32);
-		add2dObject(body32);
+		defaultshader2.addObject(body32);
 
 		Circle body33 = new Circle(980, 180, 20, 100);
 		rbB33 = new RigidBody2(PhysicsShapeCreator.create(body33));
@@ -124,7 +131,7 @@ public class PendulumTest2d extends StandardGame {
 		rbB33.setInertia(new Matrix1f(1));
 		rbB33.setLinearDamping(0.0f);
 		space.addRigidBody(body33, rbB33);
-		add2dObject(body33);
+		defaultshader2.addObject(body33);
 
 		Constraint2 constraint31 = new DistanceConstraint2(rb3, rbB31, 180);
 		Constraint2 constraint32 = new DistanceConstraint2(rbB31, rbB32, 180);
@@ -132,7 +139,6 @@ public class PendulumTest2d extends StandardGame {
 		space.addConstraint(constraint31);
 		space.addConstraint(constraint32);
 		space.addConstraint(constraint33);
-
 	}
 
 	@Override
@@ -145,7 +151,6 @@ public class PendulumTest2d extends StandardGame {
 		debugger.begin();
 		render2dScene();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 		physicsdebug.render2d();
 	}
 
@@ -172,7 +177,7 @@ public class PendulumTest2d extends StandardGame {
 			time = 0;
 		}
 
-		debugger.update();
+		debugger.update(fps, 0, 0);
 		space.update(delta);
 		physicsdebug.update();
 		cam.update(delta);

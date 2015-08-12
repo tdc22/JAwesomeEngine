@@ -1,15 +1,18 @@
 package debug_ConvexHull;
 
-import game.StandardGame;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
 import loader.FontLoader;
 import math.VecMath;
 import objects.ShapedObject;
@@ -17,10 +20,6 @@ import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ConvexHullDebugger extends StandardGame {
 	public class Triangle {
@@ -142,9 +141,7 @@ public class ConvexHullDebugger extends StandardGame {
 			System.out.println("---");
 			for (Triangle t : faces) {
 				System.out
-						.println(vertices.indexOf(t.a) + " | "
-								+ vertices.indexOf(t.b) + " | "
-								+ vertices.indexOf(t.c));
+						.println(vertices.indexOf(t.a) + " | " + vertices.indexOf(t.b) + " | " + vertices.indexOf(t.c));
 			}
 
 			System.exit(0);
@@ -165,24 +162,21 @@ public class ConvexHullDebugger extends StandardGame {
 			for (int i = 0; i < faces.size(); i++) {
 				Triangle f = faces.get(i);
 				Triangle[] adjs = findAdjacentTriangles(f, faces);
-				if (VecMath.dotproduct(VecMath.subtraction(f.c, f.a),
-						adjs[0].normal) > 0) {
+				if (VecMath.dotproduct(VecMath.subtraction(f.c, f.a), adjs[0].normal) > 0) {
 					Vector3f adjD = findTheD(f.a, f.b, adjs[0]);
 					faces.add(new Triangle(f.c, f.a, adjD));
 					faces.add(new Triangle(f.b, f.c, adjD));
 					faces.remove(i);
 					faces.remove(adjs[0]);
 					i--;
-				} else if (VecMath.dotproduct(VecMath.subtraction(f.a, f.b),
-						adjs[1].normal) > 0) {
+				} else if (VecMath.dotproduct(VecMath.subtraction(f.a, f.b), adjs[1].normal) > 0) {
 					Vector3f adjD = findTheD(f.b, f.c, adjs[1]);
 					faces.add(new Triangle(f.a, f.b, adjD));
 					faces.add(new Triangle(f.c, f.a, adjD));
 					faces.remove(i);
 					faces.remove(adjs[1]);
 					i--;
-				} else if (VecMath.dotproduct(VecMath.subtraction(f.b, f.c),
-						adjs[2].normal) > 0) {
+				} else if (VecMath.dotproduct(VecMath.subtraction(f.b, f.c), adjs[2].normal) > 0) {
 					Vector3f adjD = findTheD(f.c, f.a, adjs[2]);
 					faces.add(new Triangle(f.b, f.c, adjD));
 					faces.add(new Triangle(f.a, f.b, adjD));
@@ -229,8 +223,7 @@ public class ConvexHullDebugger extends StandardGame {
 		float distance = 0;
 		int pointID = -1;
 		for (int i = 0; i < points.size(); i++) {
-			float dist = Math.abs(VecMath.dotproduct(t.normal,
-					VecMath.subtraction(points.get(i), t.a)));
+			float dist = Math.abs(VecMath.dotproduct(t.normal, VecMath.subtraction(points.get(i), t.a)));
 			if (dist > distance) {
 				distance = dist;
 				pointID = i;
@@ -239,13 +232,11 @@ public class ConvexHullDebugger extends StandardGame {
 		return pointID;
 	}
 
-	private static int getFurthestPointDirection(Triangle t,
-			List<Vector3f> points) {
+	private static int getFurthestPointDirection(Triangle t, List<Vector3f> points) {
 		float distance = 0;
 		int pointID = -1;
 		for (int i = 0; i < points.size(); i++) {
-			float dist = VecMath.dotproduct(t.normal,
-					VecMath.subtraction(points.get(i), t.a));
+			float dist = VecMath.dotproduct(t.normal, VecMath.subtraction(points.get(i), t.a));
 			System.out.println("distance: " + dist);
 			if (dist > distance) {
 				distance = dist;
@@ -262,25 +253,21 @@ public class ConvexHullDebugger extends StandardGame {
 	 * @param faces
 	 * @return
 	 */
-	private static Triangle[] findAdjacentTriangles(Triangle t,
-			List<Triangle> faces) {
+	private static Triangle[] findAdjacentTriangles(Triangle t, List<Triangle> faces) {
 		Triangle[] result = new Triangle[3];
 		for (Triangle f : faces) {
 			System.out.println("a");
 			if (!f.equals(t)) {
 				System.out.println("b");
 				System.out.println(f.a.equals(t.b) && f.b.equals(t.a));
-				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b)
-						&& f.c.equals(t.a) || f.c.equals(t.b)
-						&& f.a.equals(t.a))
+				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b) && f.c.equals(t.a)
+						|| f.c.equals(t.b) && f.a.equals(t.a))
 					result[0] = f;
-				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c)
-						&& f.c.equals(t.b) || f.c.equals(t.c)
-						&& f.a.equals(t.b))
+				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c) && f.c.equals(t.b)
+						|| f.c.equals(t.c) && f.a.equals(t.b))
 					result[1] = f;
-				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a)
-						&& f.c.equals(t.c) || f.c.equals(t.a)
-						&& f.a.equals(t.c))
+				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a) && f.c.equals(t.c)
+						|| f.c.equals(t.a) && f.a.equals(t.c))
 					result[2] = f;
 			}
 		}
@@ -305,23 +292,19 @@ public class ConvexHullDebugger extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(),
-				new PixelFormat().withSamples(0), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings());
 
 		display.bindMouse();
-		debugger = new Debugger(inputs,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		cam.setFlyCam(true);
 		cam.translateTo(0, 1, 3);
 		cam.setFlySpeed(0.01f);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
 		// Input to step EPA
-		InputEvent stepEPA = new InputEvent("Step Hull", new Input(
-				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
+		InputEvent stepEPA = new InputEvent("Step Hull", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(stepEPA);
 
 		points = new ArrayList<Vector3f>();
@@ -342,7 +325,7 @@ public class ConvexHullDebugger extends StandardGame {
 
 	@Override
 	public void render() {
-		debugger.render3d();
+		debugger.update3d();
 		debugger.begin();
 		renderScene();
 		simplex.render();
@@ -385,8 +368,7 @@ public class ConvexHullDebugger extends StandardGame {
 		public PointCloud(List<Vector3f> points) {
 			setRenderMode(GLConstants.POINTS);
 			for (int i = 0; i < points.size(); i++) {
-				addVertex(points.get(i), Color.GRAY, new Vector2f(0, 0),
-						new Vector3f(0, 1, 0));
+				addVertex(points.get(i), Color.GRAY, new Vector2f(0, 0), new Vector3f(0, 1, 0));
 				addIndex(i);
 			}
 			prerender();

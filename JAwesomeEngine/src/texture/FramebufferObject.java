@@ -1,6 +1,6 @@
 package texture;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.GL_VIEWPORT_BIT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glPopAttrib;
@@ -51,25 +52,31 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.opengl.GL32.GL_TEXTURE_2D_MULTISAMPLE;
 import static org.lwjgl.opengl.GL32.glTexImage2DMultisample;
 
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+
+import org.lwjgl.opengl.GL11;
 
 import objects.Camera;
 import objects.Renderable;
+import objects.ViewProjection;
+import utils.Debugger;
 import utils.DefaultValues;
 import utils.ViewFrustum;
 
 public class FramebufferObject {
-	Renderable render;
+	ViewProjection render;
 	int frameBufferID, colorRBID, depthRBID, samples;
 	Texture colorTexture, depthTexture;
 	int width, height;
 	IntBuffer imageData;
+	FloatBuffer viewTemp, projectionTemp;
 	boolean multisampled, useCam, useFrustum, renderColor, renderDepth,
 			renderColorToTexture, renderDepthToTexture;
 	Camera cam;
 	ViewFrustum frustum;
 
-	public FramebufferObject(Renderable render) {
+	public FramebufferObject(ViewProjection render) {
 		init(render, DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_X,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_Y,
 				DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null, null,
@@ -79,7 +86,7 @@ public class FramebufferObject {
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(Renderable render, int width, int height) {
+	public FramebufferObject(ViewProjection render, int width, int height) {
 		init(render, width, height, DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES,
 				null, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
@@ -88,7 +95,7 @@ public class FramebufferObject {
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(Renderable render, int width, int height,
+	public FramebufferObject(ViewProjection render, int width, int height,
 			int samples) {
 		init(render, width, height, samples, null, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
@@ -97,7 +104,7 @@ public class FramebufferObject {
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(Renderable render, int width, int height,
+	public FramebufferObject(ViewProjection render, int width, int height,
 			int samples, Camera cam) {
 		init(render, width, height, samples, cam, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
@@ -106,21 +113,21 @@ public class FramebufferObject {
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(Renderable render, int width, int height,
+	public FramebufferObject(ViewProjection render, int width, int height,
 			int samples, Camera cam, boolean renderColor, boolean renderDepth) {
 		init(render, width, height, samples, cam, null, null, renderColor,
 				renderDepth, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(Renderable render, int width, int height,
+	public FramebufferObject(ViewProjection render, int width, int height,
 			int samples, Camera cam, boolean renderColor, boolean renderDepth,
 			boolean renderColorToTexture, boolean renderDepthToTexture) {
 		init(render, width, height, samples, cam, null, null, renderColor,
 				renderDepth, renderColorToTexture, renderDepthToTexture);
 	}
 
-	public FramebufferObject(Renderable render, int width, int height,
+	public FramebufferObject(ViewProjection render, int width, int height,
 			int samples, Camera cam, Texture colorbuffer) {
 		init(render, width, height, samples, cam, colorbuffer, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
@@ -129,7 +136,7 @@ public class FramebufferObject {
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(Renderable render, int width, int height,
+	public FramebufferObject(ViewProjection render, int width, int height,
 			int samples, Camera cam, Texture colorbuffer, ViewFrustum frustum) {
 		init(render, width, height, samples, cam, colorbuffer, frustum,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
@@ -140,17 +147,36 @@ public class FramebufferObject {
 
 	public void begin() {
 		glDisable(GL_TEXTURE_2D);
-		glPushAttrib(GL_VIEWPORT_BIT);
-		glViewport(0, 0, width, height);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		if (useCam)
-			cam.begin();
-		if (useFrustum)
-			frustum.begin();
+		if (useCam && useFrustum) {
+			viewTemp = render.getViewMatrixBuffer();
+			projectionTemp = render.getProjectionMatrixBuffer();
+			render.setViewProjectionMatrix(cam.getMatrixBuffer(), frustum.getMatrixBuffer());
+		} else if(useCam) {
+			viewTemp = render.getViewMatrixBuffer();
+			render.setViewMatrix(cam.getMatrixBuffer());
+		} else if(useFrustum) {
+			projectionTemp = render.getProjectionMatrixBuffer();
+			render.setProjectionMatrix(frustum.getMatrixBuffer());
+		}
 
 		bind();
 		clear();
+	}
+	
+	public void end() {
+		unbind();
+
+		if (useCam && useFrustum) {
+			render.setViewProjectionMatrix(viewTemp, projectionTemp);
+		} else if(useCam) {
+			render.setViewMatrix(viewTemp);
+		} else if(useFrustum) {
+			render.setProjectionMatrix(projectionTemp);
+		}
+		
+		glEnable(GL_TEXTURE_2D);
 	}
 
 	public void bind() {
@@ -196,18 +222,6 @@ public class FramebufferObject {
 		glDeleteFramebuffers(frameBufferID);
 	}
 
-	public void end() {
-		unbind();
-
-		if (useFrustum)
-			frustum.end();
-		if (useCam)
-			cam.end();
-
-		glPopAttrib();
-		glEnable(GL_TEXTURE_2D);
-	}
-
 	public int getColorTextureID() {
 		return colorTexture.getTextureID();
 	}
@@ -236,7 +250,7 @@ public class FramebufferObject {
 		return width;
 	}
 
-	private void init(Renderable render, int width, int height, int samples,
+	private void init(ViewProjection render, int width, int height, int samples,
 			Camera camera, Texture colorbuffer, ViewFrustum frustum,
 			boolean renderColor, boolean renderDepth,
 			boolean renderColorToTexture, boolean renderDepthToTexture) {
@@ -280,18 +294,18 @@ public class FramebufferObject {
 							.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE
 									: GL_TEXTURE_2D);
 					colorTexture.bind();
-					glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER,
-							GL_LINEAR);
-					glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER,
-							GL_LINEAR);
-					glTexParameteri(textureType, GL_TEXTURE_WRAP_S,
-							GL_CLAMP_TO_EDGE);
-					glTexParameteri(textureType, GL_TEXTURE_WRAP_T,
-							GL_CLAMP_TO_EDGE);
 					if (multisampled) {
 						glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE,
 								samples, GL_RGBA, width, height, true);
 					} else {
+						glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER,
+								GL_LINEAR);
+						glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER,
+								GL_LINEAR);
+						glTexParameteri(textureType, GL_TEXTURE_WRAP_S,
+								GL_CLAMP_TO_EDGE);
+						glTexParameteri(textureType, GL_TEXTURE_WRAP_T,
+								GL_CLAMP_TO_EDGE);
 						glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
 								0, GL_RGBA, GL_UNSIGNED_BYTE,
 								(java.nio.ByteBuffer) null);
@@ -323,16 +337,16 @@ public class FramebufferObject {
 								: GL_TEXTURE_2D);
 				depthTexture.bind();
 				int textureType = depthTexture.getTextureType();
-				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTexParameteri(textureType, GL_TEXTURE_WRAP_S,
-						GL_CLAMP_TO_EDGE);
-				glTexParameteri(textureType, GL_TEXTURE_WRAP_T,
-						GL_CLAMP_TO_EDGE);
 				if (multisampled) {
 					glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples,
 							GL_DEPTH_COMPONENT, width, height, true);
 				} else {
+					glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+					glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(textureType, GL_TEXTURE_WRAP_S,
+							GL_CLAMP_TO_EDGE);
+					glTexParameteri(textureType, GL_TEXTURE_WRAP_T,
+							GL_CLAMP_TO_EDGE);
 					glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width,
 							height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
 							(java.nio.ByteBuffer) null);

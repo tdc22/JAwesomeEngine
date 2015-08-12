@@ -1,14 +1,17 @@
 package debug_GJK;
 
-import game.StandardGame;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
 import loader.FontLoader;
 import math.VecMath;
 import objects.RigidBody3;
@@ -22,10 +25,6 @@ import shape.Sphere;
 import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector3f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class GJKDebugger extends StandardGame {
 	private class Line extends ShapedObject {
@@ -287,15 +286,12 @@ public class GJKDebugger extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(),
-				new PixelFormat().withSamples(0), new VideoSettings());
-		debugger = new Debugger(inputs,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings());
+		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		display.bindMouse();
 		cam.setFlyCam(true);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
 		// Box b1 = new Box(-8.960001f, 8.190001f, 0.0f, 1f, 1f, 1f);
@@ -317,8 +313,7 @@ public class GJKDebugger extends StandardGame {
 		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
 		Box b1 = new Box(0.0f, -3.513634f, 0.0f, 0.5f, 0.5f, 0.5f);
-		Quaternionf falsecase = new Quaternionf(0.9998758, -0.011145344,
-				-2.5039499E-5, 0.011145378);
+		Quaternionf falsecase = new Quaternionf(0.9998758, -0.011145344, -2.5039499E-5, 0.011145378);
 		b1.setRotation(falsecase);
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
 
@@ -360,8 +355,7 @@ public class GJKDebugger extends StandardGame {
 		// rb1.setRotation(interpolation);
 		// BRUTEFORCE(rb1, rb2, Color.GREEN);
 
-		InputEvent stepGJK = new InputEvent("Step GJK", new Input(
-				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
+		InputEvent stepGJK = new InputEvent("Step GJK", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(stepGJK);
 	}
 
@@ -392,7 +386,7 @@ public class GJKDebugger extends StandardGame {
 
 	@Override
 	public void render() {
-		debugger.render3d();
+		debugger.update3d();
 		debugger.begin();
 		renderScene();
 		GJKsimplex.render();
@@ -413,8 +407,7 @@ public class GJKDebugger extends StandardGame {
 		// System.out.println("New Point: " + a);
 		// if AtD < 0 No Intersection
 		System.out.println();
-		System.out.println(simplex.size() + " dir: " + direction + "; " + a
-				+ "; " + VecMath.dotproduct(a, direction));
+		System.out.println(simplex.size() + " dir: " + direction + "; " + a + "; " + VecMath.dotproduct(a, direction));
 		if (VecMath.dotproduct(a, direction) < 0)
 			System.out.println("Failure!");
 		// [] += A
@@ -425,14 +418,12 @@ public class GJKDebugger extends StandardGame {
 		}
 	}
 
-	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
-			Vector3f dir) {
+	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb, Vector3f dir) {
 		// System.out.println("sup: " +
 		// VecMath.substraction(Sa.supportPoint(dir),
 		// Sb.supportPoint(VecMath.negate(dir))) + ": " + Sa.supportPoint(dir) +
 		// "; " + Sb.supportPoint(VecMath.negate(dir)) + "; " + dir);
-		return VecMath.subtraction(Sa.supportPoint(dir),
-				Sb.supportPointNegative(dir));
+		return VecMath.subtraction(Sa.supportPoint(dir), Sb.supportPointNegative(dir));
 	}
 
 	@Override

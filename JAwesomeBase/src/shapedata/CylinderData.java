@@ -16,7 +16,7 @@ public class CylinderData extends DataObject implements CylinderStructure {
 	public CylinderData(float x, float y, float z, float radius,
 			float halfheight) {
 		super();
-		translate(x, y, z);
+		translateTo(x, y, z);
 		shapetype = SHAPE_CYLINDER;
 		this.radius = radius;
 		this.halfheight = halfheight;
@@ -24,7 +24,7 @@ public class CylinderData extends DataObject implements CylinderStructure {
 
 	public CylinderData(Vector3f pos, float radius, float halfheight) {
 		super();
-		translate(pos);
+		translateTo(pos);
 		shapetype = SHAPE_CYLINDER;
 		this.radius = radius;
 		this.halfheight = halfheight;

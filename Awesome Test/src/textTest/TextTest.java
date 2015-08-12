@@ -1,14 +1,16 @@
 package textTest;
 
-import game.StandardGame;
-import gui.Font;
-import gui.Text;
-import loader.FontLoader;
 import collisionshape2d.QuadShape;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
+import game.StandardGame;
+import gui.Font;
+import gui.Text;
+import loader.FontLoader;
+import loader.ShaderLoader;
+import shader.Shader;
 
 public class TextTest extends StandardGame {
 	QuadShape rotquad;
@@ -17,17 +19,17 @@ public class TextTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		add2dShader(defaultshader);
+
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		add2dObject(new Text(
-				"Hello this is a test!\nYou can make line breaks.", 100, 100,
-				font, 40));
-		add2dObject(new Text("This font is rendered in polygons.", 100, 200,
-				font, 10));
+		defaultshader.addObject(new Text("Hello this is a test!\nYou can make line breaks.", 100, 100, font, 40));
+		defaultshader.addObject(new Text("This font is rendered in polygons.", 100, 200, font, 10));
 	}
 
 	@Override

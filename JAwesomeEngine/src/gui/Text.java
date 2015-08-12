@@ -1,11 +1,20 @@
 package gui;
 
 import static org.lwjgl.opengl.GL11.glTranslatef;
-import loader.FontLoader;
-import objects.RenderedObject;
-import utils.DefaultValues;
 
-public class Text extends RenderedObject {
+import org.lwjgl.opengl.GL11;
+
+import loader.FontLoader;
+import math.VecMath;
+import objects.RenderedObject;
+import objects.ShapedObject;
+import objects.ShapedObject2;
+import utils.DefaultValues;
+import utils.GLConstants;
+import vector.Vector2f;
+import vector.Vector3f;
+
+public class Text extends ShapedObject2 {
 	String text;
 	Font font;
 	float fontsize = 1, charactermargin, spacesize;
@@ -44,37 +53,13 @@ public class Text extends RenderedObject {
 
 	private void init(String text, float x, float y, Font f, float size,
 			float characterMargin, float spaceSize) {
-		this.text = text;
+		setRenderMode(GLConstants.LINES);
 		setFont(f);
 		setSpaceSize(spaceSize);
 		setFontsize(size);
 		setCharacterMargin(characterMargin);
+		setText(text);
 		translateTo(x, y);
-	}
-
-	@Override
-	public void render() {
-		initRender();
-
-		char[] chars = text.toCharArray();
-		float lastmargin = 0;
-		float linemargin = 0;
-		int l = chars.length;
-		glTranslatef(0, 1, 0);
-		for (int i = 0; i < l; i++) {
-			char c = chars[i];
-			FontCharacter character = font.getCharacter(c);
-			glTranslatef(lastmargin, 0, 0);
-			character.render();
-			lastmargin = character.getMargin().x + charactermargin;
-			linemargin += lastmargin;
-			if (c == '\n') {
-				glTranslatef(-linemargin, 1, 0);
-				linemargin = 0;
-			}
-		}
-
-		endRender();
 	}
 
 	public void setCharacterMargin(float margin) {
@@ -82,7 +67,7 @@ public class Text extends RenderedObject {
 	}
 
 	public void setFont(Font f) {
-		font = f;
+		font = new Font(f);
 	}
 
 	public void setFont(String fontname) {
@@ -95,10 +80,32 @@ public class Text extends RenderedObject {
 	}
 
 	public void setSpaceSize(float size) {
-		font.getCharacter(' ').setMargin(size, size);
+		font.setSpaceSize(size);
 	}
 
 	public void setText(String text) {
 		this.text = text;
+		char[] chars = text.toCharArray();
+		
+		delete();
+		Vector3f position = new Vector3f();
+		int indexCount = 0;
+		for (int i = 0; i < chars.length; i++) {
+			char c = chars[i];
+			FontCharacter character = font.getCharacter(c);
+			for(Vector3f v : character.getVertices()) {
+				this.addVertex(VecMath.addition(position, v));
+			}
+			for(Integer index : character.getIndices()) {
+				this.addIndex(indexCount + index);
+			}
+			indexCount = getIndices().get(getIndices().size()-1)+1;
+			position.x += character.getMargin().x + charactermargin;
+			if (c == '\n') {
+				position.x = 0;
+				position.y += 1;
+			}
+		}
+		prerender();
 	}
 }

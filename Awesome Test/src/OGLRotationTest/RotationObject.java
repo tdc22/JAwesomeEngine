@@ -5,8 +5,7 @@ import shape.Box;
 public class RotationObject extends Box {
 	float degree = 0;
 
-	public RotationObject(float x, float y, float z, float halfsizeX,
-			float halfsizeY, float halfsizeZ) {
+	public RotationObject(float x, float y, float z, float halfsizeX, float halfsizeY, float halfsizeZ) {
 		super(x, y, z, halfsizeX, halfsizeY, halfsizeZ);
 	}
 

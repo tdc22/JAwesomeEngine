@@ -1,8 +1,7 @@
 package gui;
 
 import objects.ShapedObject2;
-
-import org.lwjgl.opengl.GL11;
+import utils.GLConstants;
 
 import vector.Vector2f;
 
@@ -10,7 +9,7 @@ public class FontCharacter extends ShapedObject2 {
 	Vector2f margin;
 
 	public FontCharacter() {
-		setRenderMode(GL11.GL_LINES);
+		setRenderMode(GLConstants.LINES);
 	}
 
 	public Vector2f getMargin() {

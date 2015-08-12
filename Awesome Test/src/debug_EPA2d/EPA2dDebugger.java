@@ -1,13 +1,16 @@
 package debug_EPA2d;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import loader.FontLoader;
 import math.VecMath;
 import narrowphase.EmptyManifoldGenerator2;
@@ -21,10 +24,6 @@ import quaternion.Quaternionf;
 import shape2d.Circle;
 import utils.Debugger;
 import vector.Vector2f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class EPA2dDebugger extends StandardGame {
 	public class Edge {
@@ -118,26 +117,21 @@ public class EPA2dDebugger extends StandardGame {
 		return closest;
 	}
 
-	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,
-			Vector2f dir) {
-		return VecMath.subtraction(Sa.supportPoint(dir),
-				Sb.supportPointNegative(dir));
+	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb, Vector2f dir) {
+		return VecMath.subtraction(Sa.supportPoint(dir), Sb.supportPointNegative(dir));
 	}
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 
 		display.bindMouse();
-		debugger = new Debugger(inputs,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		cam.setFlyCam(true);
 		cam.translateTo(0, 1, 3);
 		cam.setFlySpeed(0.01f);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
 		// Test 5
@@ -171,14 +165,13 @@ public class EPA2dDebugger extends StandardGame {
 		epaInit(gjk.getSimplex());
 
 		// Input to step EPA
-		InputEvent stepEPA = new InputEvent("Step EPA", new Input(
-				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
+		InputEvent stepEPA = new InputEvent("Step EPA", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(stepEPA);
 	}
 
 	@Override
 	public void render() {
-		debugger.render3d();
+		debugger.update3d();
 		debugger.begin();
 		renderScene();
 	}

@@ -452,12 +452,15 @@ public class Matrix3d extends Matrix3 {
 	 */
 	@Override
 	public void transpose() {
-		double[][] tmp = matrix;
-		matrix[0][1] = tmp[1][0];
-		matrix[0][2] = tmp[2][0];
-		matrix[1][0] = tmp[0][1];
-		matrix[1][2] = tmp[2][1];
-		matrix[2][0] = tmp[0][2];
-		matrix[2][1] = tmp[1][2];
+		double m01 = matrix[0][1];
+		double m02 = matrix[0][2];
+		double m12 = matrix[1][2];
+		
+		matrix[0][1] = matrix[1][0];
+		matrix[0][2] = matrix[2][0];
+		matrix[1][2] = matrix[2][1];
+		matrix[1][0] = m01;
+		matrix[2][0] = m02;
+		matrix[2][1] = m12;
 	}
 }

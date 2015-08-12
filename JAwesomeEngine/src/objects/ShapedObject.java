@@ -1,6 +1,7 @@
 package objects;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_ARRAY;
+import static org.lwjgl.opengl.GL11.GL_DOUBLE;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_NORMAL_ARRAY;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_COORD_ARRAY;
@@ -13,13 +14,10 @@ import static org.lwjgl.opengl.GL11.glEnableClientState;
 import static org.lwjgl.opengl.GL11.glNormalPointer;
 import static org.lwjgl.opengl.GL11.glTexCoordPointer;
 import static org.lwjgl.opengl.GL11.glVertexPointer;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL21.*;
+import static org.lwjgl.opengl.GL30.*;
 
 import java.awt.Color;
 import java.nio.FloatBuffer;
@@ -30,18 +28,29 @@ import java.util.List;
 import math.VecMath;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 
+import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
 public class ShapedObject extends RenderedObject {
+	private static final int VERTEX_POSITION = 0;
+	private static final int COLOR_POSITION = 1;
+	private static final int TEXTURE_POSITION = 2;
+	private static final int NORMAL_POSITION = 3;
+	
 	private List<Integer> indices;
 	private List<Vector3f> vertices;
 	private List<Vector3f> normals;
 	private List<Color> vertcolors;
 	private List<Vector2f> texturecoords;
 
+	private int vaoID;
 	private int vboIndexHandle;
 	private int vboVertexHandle;
 	private int vboColorHandle;
@@ -49,12 +58,14 @@ public class ShapedObject extends RenderedObject {
 	private int vboNormalHandle;
 
 	protected int rendermode;
+	protected int renderedIndexCount = 0;
 
+	boolean render = true;
 	boolean renderColor = true;
 	boolean renderTexCoords = false;
 	boolean renderNormals = false;
 
-	protected int vertexsize = 3;
+	protected int vertexsize = 4;
 	protected int polysize = 3;
 	protected int colorsize = 3;
 	protected int texsize = 2;
@@ -160,7 +171,7 @@ public class ShapedObject extends RenderedObject {
 		// matrix = null;
 		deleteData();
 		deleteGPUData();
-		buf.clear();
+		// buf.clear();
 	}
 
 	public void deleteData() {
@@ -172,11 +183,16 @@ public class ShapedObject extends RenderedObject {
 	}
 
 	public void deleteGPUData() {
-		glDeleteBuffers(vboIndexHandle);
-		glDeleteBuffers(vboVertexHandle);
-		glDeleteBuffers(vboColorHandle);
-		glDeleteBuffers(vboTextureCoordHandle);
-		glDeleteBuffers(vboNormalHandle);
+		if (vboIndexHandle != 0)
+			glDeleteBuffers(vboIndexHandle);
+		if (vboVertexHandle != 0)
+			glDeleteBuffers(vboVertexHandle);
+		if (vboColorHandle != 0)
+			glDeleteBuffers(vboColorHandle);
+		if (vboTextureCoordHandle != 0)
+			glDeleteBuffers(vboTextureCoordHandle);
+		if (vboNormalHandle != 0)
+			glDeleteBuffers(vboNormalHandle);
 	}
 
 	public Integer getIndex(int indexid) {
@@ -234,11 +250,11 @@ public class ShapedObject extends RenderedObject {
 		if (vboNormalHandle != 0)
 			glDeleteBuffers(vboNormalHandle);
 
-		int allIndices = indices.size();
+		renderedIndexCount = indices.size();
 		int allVertices = vertices.size();
 
 		IntBuffer indexData = BufferUtils
-				.createIntBuffer(allIndices * polysize);
+				.createIntBuffer(renderedIndexCount * polysize);
 		FloatBuffer vertexData = BufferUtils.createFloatBuffer(allVertices
 				* vertexsize);
 		FloatBuffer colorData = BufferUtils.createFloatBuffer(allVertices
@@ -250,16 +266,16 @@ public class ShapedObject extends RenderedObject {
 
 		for (int v = 0; v < allVertices; v++) {
 			Vector3f vertex = vertices.get(v);
-			vertexData.put(new float[] { vertex.x, vertex.y, vertex.z });
+			vertexData.put(new float[] { vertex.x, vertex.y, vertex.z, 1 });
 			Color vertcolor = vertcolors.get(v);
 			colorData.put(new float[] { vertcolor.getRed(),
 					vertcolor.getGreen(), vertcolor.getBlue() });
 			Vector2f tex = texturecoords.get(v);
 			textureData.put(new float[] { tex.x, tex.y });
 			Vector3f normal = normals.get(v);
-			normalData.put(new float[] { normal.x, normal.y, normal.z });
+			normalData.put(new float[] { normal.x, normal.y, normal.z, 0 });
 		}
-		for (int i = 0; i < allIndices; i++) {
+		for (int i = 0; i < renderedIndexCount; i++) {
 			indexData.put(indices.get(i));
 		}
 		indexData.flip();
@@ -268,73 +284,80 @@ public class ShapedObject extends RenderedObject {
 		textureData.flip();
 		normalData.flip();
 
-		vboIndexHandle = glGenBuffers();
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndexHandle);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData, GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+		vaoID = glGenVertexArrays();
+		glBindVertexArray(vaoID);
+		
 		vboVertexHandle = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
 		glBufferData(GL_ARRAY_BUFFER, vertexData, GL_STATIC_DRAW);
+		glVertexAttribPointer(VERTEX_POSITION, vertexsize, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		vboColorHandle = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboColorHandle);
 		glBufferData(GL_ARRAY_BUFFER, colorData, GL_STATIC_DRAW);
+		glVertexAttribPointer(COLOR_POSITION, colorsize, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		vboTextureCoordHandle = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboTextureCoordHandle);
 		glBufferData(GL_ARRAY_BUFFER, textureData, GL_STATIC_DRAW);
+		glVertexAttribPointer(TEXTURE_POSITION, texsize, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		vboNormalHandle = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboNormalHandle);
 		glBufferData(GL_ARRAY_BUFFER, normalData, GL_STATIC_DRAW);
+		glVertexAttribPointer(NORMAL_POSITION, vertexsize, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		glBindVertexArray(0);
+		
+		vboIndexHandle = glGenBuffers();
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndexHandle);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData, GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 	@Override
 	public void render() {
-		initRender();
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
-		glVertexPointer(vertexsize, GL_FLOAT, 0, 0L);
-
-		if (renderColor) {
-			glEnableClientState(GL_COLOR_ARRAY);
-			glBindBuffer(GL_ARRAY_BUFFER, vboColorHandle);
-			glColorPointer(colorsize, GL_FLOAT, 0, 0L);
+		if(render) {
+			glBindVertexArray(vaoID);
+			
+			glEnableVertexAttribArray(VERTEX_POSITION);
+			glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
+	
+			if (renderColor) {
+				glEnableVertexAttribArray(COLOR_POSITION);
+				glBindBuffer(GL_ARRAY_BUFFER, vboColorHandle);
+			}
+	
+			if (renderTexCoords) {
+				glEnableVertexAttribArray(TEXTURE_POSITION);
+				glBindBuffer(GL_ARRAY_BUFFER, vboTextureCoordHandle);
+			}
+	
+			if (renderNormals) {
+				glEnableVertexAttribArray(NORMAL_POSITION);
+				glBindBuffer(GL_ARRAY_BUFFER, vboNormalHandle);
+			}
+	
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndexHandle);
+			
+			glDrawElements(rendermode, renderedIndexCount, GL_UNSIGNED_INT, 0);
+			
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glDisableVertexAttribArray(VERTEX_POSITION);
+			if (renderNormals)
+				glDisableVertexAttribArray(NORMAL_POSITION);
+			if (renderTexCoords)
+				glDisableVertexAttribArray(TEXTURE_POSITION);
+			if (renderColor)
+				glDisableVertexAttribArray(COLOR_POSITION);
+			
+			glBindVertexArray(0);
 		}
-
-		if (renderTexCoords) {
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glBindBuffer(GL_ARRAY_BUFFER, vboTextureCoordHandle);
-			glTexCoordPointer(texsize, GL_FLOAT, 0, 0L);
-		}
-
-		if (renderNormals) {
-			glEnableClientState(GL_NORMAL_ARRAY);
-			glBindBuffer(GL_ARRAY_BUFFER, vboNormalHandle);
-			glNormalPointer(GL_FLOAT, 0, 0L);
-		}
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndexHandle);
-
-		glDrawElements(rendermode, indices.size(), GL_UNSIGNED_INT, 0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		if (renderNormals)
-			glDisableClientState(GL_NORMAL_ARRAY);
-		if (renderTexCoords)
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		if (renderColor)
-			glDisableClientState(GL_COLOR_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);
-
-		endRender();
 	}
 
 	public void setColor(Color color) {
@@ -357,6 +380,14 @@ public class ShapedObject extends RenderedObject {
 		renderColor = rendercolors;
 		renderTexCoords = rendertexturecoords;
 		renderNormals = rendernormals;
+	}
+	
+	public void setRendered(boolean render) {
+		this.render = render;
+	}
+	
+	public boolean isRendered() {
+		return render;
 	}
 
 	public void setRenderMode(int mode) {

@@ -1,50 +1,46 @@
 package geometry;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
+import loader.ShaderLoader;
+import shader.Shader;
 import shape.Box;
 import shape.Capsule;
 import shape.Cylinder;
 import shape.IsoSphere;
 import shape.Sphere;
 import utils.Debugger;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class GeometryTest extends StandardGame {
 	Debugger debugger;
 
-	// Shader lineshader;
-
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		debugger = new Debugger(inputs,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		add2dShader(defaultshader2);
 
-		// inputs.setInputReader(new GLFWInputReader(((GLDisplay) display)
-		// .getWindowID()));
-		/*
-		 * lineshader = new Shader(ShaderLoader.loadShaderPair(
-		 * "res/shaders/geometrytestshader.vert",
-		 * "res/shaders/geometrytestshader.geo",
-		 * ARBGeometryShader4.GL_TRIANGLES_ADJACENCY_ARB, GL11.GL_LINE_STRIP,
-		 * 6));
-		 */
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
 
-		addObject(new Box(-1, 0, 0, 1, 1, 1));
-		addObject(new Sphere(2, 0, 0, 1, 36, 36));
-		addObject(new Capsule(5, 0, 0, 1, 2, 36, 36));
-		addObject(new Cylinder(8, 0, 0, 1, 2, 36));
-		addObject(new IsoSphere(11, 0, 0, 1, 0));
+		defaultshader.addObject(new Box(-1, 0, 0, 1, 1, 1));
+		defaultshader.addObject(new Sphere(2, 0, 0, 1, 36, 36));
+		defaultshader.addObject(new Capsule(5, 0, 0, 1, 2, 36, 36));
+		defaultshader.addObject(new Cylinder(8, 0, 0, 1, 2, 36));
+		defaultshader.addObject(new IsoSphere(11, 0, 0, 1, 0));
 		// addObject(new IsoSphere(14, 0, 0, 1, 1));
 		// addObject(new IsoSphere(17, 0, 0, 1, 2));
 		// addObject(new IsoSphere(20, 0, 0, 1, 3));
@@ -56,26 +52,20 @@ public class GeometryTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugger.render3d();
 		debugger.begin();
-		// lineshader.bind();
 		renderScene();
-		// lineshader.unbind();
 	}
 
 	@Override
 	public void render2d() {
 		render2dScene();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
-		// System.out.println("------------------------------------");
-		debugger.update();
+		debugger.update(fps, 0, 0);
 		cam.update(delta);
-		// System.out.println(cam.getPosition().toString());
 	}
 
 }

@@ -15,14 +15,14 @@ public class SphereData extends DataObject implements SphereStructure {
 
 	public SphereData(float x, float y, float z, float radius) {
 		super();
-		translate(x, y, z);
+		translateTo(x, y, z);
 		shapetype = SHAPE_SPHERE;
 		this.radius = radius;
 	}
 
 	public SphereData(Vector3f pos, float radius) {
 		super();
-		translate(pos);
+		translateTo(pos);
 		shapetype = SHAPE_SPHERE;
 		this.radius = radius;
 	}

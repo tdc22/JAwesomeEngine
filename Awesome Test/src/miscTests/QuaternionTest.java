@@ -73,13 +73,11 @@ public class QuaternionTest {
 		rot.rotate(Math.toRadians(90), new Vector3f(0, 0, 1));
 		System.out.println(rot);
 		System.out.println(rot.toMatrix());
-		System.out.println("Quaternion: "
-				+ QuatMath.transform(rot, new Vector3f(1, 0, 0)));
+		System.out.println("Quaternion: " + QuatMath.transform(rot, new Vector3f(1, 0, 0)));
 
 		Matrix4f rotm = new Matrix4f();
 		rotm.rotate(Math.toRadians(90), new Vector3f(0, 0, 1));
-		System.out.println("Matrix: "
-				+ VecMath.transformVector(rotm, new Vector3f(1, 0, 0)));
+		System.out.println("Matrix: " + VecMath.transformVector(rotm, new Vector3f(1, 0, 0)));
 		System.out.println(rotm);
 
 		System.out.println();

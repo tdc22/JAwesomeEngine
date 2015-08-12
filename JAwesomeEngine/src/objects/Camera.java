@@ -29,16 +29,16 @@ public class Camera extends GameObject {
 		init(pos, hRotation, vRotation);
 	}
 
-	public void begin() {
-		glPushMatrix();
-		glTranslatef(rotcenter.x, rotcenter.y, rotcenter.z);
-		glMultMatrixf(buf);
-		glTranslatef(-rotcenter.x, -rotcenter.y, -rotcenter.z);
-	}
+//	public void begin() {
+//		glPushMatrix();
+//		glTranslatef(rotcenter.x, rotcenter.y, rotcenter.z);
+//		glMultMatrixf(buf);
+//		glTranslatef(-rotcenter.x, -rotcenter.y, -rotcenter.z);
+//	}
 
-	public void end() {
-		glPopMatrix();
-	}
+//	public void end() {
+//		glPopMatrix();
+//	}
 
 	public Vector3f getDirection() {
 		return direction;
@@ -89,6 +89,6 @@ public class Camera extends GameObject {
 		mat.translate(getTranslation());
 		mat.invert();
 		mat.store(buf);
-		buf.rewind();
+		buf.flip();
 	}
 }

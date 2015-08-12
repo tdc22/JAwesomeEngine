@@ -1,8 +1,14 @@
 package physicsImpulse;
 
+import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import integration.EulerIntegration;
 import loader.FontLoader;
+import loader.ShaderLoader;
 import manifold.SimpleManifoldManager;
 import narrowphase.EPA;
 import narrowphase.GJK;
@@ -12,14 +18,10 @@ import physics.PhysicsSpace;
 import positionalcorrection.NullCorrection;
 import quaternion.Quaternionf;
 import resolution.NullResolution;
+import shader.Shader;
 import shape.Box;
 import utils.Debugger;
 import vector.Vector3f;
-import broadphase.SAP;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ImpulseTest extends StandardGame {
 	PhysicsSpace space;
@@ -31,31 +33,34 @@ public class ImpulseTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
+		display.bindMouse();
 
-		debugger = new Debugger(inputs,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		// mouse.setGrabbed(false);
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		add2dShader(defaultshader2);
+		
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
-		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(
-				new EPA()), new NullResolution(), new NullCorrection(),
-				new SimpleManifoldManager<Vector3f>());
+		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(new EPA()), new NullResolution(),
+				new NullCorrection(), new SimpleManifoldManager<Vector3f>());
 
 		b = new Box(0, 0, 0, 1, 1, 1);
 		rb = new RigidBody3(PhysicsShapeCreator.create(b));
 		rb.setMass(1);
 		rb.setInertia(new Quaternionf());
 		space.addRigidBody(b, rb);
-		addObject(b);
+		defaultshader.addObject(b);
 	}
 
 	@Override
 	public void render() {
-		debugger.render3d();
 		debugger.begin();
 		renderScene();
 	}
@@ -64,7 +69,6 @@ public class ImpulseTest extends StandardGame {
 	public void render2d() {
 		render2dScene();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
@@ -78,7 +82,7 @@ public class ImpulseTest extends StandardGame {
 			impulseapplied = true;
 		}
 
-		debugger.update();
+		debugger.update(fps, 0, 0);
 		space.update(delta);
 		cam.update(delta);
 	}

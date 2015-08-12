@@ -9,9 +9,17 @@ public class Font {
 	public Font() {
 		characters = new HashMap<Character, FontCharacter>();
 	}
+	
+	public Font(Font font) {
+		characters = new HashMap<Character, FontCharacter>(font.getCharacters());
+	}
 
 	public void addCharacter(char character, FontCharacter fontcharacter) {
 		characters.put(character, fontcharacter);
+	}
+	
+	public HashMap<Character, FontCharacter> getCharacters() {
+		return characters;
 	}
 
 	public FontCharacter getCharacter(char character) {
@@ -22,5 +30,9 @@ public class Font {
 		for (FontCharacter fc : characters.values()) {
 			fc.setColor(color);
 		}
+	}
+	
+	public void setSpaceSize(float size) {
+		getCharacter(' ').setMargin(size, size);
 	}
 }

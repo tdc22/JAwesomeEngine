@@ -1,5 +1,10 @@
 package tutorialp4;
 
+import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
@@ -22,11 +27,6 @@ import shape.Cylinder;
 import utils.GLConstants;
 import vector.Vector3f;
 import vector.Vector4f;
-import broadphase.SAP;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class Tutorial extends StandardGame {
 	InputEvent forward, backward, left, right, jump;
@@ -40,40 +40,31 @@ public class Tutorial extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		display.bindMouse();
 		cam.rotateTo(0, 0);
 
-		Cylinder player = new Cylinder(0, 0, 0, playerradius,
-				playerheight / 2f, 50);
+		Cylinder player = new Cylinder(0, 0, 0, playerradius, playerheight / 2f, 50);
 		player.setRenderHints(false, false, true);
 		addObject(player);
 
-		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT,
-				"W", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT, "Up",
-				KeyInput.KEY_DOWN));
-		backward = new InputEvent("Backward", new Input(Input.KEYBOARD_EVENT,
-				"S", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
-				"Down", KeyInput.KEY_DOWN));
-		left = new InputEvent("Left", new Input(Input.KEYBOARD_EVENT, "A",
-				KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT, "Left",
-				KeyInput.KEY_DOWN));
-		right = new InputEvent("Right", new Input(Input.KEYBOARD_EVENT, "D",
-				KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT, "Right",
-				KeyInput.KEY_DOWN));
-		jump = new InputEvent("Jump", new Input(Input.KEYBOARD_EVENT, " ",
-				KeyInput.KEY_PRESSED));
+		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN));
+		backward = new InputEvent("Backward", new Input(Input.KEYBOARD_EVENT, "S", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "Down", KeyInput.KEY_DOWN));
+		left = new InputEvent("Left", new Input(Input.KEYBOARD_EVENT, "A", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "Left", KeyInput.KEY_DOWN));
+		right = new InputEvent("Right", new Input(Input.KEYBOARD_EVENT, "D", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "Right", KeyInput.KEY_DOWN));
+		jump = new InputEvent("Jump", new Input(Input.KEYBOARD_EVENT, " ", KeyInput.KEY_PRESSED));
 		inputs.addEvent(forward);
 		inputs.addEvent(backward);
 		inputs.addEvent(left);
 		inputs.addEvent(right);
 		inputs.addEvent(jump);
 
-		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
-				new EPA()), new LinearImpulseResolution(),
-				new ProjectionCorrection(0.02f, 0.0f),
-				new MultiPointManifoldManager());
+		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(new EPA()), new LinearImpulseResolution(),
+				new ProjectionCorrection(0.02f, 0.0f), new MultiPointManifoldManager());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		playerbody = new RigidBody3(PhysicsShapeCreator.create(player));
@@ -89,16 +80,15 @@ public class Tutorial extends StandardGame {
 		space.addRigidBody(ground, rb);
 		addObject(ground);
 
-		Shader colorshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader colorshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 
 		player.setShader(colorshader);
 
-		edgeshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.geo",
-				GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
+		edgeshader = new Shader(ShaderLoader.loadShaderFromFile("res/shaders/edgeshader.vert",
+				"res/shaders/edgeshader.geo", GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 	}
 
 	@Override
@@ -134,12 +124,10 @@ public class Tutorial extends StandardGame {
 			move = VecMath.subtraction(move, cam.getDirection());
 		}
 		if (left.isActive()) {
-			move = VecMath.subtraction(move, VecMath.crossproduct(
-					cam.getDirection(), new Vector3f(0, 1, 0)));
+			move = VecMath.subtraction(move, VecMath.crossproduct(cam.getDirection(), new Vector3f(0, 1, 0)));
 		}
 		if (right.isActive()) {
-			move = VecMath.addition(move, VecMath.crossproduct(
-					cam.getDirection(), new Vector3f(0, 1, 0)));
+			move = VecMath.addition(move, VecMath.crossproduct(cam.getDirection(), new Vector3f(0, 1, 0)));
 		}
 		if (move.length() > 0) {
 			move.setY(0);
@@ -149,13 +137,11 @@ public class Tutorial extends StandardGame {
 		if (jump.isActive()) {
 			move = VecMath.addition(move, new Vector3f(0, 8, 0));
 		}
-		playerbody.setLinearVelocity(new Vector3f(move.x, playerbody
-				.getLinearVelocity().y + move.y, move.z));
+		playerbody.setLinearVelocity(new Vector3f(move.x, playerbody.getLinearVelocity().y + move.y, move.z));
 
 		space.update(delta);
 
-		Vector3f offset = QuatMath.transform(playerbody.getRotation(),
-				new Vector3f(0, 0, -1));
+		Vector3f offset = QuatMath.transform(playerbody.getRotation(), new Vector3f(0, 0, -1));
 		offset.setY((playerheight * (6 / 8f)) / 2f);
 		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
 	}

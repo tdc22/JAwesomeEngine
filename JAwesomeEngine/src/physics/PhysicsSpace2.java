@@ -41,8 +41,8 @@ public class PhysicsSpace2 extends Space2 {
 
 	public void addRigidBody(DataGameObject obj,
 			RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> body) {
-		obj.setRotation(body.getRotation());
-		obj.setTranslation(body.getTranslation());
+		body.setRotation(obj.getRotation());
+		body.setTranslation(obj.getTranslation());
 		addRigidBody(body);
 		addedobjects.add(obj);
 	}

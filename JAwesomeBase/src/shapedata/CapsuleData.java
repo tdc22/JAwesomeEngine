@@ -15,7 +15,7 @@ public class CapsuleData extends DataObject implements CapsuleStructure {
 
 	public CapsuleData(float x, float y, float z, float radius, float height) {
 		super();
-		translate(x, y, z);
+		translateTo(x, y, z);
 		shapetype = SHAPE_CAPSULE;
 		this.radius = radius;
 		this.height = height;
@@ -23,7 +23,7 @@ public class CapsuleData extends DataObject implements CapsuleStructure {
 
 	public CapsuleData(Vector3f pos, float radius, float height) {
 		super();
-		translate(pos);
+		translateTo(pos);
 		shapetype = SHAPE_CAPSULE;
 		this.radius = radius;
 		this.height = height;

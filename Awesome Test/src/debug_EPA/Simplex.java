@@ -3,11 +3,11 @@ package debug_EPA;
 import java.awt.Color;
 import java.util.List;
 
+import debug_EPA.EPADebugger.Triangle;
 import math.VecMath;
 import objects.ShapedObject;
 import utils.GLConstants;
 import vector.Vector3f;
-import debug_EPA.EPADebugger.Triangle;
 
 public class Simplex extends ShapedObject {
 	public Simplex(List<Triangle> triangles, Triangle closest) {
@@ -37,15 +37,12 @@ public class Simplex extends ShapedObject {
 	private final float EPSILON = 0.001f;
 
 	private boolean isOriginInsideTriangleArea(Triangle t) {
-		return (checkPlane(t.a, t.b, t.normal)
-				&& checkPlane(t.b, t.c, t.normal) && checkPlane(t.c, t.a,
-					t.normal));
+		return (checkPlane(t.a, t.b, t.normal) && checkPlane(t.b, t.c, t.normal) && checkPlane(t.c, t.a, t.normal));
 	}
 
 	// (b - a) x normal * a <= EPSILON
 	private boolean checkPlane(Vector3f a, Vector3f b, Vector3f normal) {
-		Vector3f cross = VecMath
-				.crossproduct(VecMath.subtraction(b, a), normal);
+		Vector3f cross = VecMath.crossproduct(VecMath.subtraction(b, a), normal);
 		return ((cross.x * -a.x + cross.y * -a.y + cross.z * -a.z) <= EPSILON);
 	}
 }

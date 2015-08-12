@@ -15,7 +15,7 @@ public class EllipseData extends DataObject implements EllipseStructure {
 
 	public EllipseData(float x, float y, float radius, float height) {
 		super();
-		translate(x, y);
+		translateTo(x, y);
 		shapetype = SHAPE_ELLIPSE;
 		this.radius = radius;
 		this.height = height;
@@ -23,7 +23,7 @@ public class EllipseData extends DataObject implements EllipseStructure {
 
 	public EllipseData(Vector2f pos, float radius, float height) {
 		super();
-		translate(pos);
+		translateTo(pos);
 		shapetype = SHAPE_ELLIPSE;
 		this.radius = radius;
 		this.height = height;

@@ -12,13 +12,13 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 
 	public Ellipse(float x, float y, float radius, float height, int slices) {
 		super();
-		translate(x, y);
+		translateTo(x, y);
 		init(radius, height, slices);
 	}
 
 	public Ellipse(Vector2f pos, float radius, float height, int slices) {
 		super();
-		translate(pos);
+		translateTo(pos);
 		init(radius, height, slices);
 	}
 
@@ -46,6 +46,8 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 					* (float) (Math.sin(Math.toRadians(s * anglestep))), height
 					* (float) (Math.cos(Math.toRadians(s * anglestep))));
 			addVertex(v, color, v);
+		}
+		for(int s = 0; s < slices-1; s++) {
 			addTriangle(0, s + 1, s + 2);
 		}
 		addTriangle(0, slices, 1);

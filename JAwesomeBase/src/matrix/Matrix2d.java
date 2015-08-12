@@ -324,8 +324,9 @@ public class Matrix2d extends Matrix2 {
 	 */
 	@Override
 	public void transpose() {
-		double t = matrix[0][1];
+		double m01 = matrix[0][1];
+		
 		matrix[0][1] = matrix[1][0];
-		matrix[1][0] = t;
+		matrix[1][0] = m01;
 	}
 }

@@ -243,7 +243,7 @@ public abstract class GameObject extends BaseObject {
 		buf.put(translation.getYf());
 		buf.put(translation.getZf());
 		buf.put(1);
-		buf.rewind();
+		buf.flip();
 	}
 
 	// public void attachTo(GameObject obj) {

@@ -1,18 +1,17 @@
 package modelloader;
 
-import game.StandardGame;
-import loader.ModelLoader;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
+import game.StandardGame;
+import loader.ModelLoader;
 
 public class ModelTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);

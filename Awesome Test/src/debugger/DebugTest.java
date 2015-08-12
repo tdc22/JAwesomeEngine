@@ -1,35 +1,43 @@
 package debugger;
 
-import game.StandardGame;
-import gui.Font;
-import loader.FontLoader;
-import loader.ModelLoader;
-import utils.Debugger;
-import utils.GameProfiler;
-import utils.Profiler;
-import utils.SimpleGameProfiler;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
+import game.StandardGame;
+import gui.Font;
+import loader.FontLoader;
+import loader.ModelLoader;
+import loader.ShaderLoader;
+import shader.Shader;
+import utils.Debugger;
 
 public class DebugTest extends StandardGame {
 	Debugger debugger;
-	Profiler profiler;
+	// Profiler profiler;
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		display.bindMouse();
-		Font f = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, f, cam);
-		GameProfiler gp = new SimpleGameProfiler();
-		setProfiler(gp);
-		profiler = new Profiler(inputs, f, gp, null);
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
-		addObject(ModelLoader.load("res/models/bunny.mobj"));
+		cam.rotateTo(0, 0);
+
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		add2dShader(defaultshader2);
+
+		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
+		// GameProfiler gp = new SimpleGameProfiler();
+		// setProfiler(gp);
+		// profiler = new Profiler(inputs, font, gp, null);
+
+		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
 
 		// inputs.createInputEvent("toggle Mouse grab").addEventTrigger(
 		// new Input(Input.KEYBOARD_EVENT, Keyboard.KEY_T,
@@ -38,7 +46,6 @@ public class DebugTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugger.render3d();
 		debugger.begin();
 		renderScene();
 	}
@@ -47,8 +54,7 @@ public class DebugTest extends StandardGame {
 	public void render2d() {
 		render2dScene();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
-		profiler.render2d();
+		// profiler.render2d();
 	}
 
 	@Override
@@ -57,8 +63,8 @@ public class DebugTest extends StandardGame {
 		// mouse.setGrabbed(!mouse.isGrabbed());
 		// }
 
-		debugger.update();
-		profiler.update(delta);
+		debugger.update(fps, 0, 0);
+		// profiler.update(delta);
 		cam.update(delta);
 	}
 

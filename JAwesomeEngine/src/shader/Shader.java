@@ -32,6 +32,9 @@ import java.util.List;
 import matrix.Matrix2f;
 import matrix.Matrix3f;
 import matrix.Matrix4f;
+import objects.Renderable;
+import objects.RenderedObject;
+import objects.ViewProjection;
 
 import org.lwjgl.BufferUtils;
 
@@ -41,12 +44,14 @@ import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
 
-public class Shader {
-	int shaderProgram;
+public class Shader implements ViewProjection {
+	int shaderProgram, uniformBuffer;
 	private List<Integer> uniformpositions;
 	private List<Integer> uniformtypes;
 	private List<Object> uniformarguments;
 	private HashMap<String, Integer> uniformnames;
+	private List<RenderedObject> objects;
+	private boolean active = true;
 
 	public Shader(int shaderProgram) {
 		this.shaderProgram = shaderProgram;
@@ -54,6 +59,7 @@ public class Shader {
 		uniformtypes = new ArrayList<Integer>();
 		uniformarguments = new ArrayList<Object>();
 		uniformnames = new HashMap<String, Integer>();
+		objects = new ArrayList<RenderedObject>();
 	}
 
 	public Shader(int shaderProgram, List<String> argumentnames,
@@ -64,6 +70,7 @@ public class Shader {
 		uniformarguments = new ArrayList<Object>();
 		uniformnames = new HashMap<String, Integer>();
 		addArguments(argumentnames, arguments);
+		objects = new ArrayList<RenderedObject>();
 	}
 
 	@SafeVarargs
@@ -75,6 +82,7 @@ public class Shader {
 		uniformnames = new HashMap<String, Integer>();
 		for (Pair<String, Object> a : arguments)
 			addArgument(a.getFirst(), a.getSecond());
+		objects = new ArrayList<RenderedObject>();
 	}
 
 	public Shader(int shaderProgram, String argumentname, Object argument) {
@@ -84,6 +92,7 @@ public class Shader {
 		uniformarguments = new ArrayList<Object>();
 		uniformnames = new HashMap<String, Integer>();
 		addArgument(argumentname, argument);
+		objects = new ArrayList<RenderedObject>();
 	}
 
 	public Shader(Shader shader) {
@@ -92,6 +101,16 @@ public class Shader {
 		uniformtypes = new ArrayList<Integer>(shader.getArgumentTypes());
 		uniformarguments = new ArrayList<Object>(shader.getArguments());
 		uniformnames = new HashMap<String, Integer>(shader.getUniformNames());
+		objects = new ArrayList<RenderedObject>();
+	}
+	
+	public void addObject(RenderedObject obj) {
+		objects.add(obj);
+	}
+	
+	public void addObjects(RenderedObject... objs) {
+		for(RenderedObject obj : objs)
+			objects.add(obj);
 	}
 
 	public void addArgument(Object argument) {
@@ -99,50 +118,49 @@ public class Shader {
 			uniformtypes.add(1);
 			uniformarguments.add(argument);
 			System.out.println("Argument type is Integer");
-		}
-		if (argument instanceof Float) {
+		} else if (argument instanceof Float) {
 			uniformtypes.add(2);
 			uniformarguments.add(argument);
 			System.out.println("Argument type is Float");
-		}
-		if (argument instanceof Vector2f) {
+		} else if (argument instanceof Vector2f) {
 			uniformtypes.add(3);
 			uniformarguments.add(argument);
 			System.out.println("Argument type is Vector2f");
-		}
-		if (argument instanceof Vector3f) {
+		} else if (argument instanceof Vector3f) {
 			uniformtypes.add(4);
 			uniformarguments.add(argument);
 			System.out.println("Argument type is Vector3f");
-		}
-		if (argument instanceof Vector4f) {
+		} else if (argument instanceof Vector4f) {
 			uniformtypes.add(5);
 			uniformarguments.add(argument);
 			System.out.println("Argument type is Vector4f");
-		}
-		if (argument instanceof Matrix2f) {
+		} else if (argument instanceof Matrix2f) {
 			uniformtypes.add(6);
 			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 2);
 			((Matrix2f) argument).store(buf);
-			buf.rewind();
+			buf.flip();
 			uniformarguments.add(buf);
 			System.out.println("Argument type is Matrix2f");
-		}
-		if (argument instanceof Matrix3f) {
+		} else if (argument instanceof Matrix3f) {
 			uniformtypes.add(7);
 			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 3);
 			((Matrix3f) argument).store(buf);
-			buf.rewind();
+			buf.flip();
 			uniformarguments.add(buf);
 			System.out.println("Argument type is Matrix3f");
-		}
-		if (argument instanceof Matrix4f) {
+		} else if (argument instanceof Matrix4f) {
 			uniformtypes.add(8);
 			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 4);
 			((Matrix4f) argument).store(buf);
-			buf.rewind();
+			buf.flip();
 			uniformarguments.add(buf);
 			System.out.println("Argument type is Matrix4f");
+		} else if (argument instanceof FloatBuffer) {
+			// same as before "direct" route
+			// has to be already flipped!
+			uniformtypes.add(8);
+			uniformarguments.add(argument);
+			System.out.println("Argument type is Matrix4f (FloatBuffer)");
 		} else if (argument instanceof Texture) {
 			uniformtypes.add(9);
 			uniformarguments.add(argument);
@@ -272,6 +290,10 @@ public class Shader {
 	}
 
 	public void delete() {
+		for(RenderedObject obj : objects) {
+			obj.delete();
+		}
+		
 		glDeleteProgram(shaderProgram);
 		uniformpositions.clear();
 		uniformtypes.clear();
@@ -312,7 +334,31 @@ public class Shader {
 	}
 
 	public void setArgument(String argumentname, Object argument) {
-		uniformarguments.set(getArgumentID(argumentname), argument);
+		int argumentID = getArgumentID(argumentname);
+		int argumentType = uniformtypes.get(argumentID);
+		if(argumentType == 8) {
+			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 4);
+			((Matrix4f) argument).store(buf);
+			buf.flip();
+			uniformarguments.set(argumentID, buf);
+		} else if(argumentType == 7) {
+			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 3);
+			((Matrix3f) argument).store(buf);
+			buf.flip();
+			uniformarguments.set(argumentID, buf);
+		} else if(argumentType == 6) {
+			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 2);
+			((Matrix2f) argument).store(buf);
+			buf.flip();
+			uniformarguments.set(argumentID, buf);
+		} else {
+			uniformarguments.set(argumentID, argument);
+		}
+	}
+	
+	public void setArgumentDirect(String argumentname, Object argument) {
+		int argumentID = getArgumentID(argumentname);
+		uniformarguments.set(argumentID, argument);
 	}
 
 	public void unbind() {
@@ -360,5 +406,68 @@ public class Shader {
 		if (texturenumber > 0)
 			glActiveTexture(GL_TEXTURE0);
 		glUseProgram(0);
+	}
+	
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
+	public boolean isActive() {
+		return active;
+	}
+
+	@Override
+	public void render() {
+		//TODO: Optimize!
+		
+		bind();
+		int modelLocation = glGetUniformLocation(shaderProgram, "model");
+		for(RenderedObject obj : objects) {
+			glUniformMatrix4fv(modelLocation, false, obj.getMatrixBuffer());
+			obj.render();
+		}
+		unbind();
+	}
+
+	@Override
+	public void setViewMatrix(FloatBuffer buffer) {
+		setArgumentDirect("view", buffer);
+	}
+
+	@Override
+	public void setProjectionMatrix(FloatBuffer buffer) {
+		setArgumentDirect("projection", buffer);
+	}
+
+	@Override
+	public void setViewProjectionMatrix(FloatBuffer viewBuffer, FloatBuffer projectionBuffer) {
+		setArgumentDirect("view", viewBuffer);
+		setArgumentDirect("projection", projectionBuffer);
+	}
+
+	@Override
+	public void setViewMatrix(Matrix4f matrix) {
+		setArgument("view", matrix);
+	}
+
+	@Override
+	public void setProjectionMatrix(Matrix4f matrix) {
+		setArgument("projection", matrix);
+	}
+	
+	@Override
+	public void setViewProjectionMatrix(Matrix4f viewMatrix, Matrix4f projectionMatrix) {
+		setArgument("view", viewMatrix);
+		setArgument("projection", projectionMatrix);
+	}
+
+	@Override
+	public FloatBuffer getViewMatrixBuffer() {
+		return (FloatBuffer) getArgument("view");
+	}
+
+	@Override
+	public FloatBuffer getProjectionMatrixBuffer() {
+		return (FloatBuffer) getArgument("projection");
 	}
 }

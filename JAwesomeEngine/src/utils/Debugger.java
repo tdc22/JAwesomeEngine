@@ -24,6 +24,7 @@ import java.awt.Color;
 
 import objects.Camera;
 import objects.ShapedObject;
+import shader.Shader;
 import vector.Vector3f;
 
 public class Debugger {
@@ -72,11 +73,12 @@ public class Debugger {
 
 	InputEvent toggledata, toggleaxis, togglegrid, togglewireframe;
 
-	public Debugger(InputManager i, Font f, Camera cam) {
+	public Debugger(InputManager input, Shader shader, Shader shader2d, Font font, Camera cam) {
 		this.cam = cam;
 
-		text = new Text("", 10, 10, f);
-
+		text = new Text("", 10, 20, font);
+		shader2d.addObject(text);
+		
 		xaxis = new ShapedObject();
 		yaxis = new ShapedObject();
 		zaxis = new ShapedObject();
@@ -87,9 +89,15 @@ public class Debugger {
 		zaxis.setRenderMode(GLConstants.LINES);
 		grid.setRenderMode(GLConstants.LINES);
 		gridXZAxis.setRenderMode(GLConstants.LINES);
+		xaxis.setRendered(false);
+		yaxis.setRendered(false);
+		zaxis.setRendered(false);
+		grid.setRendered(false);
+		gridXZAxis.setRendered(false);
+		shader.addObjects(xaxis, yaxis, zaxis, grid, gridXZAxis);
 
 		setRange(new Vector3f(1000, 1000, 1000));
-		setupEvents(i);
+		setupEvents(input);
 	}
 
 	public void begin() {
@@ -125,54 +133,7 @@ public class Debugger {
 	public boolean isWireframeRendered() {
 		return wireframe;
 	}
-
-	public void render2d(int fps, int objects, int objects2d) {
-		// if(wireframe) wireframeshader.unbind();
-		if (showdata) {
-			Vector3f campos = cam.getTranslation();
-
-			if (isFirstError) {
-				firsterror = getGLErrorName(glGetError());
-				isFirstError = false;
-			}
-
-			text.setText("FPS: " + fps + " ("
-					+ String.format("%.2f", 1000 / (float) fps)
-					+ " ms)\nObjects: " + objects + "\n2d Objects: "
-					+ objects2d + "\nPolygons:\nCamera: " + campos.x + "; "
-					+ campos.y + "; " + campos.z + "\nGL-Error: "
-					+ getGLErrorName(glGetError()) + " (" + firsterror + ")");
-			text.render();
-		}
-	}
-
-	public void render3d() {
-		if (showaxis) {
-			Vector3f campos = cam.getTranslation();
-			if (campos.x >= range.x)
-				xaxis.translateTo(campos.x, 0, 0);
-			else
-				xaxis.translateTo(range.x, 0, 0);
-			if (campos.y >= range.y)
-				yaxis.translateTo(0, campos.y, 0);
-			else
-				yaxis.translateTo(0, range.y, 0);
-			if (campos.z >= range.z)
-				zaxis.translateTo(0, 0, campos.z);
-			else
-				zaxis.translateTo(0, 0, range.z);
-			xaxis.render();
-			yaxis.render();
-			zaxis.render();
-		}
-
-		if (showgrid) {
-			grid.render();
-			if (!showaxis)
-				gridXZAxis.render();
-		}
-	}
-
+	
 	public void setRange(Vector3f range) {
 		this.range = range;
 		xaxis.deleteData();
@@ -230,14 +191,25 @@ public class Debugger {
 	}
 
 	public void setShowAxis(boolean a) {
+		xaxis.setRendered(a);
+		yaxis.setRendered(a);
+		zaxis.setRendered(a);
+		if(showgrid) {
+			gridXZAxis.setRendered(!a);
+		}
 		showaxis = a;
 	}
 
 	public void setShowData(boolean d) {
+		text.setRendered(d);
 		showdata = d;
 	}
 
 	public void setShowGrid(boolean g) {
+		grid.setRendered(g);
+		if(!showaxis) {
+			gridXZAxis.setRendered(g);
+		}
 		showgrid = g;
 	}
 
@@ -273,7 +245,7 @@ public class Debugger {
 		setRenderWireframe(!wireframe);
 	}
 
-	public void update() {
+	public void update(int fps, int objects, int objects2d) {
 		if (toggledata.isActive())
 			toggleData();
 		if (toggleaxis.isActive())
@@ -282,5 +254,36 @@ public class Debugger {
 			toggleGrid();
 		if (togglewireframe.isActive())
 			toggleWireframe();
+		
+		if (showdata) {
+			Vector3f campos = cam.getTranslation();
+
+			if (isFirstError) {
+				firsterror = getGLErrorName(glGetError());
+				isFirstError = false;
+			}
+
+			text.setText("FPS: " + fps + " ("
+					+ String.format("%.2f", 1000 / (float) fps)
+					+ " ms)\nObjects: " + objects + "\n2d Objects: "
+					+ objects2d + "\nPolygons:\nCamera: " + campos.x + "; "
+					+ campos.y + "; " + campos.z + "\nGL-Error: "
+					+ getGLErrorName(glGetError()) + " (" + firsterror + ")");
+		}
+		if (showaxis) {
+			Vector3f campos = cam.getTranslation();
+			if (campos.x >= range.x)
+				xaxis.translateTo(campos.x, 0, 0);
+			else
+				xaxis.translateTo(range.x, 0, 0);
+			if (campos.y >= range.y)
+				yaxis.translateTo(0, campos.y, 0);
+			else
+				yaxis.translateTo(0, range.y, 0);
+			if (campos.z >= range.z)
+				zaxis.translateTo(0, 0, campos.z);
+			else
+				zaxis.translateTo(0, 0, range.z);
+		}
 	}
 }

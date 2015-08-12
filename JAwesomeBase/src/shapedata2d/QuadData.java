@@ -16,28 +16,28 @@ public class QuadData extends DataObject implements QuadStructure {
 
 	public QuadData(float x, float y, float halfsizex, float halfsizey) {
 		super();
-		translate(x, y);
+		translateTo(x, y);
 		shapetype = SHAPE_QUAD;
 		halfsize = new Vector2f(halfsizex, halfsizey);
 	}
 
 	public QuadData(float x, float y, Vector2f halfsize) {
 		super();
-		translate(x, y);
+		translateTo(x, y);
 		shapetype = SHAPE_QUAD;
 		this.halfsize = halfsize;
 	}
 
 	public QuadData(Vector2f pos, float halfsizex, float halfsizey) {
 		super();
-		translate(pos);
+		translateTo(pos);
 		shapetype = SHAPE_QUAD;
 		halfsize = new Vector2f(halfsizex, halfsizey);
 	}
 
 	public QuadData(Vector2f pos, Vector2f halfsize) {
 		super();
-		translate(pos);
+		translateTo(pos);
 		shapetype = SHAPE_QUAD;
 		this.halfsize = halfsize;
 	}

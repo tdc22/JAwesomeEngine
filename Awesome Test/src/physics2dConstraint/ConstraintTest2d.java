@@ -1,13 +1,19 @@
 package physics2dConstraint;
 
-import game.StandardGame;
-import gui.Font;
-import integration.VerletIntegration;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import broadphase.SAP2;
+import constraints.DistanceConstraint2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import gui.Font;
+import integration.VerletIntegration;
 import loader.FontLoader;
+import loader.ShaderLoader;
 import manifold.MultiPointManifoldManager2;
 import matrix.Matrix1f;
 import narrowphase.EPA2;
@@ -19,16 +25,11 @@ import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
 import positionalcorrection.ProjectionCorrection;
 import resolution.ImpulseResolution;
+import shader.Shader;
 import shape2d.Circle;
 import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
-import broadphase.SAP2;
-import constraints.DistanceConstraint2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ConstraintTest2d extends StandardGame {
 	PhysicsSpace2 space;
@@ -39,26 +40,31 @@ public class ConstraintTest2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		// display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(),
-				new GJK2(new EPA2()), new ImpulseResolution(),
+		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(), new GJK2(new EPA2()), new ImpulseResolution(),
 				new ProjectionCorrection(1), new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
 		space.setGlobalGravitation(new Vector2f(0, 120));
 
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		add2dShader(defaultshader2);
+		
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
 		physicsdebug = new PhysicsDebug2(inputs, font, space);
 
 		Quad ground = new Quad(400, 550, 300, 20);
 		RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(ground));
 		space.addRigidBody(ground, rb);
-		add2dObject(ground);
+		defaultshader2.addObject(ground);
 
 		bodies = new ArrayList<RigidBody2>();
 
@@ -69,7 +75,7 @@ public class ConstraintTest2d extends StandardGame {
 		rbL.setInertia(new Matrix1f(1));
 		bodies.add(rbL);
 		space.addRigidBody(leftCircle, rbL);
-		add2dObject(leftCircle);
+		defaultshader2.addObject(leftCircle);
 
 		Circle rightCircle = new Circle(430, 50, 20, 10);
 		RigidBody2 rbR = new RigidBody2(PhysicsShapeCreator.create(rightCircle));
@@ -77,7 +83,7 @@ public class ConstraintTest2d extends StandardGame {
 		rbR.setInertia(new Matrix1f(1));
 		bodies.add(rbR);
 		space.addRigidBody(rightCircle, rbR);
-		add2dObject(rightCircle);
+		defaultshader2.addObject(rightCircle);
 
 		Constraint2 constraint = new DistanceConstraint2(rbL, rbR, 60);
 		space.addConstraint(constraint);
@@ -93,7 +99,6 @@ public class ConstraintTest2d extends StandardGame {
 		debugger.begin();
 		render2dScene();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 		physicsdebug.render2d();
 	}
 
@@ -104,7 +109,7 @@ public class ConstraintTest2d extends StandardGame {
 		if (inputs.isKeyDown("2"))
 			bodies.get(1).applyCentralImpulse(new Vector2f(0, -20));
 
-		debugger.update();
+		debugger.update(fps, 0, 0);
 		space.update(delta);
 		physicsdebug.update();
 		cam.update(delta);

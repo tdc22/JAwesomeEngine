@@ -14,6 +14,7 @@ import static org.lwjgl.opengl.GL20.glGetShaderi;
 import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glShaderSource;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
+import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_INPUT_TYPE;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_OUTPUT_TYPE;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
@@ -94,6 +95,9 @@ public class ShaderLoader {
 			glProgramParameteri(shaderProgram, GL_GEOMETRY_OUTPUT_TYPE,
 					outputtype);
 		}
+		
+		glBindAttribLocation(shaderProgram, 0, "in_Position");
+		glBindAttribLocation(shaderProgram, 1, "in_Color");
 
 		glLinkProgram(shaderProgram);
 		glValidateProgram(shaderProgram);

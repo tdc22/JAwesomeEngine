@@ -76,7 +76,7 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 			Vector2f b = simplex.get(j);
 			Vector2f e = VecMath.subtraction(b, a);
 			Vector2f n = edgeDirection(e, a);
-			n.normalize();
+			n.normalize(); // TODO: Zero length vector
 			double d = VecMath.dotproduct(n, a);
 			if (d < closest.distance) {
 				closest.distance = (float) d;

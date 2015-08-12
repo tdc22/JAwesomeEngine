@@ -1,18 +1,17 @@
 package tutorialp1;
 
-import game.StandardGame;
-import shape.Box;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
+import game.StandardGame;
+import shape.Box;
 
 public class Tutorial extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
