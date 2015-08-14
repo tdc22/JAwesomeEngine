@@ -16,7 +16,7 @@ public abstract class GameObject extends BaseObject {
 	public GameObject() {
 		super();
 
-		buf = BufferUtils.createFloatBuffer(16 * 4);
+		buf = BufferUtils.createFloatBuffer(16);
 		updateBuffer();
 
 		rotcenter = new Vector3f(0, 0, 0);

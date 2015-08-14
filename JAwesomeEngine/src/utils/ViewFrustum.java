@@ -11,13 +11,18 @@ public class ViewFrustum {
 	Matrix4f matrix;
 	FloatBuffer buf;
 
-	public ViewFrustum(float width, float height, float zNear, float zFar, float fovY) {
-		halfHeight = (float) (Math.tan(fovY / 360f * Math.PI) * zNear);
-		halfWidth = halfHeight * width / height;
-		this.zNear = zNear;
-		this.zFar = zFar;
-		matrix = ProjectionHelper.frustum(-halfWidth, halfWidth, -halfHeight, halfHeight, zNear, zFar);
-		buf = BufferUtils.createFloatBuffer(16 * 2);
+	public ViewFrustum(float aspect, float zNear, float zFar, float fovY) {
+		// halfHeight = height/2f;//(float) (Math.tan(fovY / 360f * Math.PI) *
+		// zNear);
+		// halfWidth = width/2f;//halfHeight * width / height;
+		// this.zNear = zNear;
+		// this.zFar = zFar;
+		// halfHeight = (float) (zNear * Math.tan((fovY*Math.PI/180f)/2f));
+		// halfWidth = aspect * halfHeight;
+		// matrix = ProjectionHelper.frustum(-halfWidth, halfWidth, -halfHeight,
+		// halfHeight, zNear, zFar);
+		matrix = ProjectionHelper.perspective(fovY, aspect, zNear, zFar);
+		buf = BufferUtils.createFloatBuffer(16);
 		matrix.store(buf);
 		buf.flip();
 	}

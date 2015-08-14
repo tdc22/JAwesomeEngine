@@ -70,7 +70,7 @@ public class BasicTest extends StandardGame {
 		// setProfiler(gp);
 		// PhysicsProfiler pp = new SimplePhysicsProfiler();
 		// space.setProfiler(pp);
-		// profiler = new Profiler(inputs, font, gp, pp);
+		// profiler = new Profiler(this, inputs, font, gp, pp);
 
 		Box ground = new Box(0, -5, 0, 10, 1, 10);
 		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
@@ -154,7 +154,7 @@ public class BasicTest extends StandardGame {
 				display.unbindMouse();
 		}
 
-		debugger.update(fps, 0, 0);
+		debugger.update(fps, defaultshader.getObjects().size(), 0);
 		// profiler.update(delta);
 		space.update(delta);
 		physicsdebug.update();

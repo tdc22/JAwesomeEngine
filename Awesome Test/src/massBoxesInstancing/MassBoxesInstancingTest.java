@@ -1,4 +1,4 @@
-package massBoxes;
+package massBoxesInstancing;
 
 import display.DisplayMode;
 import display.GLDisplay;
@@ -8,12 +8,15 @@ import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
+import matrix.Matrix4f;
+import objects.InstancedObject;
 import shader.Shader;
 import shape.Box;
 import texture.Texture;
 import utils.Debugger;
+import vector.Vector3f;
 
-public class MassBoxesTest extends StandardGame {
+public class MassBoxesInstancingTest extends StandardGame {
 	Debugger debugger;
 
 	@Override
@@ -37,18 +40,33 @@ public class MassBoxesTest extends StandardGame {
 
 		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
 
-		Shader textureshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
+		Shader textureshader = new Shader(ShaderLoader.loadShaderFromFile("res/shaders/textureinstanceshader.vert",
+				"res/shaders/textureinstanceshader.frag"));
 		textureshader.addArgumentName("u_texture");
 		textureshader.addArgument(texture);
 		addShader(textureshader);
 
-		for (int i = 0; i < 10000; i++) {
-			Box b = new Box((float) Math.random() * 100, (float) Math.random() * 100, (float) Math.random() * 100, 0.5f,
-					0.5f, 0.5f);
-			b.setRenderHints(false, true, false);
-			textureshader.addObject(b);
+		InstancedObject boxes = new InstancedObject();
+
+		Box b = new Box(0, 0, 0, 1, 1, 1);
+		boxes.setVertices(b.getVertices());
+		boxes.setColors(b.getColors());
+		boxes.setTextureCoordinates(b.getTextureCoordinates());
+		boxes.setNormals(b.getNormals());
+		boxes.setIndices(b.getIndices());
+
+		boxes.setRenderHints(false, true, false, true);
+
+		Matrix4f mat = new Matrix4f();
+		for (int i = 0; i < 30; i++) {
+			mat.translate(new Vector3f(i * 3, 0, 0));
+			Matrix4f m = new Matrix4f(mat);
+			System.out.println(m);
+			boxes.addInstance(m);
 		}
+
+		boxes.prerender();
+		textureshader.addObject(boxes);
 	}
 
 	@Override

@@ -104,7 +104,7 @@ public class CubeEnvironmentMap {
 		this.render = render;
 		this.width = resX;
 		this.height = resY;
-		frustum = new ViewFrustum(resX, resY, zNear, zFar, 90);
+		frustum = new ViewFrustum(resX / (float) resY, zNear, zFar, 90);
 
 		cubemap = new CubeMap();
 		cubemap.bind();

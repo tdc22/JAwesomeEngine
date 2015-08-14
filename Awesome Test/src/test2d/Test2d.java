@@ -86,6 +86,11 @@ public class Test2d extends StandardGame {
 		jumppos += delta * 0.01f;
 		coloredjumptext.translate(0, FastMath.sin(jumppos));
 
+		if (inputs.isKeyDown("I"))
+			cam2.translate(delta, 0);
+		if (inputs.isKeyDown("U"))
+			cam2.translate(-delta, 0);
+
 		cam.update(delta);
 	}
 

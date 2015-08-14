@@ -110,6 +110,13 @@ public class FramebufferObject {
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
+	public FramebufferObject(ViewProjection render, int width, int height, int samples, Camera cam,
+			ViewFrustum frustum) {
+		init(render, width, height, samples, cam, null, frustum, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+	}
+
 	public FramebufferObject(ViewProjection render, int width, int height, int samples, Camera cam, Texture colorbuffer,
 			ViewFrustum frustum) {
 		init(render, width, height, samples, cam, colorbuffer, frustum, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
@@ -121,6 +128,7 @@ public class FramebufferObject {
 		glDisable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+		// System.out.println(useCam + "; " + useFrustum);
 		if (useCam && useFrustum) {
 			viewTemp = render.getViewMatrixBuffer();
 			projectionTemp = render.getProjectionMatrixBuffer();

@@ -49,7 +49,7 @@ public class Shader implements ViewProjection {
 	private List<Object> uniformarguments;
 	private HashMap<String, Integer> uniformnames;
 	private List<RenderedObject> objects;
-	private boolean active = true;
+	private boolean rendered = true;
 
 	public Shader(int shaderProgram) {
 		this.shaderProgram = shaderProgram;
@@ -110,6 +110,10 @@ public class Shader implements ViewProjection {
 			objects.add(obj);
 	}
 
+	public List<RenderedObject> getObjects() {
+		return objects;
+	}
+
 	public void addArgument(Object argument) {
 		if (argument instanceof Integer) {
 			uniformtypes.add(1);
@@ -133,21 +137,21 @@ public class Shader implements ViewProjection {
 			System.out.println("Argument type is Vector4f");
 		} else if (argument instanceof Matrix2f) {
 			uniformtypes.add(6);
-			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 2);
+			FloatBuffer buf = BufferUtils.createFloatBuffer(4);
 			((Matrix2f) argument).store(buf);
 			buf.flip();
 			uniformarguments.add(buf);
 			System.out.println("Argument type is Matrix2f");
 		} else if (argument instanceof Matrix3f) {
 			uniformtypes.add(7);
-			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 3);
+			FloatBuffer buf = BufferUtils.createFloatBuffer(9);
 			((Matrix3f) argument).store(buf);
 			buf.flip();
 			uniformarguments.add(buf);
 			System.out.println("Argument type is Matrix3f");
 		} else if (argument instanceof Matrix4f) {
 			uniformtypes.add(8);
-			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 4);
+			FloatBuffer buf = BufferUtils.createFloatBuffer(16);
 			((Matrix4f) argument).store(buf);
 			buf.flip();
 			uniformarguments.add(buf);
@@ -327,17 +331,17 @@ public class Shader implements ViewProjection {
 		int argumentID = getArgumentID(argumentname);
 		int argumentType = uniformtypes.get(argumentID);
 		if (argumentType == 8) {
-			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 4);
+			FloatBuffer buf = BufferUtils.createFloatBuffer(16);
 			((Matrix4f) argument).store(buf);
 			buf.flip();
 			uniformarguments.set(argumentID, buf);
 		} else if (argumentType == 7) {
-			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 3);
+			FloatBuffer buf = BufferUtils.createFloatBuffer(9);
 			((Matrix3f) argument).store(buf);
 			buf.flip();
 			uniformarguments.set(argumentID, buf);
 		} else if (argumentType == 6) {
-			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 2);
+			FloatBuffer buf = BufferUtils.createFloatBuffer(4);
 			((Matrix2f) argument).store(buf);
 			buf.flip();
 			uniformarguments.set(argumentID, buf);
@@ -397,25 +401,26 @@ public class Shader implements ViewProjection {
 		glUseProgram(0);
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setRendered(boolean rendered) {
+		this.rendered = rendered;
 	}
 
-	public boolean isActive() {
-		return active;
+	public boolean isRendered() {
+		return rendered;
 	}
 
 	@Override
 	public void render() {
 		// TODO: Optimize!
-
-		bind();
-		int modelLocation = glGetUniformLocation(shaderProgram, "model");
-		for (RenderedObject obj : objects) {
-			glUniformMatrix4fv(modelLocation, false, obj.getMatrixBuffer());
-			obj.render();
+		if (rendered) {
+			bind();
+			int modelLocation = glGetUniformLocation(shaderProgram, "model");
+			for (RenderedObject obj : objects) {
+				glUniformMatrix4fv(modelLocation, false, obj.getMatrixBuffer());
+				obj.render();
+			}
+			unbind();
 		}
-		unbind();
 	}
 
 	@Override

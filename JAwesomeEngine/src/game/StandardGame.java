@@ -44,6 +44,7 @@ import input.KeyInput;
 import loader.ShaderLoader;
 import math.VecMath;
 import matrix.Matrix4f;
+import objects.Camera2;
 import objects.GameCamera;
 import objects.Updateable;
 import objects.ViewProjection;
@@ -55,7 +56,6 @@ import utils.DefaultShader;
 import utils.GameProfiler;
 import utils.NullGameProfiler;
 import utils.ProjectionHelper;
-import utils.ViewFrustum;
 
 public abstract class StandardGame extends AbstractGame implements ViewProjection, Updateable {
 	protected List<Shader> shader;
@@ -67,13 +67,13 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 	private Shader screenShader;
 	public Display display;
 	public GameCamera cam;
+	public Camera2 cam2;
 	protected FloatBuffer projectionMatrix, projectionMatrix2;
 	protected GameProfiler profiler;
 
 	public InputManager inputs;
 	protected InputEvent closeEvent;
 
-	private ViewFrustum frustum;
 	private FloatBuffer identity;
 	protected boolean render2d = true;
 	protected boolean useFBO = true;
@@ -237,28 +237,11 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 			screenShader.addObject(screen);
 		}
 
-		frustum = new ViewFrustum(settings.getResolutionX(), settings.getResolutionY(), settings.getZNear(),
-				settings.getZFar(), settings.getFOVy());
-		projectionMatrix = storeMatrix(frustum.getMatrix());
-
+		projectionMatrix = storeMatrix(ProjectionHelper.perspective(settings.getFOVy(),
+				settings.getResolutionX() / (float) settings.getResolutionY(), settings.getZNear(),
+				settings.getZFar()));
 		projectionMatrix2 = storeMatrix(
-				ProjectionHelper.ortho(0, settings.getResolutionX(), settings.getResolutionY(), 0, -1, 1));// new
-																											// Matrix4f(a2,
-																											// 0,
-																											// 0,
-																											// 0,
-																											// 0,
-																											// b2,
-																											// 0,
-																											// 0,
-																											// 0,
-																											// 0,
-																											// c2,
-																											// 0,
-																											// d2,
-																											// e2,
-																											// 0,
-																											// 1);
+				ProjectionHelper.ortho(0, settings.getResolutionX(), settings.getResolutionY(), 0, -1, 1));
 	}
 
 	@Override
@@ -278,11 +261,12 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		inputs.addEvent(closeEvent);
 
 		cam = new GameCamera(inputs);
+		cam2 = new Camera2();
 
 		postProcessing = new ArrayList<Shader>();
 		postProcessing2 = new ArrayList<Shader>();
 
-		identity = BufferUtils.createFloatBuffer(16 * 4);
+		identity = BufferUtils.createFloatBuffer(16);
 		VecMath.identityMatrix().store(identity);
 		identity.flip();
 
@@ -340,20 +324,8 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		}
 	}
 
-	public void setRendering2d(boolean r) {
+	public void setRender2d(boolean r) {
 		render2d = r;
-	}
-
-	public void setShadersActive(boolean active) {
-		for (Shader s : shader) {
-			s.setActive(active);
-		}
-	}
-
-	public void setShadersActive2d(boolean active) {
-		for (Shader s : shader2d) {
-			s.setActive(active);
-		}
 	}
 
 	public void setProfiler(GameProfiler profiler) {
@@ -407,7 +379,7 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 			s.setArgumentDirect("view", cam.getMatrixBuffer());
 		}
 		for (Shader s : shader2d) {
-			// TODO: 2d camera
+			s.setArgumentDirect("view", cam2.getMatrixBuffer());
 		}
 	}
 
@@ -478,8 +450,8 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		return projectionMatrix;
 	}
 
-	private FloatBuffer storeMatrix(Matrix4f mat) {
-		FloatBuffer buf = BufferUtils.createFloatBuffer(16 * 2);
+	protected FloatBuffer storeMatrix(Matrix4f mat) {
+		FloatBuffer buf = BufferUtils.createFloatBuffer(16);
 		mat.store(buf);
 		buf.flip();
 		return buf;

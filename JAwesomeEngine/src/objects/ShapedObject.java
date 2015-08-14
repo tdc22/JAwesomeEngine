@@ -30,23 +30,23 @@ import vector.Vector2f;
 import vector.Vector3f;
 
 public class ShapedObject extends RenderedObject {
-	private static final int VERTEX_POSITION = 0;
-	private static final int COLOR_POSITION = 1;
-	private static final int TEXTURE_POSITION = 2;
-	private static final int NORMAL_POSITION = 3;
+	protected static final int VERTEX_POSITION = 0;
+	protected static final int COLOR_POSITION = 1;
+	protected static final int TEXTURE_POSITION = 2;
+	protected static final int NORMAL_POSITION = 3;
 
-	private List<Integer> indices;
-	private List<Vector3f> vertices;
-	private List<Vector3f> normals;
-	private List<Color> vertcolors;
-	private List<Vector2f> texturecoords;
+	protected List<Integer> indices;
+	protected List<Vector3f> vertices;
+	protected List<Vector3f> normals;
+	protected List<Color> vertcolors;
+	protected List<Vector2f> texturecoords;
 
-	private int vaoID;
-	private int vboIndexHandle;
-	private int vboVertexHandle;
-	private int vboColorHandle;
-	private int vboTextureCoordHandle;
-	private int vboNormalHandle;
+	protected int vaoHandle;
+	protected int vboIndexHandle;
+	protected int vboVertexHandle;
+	protected int vboColorHandle;
+	protected int vboTextureCoordHandle;
+	protected int vboNormalHandle;
 
 	protected int rendermode;
 	protected int renderedIndexCount = 0;
@@ -208,6 +208,18 @@ public class ShapedObject extends RenderedObject {
 		return vertices;
 	}
 
+	public List<Vector2f> getTextureCoordinates() {
+		return texturecoords;
+	}
+
+	public List<Color> getColors() {
+		return vertcolors;
+	}
+
+	public List<Vector3f> getNormals() {
+		return normals;
+	}
+
 	public void invertAllTriangles() {
 		List<Integer> newIndices = new ArrayList<Integer>();
 		for (int i = 0; i < indices.size(); i += 6) {
@@ -263,8 +275,8 @@ public class ShapedObject extends RenderedObject {
 		textureData.flip();
 		normalData.flip();
 
-		vaoID = glGenVertexArrays();
-		glBindVertexArray(vaoID);
+		vaoHandle = glGenVertexArrays();
+		glBindVertexArray(vaoHandle);
 
 		vboVertexHandle = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
@@ -301,7 +313,7 @@ public class ShapedObject extends RenderedObject {
 	@Override
 	public void render() {
 		if (render) {
-			glBindVertexArray(vaoID);
+			glBindVertexArray(vaoHandle);
 
 			glEnableVertexAttribArray(VERTEX_POSITION);
 			glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
@@ -374,5 +386,17 @@ public class ShapedObject extends RenderedObject {
 
 	public void setVertices(List<Vector3f> verts) {
 		vertices = verts;
+	}
+
+	public void setColors(List<Color> colors) {
+		vertcolors = colors;
+	}
+
+	public void setNormals(List<Vector3f> normals) {
+		this.normals = normals;
+	}
+
+	public void setTextureCoordinates(List<Vector2f> texcoords) {
+		texturecoords = texcoords;
 	}
 }

@@ -23,17 +23,6 @@ public class Camera extends GameObject {
 		init(pos, hRotation, vRotation);
 	}
 
-	// public void begin() {
-	// glPushMatrix();
-	// glTranslatef(rotcenter.x, rotcenter.y, rotcenter.z);
-	// glMultMatrixf(buf);
-	// glTranslatef(-rotcenter.x, -rotcenter.y, -rotcenter.z);
-	// }
-
-	// public void end() {
-	// glPopMatrix();
-	// }
-
 	public Vector3f getDirection() {
 		return direction;
 	}

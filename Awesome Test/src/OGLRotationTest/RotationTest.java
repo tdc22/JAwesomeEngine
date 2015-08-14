@@ -16,7 +16,7 @@ public class RotationTest extends StandardGame {
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		debugmanager = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
-		this.setRendering2d(true);
+		this.setRender2d(true);
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);

@@ -35,9 +35,7 @@ public class BasicTest2d extends StandardGame {
 
 	@Override
 	public void init() {
-		useFBO = false;
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
-		// display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
