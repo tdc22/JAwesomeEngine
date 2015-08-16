@@ -12,7 +12,8 @@ public class Cylinder extends ShapedObject implements CylinderStructure {
 	float radius, halfheight;
 	int slices;
 
-	public Cylinder(float x, float y, float z, float radius, float halfheight, int slices) {
+	public Cylinder(float x, float y, float z, float radius, float halfheight,
+			int slices) {
 		super();
 		translateTo(x, y, z);
 		init(radius, halfheight, slices);
@@ -48,25 +49,31 @@ public class Cylinder extends ShapedObject implements CylinderStructure {
 		radius = r;
 		halfheight = h;
 
-		addVertex(new Vector3f(0, halfheight, 0), Color.GRAY, new Vector2f(0, 0), new Vector3f(0, 1, 0));
+		addVertex(new Vector3f(0, halfheight, 0), Color.GRAY,
+				new Vector2f(0, 0), new Vector3f(0, 1, 0));
 		float angleStep = 360 / (float) slices;
 		Vector3f[] circle = new Vector3f[slices];
 		for (int a = 0; a < slices; a++) {
-			circle[a] = new Vector3f((float) Math.sin(Math.toRadians(angleStep * a)) * radius, 0,
+			circle[a] = new Vector3f((float) Math.sin(Math.toRadians(angleStep
+					* a))
+					* radius, 0,
 					(float) Math.cos(Math.toRadians(angleStep * a)) * radius);
 		}
 		for (int a = 0; a < slices; a++) {
 			Vector3f pos = circle[a];
 			Vector3f normal = VecMath.normalize(pos);
-			addVertex(new Vector3f(pos.x, halfheight, pos.z), Color.GRAY, new Vector2f(a, 1), normal);
+			addVertex(new Vector3f(pos.x, halfheight, pos.z), Color.GRAY,
+					new Vector2f(a, 1), normal);
 		}
 		for (int a = 0; a < slices; a++) {
 			Vector3f pos = circle[a];
 			Vector3f normal = VecMath.normalize(pos);
-			addVertex(new Vector3f(pos.x, -halfheight, pos.z), Color.GRAY, new Vector2f(a, 0), normal);
+			addVertex(new Vector3f(pos.x, -halfheight, pos.z), Color.GRAY,
+					new Vector2f(a, 0), normal);
 		}
 
-		addVertex(new Vector3f(0, -halfheight, 0), Color.GRAY, new Vector2f(1, 1), new Vector3f(0, -1, 0));
+		addVertex(new Vector3f(0, -halfheight, 0), Color.GRAY, new Vector2f(1,
+				1), new Vector3f(0, -1, 0));
 		int size = getVertices().size() - 1;
 
 		// Top
@@ -79,17 +86,23 @@ public class Cylinder extends ShapedObject implements CylinderStructure {
 		// Mantle
 		addQuad(1, slices, 1 + slices, size, 2 + slices, slices + 3, 2, 0);
 		for (int a = 2; a < slices - 1; a++) {
-			addQuad(a, a - 1, a + slices, size, a + slices + 1, a + slices + 2, a + 1, 0);
+			addQuad(a, a - 1, a + slices, size, a + slices + 1, a + slices + 2,
+					a + 1, 0);
 		}
-		addQuad(slices - 1, slices - 2, slices * 2 - 1, size, 2 * slices, slices + 1, slices, 0);
-		addQuad(slices, slices - 1, slices * 2, size, 1 + slices, slices + 2, 1, 0);
+		addQuad(slices - 1, slices - 2, slices * 2 - 1, size, 2 * slices,
+				slices + 1, slices, 0);
+		addQuad(slices, slices - 1, slices * 2, size, 1 + slices, slices + 2,
+				1, 0);
 
 		// Bottom
 		for (int a = 1; a < slices - 1; a++) {
-			addTriangle(size, slices + a + 2, slices + a + 1, a, slices + a, slices + a - 1);
+			addTriangle(size, slices + a + 2, slices + a + 1, a, slices + a,
+					slices + a - 1);
 		}
-		addTriangle(size, slices + 2, slices + 1, slices, 2 * slices, 2 * slices - 1);
-		addTriangle(size, slices + 1, 2 * slices, slices - 1, 2 * slices - 1, 2 * slices - 2);
+		addTriangle(size, slices + 2, slices + 1, slices, 2 * slices,
+				2 * slices - 1);
+		addTriangle(size, slices + 1, 2 * slices, slices - 1, 2 * slices - 1,
+				2 * slices - 2);
 
 		this.prerender();
 	}

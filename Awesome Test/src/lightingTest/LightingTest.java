@@ -1,9 +1,5 @@
 package lightingTest;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
@@ -15,6 +11,10 @@ import objects.ShapedObject;
 import shader.Shader;
 import utils.Debugger;
 import vector.Vector3f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class LightingTest extends StandardGame {
 	Debugger debugger;
@@ -22,24 +22,27 @@ public class LightingTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
 		cam.rotateTo(0, 0);
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
-		Shader shader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/phongshader.vert", "res/shaders/phongshader.frag"));
+		Shader shader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/phongshader.vert", "res/shaders/phongshader.frag"));
 		shader.addArgumentName("u_lightpos");
 		shader.addArgument(new Vector3f(0, 0, 10));
 		shader.addArgumentName("u_ambient");
@@ -54,7 +57,8 @@ public class LightingTest extends StandardGame {
 		bunny.setRenderHints(false, false, true);
 		shader.addObject(bunny);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 

@@ -1,9 +1,5 @@
 package postProcessingBlur;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
@@ -15,6 +11,10 @@ import shader.Shader;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector2f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class BlurTest extends StandardGame {
 	Debugger debugger;
@@ -22,24 +22,28 @@ public class BlurTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
 
-		Shader blurPPShader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/ppBlurshader.vert", "res/shaders/ppBlurshader.frag"));
+		Shader blurPPShader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/ppBlurshader.vert",
+				"res/shaders/ppBlurshader.frag"));
 		blurPPShader.addArgumentName("u_texture");
 		blurPPShader.addArgument(new Texture());
 		blurPPShader.addArgumentName("u_depthTexture");
@@ -49,7 +53,8 @@ public class BlurTest extends StandardGame {
 
 		addPostProcessingShader(blurPPShader);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 

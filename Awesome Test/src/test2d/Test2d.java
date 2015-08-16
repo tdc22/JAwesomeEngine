@@ -1,9 +1,5 @@
 package test2d;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import gui.Text;
@@ -17,6 +13,10 @@ import shape2d.Ellipse;
 import shape2d.Quad;
 import texture.Texture;
 import vector.Vector4f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class Test2d extends StandardGame {
 	Quad rotquad;
@@ -27,19 +27,22 @@ public class Test2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 
 		defaultshader.addObject(new Quad(25, 25, 50, 50));
-		defaultshader.addObject(new Text("2D Fonttest... seems to work perfectly!", 100, 100, font));
+		defaultshader.addObject(new Text(
+				"2D Fonttest... seems to work perfectly!", 100, 100, font));
 
 		rotquad = new Quad(500, 50, 25, 25);
 		defaultshader.addObject(rotquad);
@@ -49,18 +52,22 @@ public class Test2d extends StandardGame {
 		defaultshader.addObject(new Circle(600, 180, 30, 36));
 		defaultshader.addObject(new Circle(660, 180, 20, 36));
 
-		Shader colorshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader colorshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("u_color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 		add2dShader(colorshader);
 
-		coloredjumptext = new Text("This text jumps and is colored.", 100, 300, font);
+		coloredjumptext = new Text("This text jumps and is colored.", 100, 300,
+				font);
 		colorshader.addObject(coloredjumptext);
 
-		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/textureCoordinateTest.png"));
-		Shader textureshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
+		Texture texture = new Texture(
+				TextureLoader
+						.loadTexture("res/textures/textureCoordinateTest.png"));
+		Shader textureshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/textureshader.vert",
+				"res/shaders/textureshader.frag"));
 		textureshader.addArgumentName("u_texture");
 		textureshader.addArgument(texture);
 		add2dShader(textureshader);

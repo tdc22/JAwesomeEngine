@@ -33,31 +33,46 @@ public class OBJLoader {
 				String writeline = "";
 				if (line.split(" ").length == 4) {
 					Integer[] indices = new Integer[3];
-					indices[0] = Integer.parseInt(line.split(" ")[1].split("/")[0]) - 1;
-					indices[1] = Integer.parseInt(line.split(" ")[2].split("/")[0]) - 1;
-					indices[2] = Integer.parseInt(line.split(" ")[3].split("/")[0]) - 1;
+					indices[0] = Integer
+							.parseInt(line.split(" ")[1].split("/")[0]) - 1;
+					indices[1] = Integer
+							.parseInt(line.split(" ")[2].split("/")[0]) - 1;
+					indices[2] = Integer
+							.parseInt(line.split(" ")[3].split("/")[0]) - 1;
 					faces.add(indices);
-					writeline = line.split(" ")[0] + " " + indices[0] + " " + indices[1] + " " + indices[2];
+					writeline = line.split(" ")[0] + " " + indices[0] + " "
+							+ indices[1] + " " + indices[2];
 				} else if (line.split(" ").length == 5) {
 					Integer[] indices1 = new Integer[3];
-					indices1[0] = Integer.parseInt(line.split(" ")[1].split("/")[0]) - 1;
-					indices1[1] = Integer.parseInt(line.split(" ")[2].split("/")[0]) - 1;
-					indices1[2] = Integer.parseInt(line.split(" ")[3].split("/")[0]) - 1;
+					indices1[0] = Integer.parseInt(line.split(" ")[1]
+							.split("/")[0]) - 1;
+					indices1[1] = Integer.parseInt(line.split(" ")[2]
+							.split("/")[0]) - 1;
+					indices1[2] = Integer.parseInt(line.split(" ")[3]
+							.split("/")[0]) - 1;
 					faces.add(indices1);
 					Integer[] indices2 = new Integer[3];
-					indices2[0] = Integer.parseInt(line.split(" ")[1].split("/")[0]) - 1;
-					indices2[1] = Integer.parseInt(line.split(" ")[3].split("/")[0]) - 1;
-					indices2[2] = Integer.parseInt(line.split(" ")[4].split("/")[0]) - 1;
+					indices2[0] = Integer.parseInt(line.split(" ")[1]
+							.split("/")[0]) - 1;
+					indices2[1] = Integer.parseInt(line.split(" ")[3]
+							.split("/")[0]) - 1;
+					indices2[2] = Integer.parseInt(line.split(" ")[4]
+							.split("/")[0]) - 1;
 					faces.add(indices2);
-					writeline = line.split(" ")[0] + " " + indices1[0] + " " + indices1[1] + " " + indices1[2] + " "
-							+ "\n" + line.split(" ")[0] + " " + indices2[0] + " " + indices2[1] + " " + indices2[2];
+					writeline = line.split(" ")[0] + " " + indices1[0] + " "
+							+ indices1[1] + " " + indices1[2] + " " + "\n"
+							+ line.split(" ")[0] + " " + indices2[0] + " "
+							+ indices2[1] + " " + indices2[2];
 				} else {
-					System.err.println("Number of vertices per face must be 3 or 4");
+					System.err
+							.println("Number of vertices per face must be 3 or 4");
 				}
 				writer.write(writeline);
 			}
-			if (line.startsWith("v ") || line.startsWith("vn ") || line.startsWith("#") || line.startsWith("mtllib")
-					|| line.startsWith("o ") || line.startsWith("s ") || line.startsWith("usemtl")) {
+			if (line.startsWith("v ") || line.startsWith("vn ")
+					|| line.startsWith("#") || line.startsWith("mtllib")
+					|| line.startsWith("o ") || line.startsWith("s ")
+					|| line.startsWith("usemtl")) {
 				writer.write(line);
 			}
 			writer.newLine();
@@ -118,8 +133,9 @@ public class OBJLoader {
 					}
 				}
 				String[] lineparts = line.split(" ");
-				writeline = lineparts[0] + " " + lineparts[1] + " " + adj1 + " " + lineparts[2] + " " + adj2 + " "
-						+ lineparts[3] + " " + adj3;
+				writeline = lineparts[0] + " " + lineparts[1] + " " + adj1
+						+ " " + lineparts[2] + " " + adj2 + " " + lineparts[3]
+						+ " " + adj3;
 				writer.write(writeline);
 				facenumber++;
 			} else {
@@ -151,7 +167,8 @@ public class OBJLoader {
 				float z = Float.parseFloat(line.split(" ")[3]);
 				Vector3f vertex = new Vector3f(x, y, z);
 
-				object.addVertex(vertex, Color.WHITE, new Vector2f(0, 0), new Vector3f(0, 1, 0));
+				object.addVertex(vertex, Color.WHITE, new Vector2f(0, 0),
+						new Vector3f(0, 1, 0));
 			}
 			if (line.startsWith("vn")) {
 				float nx = Float.parseFloat(line.split(" ")[1]);
@@ -178,7 +195,8 @@ public class OBJLoader {
 		return object;
 	}
 
-	public static ShapedObject loadModel(File f) throws FileNotFoundException, IOException {
+	public static ShapedObject loadModel(File f) throws FileNotFoundException,
+			IOException {
 		ShapedObject object = new ShapedObject();
 		if (f.getName().endsWith(".mobj")) {
 			object = loadMOBJ(f);
@@ -187,7 +205,8 @@ public class OBJLoader {
 				f = convertOBJ(f);
 				object = loadMOBJ(f);
 			} else {
-				System.err.println("File extension not recognized. (Use *.obj or *.mobj)");
+				System.err
+						.println("File extension not recognized. (Use *.obj or *.mobj)");
 				return null;
 			}
 		}

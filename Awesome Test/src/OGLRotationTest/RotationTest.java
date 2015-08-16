@@ -1,12 +1,12 @@
 package OGLRotationTest;
 
+import game.StandardGame;
+import loader.FontLoader;
+import utils.Debugger;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
-import game.StandardGame;
-import loader.FontLoader;
-import utils.Debugger;
 
 public class RotationTest extends StandardGame {
 	RotationObject b;
@@ -14,8 +14,10 @@ public class RotationTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
-		debugmanager = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
+		debugmanager = new Debugger(inputs,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		this.setRender2d(true);
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);

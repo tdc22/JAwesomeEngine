@@ -1,17 +1,12 @@
 package physics2dConstraint;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import broadphase.SAP2;
-import constraints.DistanceConstraint2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import integration.VerletIntegration;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import loader.FontLoader;
 import loader.ShaderLoader;
 import manifold.MultiPointManifoldManager2;
@@ -30,6 +25,12 @@ import shape2d.Circle;
 import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
+import broadphase.SAP2;
+import constraints.DistanceConstraint2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ConstraintTest2d extends StandardGame {
 	PhysicsSpace2 space;
@@ -40,25 +41,30 @@ public class ConstraintTest2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		// display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(), new GJK2(new EPA2()), new ImpulseResolution(),
+		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(),
+				new GJK2(new EPA2()), new ImpulseResolution(),
 				new ProjectionCorrection(1), new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
 		space.setGlobalGravitation(new Vector2f(0, 120));
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, font,
+				cam);
 		physicsdebug = new PhysicsDebug2(inputs, font, space);
 
 		Quad ground = new Quad(400, 550, 300, 20);

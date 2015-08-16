@@ -1,17 +1,15 @@
 package debug_EPA2d;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import loader.FontLoader;
+import loader.ShaderLoader;
 import math.VecMath;
 import narrowphase.EmptyManifoldGenerator2;
 import narrowphase.GJK2;
@@ -21,9 +19,14 @@ import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
 import physics2dSupportFunction.SupportDifferenceObject;
 import quaternion.Quaternionf;
-import shape2d.Circle;
+import shader.Shader;
+import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class EPA2dDebugger extends StandardGame {
 	public class Edge {
@@ -43,6 +46,7 @@ public class EPA2dDebugger extends StandardGame {
 	int iter = 0;
 
 	SupportDifferenceObject support1;
+	Shader defaultshader;
 
 	InputEvent toggleMouseBind;
 
@@ -117,30 +121,44 @@ public class EPA2dDebugger extends StandardGame {
 		return closest;
 	}
 
-	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb, Vector2f dir) {
-		return VecMath.subtraction(Sa.supportPoint(dir), Sb.supportPointNegative(dir));
+	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,
+			Vector2f dir) {
+		return VecMath.subtraction(Sa.supportPoint(dir),
+				Sb.supportPointNegative(dir));
 	}
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
-
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		display.bindMouse();
-		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+
+		Shader defaultshader3 = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
+		addShader(defaultshader3);
+		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
+		add2dShader(defaultshader);
+
+		debugger = new Debugger(inputs, defaultshader3, defaultshader,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		cam.setFlyCam(true);
 		cam.translateTo(0, 1, 3);
 		cam.setFlySpeed(0.01f);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
 		// Test 5
-		Circle s1 = new Circle(400.0f, 80.0f, 24, 10);
+		Quad s1 = new Quad(120, 50, 20, 20);
 		s1.setRotation(new Quaternionf(1.0, 0.0, 0.0, 0.0));
 		rb1 = new RigidBody2(PhysicsShapeCreator.create(s1));
 
-		Circle s2 = new Circle(399.70612f, 79.57493f, 24, 10);
-		s2.setRotation(new Quaternionf(0.99988294, 0.0, 0.0, 0.0153108835));
+		Quad s2 = new Quad(95.99999f, 43.0043f, 5, 6);
+		s2.setRotation(new Quaternionf(1.0, 0.0, 0.0, 0.0));
 		rb2 = new RigidBody2(PhysicsShapeCreator.create(s2));
 
 		// Fix transformation (usually done in PhysicsSpace-class of Engine
@@ -156,6 +174,7 @@ public class EPA2dDebugger extends StandardGame {
 		// Visualize the support functions
 		support1 = new SupportDifferenceObject(s1, rb1, s2, rb2);
 		support1.translate(200, 200);
+		defaultshader.addObject(support1);
 
 		// Compute simplex as starting point for EPA
 		GJK2 gjk = new GJK2(new EmptyManifoldGenerator2());
@@ -165,13 +184,13 @@ public class EPA2dDebugger extends StandardGame {
 		epaInit(gjk.getSimplex());
 
 		// Input to step EPA
-		InputEvent stepEPA = new InputEvent("Step EPA", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
+		InputEvent stepEPA = new InputEvent("Step EPA", new Input(
+				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(stepEPA);
 	}
 
 	@Override
 	public void render() {
-		debugger.update3d();
 		debugger.begin();
 		renderScene();
 	}
@@ -179,10 +198,7 @@ public class EPA2dDebugger extends StandardGame {
 	@Override
 	public void render2d() {
 		render2dScene();
-		simplex.render();
-		support1.render();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
@@ -191,11 +207,12 @@ public class EPA2dDebugger extends StandardGame {
 			epaStep();
 			simplex.delete();
 			simplex = new Simplex(edges, findClosestEdge(edges));
+			if (!defaultshader.getObjects().contains(simplex))
+				defaultshader.addObject(simplex);
 		}
-		debugger.update();
+		debugger.update(fps, 0, 0);
+		cam.update(delta);
 
-		if (display.isMouseBound())
-			cam.update(delta);
 		if (toggleMouseBind.isActive()) {
 			if (!display.isMouseBound())
 				display.bindMouse();

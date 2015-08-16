@@ -1,9 +1,5 @@
 package transRot;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
@@ -11,6 +7,10 @@ import input.KeyInput;
 import loader.ModelLoader;
 import math.FastMath;
 import objects.RenderedObject;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class TransRot extends StandardGame {
 	RenderedObject rabbit1, rabbit2;
@@ -19,7 +19,8 @@ public class TransRot extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 5, 40);
@@ -33,7 +34,8 @@ public class TransRot extends StandardGame {
 		rabbit1.translateTo(-10, 0, 0);
 		rabbit2.translateTo(10, 0, 0);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 
@@ -63,7 +65,8 @@ public class TransRot extends StandardGame {
 		float speed = 0.01f * delta;
 		rabbit1.rotate(speed, speed, speed);
 		r2y += speed;
-		rabbit2.translateTo(rabbit2.getTranslation().getXf(), FastMath.sin(r2y) * 3, 0);
+		rabbit2.translateTo(rabbit2.getTranslation().getXf(),
+				FastMath.sin(r2y) * 3, 0);
 	}
 
 }

@@ -3,15 +3,6 @@ package physics;
 import java.util.ArrayList;
 import java.util.List;
 
-import collisionshape.BoxShape;
-import collisionshape.CapsuleShape;
-import collisionshape.ConvexShape;
-import collisionshape.CylinderShape;
-import collisionshape2d.ConvexShape2;
-import collisionshape2d.EllipseShape;
-import collisionshape2d.QuadShape;
-import convexhull.Quickhull;
-import convexhull.Quickhull2;
 import objects.ShapedObject;
 import objects.ShapedObject2;
 import shapedata.BoxStructure;
@@ -21,6 +12,15 @@ import shapedata2d.EllipseStructure;
 import shapedata2d.QuadStructure;
 import vector.Vector2f;
 import vector.Vector3f;
+import collisionshape.BoxShape;
+import collisionshape.CapsuleShape;
+import collisionshape.ConvexShape;
+import collisionshape.CylinderShape;
+import collisionshape2d.ConvexShape2;
+import collisionshape2d.EllipseShape;
+import collisionshape2d.QuadShape;
+import convexhull.Quickhull;
+import convexhull.Quickhull2;
 
 public class PhysicsShapeCreator {
 	public static BoxShape create(BoxStructure box) {
@@ -28,15 +28,18 @@ public class PhysicsShapeCreator {
 	}
 
 	public static CapsuleShape create(CapsuleStructure capsule) {
-		return new CapsuleShape(capsule.getTranslation(), capsule.getRadius(), capsule.getHeight());
+		return new CapsuleShape(capsule.getTranslation(), capsule.getRadius(),
+				capsule.getHeight());
 	}
 
 	public static CylinderShape create(CylinderStructure cylinder) {
-		return new CylinderShape(cylinder.getTranslation(), cylinder.getRadius(), cylinder.getHalfHeight());
+		return new CylinderShape(cylinder.getTranslation(),
+				cylinder.getRadius(), cylinder.getHalfHeight());
 	}
 
 	public static EllipseShape create(EllipseStructure ellipse) {
-		return new EllipseShape(ellipse.getTranslation2(), ellipse.getRadius(), ellipse.getHeight());
+		return new EllipseShape(ellipse.getTranslation2(), ellipse.getRadius(),
+				ellipse.getHeight());
 	}
 
 	public static QuadShape create(QuadStructure quad) {
@@ -44,7 +47,8 @@ public class PhysicsShapeCreator {
 	}
 
 	public static ConvexShape createHull(ShapedObject shapedobject) {
-		ConvexShape hull = Quickhull.computeConvexHull(shapedobject.getVertices());
+		ConvexShape hull = Quickhull.computeConvexHull(shapedobject
+				.getVertices());
 		hull.translateTo(shapedobject.getTranslation());
 		return hull;
 	}

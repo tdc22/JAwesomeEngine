@@ -30,8 +30,10 @@ public abstract class TCPConnecter extends AbstractTCPConnecter {
 
 	@Override
 	protected void initIO() throws IOException {
-		reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		reader = new BufferedReader(new InputStreamReader(
+				socket.getInputStream()));
+		writer = new BufferedWriter(new OutputStreamWriter(
+				socket.getOutputStream()));
 	}
 
 	protected abstract void received(String received);

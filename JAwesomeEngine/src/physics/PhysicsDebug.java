@@ -1,21 +1,23 @@
 package physics;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import manifold.CollisionManifold;
 import math.VecMath;
 import objects.AABB;
 import objects.RigidBody;
 import objects.ShapedObject;
+
+import org.lwjgl.opengl.GL11;
+
 import quaternion.Quaternionf;
 import space.Space3;
 import utils.Pair;
@@ -28,7 +30,8 @@ public class PhysicsDebug {
 	boolean showVelocities = false;
 	boolean showCollisionNormals = false;
 	boolean showCollisionTangents = false;
-	private InputEvent toggleAABBs, toggleCollisionNormals, toggleVelocities, toggleCollisionTangents;
+	private InputEvent toggleAABBs, toggleCollisionNormals, toggleVelocities,
+			toggleCollisionTangents;
 	private List<Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>> aabbObjects;
 
 	public PhysicsDebug(InputManager inputs, Font f, Space3 physics) {
@@ -47,7 +50,8 @@ public class PhysicsDebug {
 	private void initAABBObjects() {
 		aabbObjects = new ArrayList<Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>>();
 		Color c = Color.YELLOW;
-		for (RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> rb : physics.getObjects()) {
+		for (RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> rb : physics
+				.getObjects()) {
 			AABB<Vector3f> aabb = rb.getAABB();
 			ShapedObject aabbobj = new ShapedObject();
 			Vector3f min = aabb.getMin();
@@ -61,10 +65,12 @@ public class PhysicsDebug {
 			aabbobj.addVertex(new Vector3f(max.x, min.y, max.z), c);
 			aabbobj.addVertex(new Vector3f(min.x, max.y, max.z), c);
 			aabbobj.addVertex(max, c);
-			aabbobj.addIndices(0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 2, 4, 2, 6, 3, 6, 3, 5, 4, 7, 5, 7, 6, 7);
+			aabbobj.addIndices(0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 2, 4, 2, 6, 3, 6,
+					3, 5, 4, 7, 5, 7, 6, 7);
 			aabbobj.prerender();
 			aabbObjects
-					.add(new Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(aabbobj, rb));
+					.add(new Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(
+							aabbobj, rb));
 		}
 	}
 
@@ -91,12 +97,14 @@ public class PhysicsDebug {
 	public void render3d() {
 		if (showAABBs) {
 			for (Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> aabbobj : aabbObjects) {
-				aabbobj.getFirst().translateTo(aabbobj.getSecond().getTranslation());
+				aabbobj.getFirst().translateTo(
+						aabbobj.getSecond().getTranslation());
 				aabbobj.getFirst().render();
 			}
 		}
 		if (showCollisionNormals) {
-			List<CollisionManifold<Vector3f>> manifolds = physics.getCollisionManifolds();
+			List<CollisionManifold<Vector3f>> manifolds = physics
+					.getCollisionManifolds();
 			for (CollisionManifold<Vector3f> cm : manifolds) {
 				Color c = Color.RED;
 				ShapedObject normal1 = new ShapedObject();
@@ -104,9 +112,13 @@ public class PhysicsDebug {
 				normal1.setRenderMode(GL11.GL_LINES);
 				normal2.setRenderMode(GL11.GL_LINES);
 				normal1.addVertex(cm.getContactPointA(), c);
-				normal1.addVertex(VecMath.addition(cm.getContactPointA(), VecMath.negate(cm.getCollisionNormal())), c);
+				normal1.addVertex(
+						VecMath.addition(cm.getContactPointA(),
+								VecMath.negate(cm.getCollisionNormal())), c);
 				normal2.addVertex(cm.getContactPointB(), c);
-				normal2.addVertex(VecMath.addition(cm.getContactPointB(), cm.getCollisionNormal()), c);
+				normal2.addVertex(
+						VecMath.addition(cm.getContactPointB(),
+								cm.getCollisionNormal()), c);
 				normal1.addIndices(0, 1);
 				normal2.addIndices(0, 1);
 				normal1.prerender();
@@ -118,7 +130,8 @@ public class PhysicsDebug {
 			}
 		}
 		if (showCollisionTangents) {
-			List<CollisionManifold<Vector3f>> manifolds = physics.getCollisionManifolds();
+			List<CollisionManifold<Vector3f>> manifolds = physics
+					.getCollisionManifolds();
 			for (CollisionManifold<Vector3f> cm : manifolds) {
 				Color c = Color.GREEN;
 				ShapedObject tangent1 = new ShapedObject();
@@ -126,9 +139,13 @@ public class PhysicsDebug {
 				tangent1.setRenderMode(GL11.GL_LINES);
 				tangent2.setRenderMode(GL11.GL_LINES);
 				tangent1.addVertex(cm.getContactPointA(), c);
-				tangent1.addVertex(VecMath.addition(cm.getContactPointA(), VecMath.negate(cm.getContactTangentA())), c);
+				tangent1.addVertex(
+						VecMath.addition(cm.getContactPointA(),
+								VecMath.negate(cm.getContactTangentA())), c);
 				tangent2.addVertex(cm.getContactPointB(), c);
-				tangent2.addVertex(VecMath.addition(cm.getContactPointB(), cm.getContactTangentB()), c);
+				tangent2.addVertex(
+						VecMath.addition(cm.getContactPointB(),
+								cm.getContactTangentB()), c);
 				tangent1.addIndices(0, 1);
 				tangent2.addIndices(0, 1);
 				tangent1.prerender();
@@ -140,13 +157,16 @@ public class PhysicsDebug {
 			}
 		}
 		if (showVelocities) {
-			List<RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> objs = physics.getObjects();
+			List<RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> objs = physics
+					.getObjects();
 			for (RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> o : objs) {
 				Color c = Color.BLUE;
 				ShapedObject velocity = new ShapedObject();
 				velocity.setRenderMode(GL11.GL_LINES);
 				velocity.addVertex(o.getTranslation(), c);
-				velocity.addVertex(VecMath.addition(o.getTranslation(), o.getLinearVelocity()), c);
+				velocity.addVertex(
+						VecMath.addition(o.getTranslation(),
+								o.getLinearVelocity()), c);
 				velocity.addIndices(0, 1);
 				velocity.prerender();
 				velocity.render();
@@ -176,14 +196,16 @@ public class PhysicsDebug {
 	}
 
 	private void setupEvents(InputManager inputs) {
-		toggleAABBs = new InputEvent("debug_physics2_showAABBs",
-				new Input(Input.KEYBOARD_EVENT, "F5", KeyInput.KEY_PRESSED));
+		toggleAABBs = new InputEvent("debug_physics2_showAABBs", new Input(
+				Input.KEYBOARD_EVENT, "F5", KeyInput.KEY_PRESSED));
 		toggleVelocities = new InputEvent("debug_physics2_showVelocities",
 				new Input(Input.KEYBOARD_EVENT, "F6", KeyInput.KEY_PRESSED));
-		toggleCollisionNormals = new InputEvent("debug_physics2_showCollisionNormals",
-				new Input(Input.KEYBOARD_EVENT, "F7", KeyInput.KEY_PRESSED));
-		toggleCollisionTangents = new InputEvent("debug_physics2_showCollisionTangents",
-				new Input(Input.KEYBOARD_EVENT, "F8", KeyInput.KEY_PRESSED));
+		toggleCollisionNormals = new InputEvent(
+				"debug_physics2_showCollisionNormals", new Input(
+						Input.KEYBOARD_EVENT, "F7", KeyInput.KEY_PRESSED));
+		toggleCollisionTangents = new InputEvent(
+				"debug_physics2_showCollisionTangents", new Input(
+						Input.KEYBOARD_EVENT, "F8", KeyInput.KEY_PRESSED));
 
 		inputs.addEvent(toggleAABBs);
 		inputs.addEvent(toggleVelocities);

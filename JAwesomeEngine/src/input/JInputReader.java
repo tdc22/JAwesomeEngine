@@ -92,7 +92,8 @@ public class JInputReader extends InputReader {
 	}
 
 	public boolean isUseable() {
-		return (mousecontrollers.size() > 0) && (keyboardcontrollers.size() > 0);
+		return (mousecontrollers.size() > 0)
+				&& (keyboardcontrollers.size() > 0);
 	}
 
 	private void setupKeys() {
@@ -250,7 +251,8 @@ public class JInputReader extends InputReader {
 		keyboardcontrollers.clear();
 		gamepadcontrollers.clear();
 
-		Controller[] ca = ControllerEnvironment.getDefaultEnvironment().getControllers();
+		Controller[] ca = ControllerEnvironment.getDefaultEnvironment()
+				.getControllers();
 		for (Controller c : ca) {
 			Type t = c.getType();
 			if (t == Type.MOUSE)

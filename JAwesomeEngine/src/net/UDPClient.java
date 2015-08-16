@@ -45,8 +45,8 @@ public abstract class UDPClient extends UDPConnecter {
 	}
 
 	public void send(DatagramPacket packet) {
-		System.out.println(
-				"client send: " + packet.getAddress() + "; " + packet.getPort() + "; " + decode(packet.getData()));
+		System.out.println("client send: " + packet.getAddress() + "; "
+				+ packet.getPort() + "; " + decode(packet.getData()));
 		try {
 			socket.send(packet);
 		} catch (IOException e) {

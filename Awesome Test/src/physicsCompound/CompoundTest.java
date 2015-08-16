@@ -1,18 +1,14 @@
 package physicsCompound;
 
-import java.awt.Color;
-
-import broadphase.SAP;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
+
+import java.awt.Color;
+
 import loader.FontLoader;
 import loader.ShaderLoader;
 import manifold.SimpleManifoldManager;
@@ -31,6 +27,11 @@ import shape.Box;
 import shape.Sphere;
 import utils.Debugger;
 import vector.Vector3f;
+import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class CompoundTest extends StandardGame {
 	PhysicsSpace space;
@@ -44,26 +45,31 @@ public class CompoundTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
 
-		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(new EPA()), new ImpulseResolution(),
-				new ProjectionCorrection(0.01f), new SimpleManifoldManager<Vector3f>());// new
-																						// MultiPointManifoldManager());
+		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
+				new EPA()), new ImpulseResolution(), new ProjectionCorrection(
+				0.01f), new SimpleManifoldManager<Vector3f>());// new
+																// MultiPointManifoldManager());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, font,
+				cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
 
 		Box ground = new Box(0, -5, 0, 10, 1, 10);
@@ -72,7 +78,8 @@ public class CompoundTest extends StandardGame {
 		space.addRigidBody(ground, rb);
 		defaultshader.addObject(ground);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 

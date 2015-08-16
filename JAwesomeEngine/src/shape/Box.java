@@ -11,7 +11,8 @@ import vector.Vector3f;
 public class Box extends ShapedObject implements BoxStructure {
 	Vector3f halfsize;
 
-	public Box(float x, float y, float z, float halfsizeX, float halfsizeY, float halfsizeZ) {
+	public Box(float x, float y, float z, float halfsizeX, float halfsizeY,
+			float halfsizeZ) {
 		super();
 		translateTo(x, y, z);
 		init(halfsizeX, halfsizeY, halfsizeZ);

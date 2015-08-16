@@ -22,7 +22,8 @@ public class Simplex extends ShapedObject {
 		}
 
 		for (int i = 0; i < simplices.size(); i++) {
-			addVertex(simplices.get(i), Color.GRAY, new Vector2f(0, 0), new Vector3f(0, 1, 0));
+			addVertex(simplices.get(i), Color.GRAY, new Vector2f(0, 0),
+					new Vector3f(0, 1, 0));
 			addIndex(i);
 		}
 		if (simplices.size() == 4) {

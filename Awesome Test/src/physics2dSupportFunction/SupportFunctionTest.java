@@ -1,10 +1,5 @@
 package physics2dSupportFunction;
 
-import broadphase.SAP2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
@@ -25,6 +20,11 @@ import shape2d.Circle;
 import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
+import broadphase.SAP2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class SupportFunctionTest extends StandardGame {
 	PhysicsSpace2 space;
@@ -43,17 +43,20 @@ public class SupportFunctionTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(),
+				new PixelFormat().withSamples(0), new VideoSettings());
 		// display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
-		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
-		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(new EPA2()), new NullResolution(),
-				new NullCorrection(), new SimpleManifoldManager<Vector2f>());
+		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(
+				new EPA2()), new NullResolution(), new NullCorrection(),
+				new SimpleManifoldManager<Vector2f>());
 
 		// q1 = new Quad(400, 200, 25, 25);
 		// rb1 = new RigidBody2(PhysicsShapeCreator.create(q1));
@@ -89,10 +92,14 @@ public class SupportFunctionTest extends StandardGame {
 		add2dObject(so2);
 		add2dObject(so3);
 
-		support1 = new SupportDifferenceObject(q, rb1.getCollisionShapes().get(0), q2, rb2);
-		support2 = new SupportDifferenceObject(q, rb1.getCollisionShapes().get(0), c1, rb3);
-		support11 = new SupportDifferenceObject(c, rb1.getCollisionShapes().get(1), q2, rb2);
-		support21 = new SupportDifferenceObject(c, rb1.getCollisionShapes().get(1), c1, rb3);
+		support1 = new SupportDifferenceObject(q, rb1.getCollisionShapes().get(
+				0), q2, rb2);
+		support2 = new SupportDifferenceObject(q, rb1.getCollisionShapes().get(
+				0), c1, rb3);
+		support11 = new SupportDifferenceObject(c, rb1.getCollisionShapes()
+				.get(1), q2, rb2);
+		support21 = new SupportDifferenceObject(c, rb1.getCollisionShapes()
+				.get(1), c1, rb3);
 
 		add2dObject(support1);
 		add2dObject(support2);
@@ -103,7 +110,8 @@ public class SupportFunctionTest extends StandardGame {
 		// Vector3f(2,5,2)); add(new Vector3f(8,5,2)); add(new Vector3f(2,5,8));
 		// add(new Vector3f(4,8,4)); }}));
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 
@@ -167,7 +175,8 @@ public class SupportFunctionTest extends StandardGame {
 			dirrenderer.setDirections(support2.updateShape());
 		}
 
-		System.out.println(rb1.getInverseRotation() + "; " + rb1.getCollisionShapes().get(0).getInverseRotation());
+		System.out.println(rb1.getInverseRotation() + "; "
+				+ rb1.getCollisionShapes().get(0).getInverseRotation());
 		// if(space.testlist.size() > 0) {
 		// for(List<Vector2f> v : space.testlist) {
 		// addObject(new ResultTetrahedron(v));

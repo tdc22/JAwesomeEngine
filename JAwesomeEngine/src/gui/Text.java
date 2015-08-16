@@ -13,15 +13,18 @@ public class Text extends ShapedObject2 {
 	float fontsize = 1, charactermargin, spacesize;
 
 	public Text(String text, float x, float y, Font f) {
-		init(text, x, y, f, DefaultValues.DEFAULT_FONT_SIZE, DefaultValues.DEFAULT_FONT_CHARACTER_MARGIN,
+		init(text, x, y, f, DefaultValues.DEFAULT_FONT_SIZE,
+				DefaultValues.DEFAULT_FONT_CHARACTER_MARGIN,
 				DefaultValues.DEFAULT_FONT_SPACE_SIZE);
 	}
 
 	public Text(String text, float x, float y, Font f, float size) {
-		init(text, x, y, f, size, DefaultValues.DEFAULT_FONT_CHARACTER_MARGIN, DefaultValues.DEFAULT_FONT_SPACE_SIZE);
+		init(text, x, y, f, size, DefaultValues.DEFAULT_FONT_CHARACTER_MARGIN,
+				DefaultValues.DEFAULT_FONT_SPACE_SIZE);
 	}
 
-	public Text(String text, float x, float y, Font f, float size, float characterMargin, float spaceSize) {
+	public Text(String text, float x, float y, Font f, float size,
+			float characterMargin, float spaceSize) {
 		init(text, x, y, f, size, characterMargin, spaceSize);
 	}
 
@@ -41,7 +44,8 @@ public class Text extends ShapedObject2 {
 		return text;
 	}
 
-	private void init(String text, float x, float y, Font f, float size, float characterMargin, float spaceSize) {
+	private void init(String text, float x, float y, Font f, float size,
+			float characterMargin, float spaceSize) {
 		setRenderMode(GLConstants.LINES);
 		setFont(f);
 		setSpaceSize(spaceSize);

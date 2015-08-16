@@ -40,17 +40,22 @@ public class CubeEnvironmentMap {
 	ViewFrustum frustum;
 
 	public CubeEnvironmentMap(ViewProjection render, Vector3f pos) {
-		init(render, pos, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_X,
-				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_Y, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
+		init(render, pos,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_X,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_Y,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
 				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR);
 	}
 
-	public CubeEnvironmentMap(ViewProjection render, Vector3f pos, int resX, int resY) {
-		init(render, pos, resX, resY, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
+	public CubeEnvironmentMap(ViewProjection render, Vector3f pos, int resX,
+			int resY) {
+		init(render, pos, resX, resY,
+				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
 				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR);
 	}
 
-	public CubeEnvironmentMap(ViewProjection render, Vector3f pos, int resX, int resY, float zNear, float zFar) {
+	public CubeEnvironmentMap(ViewProjection render, Vector3f pos, int resX,
+			int resY, float zNear, float zFar) {
 		init(render, pos, resX, resY, zNear, zFar);
 	}
 
@@ -100,7 +105,8 @@ public class CubeEnvironmentMap {
 		return width;
 	}
 
-	private void init(ViewProjection render, Vector3f pos, int resX, int resY, float zNear, float zFar) {
+	private void init(ViewProjection render, Vector3f pos, int resX, int resY,
+			float zNear, float zFar) {
 		this.render = render;
 		this.width = resX;
 		this.height = resY;
@@ -109,40 +115,49 @@ public class CubeEnvironmentMap {
 		cubemap = new CubeMap();
 		cubemap.bind();
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
+				GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
+				GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
+				GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-				(java.nio.ByteBuffer) null);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-				(java.nio.ByteBuffer) null);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-				(java.nio.ByteBuffer) null);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-				(java.nio.ByteBuffer) null);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-				(java.nio.ByteBuffer) null);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-				(java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, width, height,
+				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, width, height,
+				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, width, height,
+				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, width, height,
+				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, width, height,
+				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, width, height,
+				0, GL_RGBA, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
 
-		top = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 0, 90),
-				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_POSITIVE_Y));
-		bottom = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 0, -90),
-				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_NEGATIVE_Y));
-		left = new FramebufferObject(render, resX, resY, 0, new Camera(pos, -90, 180),
-				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_NEGATIVE_X));
-		right = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 90, 180),
-				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X));
-		front = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 180, 180),
-				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_NEGATIVE_Z));
-		back = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 0, 180),
-				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_POSITIVE_Z));
+		top = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 0,
+				90), new Texture(cubemap.getTextureID(),
+				GL_TEXTURE_CUBE_MAP_POSITIVE_Y));
+		bottom = new FramebufferObject(render, resX, resY, 0, new Camera(pos,
+				0, -90), new Texture(cubemap.getTextureID(),
+				GL_TEXTURE_CUBE_MAP_NEGATIVE_Y));
+		left = new FramebufferObject(render, resX, resY, 0, new Camera(pos,
+				-90, 180), new Texture(cubemap.getTextureID(),
+				GL_TEXTURE_CUBE_MAP_NEGATIVE_X));
+		right = new FramebufferObject(render, resX, resY, 0, new Camera(pos,
+				90, 180), new Texture(cubemap.getTextureID(),
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X));
+		front = new FramebufferObject(render, resX, resY, 0, new Camera(pos,
+				180, 180), new Texture(cubemap.getTextureID(),
+				GL_TEXTURE_CUBE_MAP_NEGATIVE_Z));
+		back = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 0,
+				180), new Texture(cubemap.getTextureID(),
+				GL_TEXTURE_CUBE_MAP_POSITIVE_Z));
 
 		cubemap.unbind();
 	}
