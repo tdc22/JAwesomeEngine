@@ -29,15 +29,13 @@ public class SupportObject extends ShapedObject {
 
 		List<Vector3f> result = new ArrayList<Vector3f>();
 		for (Vector3f v : v1) {
-			Vector3f res = rb.supportPoint(QuatMath.transform(rb.getRotation(),
-					v));
+			Vector3f res = rb.supportPoint(QuatMath.transform(rb.getRotation(), v));
 			if (!result.contains(res))
 				result.add(res);
 		}
 
 		for (int r = 0; r < result.size(); r++) {
-			addVertex(result.get(r), Color.RED, new Vector2f(), new Vector3f(0,
-					1, 0));
+			addVertex(result.get(r), Color.RED, new Vector2f(), new Vector3f(0, 1, 0));
 			addIndex(r);
 		}
 		this.prerender();

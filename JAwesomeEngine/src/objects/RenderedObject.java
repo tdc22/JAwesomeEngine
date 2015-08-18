@@ -1,7 +1,6 @@
 package objects;
 
-public abstract class RenderedObject extends DataGameObject implements
-		Renderable {
+public abstract class RenderedObject extends DataGameObject implements Renderable {
 	// protected Shader shader;
 	// protected boolean shadered = false;
 	// protected boolean shaderactive = true;

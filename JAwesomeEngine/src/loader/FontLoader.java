@@ -1,8 +1,5 @@
 package loader;
 
-import gui.Font;
-import gui.FontCharacter;
-
 import java.awt.Color;
 import java.awt.FontFormatException;
 import java.awt.Point;
@@ -19,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
+import gui.Font;
+import gui.FontCharacter;
 import vector.Vector2f;
 
 public class FontLoader {
@@ -123,18 +122,16 @@ public class FontLoader {
 			characters = chars;
 			l = characters.length;
 		}
-		GlyphVector glyphvector = f.createGlyphVector(new FontRenderContext(
-				null, true, true), characters);
+		GlyphVector glyphvector = f.createGlyphVector(new FontRenderContext(null, true, true), characters);
 		for (int i = 0; i < l; i++) {
 			Character c = characters[i];
 			FontCharacter character = new FontCharacter();
-			Shape shape = glyphvector.getGlyphOutline(i, -(float) glyphvector
-					.getGlyphOutline(i).getBounds2D().getX(), 0);
+			Shape shape = glyphvector.getGlyphOutline(i, -(float) glyphvector.getGlyphOutline(i).getBounds2D().getX(),
+					0);
 			Rectangle2D bounds = shape.getBounds2D();
 			PathIterator iterator = shape.getPathIterator(f.getTransform());
 
-			character.setMargin((float) bounds.getWidth(),
-					(float) bounds.getHeight());
+			character.setMargin((float) bounds.getWidth(), (float) bounds.getHeight());
 			Point2D.Float current = new Point2D.Float();
 			Color color = Color.WHITE;
 			Vector2f texcoords = new Vector2f(0, 0);
@@ -145,15 +142,13 @@ public class FontLoader {
 				int path = iterator.currentSegment(coords);
 				switch (path) {
 				case PathIterator.SEG_MOVETO:
-					character.addVertex(new Vector2f(coords[0], coords[1]),
-							color, texcoords);
+					character.addVertex(new Vector2f(coords[0], coords[1]), color, texcoords);
 					index++;
 					current.x = coords[0];
 					current.y = coords[1];
 					break;
 				case PathIterator.SEG_LINETO:
-					character.addVertex(new Vector2f(coords[0], coords[1]),
-							color, texcoords);
+					character.addVertex(new Vector2f(coords[0], coords[1]), color, texcoords);
 					character.addIndex(index - 1);
 					character.addIndex(index);
 					index++;
@@ -162,19 +157,15 @@ public class FontLoader {
 					break;
 				case PathIterator.SEG_CUBICTO:
 					for (Point2D.Float p : _computeBezierCurve(
-							new Point2D.Float[] { current,
-									new Point2D.Float(coords[0], coords[1]),
-									new Point.Float(coords[2], coords[3]),
-									new Point.Float(coords[4], coords[5]) },
+							new Point2D.Float[] { current, new Point2D.Float(coords[0], coords[1]),
+									new Point.Float(coords[2], coords[3]), new Point.Float(coords[4], coords[5]) },
 							f.getSize())) {
-						character.addVertex(new Vector2f(p.x, p.y), color,
-								texcoords);
+						character.addVertex(new Vector2f(p.x, p.y), color, texcoords);
 						character.addIndex(index - 1);
 						character.addIndex(index);
 						index++;
 					}
-					character.addVertex(new Vector2f(coords[4], coords[5]),
-							color, texcoords);
+					character.addVertex(new Vector2f(coords[4], coords[5]), color, texcoords);
 					character.addIndex(index - 1);
 					character.addIndex(index);
 					index++;
@@ -182,19 +173,15 @@ public class FontLoader {
 					current.y = coords[5];
 					break;
 				case PathIterator.SEG_QUADTO:
-					for (Point2D.Float p : _computeBezierCurve(
-							new Point2D.Float[] { current,
-									new Point2D.Float(coords[0], coords[1]),
-									new Point.Float(coords[2], coords[3]) },
+					for (Point2D.Float p : _computeBezierCurve(new Point2D.Float[] { current,
+							new Point2D.Float(coords[0], coords[1]), new Point.Float(coords[2], coords[3]) },
 							f.getSize())) {
-						character.addVertex(new Vector2f(p.x, p.y), color,
-								texcoords);
+						character.addVertex(new Vector2f(p.x, p.y), color, texcoords);
 						character.addIndex(index - 1);
 						character.addIndex(index);
 						index++;
 					}
-					character.addVertex(new Vector2f(coords[2], coords[3]),
-							color, texcoords);
+					character.addVertex(new Vector2f(coords[2], coords[3]), color, texcoords);
 					character.addIndex(index - 1);
 					character.addIndex(index);
 					index++;

@@ -29,14 +29,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.lwjgl.BufferUtils;
+
 import matrix.Matrix2f;
 import matrix.Matrix3f;
 import matrix.Matrix4f;
 import objects.RenderedObject;
 import objects.ViewProjection;
-
-import org.lwjgl.BufferUtils;
-
 import texture.Texture;
 import utils.Pair;
 import vector.Vector2f;
@@ -61,8 +60,7 @@ public class Shader implements ViewProjection {
 		objects = new ArrayList<RenderedObject>();
 	}
 
-	public Shader(int shaderProgram, List<String> argumentnames,
-			List<Object> arguments) {
+	public Shader(int shaderProgram, List<String> argumentnames, List<Object> arguments) {
 		this.shaderProgram = shaderProgram;
 		uniformpositions = new ArrayList<Integer>();
 		uniformtypes = new ArrayList<Integer>();
@@ -228,29 +226,23 @@ public class Shader implements ViewProjection {
 				glUniform1f(uniformlocation, (Float) argument);
 				break;
 			case 3:
-				glUniform2f(uniformlocation, ((Vector2f) argument).x,
-						((Vector2f) argument).y);
+				glUniform2f(uniformlocation, ((Vector2f) argument).x, ((Vector2f) argument).y);
 				break;
 			case 4:
-				glUniform3f(uniformlocation, ((Vector3f) argument).x,
-						((Vector3f) argument).y, ((Vector3f) argument).z);
+				glUniform3f(uniformlocation, ((Vector3f) argument).x, ((Vector3f) argument).y, ((Vector3f) argument).z);
 				break;
 			case 5:
-				glUniform4f(uniformlocation, ((Vector4f) argument).x,
-						((Vector4f) argument).y, ((Vector4f) argument).z,
+				glUniform4f(uniformlocation, ((Vector4f) argument).x, ((Vector4f) argument).y, ((Vector4f) argument).z,
 						((Vector4f) argument).w);
 				break;
 			case 6:
-				glUniformMatrix2fv(uniformlocation, false,
-						(FloatBuffer) argument);
+				glUniformMatrix2fv(uniformlocation, false, (FloatBuffer) argument);
 				break;
 			case 7:
-				glUniformMatrix3fv(uniformlocation, false,
-						(FloatBuffer) argument);
+				glUniformMatrix3fv(uniformlocation, false, (FloatBuffer) argument);
 				break;
 			case 8:
-				glUniformMatrix4fv(uniformlocation, false,
-						(FloatBuffer) argument);
+				glUniformMatrix4fv(uniformlocation, false, (FloatBuffer) argument);
 				break;
 			case 9:
 				switch (texturenumber) {
@@ -285,8 +277,7 @@ public class Shader implements ViewProjection {
 					glActiveTexture(GL_TEXTURE9);
 					break;
 				}
-				glBindTexture(((Texture) argument).getTextureType(),
-						((Texture) argument).getTextureID());
+				glBindTexture(((Texture) argument).getTextureType(), ((Texture) argument).getTextureID());
 				glUniform1i(uniformlocation, texturenumber);
 				texturenumber++;
 				break;
@@ -405,8 +396,7 @@ public class Shader implements ViewProjection {
 					glActiveTexture(GL_TEXTURE9);
 					break;
 				}
-				glBindTexture(
-						((Texture) uniformarguments.get(e)).getTextureType(), 0);
+				glBindTexture(((Texture) uniformarguments.get(e)).getTextureType(), 0);
 				texturenumber++;
 			}
 		}
@@ -448,8 +438,7 @@ public class Shader implements ViewProjection {
 	}
 
 	@Override
-	public void setViewProjectionMatrix(FloatBuffer viewBuffer,
-			FloatBuffer projectionBuffer) {
+	public void setViewProjectionMatrix(FloatBuffer viewBuffer, FloatBuffer projectionBuffer) {
 		setArgumentDirect("view", viewBuffer);
 		setArgumentDirect("projection", projectionBuffer);
 	}
@@ -465,8 +454,7 @@ public class Shader implements ViewProjection {
 	}
 
 	@Override
-	public void setViewProjectionMatrix(Matrix4f viewMatrix,
-			Matrix4f projectionMatrix) {
+	public void setViewProjectionMatrix(Matrix4f viewMatrix, Matrix4f projectionMatrix) {
 		setArgument("view", viewMatrix);
 		setArgument("projection", projectionMatrix);
 	}

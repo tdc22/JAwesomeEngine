@@ -3,9 +3,8 @@ package game;
 import objects.Updateable;
 
 public abstract class AbstractGame implements Updateable {
-	protected long lastFrame;
+	protected long lastFrame, lastFPS;
 	protected int fps, cfps;
-	protected long lastFPS;
 
 	protected boolean running = true;
 
@@ -32,9 +31,14 @@ public abstract class AbstractGame implements Updateable {
 	protected int getDelta() {
 		long time = getTime();
 		int delta = (int) (time - lastFrame);
-		lastFrame = time;
+		lastFrame += delta;
 
 		return delta;
+	}
+
+	protected void resetTimers() {
+		lastFPS = getTime();
+		lastFrame = getTime();
 	}
 
 	/**

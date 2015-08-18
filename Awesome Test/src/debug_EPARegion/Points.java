@@ -17,8 +17,7 @@ public class Points extends ShapedObject {
 		// translate(vec);
 		prerender();
 
-		setShader(new Shader(shader, "color", new Vector4f(color.x, color.y,
-				color.z, 1f)));
+		setShader(new Shader(shader, "color", new Vector4f(color.x, color.y, color.z, 1f)));
 	}
 
 	public void update() {

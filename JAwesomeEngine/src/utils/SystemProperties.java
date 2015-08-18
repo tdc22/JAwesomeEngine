@@ -6,8 +6,7 @@ import org.lwjgl.opengl.GL11;
 public class SystemProperties {
 	private static String OS = System.getProperty("os.name").toLowerCase();
 
-	private static String fileseperator = System.getProperty("file.separator")
-			.toLowerCase();
+	private static String fileseperator = System.getProperty("file.separator").toLowerCase();
 
 	public static String getFileSeperator() {
 		return fileseperator;
@@ -63,8 +62,7 @@ public class SystemProperties {
 	}
 
 	public static boolean isUnix() {
-		return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS
-				.indexOf("aix") > 0);
+		return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
 	}
 
 	public static boolean isWindows() {

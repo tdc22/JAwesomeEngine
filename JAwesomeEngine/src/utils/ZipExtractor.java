@@ -13,8 +13,7 @@ import java.util.zip.ZipInputStream;
 
 public class ZipExtractor {
 	public static File extract(File file) throws IOException {
-		File folder = new File(file.getAbsolutePath().replace(file.getName(),
-				""));
+		File folder = new File(file.getAbsolutePath().replace(file.getName(), ""));
 		// folder.mkdir();
 
 		ZipInputStream zis = new ZipInputStream(new FileInputStream(file));
@@ -27,8 +26,7 @@ public class ZipExtractor {
 			File newFile = new File(folder + File.separator + fileName);
 
 			if (!ze.isDirectory()) {
-				WritableByteChannel out = Channels
-						.newChannel(new FileOutputStream(newFile));
+				WritableByteChannel out = Channels.newChannel(new FileOutputStream(newFile));
 				while (in.read(buffer) != -1) {
 					buffer.flip();
 					out.write(buffer);

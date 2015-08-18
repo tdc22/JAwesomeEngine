@@ -37,8 +37,7 @@ public class ShaderList {
 		list = new ArrayList<Shader>();
 	}
 
-	public void addShader(int shaderProgram, List<Object> uniformarguments,
-			List<String> argumentnames) {
+	public void addShader(int shaderProgram, List<Object> uniformarguments, List<String> argumentnames) {
 		Shader element = new Shader(shaderProgram);
 		element.addArguments(uniformarguments, argumentnames);
 		list.add(element);
@@ -67,29 +66,24 @@ public class ShaderList {
 					glUniform1f(uniformlocation, (Float) argument);
 					break;
 				case 3:
-					glUniform2f(uniformlocation, ((Vector2f) argument).x,
-							((Vector2f) argument).y);
+					glUniform2f(uniformlocation, ((Vector2f) argument).x, ((Vector2f) argument).y);
 					break;
 				case 4:
-					glUniform3f(uniformlocation, ((Vector3f) argument).x,
-							((Vector3f) argument).y, ((Vector3f) argument).z);
+					glUniform3f(uniformlocation, ((Vector3f) argument).x, ((Vector3f) argument).y,
+							((Vector3f) argument).z);
 					break;
 				case 5:
-					glUniform4f(uniformlocation, ((Vector4f) argument).x,
-							((Vector4f) argument).y, ((Vector4f) argument).z,
-							((Vector4f) argument).w);
+					glUniform4f(uniformlocation, ((Vector4f) argument).x, ((Vector4f) argument).y,
+							((Vector4f) argument).z, ((Vector4f) argument).w);
 					break;
 				case 6:
-					glUniformMatrix2fv(uniformlocation, false,
-							(FloatBuffer) argument);
+					glUniformMatrix2fv(uniformlocation, false, (FloatBuffer) argument);
 					break;
 				case 7:
-					glUniformMatrix3fv(uniformlocation, false,
-							(FloatBuffer) argument);
+					glUniformMatrix3fv(uniformlocation, false, (FloatBuffer) argument);
 					break;
 				case 8:
-					glUniformMatrix4fv(uniformlocation, false,
-							(FloatBuffer) argument);
+					glUniformMatrix4fv(uniformlocation, false, (FloatBuffer) argument);
 					break;
 				case 9:
 					switch (texturenumber) {

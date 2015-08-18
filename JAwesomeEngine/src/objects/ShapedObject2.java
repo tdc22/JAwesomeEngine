@@ -34,8 +34,7 @@ public class ShapedObject2 extends ShapedObject {
 	}
 
 	public void addVertex(Vector2f vertex, Color c, Vector2f texturecoord) {
-		addVertex(new Vector3f(vertex.x, vertex.y, 0f), c, texturecoord,
-				new Vector3f(0, 0, 1));
+		addVertex(new Vector3f(vertex.x, vertex.y, 0f), c, texturecoord, new Vector3f(0, 0, 1));
 	}
 
 	// @Override

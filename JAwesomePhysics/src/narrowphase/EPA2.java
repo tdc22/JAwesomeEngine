@@ -1,5 +1,6 @@
 package narrowphase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import manifold.ContactManifold;
@@ -10,34 +11,56 @@ import vector.Vector3f;
 
 public class EPA2 implements ManifoldGenerator<Vector2f> {
 	private class Edge {
-		Vector2f normal;
+		Vector2f a, b, normal;
 		float distance;
-		int index;
 
-		public Edge() {
-			normal = new Vector2f();
+		public Edge(Vector2f a, Vector2f b) {
+			this.a = a;
+			this.b = b;
+			
+			normal = new Vector2f(a.y - b.y, b.x - a.x);
+			if (VecMath.dotproduct(normal, a) < 0)
+				normal.negate();
+			
+			if (normal.lengthSquared() > 0)
+				normal.normalize();
 		}
 	}
 
 	private final float TOLERANCE = 0.05f;
+	private final float EPSILON = 0;//0.1f;
 	private final int MAX_ITERATIONS = 50;
 
 	@Override
 	public ContactManifold<Vector2f> computeCollision(SupportMap<Vector2f> Sa,
 			SupportMap<Vector2f> Sb, List<Vector2f> simplex) {
+		List<Edge> edges = new ArrayList<Edge>();
+		
+		Vector2f A = simplex.get(0);
+		Vector2f B = simplex.get(1);
+		Vector2f C = simplex.get(2);
+		
+		edges.add(new Edge(A, B));
+		edges.add(new Edge(B, C));
+		edges.add(new Edge(C, A));
+		
 		Vector2f normal = new Vector2f();
 		float depth = 0;
 		for (int i = 0; i < MAX_ITERATIONS; i++) {
-			Edge e = findClosestEdge(simplex);
-			Vector2f p = support(Sa, Sb, e.normal);
-			double d = VecMath.dotproduct(p, e.normal);
-			if (d - e.distance < TOLERANCE) {
-				normal = e.normal;
-				depth = (float) d;
-				break;
-			} else {
-				simplex.add(e.index, p);
+			Edge e = findClosestEdge(edges);
+			if(isOriginInsideEdgeArea(e)) {
+				Vector2f p = support(Sa, Sb, e.normal);
+				double d = VecMath.dotproduct(p, e.normal);
+				if (d - e.distance < TOLERANCE) {
+					normal = e.normal;
+					depth = (float) d;
+					break;
+				} else {
+					edges.add(new Edge(e.a, p));
+					edges.add(new Edge(p, e.b));
+				}
 			}
+			edges.remove(e);
 		}
 
 		if (normal.lengthSquared() == 0)
@@ -55,33 +78,27 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 				Sb.supportPointRelative(normal), Sa.supportPointLocal(normal),
 				Sb.supportPointLocal(negnormal), tangentA, tangentB);
 	}
-
-	private Vector2f edgeDirection(Vector2f edge, Vector2f origin) {
-		Vector2f a = new Vector2f(-edge.y, edge.x);
-		if (VecMath.dotproduct(a, origin) > 0)
-			return a;
-		a.negate();
-		return a;
+	
+	private boolean isOriginInsideEdgeArea(Edge e) {
+		return (checkEdge(e.a, e.normal) && checkEdge(e.b, e.normal));
+	}
+	
+	private boolean checkEdge(Vector2f a, Vector2f normal) {
+		return (-a.x * normal.x + -a.y * normal.y <= EPSILON);
 	}
 
 	/**
 	 * Finds the closest feature to the origin on the Minkowski Difference.
 	 */
-	private Edge findClosestEdge(List<Vector2f> simplex) {
-		Edge closest = new Edge();
-		closest.distance = Float.MAX_VALUE;
-		for (int i = 0; i < simplex.size(); i++) {
-			int j = i + 1 == simplex.size() ? 0 : i + 1;
-			Vector2f a = simplex.get(i);
-			Vector2f b = simplex.get(j);
-			Vector2f e = VecMath.subtraction(b, a);
-			Vector2f n = edgeDirection(e, a);
-			n.normalize(); // TODO: Zero length vector
-			double d = VecMath.dotproduct(n, a);
-			if (d < closest.distance) {
-				closest.distance = (float) d;
-				closest.normal = n;
-				closest.index = j;
+	private Edge findClosestEdge(List<Edge> edges) {
+		Edge closest = null;
+		float distance = Float.MAX_VALUE;
+		for (Edge e : edges) {
+			float dist = VecMath.dotproduct(e.normal, e.a);
+			if (dist < distance) {
+				closest = e;
+				distance = dist;
+				e.distance = distance;
 			}
 		}
 		return closest;

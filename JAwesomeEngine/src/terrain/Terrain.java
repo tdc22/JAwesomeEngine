@@ -68,13 +68,10 @@ public class Terrain extends ShapedObject {
 				maxheight = h;
 		}
 		halfheightdiff = (maxheight - minheight) / 2f;
-		System.out
-				.println(halfheightdiff + "; " + minheight + "; " + maxheight);
-		Vector3f size = new Vector3f(terrainsizex - 1, halfheightdiff,
-				terrainsizey - 1);
+		System.out.println(halfheightdiff + "; " + minheight + "; " + maxheight);
+		Vector3f size = new Vector3f(terrainsizex - 1, halfheightdiff, terrainsizey - 1);
 		for (int v = 0; v < verts.size(); v++) {
-			verts.set(v, VecMath.subtraction(verts.get(v),
-					VecMath.scale(size, 0.5f)));
+			verts.set(v, VecMath.subtraction(verts.get(v), VecMath.scale(size, 0.5f)));
 		}
 
 		this.prerender();
@@ -86,8 +83,7 @@ public class Terrain extends ShapedObject {
 		for (int x = 0; x < terrainsizex; x++) {
 			for (int y = 0; y < terrainsizey; y++) {
 				float h = new Color(heightmap.getRGB(x, y)).getRed() / 100f;
-				addVertex(new Vector3f(x, h, y), Color.GRAY,
-						new Vector2f(0, 0), new Vector3f(0, 1, 0));
+				addVertex(new Vector3f(x, h, y), Color.GRAY, new Vector2f(0, 0), new Vector3f(0, 1, 0));
 			}
 		}
 		init(terrainsizex, terrainsizey);
@@ -99,8 +95,7 @@ public class Terrain extends ShapedObject {
 		for (int x = 0; x < terrainsizex; x++) {
 			for (int y = 0; y < terrainsizey; y++) {
 				float h = heightmap[x][y];
-				addVertex(new Vector3f(x, h, y), Color.GRAY,
-						new Vector2f(0, 0), new Vector3f(0, 1, 0));
+				addVertex(new Vector3f(x, h, y), Color.GRAY, new Vector2f(0, 0), new Vector3f(0, 1, 0));
 			}
 		}
 		init(terrainsizex, terrainsizey);

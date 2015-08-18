@@ -3,6 +3,7 @@ package texture;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glGenTextures;
+
 import utils.DefaultValues;
 
 public class Texture {

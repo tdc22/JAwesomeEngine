@@ -1,10 +1,10 @@
 package physics;
 
-import integration.IntegrationSolver;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import broadphase.Broadphase;
+import integration.IntegrationSolver;
 import manifold.ManifoldManager;
 import narrowphase.Narrowphase;
 import objects.CollisionShape;
@@ -17,19 +17,15 @@ import quaternion.Quaternionf;
 import resolution.CollisionResolution;
 import space.Space3;
 import vector.Vector3f;
-import broadphase.Broadphase;
 
 public class PhysicsSpace extends Space3 {
 	List<GameObject> addedobjects;
 
 	public PhysicsSpace(IntegrationSolver integrationsolver,
-			Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> broadphase,
-			Narrowphase<Vector3f> narrowphase,
-			CollisionResolution collisionresolution,
-			PositionalCorrection positionalcorrection,
+			Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> broadphase, Narrowphase<Vector3f> narrowphase,
+			CollisionResolution collisionresolution, PositionalCorrection positionalcorrection,
 			ManifoldManager<Vector3f> manifoldmanager) {
-		super(integrationsolver, broadphase, narrowphase, collisionresolution,
-				positionalcorrection, manifoldmanager);
+		super(integrationsolver, broadphase, narrowphase, collisionresolution, positionalcorrection, manifoldmanager);
 		addedobjects = new ArrayList<GameObject>();
 	}
 
@@ -37,26 +33,22 @@ public class PhysicsSpace extends Space3 {
 
 	}
 
-	public void addRigidBody(DataGameObject obj,
-			RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
+	public void addRigidBody(DataGameObject obj, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
 		body.setRotation(obj.getRotation());
 		body.setTranslation(obj.getTranslation());
 		addRigidBody(body);
 		addedobjects.add(obj);
 	}
 
-	public void removeRigidBody(DataGameObject obj,
-			RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
+	public void removeRigidBody(DataGameObject obj, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
 		addedobjects.remove(obj);
 		removeRigidBody(body);
 	}
 
-	public void addCompoundObject(CompoundObject3 compoundobject,
-			DataGameObject... obj) {
+	public void addCompoundObject(CompoundObject3 compoundobject, DataGameObject... obj) {
 		for (int i = 0; i < obj.length; i++) {
 			DataGameObject dgo = obj[i];
-			CollisionShape<Vector3f, Quaternionf, ?> cs = compoundobject
-					.getCollisionShapes().get(i);
+			CollisionShape<Vector3f, Quaternionf, ?> cs = compoundobject.getCollisionShapes().get(i);
 			dgo.setRotation(cs.getRotation());
 			dgo.setTranslation(cs.getTranslation());
 			dgo.setRotationCenter(cs.getRotationCenter());

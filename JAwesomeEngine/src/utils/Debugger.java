@@ -13,15 +13,15 @@ import static org.lwjgl.opengl.GL11.GL_STACK_UNDERFLOW;
 import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL30.GL_INVALID_FRAMEBUFFER_OPERATION;
+
+import java.awt.Color;
+
 import gui.Font;
 import gui.Text;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
-
-import java.awt.Color;
-
 import objects.Camera;
 import objects.ShapedObject;
 import shader.Shader;
@@ -73,8 +73,7 @@ public class Debugger {
 
 	InputEvent toggledata, toggleaxis, togglegrid, togglewireframe;
 
-	public Debugger(InputManager input, Shader shader, Shader shader2d,
-			Font font, Camera cam) {
+	public Debugger(InputManager input, Shader shader, Shader shader2d, Font font, Camera cam) {
 		this.cam = cam;
 
 		text = new Text("", 10, 20, font);
@@ -215,14 +214,11 @@ public class Debugger {
 	}
 
 	private void setupEvents(InputManager inputs) {
-		toggledata = new InputEvent("debug_showdata", new Input(
-				Input.KEYBOARD_EVENT, "F1", KeyInput.KEY_PRESSED));
-		toggleaxis = new InputEvent("debug_showaxis", new Input(
-				Input.KEYBOARD_EVENT, "F2", KeyInput.KEY_PRESSED));
-		togglegrid = new InputEvent("debug_showgrid", new Input(
-				Input.KEYBOARD_EVENT, "F3", KeyInput.KEY_PRESSED));
-		togglewireframe = new InputEvent("debug_showwireframe", new Input(
-				Input.KEYBOARD_EVENT, "F4", KeyInput.KEY_PRESSED));
+		toggledata = new InputEvent("debug_showdata", new Input(Input.KEYBOARD_EVENT, "F1", KeyInput.KEY_PRESSED));
+		toggleaxis = new InputEvent("debug_showaxis", new Input(Input.KEYBOARD_EVENT, "F2", KeyInput.KEY_PRESSED));
+		togglegrid = new InputEvent("debug_showgrid", new Input(Input.KEYBOARD_EVENT, "F3", KeyInput.KEY_PRESSED));
+		togglewireframe = new InputEvent("debug_showwireframe",
+				new Input(Input.KEYBOARD_EVENT, "F4", KeyInput.KEY_PRESSED));
 
 		inputs.addEvent(toggledata);
 		inputs.addEvent(toggleaxis);
@@ -264,12 +260,9 @@ public class Debugger {
 				isFirstError = false;
 			}
 
-			text.setText("FPS: " + fps + " ("
-					+ String.format("%.2f", 1000 / (float) fps)
-					+ " ms)\nObjects: " + objects + "\n2d Objects: "
-					+ objects2d + "\nPolygons:\nCamera: " + campos.x + "; "
-					+ campos.y + "; " + campos.z + "\nGL-Error: "
-					+ getGLErrorName(glGetError()) + " (" + firsterror + ")");
+			text.setText("FPS: " + fps + " (" + String.format("%.2f", 1000 / (float) fps) + " ms)\nObjects: " + objects
+					+ "\n2d Objects: " + objects2d + "\nPolygons:\nCamera: " + campos.x + "; " + campos.y + "; "
+					+ campos.z + "\nGL-Error: " + getGLErrorName(glGetError()) + " (" + firsterror + ")");
 		}
 		if (showaxis) {
 			Vector3f campos = cam.getTranslation();

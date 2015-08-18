@@ -116,7 +116,7 @@ public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 			if (doSimplex())
 				return true;
 		}
-		return true;
+		return false;
 	}
 
 	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,

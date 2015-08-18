@@ -1,7 +1,15 @@
 package physics2dFriction2;
 
+import broadphase.SAP2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -20,11 +28,6 @@ import shape2d.Circle;
 import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
-import broadphase.SAP2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class FrictionTest2d extends StandardGame {
 	PhysicsSpace2 space;
@@ -32,33 +35,29 @@ public class FrictionTest2d extends StandardGame {
 	Debugger debugger;
 	PhysicsDebug2 physicsdebug;
 	Shader defaultshader2;
+	InputEvent step;
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
 
-		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(
-				new EPA2()), new ImpulseResolution(), new ProjectionCorrection(
-				1), new MultiPointManifoldManager2());
+		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(new EPA2()), new ImpulseResolution(),
+				new ProjectionCorrection(1), new MultiPointManifoldManager2());
 		space.setGlobalGravitation(new Vector2f(0, 120));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, font,
-				cam);
-		physicsdebug = new PhysicsDebug2(inputs, font, space);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
+		physicsdebug = new PhysicsDebug2(inputs, defaultshader2, font, space);
 
 		Quad ground = new Quad(400, 550, 300, 20);
 		RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(ground));
@@ -70,6 +69,9 @@ public class FrictionTest2d extends StandardGame {
 		RigidBody2 rb2 = new RigidBody2(PhysicsShapeCreator.create(slope));
 		space.addRigidBody(slope, rb2);
 		defaultshader2.addObject(slope);
+
+		step = new InputEvent("Step", new Input(Input.KEYBOARD_EVENT, "R", KeyInput.KEY_PRESSED));
+		inputs.addEvent(step);
 	}
 
 	@Override
@@ -82,7 +84,6 @@ public class FrictionTest2d extends StandardGame {
 		debugger.begin();
 		render2dScene();
 		debugger.end();
-		physicsdebug.render2d();
 	}
 
 	@Override
@@ -112,8 +113,12 @@ public class FrictionTest2d extends StandardGame {
 		}
 
 		debugger.update(fps, 0, 0);
+		if (inputs.isKeyDown("E") || step.isActive()) {
+			RigidBody2 obj = (RigidBody2) space.getObjects().get(space.getObjects().size() - 1);
+			System.out.println(obj.getTranslation2() + "; " + obj.getRotation() + "; " + space.hasCollision(obj));
+			space.update(delta);
+		}
 		physicsdebug.update();
-		space.update(delta);
 		cam.update(delta);
 	}
 }

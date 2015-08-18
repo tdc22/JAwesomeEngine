@@ -1,5 +1,9 @@
 package shaderEdge;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -7,10 +11,6 @@ import shader.Shader;
 import shape.Box;
 import utils.Debugger;
 import utils.GLConstants;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ShaderTest extends StandardGame {
 	Debugger debugger;
@@ -18,29 +18,25 @@ public class ShaderTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(5, 5, 5);
 		cam.rotateTo(45, -35);
 
-		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
 
-		edgeshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.frag",
-				"res/shaders/edgeshader.geo", GLConstants.TRIANGLE_ADJACENCY,
-				GLConstants.LINE_STRIP, 6));
+		edgeshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/edgeshader.vert", "res/shaders/edgeshader.frag",
+						"res/shaders/edgeshader.geo", GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 		addShader(edgeshader);
 
 		Box a = new Box(0, 0, 0, 1, 1, 1);

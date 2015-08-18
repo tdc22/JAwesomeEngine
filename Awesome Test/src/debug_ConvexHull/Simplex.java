@@ -3,9 +3,9 @@ package debug_ConvexHull;
 import java.awt.Color;
 import java.util.List;
 
+import debug_ConvexHull.ConvexHullDebugger.Triangle;
 import objects.ShapedObject;
 import utils.GLConstants;
-import debug_ConvexHull.ConvexHullDebugger.Triangle;
 
 public class Simplex extends ShapedObject {
 	public Simplex(List<Triangle> triangles, Triangle next) {

@@ -9,8 +9,7 @@ import java.io.IOException;
 import objects.ShapedObject;
 
 public class X3DLoader {
-	public static ShapedObject loadModel(File f) throws FileNotFoundException,
-			IOException {
+	public static ShapedObject loadModel(File f) throws FileNotFoundException, IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		ShapedObject object = new ShapedObject();
 		// List<Vector3f> verts = new ArrayList<Vector3f>();

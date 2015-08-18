@@ -1,15 +1,20 @@
 package tutorialpX;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import broadphase.SAP;
+import collisionshape.CylinderShape;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import loader.FontLoader;
 import loader.ShaderLoader;
 import manifold.MultiPointManifoldManager;
@@ -30,17 +35,11 @@ import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector3f;
 import vector.Vector4f;
-import broadphase.SAP;
-import collisionshape.CylinderShape;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class Tutorial extends StandardGame {
 	InputEvent forward, backward, left, right, jump;
 	PhysicsSpace space;
-	RigidBody3 playerbody, groundchecker, spacerbody, goal;
+	RigidBody3 playerbody, groundchecker, goal;
 	float playerspeed = 10;
 	float mousesensitivity = 0.2f;
 	Shader edgeshader;
@@ -79,10 +78,9 @@ public class Tutorial extends StandardGame {
 
 		List<Shader> colorshaders = new ArrayList<Shader>();
 		for (Vector3f c : colors) {
-			Shader colorshader = new Shader(ShaderLoader.loadShaderFromFile(
-					"res/shaders/colorshader.vert",
-					"res/shaders/colorshader.frag"), "u_color", new Vector4f(
-					c.x, c.y, c.z, 1));
+			Shader colorshader = new Shader(
+					ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"),
+					"u_color", new Vector4f(c.x, c.y, c.z, 1));
 			colorshaders.add(colorshader);
 			addShader(colorshader);
 		}
@@ -94,16 +92,14 @@ public class Tutorial extends StandardGame {
 			sizez = BLOCK_SIZE_MIN + (float) (Math.random() * blocksizerange);
 			if (!((posx - sizex) <= STARTBOX_SIZE_X && (posz - sizez) <= STARTBOX_SIZE_Z)) {
 				posy = MIN_Y + (float) (Math.random() * yrange);
-				sizey = BLOCK_SIZE_MIN
-						+ (float) (Math.random() * blocksizerange);
+				sizey = BLOCK_SIZE_MIN + (float) (Math.random() * blocksizerange);
 				color = (int) (Math.random() * colornum);
 
 				Box box = new Box(posx, posy, posz, sizex, sizey, sizez);
 				box.setRenderHints(false, false, true);
 				colorshaders.get(color).addObject(box);
 				edgeshader.addObject(box);
-				RigidBody3 boxbody = new RigidBody3(
-						PhysicsShapeCreator.create(box));
+				RigidBody3 boxbody = new RigidBody3(PhysicsShapeCreator.create(box));
 				boxbody.translateTo(box.getTranslation());
 				space.addRigidBody(box, boxbody);
 
@@ -114,38 +110,31 @@ public class Tutorial extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Tutorial",
-				false), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Tutorial", false), new PixelFormat(),
+				new VideoSettings());
 		display.bindMouse();
 		cam.rotateTo(225, 0);
 
-		Cylinder player = new Cylinder(PLAYER_START_POSITION, PLAYER_RADIUS,
-				PLAYER_HEIGHT / 2f, 50);
+		Cylinder player = new Cylinder(PLAYER_START_POSITION, PLAYER_RADIUS, PLAYER_HEIGHT / 2f, 50);
 		player.setRenderHints(false, false, true);
 
-		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT,
-				"W", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT, "Up",
-				KeyInput.KEY_DOWN));
-		backward = new InputEvent("Backward", new Input(Input.KEYBOARD_EVENT,
-				"S", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
-				"Down", KeyInput.KEY_DOWN));
-		left = new InputEvent("Left", new Input(Input.KEYBOARD_EVENT, "A",
-				KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT, "Left",
-				KeyInput.KEY_DOWN));
-		right = new InputEvent("Right", new Input(Input.KEYBOARD_EVENT, "D",
-				KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT, "Right",
-				KeyInput.KEY_DOWN));
-		jump = new InputEvent("Jump", new Input(Input.KEYBOARD_EVENT, " ",
-				KeyInput.KEY_PRESSED));
+		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN));
+		backward = new InputEvent("Backward", new Input(Input.KEYBOARD_EVENT, "S", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "Down", KeyInput.KEY_DOWN));
+		left = new InputEvent("Left", new Input(Input.KEYBOARD_EVENT, "A", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "Left", KeyInput.KEY_DOWN));
+		right = new InputEvent("Right", new Input(Input.KEYBOARD_EVENT, "D", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "Right", KeyInput.KEY_DOWN));
+		jump = new InputEvent("Jump", new Input(Input.KEYBOARD_EVENT, " ", KeyInput.KEY_PRESSED));
 		inputs.addEvent(forward);
 		inputs.addEvent(backward);
 		inputs.addEvent(left);
 		inputs.addEvent(right);
 		inputs.addEvent(jump);
 
-		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(
-				new EPA()), new SimpleLinearImpulseResolution(),
-				new ProjectionCorrection(0.02f, 0.0f),
+		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(new EPA()),
+				new SimpleLinearImpulseResolution(), new ProjectionCorrection(0.00f, 0.0f),
 				new MultiPointManifoldManager());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
@@ -156,20 +145,19 @@ public class Tutorial extends StandardGame {
 		playerbody.setRestitution(0);
 		space.addRigidBody(player, playerbody);
 
-		groundchecker = new RigidBody3(new CylinderShape(0, -999, 0,
-				GROUNDCHECKER_RADIUS, GROUNDCHECKER_HEIGHT / 2f));
+		groundchecker = new RigidBody3(new CylinderShape(0, -999, 0, GROUNDCHECKER_RADIUS, GROUNDCHECKER_HEIGHT / 2f));
 		groundchecker.setMass(1f);
 		groundchecker.setLinearFactor(new Vector3f(0, 0, 0));
 		groundchecker.setAngularFactor(new Vector3f(0, 0, 0));
 		groundchecker.setRestitution(0);
 		space.addRigidBody(groundchecker);
 
-		spacerbody = new RigidBody3(new CylinderShape(PLAYER_START_POSITION,
-				PLAYER_RADIUS + TINY_SPACE, PLAYER_HEIGHT / 2f));
-		spacerbody.setMass(1f);
-		spacerbody.setLinearFactor(new Vector3f(1, 0, 1));
-		spacerbody.setAngularFactor(new Vector3f(0, 0, 0));
-		spacerbody.setRestitution(0);
+		// spacerbody = new RigidBody3(new CylinderShape(PLAYER_START_POSITION,
+		// PLAYER_RADIUS + TINY_SPACE, PLAYER_HEIGHT / 2f));
+		// spacerbody.setMass(1f);
+		// spacerbody.setLinearFactor(new Vector3f(1, 0, 1));
+		// spacerbody.setAngularFactor(new Vector3f(0, 0, 0));
+		// spacerbody.setRestitution(0);
 		// TODO: ignore collision between playerbody, groundchecker and
 		// spacerbody, remove TINY_SPACE
 		// space.addRigidBody(spacerbody);
@@ -180,14 +168,13 @@ public class Tutorial extends StandardGame {
 		space.addRigidBody(ground, rb);
 		// addObject(ground);
 
-		Box goalBox = new Box(LEVEL_SIZE_X - 5, MAX_Y + BLOCK_SIZE_MAX,
-				LEVEL_SIZE_Z - 5, 0.2f, 0.2f, 0.2f);
+		Box goalBox = new Box(LEVEL_SIZE_X - 5, MAX_Y + BLOCK_SIZE_MAX, LEVEL_SIZE_Z - 5, 0.2f, 0.2f, 0.2f);
 		goalBox.setRenderHints(false, false, true);
 		goal = new RigidBody3(PhysicsShapeCreator.create(goalBox));
 		space.addRigidBody(goalBox, goal);
 
-		Shader playershader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader playershader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		playershader.addArgumentName("u_color");
 		playershader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 		addShader(playershader);
@@ -203,10 +190,9 @@ public class Tutorial extends StandardGame {
 		addShader(goalshader);
 		goalshader.addObject(goalBox);
 
-		edgeshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/edgeshader.vert", "res/shaders/edgeshader.frag",
-				"res/shaders/edgeshader.geo", GLConstants.TRIANGLE_ADJACENCY,
-				GLConstants.LINE_STRIP, 6));
+		edgeshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/edgeshader.vert", "res/shaders/edgeshader.frag",
+						"res/shaders/edgeshader.geo", GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
 		addShader(edgeshader);
 
 		edgeshader.addObjects(player, ground, goalBox);
@@ -215,18 +201,15 @@ public class Tutorial extends StandardGame {
 		colors.add(new Vector3f(0.92f, 0.92f, 0.92f));
 		colors.add(new Vector3f(0.3f, 0.3f, 0.92f));
 
-		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, font,
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
 
 		generateLevel();
@@ -275,12 +258,10 @@ public class Tutorial extends StandardGame {
 			move = VecMath.subtraction(move, cam.getDirection());
 		}
 		if (left.isActive()) {
-			move = VecMath.subtraction(move, VecMath.crossproduct(
-					cam.getDirection(), new Vector3f(0, 1, 0)));
+			move = VecMath.subtraction(move, VecMath.crossproduct(cam.getDirection(), new Vector3f(0, 1, 0)));
 		}
 		if (right.isActive()) {
-			move = VecMath.addition(move, VecMath.crossproduct(
-					cam.getDirection(), new Vector3f(0, 1, 0)));
+			move = VecMath.addition(move, VecMath.crossproduct(cam.getDirection(), new Vector3f(0, 1, 0)));
 		}
 		if (move.length() > 0) {
 			move.setY(0);
@@ -290,14 +271,12 @@ public class Tutorial extends StandardGame {
 		if (jump.isActive() && onground) {
 			move = VecMath.addition(move, new Vector3f(0, 8, 0));
 		}
-		playerbody.setLinearVelocity(new Vector3f(move.x, playerbody
-				.getLinearVelocity().y + move.y, move.z));
+		playerbody.setLinearVelocity(new Vector3f(move.x, playerbody.getLinearVelocity().y + move.y, move.z));
 		if (playerbody.getTranslation().getY() <= VOID_OUT_DEPTH)
 			reset();
-		groundchecker.setTranslation(VecMath.subtraction(
-				playerbody.getTranslation(), new Vector3f(0, PLAYER_HEIGHT / 2f
-						+ GROUNDCHECKER_HEIGHT / 2f + TINY_SPACE, 0)));
-		spacerbody.setTranslation(playerbody.getTranslation());
+		groundchecker.setTranslation(VecMath.subtraction(playerbody.getTranslation(),
+				new Vector3f(0, PLAYER_HEIGHT / 2f + GROUNDCHECKER_HEIGHT / 2f + TINY_SPACE, 0)));
+		// spacerbody.setTranslation(playerbody.getTranslation());
 
 		goal.rotate(0.05f * delta, 0.05f * delta, 0.05f * delta);
 
@@ -310,8 +289,7 @@ public class Tutorial extends StandardGame {
 		if (space.hasCollision(playerbody, goal))
 			System.out.println("Goal!");
 
-		Vector3f offset = QuatMath.transform(playerbody.getRotation(),
-				new Vector3f(0.70710677, 0, 0.70710677));
+		Vector3f offset = QuatMath.transform(playerbody.getRotation(), new Vector3f(0.70710677, 0, 0.70710677));
 		offset.setY((PLAYER_HEIGHT * (6 / 8f)) / 2f);
 		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
 	}

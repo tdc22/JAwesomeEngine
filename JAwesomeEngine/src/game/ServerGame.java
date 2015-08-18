@@ -26,7 +26,7 @@ public abstract class ServerGame extends AbstractGame {
 	@Override
 	protected void initEngine() {
 		objects = new ArrayList<GameObject>();
-		lastFPS = getTime();
+		resetTimers();
 	}
 
 	@Override

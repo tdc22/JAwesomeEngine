@@ -42,9 +42,8 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 		float anglestep = 360 / (float) slices;
 		addVertex(new Vector2f(0, 0), color, new Vector2f(0, 0));
 		for (int s = 0; s < slices; s++) {
-			Vector2f v = new Vector2f(radius
-					* (float) (Math.sin(Math.toRadians(s * anglestep))), height
-					* (float) (Math.cos(Math.toRadians(s * anglestep))));
+			Vector2f v = new Vector2f(radius * (float) (Math.sin(Math.toRadians(s * anglestep))),
+					height * (float) (Math.cos(Math.toRadians(s * anglestep))));
 			addVertex(v, color, v);
 		}
 		for (int s = 0; s < slices - 1; s++) {

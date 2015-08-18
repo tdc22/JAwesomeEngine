@@ -1,5 +1,9 @@
 package shader4_Cube;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -15,10 +19,6 @@ import texture.Texture;
 import utils.Debugger;
 import vector.Vector3f;
 import vector.Vector4f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ShaderTest4 extends StandardGame {
 	Texture texture, diffuse, bumpmap;
@@ -29,29 +29,26 @@ public class ShaderTest4 extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.setFlySpeed(0.002f);
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
 
-		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		add2dShader(defaultshader2);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
 
 		// Shader Test 1
-		Shader colorshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader colorshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("u_color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 		addShader(colorshader);
@@ -64,17 +61,14 @@ public class ShaderTest4 extends StandardGame {
 		cubemapper = new CubeEnvironmentMap(this, s.getTranslation());
 		cubemapper.updateTexture();
 
-		rtt = new FramebufferObject(this, 1024, 1024, 0, new Camera(
-				new Vector3f(0, 0, 12), 0, 0));
+		rtt = new FramebufferObject(this, 1024, 1024, 0, new Camera(new Vector3f(0, 0, 12), 0, 0));
 		rtt.updateTexture();
 
 		// Shader Test 2
-		Texture texture = new Texture(
-				TextureLoader.loadTexture("res/textures/cobblestone.png"));
+		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
 
-		Shader textureshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/textureshader.vert",
-				"res/shaders/textureshader.frag"));
+		Shader textureshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
 		textureshader.addArgumentName("u_texture");
 		textureshader.addArgument(new Texture(rtt.getColorTextureID()));
 		addShader(textureshader);
@@ -84,14 +78,11 @@ public class ShaderTest4 extends StandardGame {
 		textureshader.addObject(b);
 
 		// Shader Test 3
-		diffuse = new Texture(
-				TextureLoader.loadTexture("res/textures/diffuse.jpg"));
-		bumpmap = new Texture(
-				TextureLoader.loadTexture("res/textures/normal.jpg"));
+		diffuse = new Texture(TextureLoader.loadTexture("res/textures/diffuse.jpg"));
+		bumpmap = new Texture(TextureLoader.loadTexture("res/textures/normal.jpg"));
 
-		Shader bumpmapshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/bumpmapshader.vert",
-				"res/shaders/bumpmapshader.frag"));
+		Shader bumpmapshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/bumpmapshader.vert", "res/shaders/bumpmapshader.frag"));
 		bumpmapshader.addArgumentNames("u_texture", "u_bumpmap");
 		bumpmapshader.addArguments(diffuse, bumpmap);
 		addShader(bumpmapshader);
@@ -102,9 +93,8 @@ public class ShaderTest4 extends StandardGame {
 
 		// Shader Test 4
 
-		Shader cubemapshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/cubemapshader.vert",
-				"res/shaders/cubemapshader.frag"));
+		Shader cubemapshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/cubemapshader.vert", "res/shaders/cubemapshader.frag"));
 		cubemapshader.addArgumentNames("u_cubeMap");
 		cubemapshader.addArguments(new CubeMap(cubemapper.getTextureID()));
 		cubemapshader.addObject(s);
