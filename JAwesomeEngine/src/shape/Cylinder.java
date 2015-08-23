@@ -13,14 +13,12 @@ public class Cylinder extends ShapedObject implements CylinderStructure {
 	int slices;
 
 	public Cylinder(float x, float y, float z, float radius, float halfheight, int slices) {
-		super();
-		translateTo(x, y, z);
+		super(x, y, z);
 		init(radius, halfheight, slices);
 	}
 
 	public Cylinder(Vector3f pos, float radius, float halfheight, int slices) {
-		super();
-		translateTo(pos);
+		super(pos);
 		init(radius, halfheight, slices);
 	}
 

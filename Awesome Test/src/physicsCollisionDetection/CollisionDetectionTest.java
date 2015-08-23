@@ -61,7 +61,7 @@ public class CollisionDetectionTest extends StandardGame {
 		addShader(defaultshader);
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		add2dShader(defaultshader2);
+		addShader2d(defaultshader2);
 
 		int shaderprogram = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
 				"res/shaders/colorshader.frag");

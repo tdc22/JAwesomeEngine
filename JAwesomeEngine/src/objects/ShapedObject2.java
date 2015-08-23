@@ -14,6 +14,18 @@ public class ShapedObject2 extends ShapedObject {
 		setRenderMode(GL11.GL_TRIANGLES);
 	}
 
+	public ShapedObject2(float x, float y) {
+		super();
+		translateTo(x, y);
+		setRenderMode(GL11.GL_TRIANGLES);
+	}
+
+	public ShapedObject2(Vector2f pos) {
+		super();
+		translateTo(pos);
+		setRenderMode(GL11.GL_TRIANGLES);
+	}
+
 	public void addQuad(int index1, int index2, int index3, int index4) {
 		addTriangle(index1, index2, index3);
 		addTriangle(index1, index3, index4);

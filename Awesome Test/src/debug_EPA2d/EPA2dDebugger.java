@@ -154,7 +154,7 @@ public class EPA2dDebugger extends StandardGame {
 		addShader(defaultshader3);
 		defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		add2dShader(defaultshader);
+		addShader2d(defaultshader);
 
 		debugger = new Debugger(inputs, defaultshader3, defaultshader, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
 				cam);

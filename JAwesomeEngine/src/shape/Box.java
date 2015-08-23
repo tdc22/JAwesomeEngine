@@ -12,20 +12,17 @@ public class Box extends ShapedObject implements BoxStructure {
 	Vector3f halfsize;
 
 	public Box(float x, float y, float z, float halfsizeX, float halfsizeY, float halfsizeZ) {
-		super();
-		translateTo(x, y, z);
+		super(x, y, z);
 		init(halfsizeX, halfsizeY, halfsizeZ);
 	}
 
 	public Box(Vector3f pos, float halfsizeX, float halfsizeY, float halfsizeZ) {
-		super();
-		translateTo(pos);
+		super(pos);
 		init(halfsizeX, halfsizeY, halfsizeZ);
 	}
 
 	public Box(Vector3f pos, Vector3f halfsize) {
-		super();
-		translateTo(pos);
+		super(pos);
 		init(halfsize.x, halfsize.y, halfsize.z);
 	}
 

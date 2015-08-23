@@ -34,7 +34,7 @@ public class Test2d extends StandardGame {
 
 		defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		add2dShader(defaultshader);
+		addShader2d(defaultshader);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 
@@ -53,7 +53,7 @@ public class Test2d extends StandardGame {
 				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("u_color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
-		add2dShader(colorshader);
+		addShader2d(colorshader);
 
 		coloredjumptext = new Text("This text jumps and is colored.", 100, 300, font);
 		colorshader.addObject(coloredjumptext);
@@ -63,7 +63,7 @@ public class Test2d extends StandardGame {
 				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
 		textureshader.addArgumentName("u_texture");
 		textureshader.addArgument(texture);
-		add2dShader(textureshader);
+		addShader2d(textureshader);
 
 		Quad texquad = new Quad(500, 300, 25, 25);
 		texquad.setRenderHints(false, true, false);
@@ -87,9 +87,9 @@ public class Test2d extends StandardGame {
 		coloredjumptext.translate(0, FastMath.sin(jumppos));
 
 		if (inputs.isKeyDown("I"))
-			cam2.translate(delta, 0);
+			cam2d.translate(delta, 0);
 		if (inputs.isKeyDown("U"))
-			cam2.translate(-delta, 0);
+			cam2d.translate(-delta, 0);
 
 		cam.update(delta);
 	}

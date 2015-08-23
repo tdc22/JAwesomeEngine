@@ -15,6 +15,8 @@ public interface CapsuleStructure extends ShapeStructure {
 	 */
 	public float getHeight();
 
+	public float getHalfHeight();
+
 	/**
 	 * Gets the radius of the capsule.
 	 * 

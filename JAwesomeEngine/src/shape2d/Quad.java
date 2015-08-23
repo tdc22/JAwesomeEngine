@@ -11,20 +11,17 @@ public class Quad extends ShapedObject2 implements QuadStructure {
 	Vector2f halfsize;
 
 	public Quad(float x, float y, float halfsizex, float halfsizey) {
-		super();
-		translateTo(x, y);
+		super(x, y);
 		init(halfsizex, halfsizey);
 	}
 
 	public Quad(Vector2f pos, float halfsizex, float halfsizey) {
-		super();
-		translateTo(pos);
+		super(pos);
 		init(halfsizex, halfsizey);
 	}
 
 	public Quad(Vector2f pos, Vector2f halfsize) {
-		super();
-		translateTo(pos);
+		super(pos);
 		init(halfsize.x, halfsize.y);
 	}
 

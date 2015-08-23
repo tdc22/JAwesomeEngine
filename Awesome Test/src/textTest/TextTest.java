@@ -25,7 +25,7 @@ public class TextTest extends StandardGame {
 
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		add2dShader(defaultshader);
+		addShader2d(defaultshader);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		defaultshader.addObject(new Text("Hello this is a test!\nYou can make line breaks.", 100, 100, font, 40));

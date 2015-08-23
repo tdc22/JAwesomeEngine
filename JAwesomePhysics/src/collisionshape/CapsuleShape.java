@@ -24,7 +24,7 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 			direction.normalize();
 			Vector3f v = QuatMath.transform(
 					collisionshape.getInverseRotation(), direction);
-			return new Vector3f(v.x * radius, v.y * height, v.z * radius);
+			return new Vector3f(v.x * radius, v.y * halfheight, v.z * radius);
 		}
 
 		@Override
@@ -34,7 +34,7 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 			direction.normalize();
 			Vector3f v = QuatMath.transform(
 					collisionshape.getInverseRotation(), direction);
-			return new Vector3f(-v.x * radius, -v.y * height, -v.z * radius);
+			return new Vector3f(-v.x * radius, -v.y * halfheight, -v.z * radius);
 		}
 
 		@Override
@@ -43,13 +43,13 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 		}
 	}
 
-	float radius, height;
+	float radius, halfheight;
 
 	public CapsuleShape(float x, float y, float z, float radius, float height) {
 		super();
 		translate(x, y, z);
 		this.radius = radius;
-		this.height = height;
+		this.halfheight = height;
 		init();
 	}
 
@@ -57,7 +57,7 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 		super();
 		translate(pos);
 		this.radius = radius;
-		this.height = height;
+		this.halfheight = height;
 		init();
 	}
 
@@ -69,7 +69,12 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 
 	@Override
 	public float getHeight() {
-		return height;
+		return 2*halfheight;
+	}
+	
+	@Override
+	public float getHalfHeight() {
+		return halfheight;
 	}
 
 	@Override
@@ -78,7 +83,7 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 	}
 
 	private void init() {
-		float longest = radius > height ? radius : height;
+		float longest = radius > halfheight ? radius : halfheight;
 		setAABB(new Vector3f(-longest, -longest, -longest), new Vector3f(
 				longest, longest, longest));
 		supportcalculator = createSupportCalculator(this);

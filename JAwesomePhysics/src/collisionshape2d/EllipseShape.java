@@ -24,7 +24,7 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 			direction.normalize();
 			Vector2f v = ComplexMath.transform(
 					collisionshape.getInverseRotation(), direction);
-			return new Vector2f(v.x * radius, v.y * height);
+			return new Vector2f(v.x * radius, v.y * halfheight);
 		}
 
 		@Override
@@ -34,7 +34,7 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 			direction.normalize();
 			Vector2f v = ComplexMath.transform(
 					collisionshape.getInverseRotation(), direction);
-			return new Vector2f(v.x * -radius, v.y * -height);
+			return new Vector2f(v.x * -radius, v.y * -halfheight);
 		}
 
 		@Override
@@ -43,21 +43,21 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 		}
 	}
 
-	float radius, height;
+	float radius, halfheight;
 
-	public EllipseShape(float x, float y, float radius, float height) {
+	public EllipseShape(float x, float y, float radius, float halfheight) {
 		super();
 		translate(x, y);
 		this.radius = radius;
-		this.height = height;
+		this.halfheight = halfheight;
 		init();
 	}
 
-	public EllipseShape(Vector2f pos, float radius, float height) {
+	public EllipseShape(Vector2f pos, float radius, float halfheight) {
 		super();
 		translate(pos);
 		this.radius = radius;
-		this.height = height;
+		this.halfheight = halfheight;
 		init();
 	}
 
@@ -69,7 +69,7 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 
 	@Override
 	public float getHeight() {
-		return height;
+		return 2*halfheight;
 	}
 
 	@Override
@@ -78,9 +78,14 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 	}
 
 	private void init() {
-		float longest = radius > height ? radius : height;
+		float longest = radius > halfheight ? radius : halfheight;
 		setAABB(new Vector2f(-longest, -longest),
 				new Vector2f(longest, longest));
 		supportcalculator = createSupportCalculator(this);
+	}
+
+	@Override
+	public float getHalfHeight() {
+		return halfheight;
 	}
 }

@@ -7,24 +7,27 @@ import shapedata2d.EllipseStructure;
 import vector.Vector2f;
 
 public class Ellipse extends ShapedObject2 implements EllipseStructure {
-	float radius, height;
+	float radius, halfheight;
 	int slices;
 
-	public Ellipse(float x, float y, float radius, float height, int slices) {
-		super();
-		translateTo(x, y);
-		init(radius, height, slices);
+	public Ellipse(float x, float y, float radius, float halfheight, int slices) {
+		super(x, y);
+		init(radius, halfheight, slices);
 	}
 
-	public Ellipse(Vector2f pos, float radius, float height, int slices) {
-		super();
-		translateTo(pos);
-		init(radius, height, slices);
+	public Ellipse(Vector2f pos, float radius, float halfheight, int slices) {
+		super(pos);
+		init(radius, halfheight, slices);
 	}
 
 	@Override
 	public float getHeight() {
-		return height;
+		return 2 * halfheight;
+	}
+
+	@Override
+	public float getHalfHeight() {
+		return halfheight;
 	}
 
 	@Override
@@ -32,10 +35,10 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 		return radius;
 	}
 
-	private void init(float radius, float height, int slices) {
+	private void init(float radius, float halfheight, int slices) {
 		shapetype = SHAPE_ELLIPSE;
 		this.radius = radius;
-		this.height = height;
+		this.halfheight = halfheight;
 		this.slices = slices;
 		Color color = Color.GRAY;
 
@@ -43,7 +46,7 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 		addVertex(new Vector2f(0, 0), color, new Vector2f(0, 0));
 		for (int s = 0; s < slices; s++) {
 			Vector2f v = new Vector2f(radius * (float) (Math.sin(Math.toRadians(s * anglestep))),
-					height * (float) (Math.cos(Math.toRadians(s * anglestep))));
+					halfheight * (float) (Math.cos(Math.toRadians(s * anglestep))));
 			addVertex(v, color, v);
 		}
 		for (int s = 0; s < slices - 1; s++) {

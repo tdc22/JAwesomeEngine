@@ -17,14 +17,12 @@ public class IsoSphere extends ShapedObject implements SphereStructure {
 	float radius;
 
 	public IsoSphere(float x, float y, float z, float radius, int subdivisions) {
-		super();
-		translateTo(x, y, z);
+		super(x, y, z);
 		init(radius, subdivisions);
 	}
 
 	public IsoSphere(Vector3f pos, float radius, int subdivisions) {
-		super();
-		translateTo(pos);
+		super(pos);
 		init(radius, subdivisions);
 	}
 

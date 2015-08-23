@@ -35,6 +35,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected List<RigidBody<L, A1, A2, A3>> objects;
 	protected List<CompoundObject<L, A2>> compoundObjects;
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> overlaps;
+	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> collisionfilter;
 	protected List<Constraint<L>> constraints;
 	protected L globalForce;
 	protected L globalGravitation;
@@ -89,6 +90,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		objects = new ArrayList<RigidBody<L, A1, A2, A3>>();
 		compoundObjects = new ArrayList<CompoundObject<L, A2>>();
 		overlaps = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
+		collisionfilter = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
 		constraints = new ArrayList<Constraint<L>>();
 		profiler = new NullPhysicsProfiler();
 		broadphase.addListener(new CompoundListener());
@@ -236,6 +238,18 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public void update(int delta) {
 		updateTimestep(delta / 1000f);
 	}
+	
+	public void addCollisionFilter(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
+		addCollisionFilter(new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(objectA, objectB));
+	}
+	
+	public void addCollisionFilter(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
+		collisionfilter.add(collisionPair);
+	}
+	
+	public boolean isCollisionFiltered(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
+		return collisionfilter.contains(collisionPair);
+	}
 
 	public void updateTimestep(float delta) {
 		profiler.physicsStart();
@@ -254,9 +268,9 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 		manifoldmanager.clear();
 		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps) {
-			if (overlap.getFirst().getMass() != 0
+			if ((overlap.getFirst().getMass() != 0
 					|| overlap.getSecond().getMass() != 0
-					|| !cullStaticOverlaps) {
+					|| !cullStaticOverlaps) && !isCollisionFiltered(overlap)) {
 				if (!overlap.getFirst().isCompound()) {
 					if (!overlap.getSecond().isCompound()) {
 						if (narrowphase.isColliding(overlap.getFirst(),

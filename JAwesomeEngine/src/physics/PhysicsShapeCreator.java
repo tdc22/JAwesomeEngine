@@ -28,7 +28,7 @@ public class PhysicsShapeCreator {
 	}
 
 	public static CapsuleShape create(CapsuleStructure capsule) {
-		return new CapsuleShape(capsule.getTranslation(), capsule.getRadius(), capsule.getHeight());
+		return new CapsuleShape(capsule.getTranslation(), capsule.getRadius(), capsule.getHalfHeight());
 	}
 
 	public static CylinderShape create(CylinderStructure cylinder) {
@@ -36,7 +36,7 @@ public class PhysicsShapeCreator {
 	}
 
 	public static EllipseShape create(EllipseStructure ellipse) {
-		return new EllipseShape(ellipse.getTranslation2(), ellipse.getRadius(), ellipse.getHeight());
+		return new EllipseShape(ellipse.getTranslation2(), ellipse.getRadius(), ellipse.getHalfHeight());
 	}
 
 	public static QuadShape create(QuadStructure quad) {

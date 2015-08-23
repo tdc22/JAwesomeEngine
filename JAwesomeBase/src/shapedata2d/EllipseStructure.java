@@ -15,6 +15,8 @@ public interface EllipseStructure extends ShapeStructure2 {
 	 */
 	public float getHeight();
 
+	public float getHalfHeight();
+
 	/**
 	 * Gets the radius of the ellipse.
 	 * 

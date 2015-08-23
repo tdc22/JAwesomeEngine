@@ -34,7 +34,7 @@ public class DepthTest extends StandardGame {
 		addShader(defaultshader);
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		add2dShader(defaultshader2);
+		addShader2d(defaultshader2);
 
 		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
 				cam);

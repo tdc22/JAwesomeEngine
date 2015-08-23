@@ -27,7 +27,7 @@ public class ConvexHullTest extends StandardGame {
 
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		add2dShader(defaultshader2);
+		addShader2d(defaultshader2);
 
 		List<Vector2f> pointcloud = new ArrayList<Vector2f>();
 		for (int i = 0; i < 100; i++) {

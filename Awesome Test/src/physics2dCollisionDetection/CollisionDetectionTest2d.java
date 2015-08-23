@@ -67,16 +67,16 @@ public class CollisionDetectionTest2d extends StandardGame {
 		s5.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s6.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 
-		add2dShader(s1);
-		add2dShader(s2);
-		add2dShader(s3);
-		add2dShader(s4);
-		add2dShader(s5);
-		add2dShader(s6);
+		addShader2d(s1);
+		addShader2d(s2);
+		addShader2d(s3);
+		addShader2d(s4);
+		addShader2d(s5);
+		addShader2d(s6);
 
 		defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		add2dShader(defaultshader);
+		addShader2d(defaultshader);
 
 		manifolds = new ArrayList<ManifoldVisualization>();
 

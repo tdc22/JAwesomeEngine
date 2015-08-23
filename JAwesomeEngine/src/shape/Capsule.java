@@ -13,19 +13,22 @@ public class Capsule extends ShapedObject implements CapsuleStructure {
 	int trisH, trisV;
 
 	public Capsule(float x, float y, float z, float radius, float height, int trisH, int trisV) {
-		super();
-		translateTo(x, y, z);
+		super(x, y, z);
 		init(radius, height, trisH, trisV);
 	}
 
 	public Capsule(Vector3f pos, float radius, float height, int trisH, int trisV) {
-		super();
-		translateTo(pos);
+		super(pos);
 		init(radius, height, trisH, trisV);
 	}
 
 	@Override
 	public float getHeight() {
+		return 2 * radiusY;
+	}
+
+	@Override
+	public float getHalfHeight() {
 		return radiusY;
 	}
 

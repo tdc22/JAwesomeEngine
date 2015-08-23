@@ -52,7 +52,7 @@ public class CompoundTest2d extends StandardGame {
 		addShader(defaultshader);
 		defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		add2dShader(defaultshader2);
+		addShader2d(defaultshader2);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
