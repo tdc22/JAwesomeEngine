@@ -46,10 +46,10 @@ public class ReflectionRefractionTest extends StandardGame {
 				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
+		addShader(colorshader);
 
 		Box a = new Box(0, 0, -2, 0.5f, 0.5f, 0.5f);
-		a.setShader(colorshader);
-		addObject(a);
+		colorshader.addObject(a);
 
 		// Shader Test 2
 		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
@@ -61,13 +61,11 @@ public class ReflectionRefractionTest extends StandardGame {
 
 		Box b = new Box(0, -1, 0, 3f, 0.1f, 3f);
 		b.setRenderHints(false, true, false);
-		b.setShader(textureshader);
-		addObject(b);
+		textureshader.addObject(b);
 
 		// Reflection Sphere
 		Sphere s1 = new Sphere(-2, 0, 1, 0.5f, 32, 32);
 		s1.setRenderHints(false, true, true);
-		addObject(s1);
 
 		cubemapper0 = new CubeEnvironmentMap(this, s1.getTranslation());
 
@@ -75,24 +73,22 @@ public class ReflectionRefractionTest extends StandardGame {
 				.loadShaderFromFile("res/shaders/cubemapreflectrefract.vert", "res/shaders/cubemapreflection.frag"));
 		cubemapreflectionshader.addArgumentNames("cubeMap");
 		cubemapreflectionshader.addArguments(new CubeMap(cubemapper0.getTextureID()));
-		s1.setShader(cubemapreflectionshader);
+		cubemapreflectionshader.addObject(s1);
 
 		// Reflection Box
 		Box b1 = new Box(-2, 0, -1, 0.5f, 0.5f, 0.5f);
 		b1.setRenderHints(false, true, true);
-		addObject(b1);
 
 		cubemapper1 = new CubeEnvironmentMap(this, b1.getTranslation());
 
 		Shader cubemapreflectionshader2 = new Shader(cubemapreflectionshader.getShaderProgram());
 		cubemapreflectionshader2.addArgumentNames("cubeMap");
 		cubemapreflectionshader2.addArguments(new CubeMap(cubemapper1.getTextureID()));
-		b1.setShader(cubemapreflectionshader2);
+		cubemapreflectionshader2.addObject(b1);
 
 		// Refraction Sphere
 		Sphere s2 = new Sphere(2, 0, 1, 0.5f, 32, 32);
 		s2.setRenderHints(false, true, true);
-		addObject(s2);
 
 		cubemapper2 = new CubeEnvironmentMap(this, s2.getTranslation());
 
@@ -102,12 +98,11 @@ public class ReflectionRefractionTest extends StandardGame {
 		cubemaprefractionshader.addArguments(new CubeMap(cubemapper2.getTextureID()));
 		cubemaprefractionshader.addArgumentNames("refractionIndex");
 		cubemaprefractionshader.addArguments(0.5f);
-		s2.setShader(cubemaprefractionshader);
+		cubemaprefractionshader.addObject(s2);
 
 		// Refraction Box
 		Box b2 = new Box(2, 0, -1, 0.5f, 0.5f, 0.5f);
 		b2.setRenderHints(false, true, true);
-		addObject(b2);
 
 		cubemapper3 = new CubeEnvironmentMap(this, b2.getTranslation());
 
@@ -116,12 +111,11 @@ public class ReflectionRefractionTest extends StandardGame {
 		cubemaprefractionshader2.addArguments(new CubeMap(cubemapper3.getTextureID()));
 		cubemaprefractionshader.addArgumentNames("refractionIndex");
 		cubemaprefractionshader.addArguments(0.5f);
-		b2.setShader(cubemaprefractionshader2);
+		cubemaprefractionshader2.addObject(b2);
 
 		// Camball
 		camball = new Sphere(0, 0, 0, 0.2f, 32, 32);
-		camball.setShader(colorshader);
-		addObject(camball);
+		colorshader.addObject(camball);
 	}
 
 	@Override

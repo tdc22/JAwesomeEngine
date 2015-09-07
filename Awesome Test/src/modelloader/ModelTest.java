@@ -6,6 +6,8 @@ import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
 import loader.ModelLoader;
+import loader.ShaderLoader;
+import shader.Shader;
 
 public class ModelTest extends StandardGame {
 
@@ -16,7 +18,12 @@ public class ModelTest extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
 		cam.rotateTo(0, 0);
-		addObject(ModelLoader.load("res/models/bunny.mobj"));
+
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+
+		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
 	}
 
 	@Override

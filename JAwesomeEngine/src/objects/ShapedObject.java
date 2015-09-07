@@ -14,6 +14,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 import java.awt.Color;
@@ -229,6 +230,8 @@ public class ShapedObject extends RenderedObject {
 	}
 
 	public void deleteGPUData() {
+		if (vaoHandle != 0)
+			glDeleteVertexArrays(vaoHandle);
 		if (vboIndexHandle != 0)
 			glDeleteBuffers(vboIndexHandle);
 		if (vboVertexHandle != 0)
@@ -297,16 +300,7 @@ public class ShapedObject extends RenderedObject {
 	}
 
 	public void prerender() {
-		if (vboIndexHandle != 0)
-			glDeleteBuffers(vboIndexHandle);
-		if (vboVertexHandle != 0)
-			glDeleteBuffers(vboVertexHandle);
-		if (vboColorHandle != 0)
-			glDeleteBuffers(vboColorHandle);
-		if (vboTextureCoordHandle != 0)
-			glDeleteBuffers(vboTextureCoordHandle);
-		if (vboNormalHandle != 0)
-			glDeleteBuffers(vboNormalHandle);
+		deleteGPUData();
 
 		renderedIndexCount = indices.size();
 		int allVertices = vertices.size();

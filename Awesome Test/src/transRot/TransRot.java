@@ -9,8 +9,10 @@ import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import loader.ModelLoader;
+import loader.ShaderLoader;
 import math.FastMath;
 import objects.RenderedObject;
+import shader.Shader;
 
 public class TransRot extends StandardGame {
 	RenderedObject rabbit1, rabbit2;
@@ -25,10 +27,14 @@ public class TransRot extends StandardGame {
 		cam.translateTo(0, 5, 40);
 		cam.rotateTo(0, 0);
 
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+
 		rabbit1 = ModelLoader.load("res/models/bunny.mobj");
 		rabbit2 = ModelLoader.load("res/models/bunny.mobj");
-		addObject(rabbit1);
-		addObject(rabbit2);
+		defaultshader.addObject(rabbit1);
+		defaultshader.addObject(rabbit2);
 
 		rabbit1.translateTo(-10, 0, 0);
 		rabbit2.translateTo(10, 0, 0);

@@ -36,12 +36,20 @@ public class ShadowTest extends StandardGame {
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader2d(defaultshader2);
 
-		addObject(new Box(0, -1, 0, 100, 0.5f, 100));
-		addObject(ModelLoader.load("res/models/bunny.mobj"));
-		addObject(new Sphere(2, 0, 0, 1, 36, 36));
-		addObject(new Cylinder(8, 0, 0, 1, 2, 36));
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
+
+		defaultshader.addObject(new Box(0, -1, 0, 100, 0.5f, 100));
+		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
+		defaultshader.addObject(new Sphere(2, 0, 0, 1, 36, 36));
+		defaultshader.addObject(new Cylinder(8, 0, 0, 1, 2, 36));
 
 		lightCam = new Camera(new Vector3f(0, 10, 0), 0, -80);
 		depthMap = new FramebufferObject(this, 1024, 1024, 0, lightCam, true, true, true, true);
@@ -71,13 +79,11 @@ public class ShadowTest extends StandardGame {
 
 		Quad q = new Quad(180, 100, 180, 100);
 		q.setRenderHints(false, true, false);
-		q.setShader(depthshader);
-		add2dObject(q);
+		defaultshader2.addObject(q);
 	}
 
 	@Override
 	public void render() {
-		debugger.update3d();
 		debugger.begin();
 		if (shadow)
 			shadowshader.bind();
@@ -90,12 +96,11 @@ public class ShadowTest extends StandardGame {
 	public void render2d() {
 		render2dScene();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
-		debugger.update();
+		debugger.update(fps, 0, 0);
 		depthMap.updateTexture();
 		cam.update(delta);
 

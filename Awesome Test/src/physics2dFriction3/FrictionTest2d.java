@@ -52,7 +52,7 @@ public class FrictionTest2d extends StandardGame {
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
-		physicsdebug = new PhysicsDebug2(inputs, font, space);
+		physicsdebug = new PhysicsDebug2(inputs, defaultshader2, font, space);
 
 		Circle c1 = new Circle(100, 200, 20, 6);
 		RigidBody2 rb1 = new RigidBody2(PhysicsShapeCreator.create(c1));
@@ -83,7 +83,6 @@ public class FrictionTest2d extends StandardGame {
 		debugger.begin();
 		render2dScene();
 		debugger.end();
-		physicsdebug.render2d();
 	}
 
 	@Override

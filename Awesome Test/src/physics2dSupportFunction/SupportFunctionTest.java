@@ -12,6 +12,7 @@ import input.KeyInput;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.InputLoader;
+import loader.ShaderLoader;
 import manifold.SimpleManifoldManager;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
@@ -21,6 +22,7 @@ import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
 import positionalcorrection.NullCorrection;
 import resolution.NullResolution;
+import shader.Shader;
 import shape2d.Circle;
 import shape2d.Quad;
 import utils.Debugger;
@@ -49,8 +51,16 @@ public class SupportFunctionTest extends StandardGame {
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader2d(defaultshader2);
+
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
-		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(new EPA2()), new NullResolution(),
 				new NullCorrection(), new SimpleManifoldManager<Vector2f>());
@@ -77,27 +87,27 @@ public class SupportFunctionTest extends StandardGame {
 		// addObject(s1);
 
 		dirrenderer = new DirectionRenderer();
-		addObject(dirrenderer);
+		defaultshader.addObject(dirrenderer);
 
 		so1 = new SupportObject(q, rb1.getCollisionShapes().get(0));
 		so11 = new SupportObject(c, rb1.getCollisionShapes().get(1));
 		so2 = new SupportObject(q2, rb2);
 		so3 = new SupportObject(c1, rb3);
 
-		add2dObject(so1);
-		add2dObject(so11);
-		add2dObject(so2);
-		add2dObject(so3);
+		defaultshader2.addObject(so1);
+		defaultshader2.addObject(so11);
+		defaultshader2.addObject(so2);
+		defaultshader2.addObject(so3);
 
 		support1 = new SupportDifferenceObject(q, rb1.getCollisionShapes().get(0), q2, rb2);
 		support2 = new SupportDifferenceObject(q, rb1.getCollisionShapes().get(0), c1, rb3);
 		support11 = new SupportDifferenceObject(c, rb1.getCollisionShapes().get(1), q2, rb2);
 		support21 = new SupportDifferenceObject(c, rb1.getCollisionShapes().get(1), c1, rb3);
 
-		add2dObject(support1);
-		add2dObject(support2);
-		add2dObject(support11);
-		add2dObject(support21);
+		defaultshader2.addObject(support1);
+		defaultshader2.addObject(support2);
+		defaultshader2.addObject(support11);
+		defaultshader2.addObject(support21);
 
 		// addObject(new ResultTetrahedron(new ArrayList<Vector3f>() {{add(new
 		// Vector3f(2,5,2)); add(new Vector3f(8,5,2)); add(new Vector3f(2,5,8));
@@ -109,7 +119,6 @@ public class SupportFunctionTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugger.update3d();
 		debugger.begin();
 		renderScene();
 	}
@@ -118,7 +127,6 @@ public class SupportFunctionTest extends StandardGame {
 	public void render2d() {
 		render2dScene();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
@@ -174,7 +182,7 @@ public class SupportFunctionTest extends StandardGame {
 		// }
 		// }
 
-		debugger.update();
+		debugger.update(fps, 0, 0);
 		cam.update(delta);
 		space.update(delta);
 	}

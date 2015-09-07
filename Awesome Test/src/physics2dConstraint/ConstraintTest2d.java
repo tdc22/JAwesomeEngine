@@ -59,7 +59,7 @@ public class ConstraintTest2d extends StandardGame {
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
-		physicsdebug = new PhysicsDebug2(inputs, font, space);
+		physicsdebug = new PhysicsDebug2(inputs, defaultshader2, font, space);
 
 		Quad ground = new Quad(400, 550, 300, 20);
 		RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(ground));
@@ -99,7 +99,6 @@ public class ConstraintTest2d extends StandardGame {
 		debugger.begin();
 		render2dScene();
 		debugger.end();
-		physicsdebug.render2d();
 	}
 
 	@Override
