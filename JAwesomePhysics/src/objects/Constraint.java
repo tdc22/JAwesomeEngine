@@ -1,18 +1,19 @@
 package objects;
 
+import quaternion.Rotation;
 import vector.Vector;
 
-public abstract class Constraint<L extends Vector> {
-	protected RigidBody<L, ?, ?, ?> bodyA, bodyB;
-
-	// good source:
-	// http://www.wildbunny.co.uk/blog/2011/04/06/physics-engines-for-dummies/
-	public Constraint(RigidBody<L, ?, ?, ?> bodyA, RigidBody<L, ?, ?, ?> bodyB) {
+public abstract class Constraint<L extends Vector, A1 extends Vector, A2 extends Rotation, A3 extends Rotation> {
+	protected float[][] A;
+	protected RigidBody<L, A1, A2, A3> bodyA, bodyB;
+	
+	public Constraint(RigidBody<L, A1, A2, A3> bodyA, RigidBody<L, A1, A2, A3> bodyB) {
 		this.bodyA = bodyA;
 		this.bodyB = bodyB;
 	}
-
-	public abstract void applyCentralImpulse(L impulse);
-
+	
+	// A = J(M^-1)(J^T)
+	protected abstract void initializeConstraint();
+	
 	public abstract void solve(float delta);
 }

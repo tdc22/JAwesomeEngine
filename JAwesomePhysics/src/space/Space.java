@@ -36,7 +36,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected List<CompoundObject<L, A2>> compoundObjects;
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> overlaps;
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> collisionfilter;
-	protected List<Constraint<L>> constraints;
+	protected List<Constraint<L, A1, A3>> constraints;
 	protected L globalForce;
 	protected L globalGravitation;
 	protected int resolutionIterations = 25;
@@ -91,12 +91,12 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		compoundObjects = new ArrayList<CompoundObject<L, A2>>();
 		overlaps = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
 		collisionfilter = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
-		constraints = new ArrayList<Constraint<L>>();
+		constraints = new ArrayList<Constraint<L, A1, A3>>();
 		profiler = new NullPhysicsProfiler();
 		broadphase.addListener(new CompoundListener());
 	}
 
-	public void addConstraint(Constraint<L> constraint) {
+	public void addConstraint(Constraint<L, A1, A3> constraint) {
 		constraints.add(constraint);
 	}
 
@@ -133,7 +133,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		return collisionresolution;
 	}
 
-	public List<Constraint<L>> getConstraints() {
+	public List<Constraint<L, A1, A3>> getConstraints() {
 		return constraints;
 	}
 
@@ -210,7 +210,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected abstract void resolve();
 
 	protected void resolveConstraints(float delta) {
-		for (Constraint<L> c : constraints)
+		for (Constraint<L, A1, A3> c : constraints)
 			c.solve(delta);
 	}
 
@@ -364,8 +364,8 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		for (int i = 0; i < resolutionIterations; i++)
 			resolve();
 		applyGlobalForce();
-		for (int i = 0; i < constraintResolutionIterations; i++)
-			resolveConstraints(delta);
+//		for (int i = 0; i < constraintResolutionIterations; i++)
+//			resolveConstraints(delta);
 
 		profiler.resolutionIntegration();
 

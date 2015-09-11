@@ -11,22 +11,22 @@ import vector.Vector2f;
  */
 
 public class EllipseData extends DataObject implements EllipseStructure {
-	float radius, height;
+	float radius, halfheight;
 
-	public EllipseData(float x, float y, float radius, float height) {
+	public EllipseData(float x, float y, float radius, float halfheight) {
 		super();
 		translateTo(x, y);
 		shapetype = SHAPE_ELLIPSE;
 		this.radius = radius;
-		this.height = height;
+		this.halfheight = halfheight;
 	}
 
-	public EllipseData(Vector2f pos, float radius, float height) {
+	public EllipseData(Vector2f pos, float radius, float halfheight) {
 		super();
 		translateTo(pos);
 		shapetype = SHAPE_ELLIPSE;
 		this.radius = radius;
-		this.height = height;
+		this.halfheight = halfheight;
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class EllipseData extends DataObject implements EllipseStructure {
 	 */
 	@Override
 	public float getHeight() {
-		return height;
+		return 2 * halfheight;
 	}
 
 	/**
@@ -43,5 +43,10 @@ public class EllipseData extends DataObject implements EllipseStructure {
 	@Override
 	public float getRadius() {
 		return radius;
+	}
+
+	@Override
+	public float getHalfHeight() {
+		return halfheight;
 	}
 }

@@ -1,7 +1,7 @@
 package physics2dConstraintPendulum;
 
 import broadphase.SAP2;
-import constraints.DistanceConstraint2;
+import constraints.OLDDistanceConstraint2;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
@@ -83,7 +83,7 @@ public class PendulumTest2d extends StandardGame {
 		space.addRigidBody(body1, rbB1);
 		defaultshader2.addObject(body1);
 
-		Constraint2 constraint = new DistanceConstraint2(rb1, rbB1, 180);
+		Constraint2 constraint = new OLDDistanceConstraint2(rb1, rbB1, 180);
 		space.addConstraint(constraint);
 
 		// Pendulum 2
@@ -103,8 +103,8 @@ public class PendulumTest2d extends StandardGame {
 		space.addRigidBody(body22, rbB22);
 		defaultshader2.addObject(body22);
 
-		Constraint2 constraint21 = new DistanceConstraint2(rb2, rbB21, 180);
-		Constraint2 constraint22 = new DistanceConstraint2(rbB21, rbB22, 180);
+		Constraint2 constraint21 = new OLDDistanceConstraint2(rb2, rbB21, 180);
+		Constraint2 constraint22 = new OLDDistanceConstraint2(rbB21, rbB22, 180);
 		space.addConstraint(constraint21);
 		space.addConstraint(constraint22);
 
@@ -133,9 +133,9 @@ public class PendulumTest2d extends StandardGame {
 		space.addRigidBody(body33, rbB33);
 		defaultshader2.addObject(body33);
 
-		Constraint2 constraint31 = new DistanceConstraint2(rb3, rbB31, 180);
-		Constraint2 constraint32 = new DistanceConstraint2(rbB31, rbB32, 180);
-		Constraint2 constraint33 = new DistanceConstraint2(rbB32, rbB33, 180);
+		Constraint2 constraint31 = new OLDDistanceConstraint2(rb3, rbB31, 180);
+		Constraint2 constraint32 = new OLDDistanceConstraint2(rbB31, rbB32, 180);
+		Constraint2 constraint33 = new OLDDistanceConstraint2(rbB32, rbB33, 180);
 		space.addConstraint(constraint31);
 		space.addConstraint(constraint32);
 		space.addConstraint(constraint33);

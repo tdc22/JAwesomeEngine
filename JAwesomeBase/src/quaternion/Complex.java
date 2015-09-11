@@ -158,4 +158,21 @@ public abstract class Complex implements Rotation {
 	 */
 	@Override
 	public abstract String toString();
+	
+	/*
+	 * Calculates the squared length in polar coordinates.
+	 */
+	public abstract double lengthSquared();
+	
+	/*
+	 * Calculates the length in polar coordinates.
+	 */
+	public double length() {
+		return Math.sqrt(lengthSquared());
+	}
+	
+	/*
+	 * Calculates the angle in polar coordinates.
+	 */
+	public abstract double angle();
 }

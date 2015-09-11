@@ -11,22 +11,22 @@ import vector.Vector3f;
  */
 
 public class CapsuleData extends DataObject implements CapsuleStructure {
-	float radius, height;
+	float radius, halfheight;
 
-	public CapsuleData(float x, float y, float z, float radius, float height) {
+	public CapsuleData(float x, float y, float z, float radius, float halfheight) {
 		super();
 		translateTo(x, y, z);
 		shapetype = SHAPE_CAPSULE;
 		this.radius = radius;
-		this.height = height;
+		this.halfheight = halfheight;
 	}
 
-	public CapsuleData(Vector3f pos, float radius, float height) {
+	public CapsuleData(Vector3f pos, float radius, float halfheight) {
 		super();
 		translateTo(pos);
 		shapetype = SHAPE_CAPSULE;
 		this.radius = radius;
-		this.height = height;
+		this.halfheight = halfheight;
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class CapsuleData extends DataObject implements CapsuleStructure {
 	 */
 	@Override
 	public float getHeight() {
-		return height;
+		return 2 * halfheight;
 	}
 
 	/**
@@ -43,5 +43,10 @@ public class CapsuleData extends DataObject implements CapsuleStructure {
 	@Override
 	public float getRadius() {
 		return radius;
+	}
+
+	@Override
+	public float getHalfHeight() {
+		return halfheight;
 	}
 }
