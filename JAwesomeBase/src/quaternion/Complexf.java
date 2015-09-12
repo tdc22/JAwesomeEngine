@@ -76,7 +76,7 @@ public class Complexf extends Complex {
 	@Override
 	public void invert() {
 		conjugate();
-		double mag = Math.abs(magnitudeSquared());
+		double mag = magnitudeSquared();
 		if (mag != 0)
 			scale(1 / mag);
 	}
