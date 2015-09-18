@@ -23,7 +23,12 @@ import resolution.ImpulseResolution;
 import shader.Shader;
 import shape2d.Circle;
 import shape2d.Quad;
+import space.PhysicsProfiler;
+import space.SimplePhysicsProfiler;
 import utils.Debugger;
+import utils.GameProfiler;
+import utils.Profiler;
+import utils.SimpleGameProfiler;
 import vector.Vector2f;
 
 public class BasicTest2d extends StandardGame {
@@ -31,11 +36,12 @@ public class BasicTest2d extends StandardGame {
 	int tempdelta = 0;
 	Debugger debugger;
 	Shader defaultshader2;
+	Profiler profiler;
 	PhysicsDebug2 physicsdebug;
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "TEST", false), new PixelFormat(), new VideoSettings());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
@@ -54,6 +60,11 @@ public class BasicTest2d extends StandardGame {
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
 		physicsdebug = new PhysicsDebug2(inputs, defaultshader2, font, space);
+		GameProfiler gp = new SimpleGameProfiler();
+		setProfiler(gp);
+		PhysicsProfiler pp = new SimplePhysicsProfiler();
+		space.setProfiler(pp);
+		profiler = new Profiler(this, inputs, font, gp, pp);
 
 		Quad ground = new Quad(400, 550, 300, 20);
 		RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(ground));
@@ -119,6 +130,7 @@ public class BasicTest2d extends StandardGame {
 		debugger.update(fps, 0, defaultshader2.getObjects().size());
 		space.update(delta);
 		physicsdebug.update();
+		profiler.update(delta);
 		cam.update(delta);
 	}
 }

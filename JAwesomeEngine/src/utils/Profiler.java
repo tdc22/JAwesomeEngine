@@ -12,13 +12,15 @@ import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
 import loader.ShaderLoader;
+import objects.ShapedObject2;
 import objects.Updateable;
 import shader.Shader;
 import shape2d.Quad;
 import space.PhysicsProfiler;
+import vector.Vector2f;
+import vector.Vector3f;
 import vector.Vector4f;
 
-@Deprecated
 public class Profiler implements Updateable {
 	GameProfiler gameprofiler;
 	PhysicsProfiler physicsprofiler;
@@ -34,9 +36,8 @@ public class Profiler implements Updateable {
 			physicsProfileText1, physicsProfileText2, physicsProfileText3, scaleMin, scaleMid, scaleMax;
 	Shader backgroundshader, colorShader0, colorShader1, colorShader2, colorShader3, colorShader4, colorShader5,
 			colorShader6, colorShader7;
-	// ProfileLine gameProfileLine0, gameProfileLine1, gameProfileLine2,
-	// gameProfileLine3, physicsProfileLine0,
-	// physicsProfileLine1, physicsProfileLine2, physicsProfileLine3;
+	ProfileLine gameProfileLine0, gameProfileLine1, gameProfileLine2, gameProfileLine3, physicsProfileLine0,
+			physicsProfileLine1, physicsProfileLine2, physicsProfileLine3;
 	float sizeX = 600, sizeY = 128;
 
 	public Profiler(StandardGame game, InputManager i, Font f, GameProfiler gameprofiler,
@@ -71,27 +72,31 @@ public class Profiler implements Updateable {
 		values.put(6, new ArrayList<Long>());
 		values.put(7, new ArrayList<Long>());
 
-		gameProfileText0 = new Text("", 10, 470, f);
-		gameProfileText1 = new Text("", 10, 485, f);
-		gameProfileText2 = new Text("", 10, 500, f);
-		gameProfileText3 = new Text("", 10, 515, f);
-		physicsProfileText0 = new Text("", 10, 535, f);
-		physicsProfileText1 = new Text("", 10, 550, f);
-		physicsProfileText2 = new Text("", 10, 565, f);
-		physicsProfileText3 = new Text("", 10, 580, f);
-
 		String c = "u_color";
-		colorShader0 = new Shader(
-				ShaderLoader.loadShader(DefaultShader.COLOR_SHADER_VERTEX, DefaultShader.COLOR_SHADER_FRAGMENT), c,
-				new Vector4f(1f, 0f, 0f, 1f));
+		int colorShaderID = ShaderLoader.loadShader(DefaultShader.COLOR_SHADER_VERTEX, DefaultShader.COLOR_SHADER_FRAGMENT);
+		
+		Quad background = new Quad(305, 533, sizeX / 2f, sizeY / 2f);
+		backgroundshader = new Shader(colorShaderID, c, new Vector4f(1f, 1f, 1f, 0.5f));
+		backgroundshader.addObject(background);
+		game.addShader2d(backgroundshader);
+		
+		gameProfileText0 = new Text("", 10, 480, f);
+		gameProfileText1 = new Text("", 10, 495, f);
+		gameProfileText2 = new Text("", 10, 510, f);
+		gameProfileText3 = new Text("", 10, 525, f);
+		physicsProfileText0 = new Text("", 10, 545, f);
+		physicsProfileText1 = new Text("", 10, 560, f);
+		physicsProfileText2 = new Text("", 10, 575, f);
+		physicsProfileText3 = new Text("", 10, 590, f);
 
-		colorShader1 = new Shader(colorShader0.getShaderProgram(), c, new Vector4f(0f, 0f, 1f, 1f));
-		colorShader2 = new Shader(colorShader0.getShaderProgram(), c, new Vector4f(1f, 1f, 1f, 1f));
-		colorShader3 = new Shader(colorShader0.getShaderProgram(), c, new Vector4f(1f, 1f, 0f, 1f));
-		colorShader4 = new Shader(colorShader0.getShaderProgram(), c, new Vector4f(0f, 1f, 1f, 1f));
-		colorShader5 = new Shader(colorShader0.getShaderProgram(), c, new Vector4f(1f, 0f, 1f, 1f));
-		colorShader6 = new Shader(colorShader0.getShaderProgram(), c, new Vector4f(0.5f, 0.5f, 0.5f, 1f));
-		colorShader7 = new Shader(colorShader0.getShaderProgram(), c, new Vector4f(0.5f, 0.5f, 0.5f, 1f));
+		colorShader0 = new Shader(colorShaderID, c, new Vector4f(1f, 0f, 0f, 1f));
+		colorShader1 = new Shader(colorShaderID, c, new Vector4f(0f, 1f, 0f, 1f));
+		colorShader2 = new Shader(colorShaderID, c, new Vector4f(0f, 0f, 1f, 1f));
+		colorShader3 = new Shader(colorShaderID, c, new Vector4f(1f, 1f, 0f, 1f));
+		colorShader4 = new Shader(colorShaderID, c, new Vector4f(0f, 1f, 1f, 1f));
+		colorShader5 = new Shader(colorShaderID, c, new Vector4f(1f, 0f, 1f, 1f));
+		colorShader6 = new Shader(colorShaderID, c, new Vector4f(1f, 1f, 1f, 1f));
+		colorShader7 = new Shader(colorShaderID, c, new Vector4f(0.5f, 0.5f, 0.5f, 1f));
 
 		game.addShader2d(colorShader0);
 		game.addShader2d(colorShader1);
@@ -111,32 +116,27 @@ public class Profiler implements Updateable {
 		colorShader6.addObject(physicsProfileText2);
 		colorShader7.addObject(physicsProfileText3);
 
-		Quad background = new Quad(305, 533, sizeX / 2f, sizeY / 2f);
-		backgroundshader = new Shader(colorShader0.getShaderProgram(), c, new Vector4f(1f, 1f, 1f, 0.6f));
-		backgroundshader.addObject(background);
-		game.addShader2d(backgroundshader);
-
 		scaleMin = new Text("0", 610, 580, f);
 		scaleMid = new Text("0", 610, 525, f);
 		scaleMax = new Text("0", 610, 470, f);
 
-		// gameProfileLine0 = new ProfileLine();
-		// gameProfileLine1 = new ProfileLine();
-		// gameProfileLine2 = new ProfileLine();
-		// gameProfileLine3 = new ProfileLine();
-		// physicsProfileLine0 = new ProfileLine();
-		// physicsProfileLine1 = new ProfileLine();
-		// physicsProfileLine2 = new ProfileLine();
-		// physicsProfileLine3 = new ProfileLine();
-		//
-		// colorShader0.addObject(gameProfileLine0);
-		// colorShader1.addObject(gameProfileLine1);
-		// colorShader2.addObject(gameProfileLine2);
-		// colorShader3.addObject(gameProfileLine3);
-		// colorShader4.addObject(physicsProfileLine0);
-		// colorShader5.addObject(physicsProfileLine1);
-		// colorShader6.addObject(physicsProfileLine2);
-		// colorShader7.addObject(physicsProfileLine3);
+		gameProfileLine0 = new ProfileLine();
+		gameProfileLine1 = new ProfileLine();
+		gameProfileLine2 = new ProfileLine();
+		gameProfileLine3 = new ProfileLine();
+		physicsProfileLine0 = new ProfileLine();
+		physicsProfileLine1 = new ProfileLine();
+		physicsProfileLine2 = new ProfileLine();
+		physicsProfileLine3 = new ProfileLine();
+
+		colorShader0.addObject(gameProfileLine0);
+		colorShader1.addObject(gameProfileLine1);
+		colorShader2.addObject(gameProfileLine2);
+		colorShader3.addObject(gameProfileLine3);
+		colorShader4.addObject(physicsProfileLine0);
+		colorShader5.addObject(physicsProfileLine1);
+		colorShader6.addObject(physicsProfileLine2);
+		colorShader7.addObject(physicsProfileLine3);
 
 		backgroundshader.setRendered(false);
 		colorShader0.setRendered(false);
@@ -266,10 +266,10 @@ public class Profiler implements Updateable {
 			for (int i = 0; i < 4; i++) {
 				values.get(i).add(profilevalues[i + 1]);
 			}
-			// gameProfileLine0.addValue(profilevalues[1]);
-			// gameProfileLine1.addValue(profilevalues[2]);
-			// gameProfileLine2.addValue(profilevalues[3]);
-			// gameProfileLine3.addValue(profilevalues[4]);
+			gameProfileLine0.addValue(profilevalues[1]);
+			gameProfileLine1.addValue(profilevalues[2]);
+			gameProfileLine2.addValue(profilevalues[3]);
+			gameProfileLine3.addValue(profilevalues[4]);
 
 			gameProfileText0.setText("Update: " + values.get(0).get(values.get(0).size() - 1));
 			gameProfileText1.setText("Render 3d: " + values.get(1).get(values.get(1).size() - 1));
@@ -283,10 +283,10 @@ public class Profiler implements Updateable {
 			for (int i = 0; i < 4; i++) {
 				values.get(i + 4).add(profilevalues[i + 1]);
 			}
-			// physicsProfileLine0.addValue(profilevalues[1]);
-			// physicsProfileLine1.addValue(profilevalues[2]);
-			// physicsProfileLine2.addValue(profilevalues[3]);
-			// physicsProfileLine3.addValue(profilevalues[4]);
+			physicsProfileLine0.addValue(profilevalues[1]);
+			physicsProfileLine1.addValue(profilevalues[2]);
+			physicsProfileLine2.addValue(profilevalues[3]);
+			physicsProfileLine3.addValue(profilevalues[4]);
 
 			physicsProfileText0.setText("Broadphase: " + values.get(4).get(values.get(4).size() - 1));
 			physicsProfileText1.setText("Narrowphase: " + values.get(5).get(values.get(5).size() - 1));
@@ -297,10 +297,10 @@ public class Profiler implements Updateable {
 		if (times.size() > numvalues) {
 			times.remove(numvalues);
 			if (gameprofiler != null) {
-				// gameProfileLine0.removeLastValue();
-				// gameProfileLine1.removeLastValue();
-				// gameProfileLine2.removeLastValue();
-				// gameProfileLine3.removeLastValue();
+				gameProfileLine0.removeLastValue();
+				gameProfileLine1.removeLastValue();
+				gameProfileLine2.removeLastValue();
+				gameProfileLine3.removeLastValue();
 				boolean rm1 = values.get(0).remove(0) == maxvalue;
 				boolean rm2 = values.get(1).remove(0) == maxvalue;
 				boolean rm3 = values.get(2).remove(0) == maxvalue;
@@ -313,10 +313,10 @@ public class Profiler implements Updateable {
 				}
 			}
 			if (physicsprofiler != null) {
-				// physicsProfileLine0.removeLastValue();
-				// physicsProfileLine1.removeLastValue();
-				// physicsProfileLine2.removeLastValue();
-				// physicsProfileLine3.removeLastValue();
+				physicsProfileLine0.removeLastValue();
+				physicsProfileLine1.removeLastValue();
+				physicsProfileLine2.removeLastValue();
+				physicsProfileLine3.removeLastValue();
 				boolean rm1 = values.get(4).remove(0) == maxvalue;
 				boolean rm2 = values.get(5).remove(0) == maxvalue;
 				boolean rm3 = values.get(6).remove(0) == maxvalue;
@@ -331,16 +331,16 @@ public class Profiler implements Updateable {
 		}
 
 		if (gameprofiler != null && showScale && showGameProfile) {
-			// gameProfileLine0.prerender();
-			// gameProfileLine1.prerender();
-			// gameProfileLine2.prerender();
-			// gameProfileLine3.prerender();
+			gameProfileLine0.prerender();
+			gameProfileLine1.prerender();
+			gameProfileLine2.prerender();
+			gameProfileLine3.prerender();
 		}
 		if (physicsprofiler != null && showScale && showPhysicsProfile) {
-			// physicsProfileLine0.prerender();
-			// physicsProfileLine1.prerender();
-			// physicsProfileLine2.prerender();
-			// physicsProfileLine3.prerender();
+			physicsProfileLine0.prerender();
+			physicsProfileLine1.prerender();
+			physicsProfileLine2.prerender();
+			physicsProfileLine3.prerender();
 		}
 	}
 
@@ -358,43 +358,43 @@ public class Profiler implements Updateable {
 
 	private void scaleProfileLines(float scale) {
 		scale = sizeY / scale;
-		// gameProfileLine0.scaleProfile(scale);
-		// gameProfileLine1.scaleProfile(scale);
-		// gameProfileLine2.scaleProfile(scale);
-		// gameProfileLine3.scaleProfile(scale);
-		// physicsProfileLine0.scaleProfile(scale);
-		// physicsProfileLine1.scaleProfile(scale);
-		// physicsProfileLine2.scaleProfile(scale);
-		// physicsProfileLine3.scaleProfile(scale);
+		gameProfileLine0.scaleProfile(scale);
+		gameProfileLine1.scaleProfile(scale);
+		gameProfileLine2.scaleProfile(scale);
+		gameProfileLine3.scaleProfile(scale);
+		physicsProfileLine0.scaleProfile(scale);
+		physicsProfileLine1.scaleProfile(scale);
+		physicsProfileLine2.scaleProfile(scale);
+		physicsProfileLine3.scaleProfile(scale);
 	}
 
-	// private class ProfileLine extends ShapedObject2 {
-	// public ProfileLine() {
-	// setRenderMode(GLConstants.LINE_STRIP);
-	// translateTo(new Vector2f(150, 595));
-	// }
-	//
-	// public void addValue(long value) {
-	// if (value > maxvalue) {
-	// maxvalue = value;
-	// scaleMid.setText(maxvalue / 2000f + " ms");
-	// scaleMax.setText(maxvalue / 1000f + " ms");
-	// scaleProfileLines(maxvalue);
-	// }
-	// for (Vector3f v : getVertices()) {
-	// v.translate(1, 0, 0);
-	// }
-	// addIndex(getVertexCount());
-	// addVertex(new Vector2f(0, -value));
-	// }
-	//
-	// public void scaleProfile(float scale) {
-	// scaleTo(1, scale, 1);
-	// }
-	//
-	// public void removeLastValue() {
-	// removeVertex(0);
-	// removeIndex(getVertexCount());
-	// }
-	// }
+	private class ProfileLine extends ShapedObject2 {
+		public ProfileLine() {
+			setRenderMode(GLConstants.LINE_STRIP);
+			translateTo(new Vector2f(150, 595));
+		}
+
+		public void addValue(long value) {
+			if (value > maxvalue) {
+				maxvalue = value;
+				scaleMid.setText(maxvalue / 2000f + " ms");
+				scaleMax.setText(maxvalue / 1000f + " ms");
+				scaleProfileLines(maxvalue);
+			}
+			for (Vector3f v : getVertices()) {
+				v.translate(1, 0, 0);
+			}
+			addIndex(getVertexCount());
+			addVertex(new Vector2f(0, -value));
+		}
+
+		public void scaleProfile(float scale) {
+			scaleTo(1, scale, 1);
+		}
+
+		public void removeLastValue() {
+			removeVertex(0);
+			removeIndex(getVertexCount());
+		}
+	}
 }
