@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import broadphase.SAP2;
-import constraints.OLDDistanceConstraint2;
+import constraints.DistanceConstraint2;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
@@ -77,7 +77,7 @@ public class ConstraintTest2d extends StandardGame {
 		space.addRigidBody(leftCircle, rbL);
 		defaultshader2.addObject(leftCircle);
 
-		Circle rightCircle = new Circle(430, 50, 20, 10);
+		Circle rightCircle = new Circle(430, 60, 20, 10);
 		RigidBody2 rbR = new RigidBody2(PhysicsShapeCreator.create(rightCircle));
 		rbR.setMass(1f);
 		rbR.setInertia(new Matrix1f(1));
@@ -85,7 +85,7 @@ public class ConstraintTest2d extends StandardGame {
 		space.addRigidBody(rightCircle, rbR);
 		defaultshader2.addObject(rightCircle);
 
-		Constraint2 constraint = new WeldConstraint2(rbL, rbR, 60);
+		Constraint2 constraint = new DistanceConstraint2(rbL, rbR, new Vector2f(), new Vector2f());
 		space.addConstraint(constraint);
 	}
 
@@ -110,6 +110,8 @@ public class ConstraintTest2d extends StandardGame {
 
 		debugger.update(fps, 0, 0);
 		space.update(delta);
+		if (inputs.isKeyDown("Q"))
+			space.resolveConstraints(delta);
 		physicsdebug.update();
 		cam.update(delta);
 	}

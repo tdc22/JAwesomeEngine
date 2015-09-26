@@ -73,13 +73,14 @@ public class Profiler implements Updateable {
 		values.put(7, new ArrayList<Long>());
 
 		String c = "u_color";
-		int colorShaderID = ShaderLoader.loadShader(DefaultShader.COLOR_SHADER_VERTEX, DefaultShader.COLOR_SHADER_FRAGMENT);
-		
+		int colorShaderID = ShaderLoader.loadShader(DefaultShader.COLOR_SHADER_VERTEX,
+				DefaultShader.COLOR_SHADER_FRAGMENT);
+
 		Quad background = new Quad(305, 533, sizeX / 2f, sizeY / 2f);
 		backgroundshader = new Shader(colorShaderID, c, new Vector4f(1f, 1f, 1f, 0.5f));
 		backgroundshader.addObject(background);
 		game.addShader2d(backgroundshader);
-		
+
 		gameProfileText0 = new Text("", 10, 480, f);
 		gameProfileText1 = new Text("", 10, 495, f);
 		gameProfileText2 = new Text("", 10, 510, f);

@@ -209,7 +209,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	protected abstract void resolve();
 
-	protected void resolveConstraints(float delta) {
+	public void resolveConstraints(float delta) {
 		for (Constraint<L, A1, A2, A3> c : constraints)
 			c.solve(delta);
 	}

@@ -227,13 +227,18 @@ public class Complexd extends Complex {
 
 	@Override
 	public double angle() {
-		if(real > 0) return Math.atan(imaginary/real);
-		if(real < 0) {
-			if(imaginary >= 0) return Math.atan(imaginary/real) + Math.PI;
-			else return Math.atan(imaginary/real) - Math.PI;
+		if (real > 0)
+			return Math.atan(imaginary / real);
+		if (real < 0) {
+			if (imaginary >= 0)
+				return Math.atan(imaginary / real) + Math.PI;
+			else
+				return Math.atan(imaginary / real) - Math.PI;
 		}
-		if (imaginary > 0) return Math.PI/2f;
-		if (imaginary < 0) return -Math.PI/2f;
+		if (imaginary > 0)
+			return Math.PI / 2f;
+		if (imaginary < 0)
+			return -Math.PI / 2f;
 		return 0;
 	}
 }

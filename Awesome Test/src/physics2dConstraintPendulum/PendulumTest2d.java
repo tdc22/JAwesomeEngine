@@ -1,7 +1,6 @@
 package physics2dConstraintPendulum;
 
 import broadphase.SAP2;
-import constraints.OLDDistanceConstraint2;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
