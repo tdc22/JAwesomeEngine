@@ -13,7 +13,7 @@ import shape.Box;
 import shape.Sphere;
 import utils.GLConstants;
 
-public class ShaderTest extends StandardGame {
+public class NormalTest extends StandardGame {
 
 	@Override
 	public void init() {
@@ -27,29 +27,34 @@ public class ShaderTest extends StandardGame {
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 
-		Shader normalshader = new Shader(ShaderLoader.loadShaderFromFile("res/shaders/normaldebug.vert",
-				"res/shaders/normaldebug.geo", GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
-		normalshader.addArgumentName("uNormalsLength");
+		Shader normalshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/normaldebug.vert", "res/shaders/normaldebug.frag",
+						"res/shaders/normaldebug.geo", GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
+		normalshader.addArgumentName("u_normalsLength");
 		normalshader.addArgument(0.4f);
 		addShader(normalshader);
 
 		Sphere a = new Sphere(0, 0, 0, 1, 36, 36);
 		a.setRenderHints(true, false, true);
 		defaultshader.addObject(a);
+		normalshader.addObject(a);
 
 		Box box = new Box(0, 0, -3, 0.5f, 0.5f, 0.5f);
 		box.setRenderHints(true, false, true);
 		defaultshader.addObject(box);
+		normalshader.addObject(box);
 
 		ShapedObject model = ModelLoader.load("res/models/bunny.mobj");
 		model.translate(-5f, 0f, -5f);
 		model.setRenderHints(true, false, true);
 		defaultshader.addObject(model);
+		normalshader.addObject(model);
 
 		ShapedObject model2 = ModelLoader.load("res/models/cylinder.mobj");
 		model2.translate(-5f, 0f, 5f);
 		model2.setRenderHints(true, false, true);
 		defaultshader.addObject(model2);
+		normalshader.addObject(model2);
 	}
 
 	@Override

@@ -84,7 +84,7 @@ public class Test2d extends StandardGame {
 		rotquad.rotate(delta * 0.1f);
 
 		jumppos += delta * 0.01f;
-		coloredjumptext.translate(0, FastMath.sin(jumppos));
+		coloredjumptext.translateTo(100, 300 + FastMath.sin(jumppos) * 30);
 
 		if (inputs.isKeyDown("I"))
 			cam2d.translate(delta, 0);

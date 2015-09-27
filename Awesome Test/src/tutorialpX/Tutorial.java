@@ -191,7 +191,7 @@ public class Tutorial extends StandardGame {
 
 		edgeshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/edgeshader.vert", "res/shaders/edgeshader.frag",
-						"res/shaders/edgeshader.geo", GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 6));
+						"res/shaders/edgeshader.geo", GLConstants.TRIANGLE_ADJACENCY, GLConstants.LINE_STRIP, 4));
 		addShader(edgeshader);
 
 		edgeshader.addObjects(player, ground, goalBox);

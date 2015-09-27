@@ -6,7 +6,7 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 
-layout(line_strip, max_vertices = 6) out;
+layout(line_strip, max_vertices = 4) out;
 
 void main(void)
 {
@@ -26,23 +26,31 @@ void main(void)
 
 	mat4 mvp = projection * view * model;
 
-	if(dot(normal, normal1) >= 0) {
+	bool a = dot(normal, normal1) >= 0;
+	bool b = dot(normal, normal2) >= 0;
+	bool c = dot(normal, normal3) >= 0;
+	
+	if(a) {
 		gl_Position = mvp * posa;
 		EmitVertex();
 
 		gl_Position = mvp * posb;
 		EmitVertex();
 	}
-	if(dot(normal, normal2) >= 0) {
-		gl_Position = mvp * posb;
-		EmitVertex();
+	if(b) {
+		if(!a) {
+			gl_Position = mvp * posb;
+			EmitVertex();
+		}
 
 		gl_Position = mvp * posc;
 		EmitVertex();
 	}
-	if(dot(normal, normal3) >= 0) {
-		gl_Position = mvp * posc;
-		EmitVertex();
+	if(c) {
+		if(!b) {
+			gl_Position = mvp * posc;
+			EmitVertex();
+		}
 
 		gl_Position = mvp * posa;
 		EmitVertex();

@@ -80,9 +80,9 @@ public class ShaderLoader {
 		if (includeGeometryShader) {
 			glAttachShader(shaderProgram, geometryShader);
 
-			glProgramParameteri(shaderProgram, GL_GEOMETRY_VERTICES_OUT, verticesout);
 			glProgramParameteri(shaderProgram, GL_GEOMETRY_INPUT_TYPE, inputtype);
 			glProgramParameteri(shaderProgram, GL_GEOMETRY_OUTPUT_TYPE, outputtype);
+			glProgramParameteri(shaderProgram, GL_GEOMETRY_VERTICES_OUT, verticesout);
 		}
 
 		glBindAttribLocation(shaderProgram, 0, "in_Position");
