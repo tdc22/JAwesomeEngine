@@ -1,8 +1,8 @@
-package loaderTest;
+package modelLoader;
 
 public class Start {
 	public static void main(String[] args) {
-		LoaderTest test = new LoaderTest();
+		ModelTest test = new ModelTest();
 		test.start();
 	}
 }

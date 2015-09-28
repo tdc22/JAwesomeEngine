@@ -50,7 +50,7 @@ public class NormalTest extends StandardGame {
 		defaultshader.addObject(model);
 		normalshader.addObject(model);
 
-		ShapedObject model2 = ModelLoader.load("res/models/cylinder.mobj");
+		ShapedObject model2 = ModelLoader.load("res/models/cone.mobj");
 		model2.translate(-5f, 0f, 5f);
 		model2.setRenderHints(true, false, true);
 		defaultshader.addObject(model2);

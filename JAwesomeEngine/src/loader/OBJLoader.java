@@ -18,11 +18,17 @@ import vector.Vector3f;
 public class OBJLoader {
 	/*
 	 * Converts a given *.obj-File to a *.mobj-File.
+	 * 
+	 * OBJ: v = vertex vt = texture coordinate vn = vertex normal vp = parameter
+	 * space vertices (unsupported) f = faces (v/vt/vn)
+	 * 
+	 * MOBJ: vs = specific vertex (v, vt, vn) f = faces (vs..)
+	 * 
 	 */
 	public static File convertOBJ(File f) throws IOException {
 		File f2 = new File(f.getPath().replace(".obj", ".mobj.tmp"));
 		File f3 = new File(f.getPath().replace(".obj", ".mobj"));
-		List<Integer[]> faces = new ArrayList<Integer[]>();
+		List<Integer[][]> facevertices = new ArrayList<Integer[][]>();
 		// First run (checks all faces, if they are triangles, make list)
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		BufferedWriter writer = new BufferedWriter(new FileWriter(f2));
@@ -30,38 +36,106 @@ public class OBJLoader {
 		while ((line = reader.readLine()) != null) {
 			if (line.startsWith("f ")) {
 				// f vertexindex/textureindex/normalindex
-				String writeline = "";
 				if (line.split(" ").length == 4) {
-					Integer[] indices = new Integer[3];
-					indices[0] = Integer.parseInt(line.split(" ")[1].split("/")[0]) - 1;
-					indices[1] = Integer.parseInt(line.split(" ")[2].split("/")[0]) - 1;
-					indices[2] = Integer.parseInt(line.split(" ")[3].split("/")[0]) - 1;
-					faces.add(indices);
-					writeline = line.split(" ")[0] + " " + indices[0] + " " + indices[1] + " " + indices[2];
+					Integer[][] indices = new Integer[3][3];
+					String[] linesplit = line.split(" ");
+					String[] firstindices = linesplit[1].split("/");
+					indices[0][0] = Integer.parseInt(firstindices[0]);
+					indices[0][1] = firstindices.length < 2 || firstindices[1].isEmpty() ? 0
+							: Integer.parseInt(firstindices[1]);
+					indices[0][2] = firstindices.length < 3 || firstindices[2].isEmpty() ? 0
+							: Integer.parseInt(firstindices[2]);
+					String[] secondindices = linesplit[2].split("/");
+					indices[1][0] = Integer.parseInt(secondindices[0]);
+					indices[1][1] = secondindices.length < 2 || secondindices[1].isEmpty() ? 0
+							: Integer.parseInt(secondindices[1]);
+					indices[1][2] = secondindices.length < 3 || secondindices[2].isEmpty() ? 0
+							: Integer.parseInt(secondindices[2]);
+					String[] thirdindices = linesplit[3].split("/");
+					indices[2][0] = Integer.parseInt(thirdindices[0]);
+					indices[2][1] = thirdindices.length < 2 || thirdindices[1].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[1]);
+					indices[2][2] = thirdindices.length < 3 || thirdindices[2].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[2]);
+					facevertices.add(indices);
 				} else if (line.split(" ").length == 5) {
-					Integer[] indices1 = new Integer[3];
-					indices1[0] = Integer.parseInt(line.split(" ")[1].split("/")[0]) - 1;
-					indices1[1] = Integer.parseInt(line.split(" ")[2].split("/")[0]) - 1;
-					indices1[2] = Integer.parseInt(line.split(" ")[3].split("/")[0]) - 1;
-					faces.add(indices1);
-					Integer[] indices2 = new Integer[3];
-					indices2[0] = Integer.parseInt(line.split(" ")[1].split("/")[0]) - 1;
-					indices2[1] = Integer.parseInt(line.split(" ")[3].split("/")[0]) - 1;
-					indices2[2] = Integer.parseInt(line.split(" ")[4].split("/")[0]) - 1;
-					faces.add(indices2);
-					writeline = line.split(" ")[0] + " " + indices1[0] + " " + indices1[1] + " " + indices1[2] + " "
-							+ "\n" + line.split(" ")[0] + " " + indices2[0] + " " + indices2[1] + " " + indices2[2];
+					Integer[][] indices = new Integer[3][3];
+					String[] linesplit = line.split(" ");
+					String[] firstindices = linesplit[1].split("/");
+					indices[0][0] = Integer.parseInt(firstindices[0]);
+					indices[0][1] = firstindices.length < 2 || firstindices[1].isEmpty() ? 0
+							: Integer.parseInt(firstindices[1]);
+					indices[0][2] = firstindices.length < 3 || firstindices[2].isEmpty() ? 0
+							: Integer.parseInt(firstindices[2]);
+					String[] secondindices = linesplit[2].split("/");
+					indices[1][0] = Integer.parseInt(secondindices[0]);
+					indices[1][1] = secondindices.length < 2 || secondindices[1].isEmpty() ? 0
+							: Integer.parseInt(secondindices[1]);
+					indices[1][2] = secondindices.length < 3 || secondindices[2].isEmpty() ? 0
+							: Integer.parseInt(secondindices[2]);
+					String[] thirdindices = linesplit[3].split("/");
+					indices[2][0] = Integer.parseInt(thirdindices[0]);
+					indices[2][1] = thirdindices.length < 2 || thirdindices[1].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[1]);
+					indices[2][2] = thirdindices.length < 3 || thirdindices[2].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[2]);
+					facevertices.add(indices);
+
+					indices = new Integer[3][3];
+					linesplit = line.split(" ");
+					firstindices = linesplit[1].split("/");
+					indices[0][0] = Integer.parseInt(firstindices[0]);
+					indices[0][1] = firstindices.length < 2 || firstindices[1].isEmpty() ? 0
+							: Integer.parseInt(firstindices[1]);
+					indices[0][2] = firstindices.length < 3 || firstindices[2].isEmpty() ? 0
+							: Integer.parseInt(firstindices[2]);
+					secondindices = linesplit[3].split("/");
+					indices[1][0] = Integer.parseInt(secondindices[0]);
+					indices[1][1] = secondindices.length < 2 || secondindices[1].isEmpty() ? 0
+							: Integer.parseInt(secondindices[1]);
+					indices[1][2] = secondindices.length < 3 || secondindices[2].isEmpty() ? 0
+							: Integer.parseInt(secondindices[2]);
+					thirdindices = linesplit[4].split("/");
+					indices[2][0] = Integer.parseInt(thirdindices[0]);
+					indices[2][1] = thirdindices.length < 2 || thirdindices[1].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[1]);
+					indices[2][2] = thirdindices.length < 3 || thirdindices[2].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[2]);
+					facevertices.add(indices);
 				} else {
 					System.err.println("Number of vertices per face must be 3 or 4");
 				}
-				writer.write(writeline);
-			}
-			if (line.startsWith("v ") || line.startsWith("vn ") || line.startsWith("#") || line.startsWith("mtllib")
-					|| line.startsWith("o ") || line.startsWith("s ") || line.startsWith("usemtl")) {
+			} else
+				if (line.startsWith("v ") || line.startsWith("vn ") || line.startsWith("#") || line.startsWith("mtllib")
+						|| line.startsWith("o ") || line.startsWith("s ") || line.startsWith("usemtl")) {
 				writer.write(line);
+				writer.newLine();
 			}
+		}
+
+		List<Integer[]> faces = new ArrayList<Integer[]>();
+		List<Integer[]> vertices = new ArrayList<Integer[]>();
+		for (Integer[][] a : facevertices) {
+			Integer[] faceVertIds = new Integer[3];
+			for (int i = 0; i < 3; i++) {
+				Integer[] b = a[i];
+				int pos = vertices.indexOf(b);
+				if (pos == -1) {
+					pos = vertices.size();
+					vertices.add(b);
+				}
+				faceVertIds[i] = pos;
+			}
+			faces.add(faceVertIds);
+			writer.write("f " + faceVertIds[0] + " " + faceVertIds[1] + " " + faceVertIds[2]);
 			writer.newLine();
 		}
+
+		for (Integer[] a : vertices) {
+			writer.write("vs " + a[0] + " " + a[1] + " " + a[2]);
+			writer.newLine();
+		}
+
 		reader.close();
 		writer.close();
 
@@ -143,34 +217,41 @@ public class OBJLoader {
 
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		String line;
-		int normalindex = 0;
+		List<Vector3f> vertices = new ArrayList<Vector3f>();
+		List<Vector3f> normals = new ArrayList<Vector3f>();
+		vertices.add(new Vector3f());
+		normals.add(new Vector3f(0, 1, 0));
 		while ((line = reader.readLine()) != null) {
 			if (line.startsWith("v ")) {
-				float x = Float.parseFloat(line.split(" ")[1]);
-				float y = Float.parseFloat(line.split(" ")[2]);
-				float z = Float.parseFloat(line.split(" ")[3]);
-				Vector3f vertex = new Vector3f(x, y, z);
-
-				object.addVertex(vertex, Color.WHITE, new Vector2f(0, 0), new Vector3f(0, 1, 0));
+				String[] vertexCoords = line.split(" ");
+				float x = Float.parseFloat(vertexCoords[1]);
+				float y = Float.parseFloat(vertexCoords[2]);
+				float z = Float.parseFloat(vertexCoords[3]);
+				vertices.add(new Vector3f(x, y, z));
 			}
 			if (line.startsWith("vn")) {
-				float nx = Float.parseFloat(line.split(" ")[1]);
-				float ny = Float.parseFloat(line.split(" ")[2]);
-				float nz = Float.parseFloat(line.split(" ")[3]);
-
-				object.setNormal(normalindex, new Vector3f(nx, ny, nz));
-				normalindex++;
+				String[] normalCoords = line.split(" ");
+				float nx = Float.parseFloat(normalCoords[1]);
+				float ny = Float.parseFloat(normalCoords[2]);
+				float nz = Float.parseFloat(normalCoords[3]);
+				normals.add(new Vector3f(nx, ny, nz));
 			}
 			if (line.startsWith("f ")) {
-				int i1 = Integer.parseInt(line.split(" ")[1].split("/")[0]);
-				int i2 = Integer.parseInt(line.split(" ")[3].split("/")[0]);
-				int i3 = Integer.parseInt(line.split(" ")[5].split("/")[0]);
+				String[] faceString = line.split(" ");
+				int i1 = Integer.parseInt(faceString[1]);
+				int i2 = Integer.parseInt(faceString[3]);
+				int i3 = Integer.parseInt(faceString[5]);
 
-				int adj1 = Integer.parseInt(line.split(" ")[2]);
-				int adj2 = Integer.parseInt(line.split(" ")[4]);
-				int adj3 = Integer.parseInt(line.split(" ")[6]);
+				int adj1 = Integer.parseInt(faceString[2]);
+				int adj2 = Integer.parseInt(faceString[4]);
+				int adj3 = Integer.parseInt(faceString[6]);
 
 				object.addTriangle(i1, adj1, i2, adj2, i3, adj3);
+			}
+			if (line.startsWith("vs")) {
+				String[] vertexString = line.split(" ");
+				object.addVertex(vertices.get(Integer.parseInt(vertexString[1])), Color.WHITE, new Vector2f(0, 0),
+						normals.get(Integer.parseInt(vertexString[3])));
 			}
 		}
 		reader.close();
