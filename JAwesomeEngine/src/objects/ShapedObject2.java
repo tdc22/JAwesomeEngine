@@ -49,6 +49,26 @@ public class ShapedObject2 extends ShapedObject {
 		addVertex(new Vector3f(vertex.x, vertex.y, 0f), c, texturecoord, new Vector3f(0, 0, 1));
 	}
 
+	public void addVertex(Vector2f vertex, Vector3f c, Vector2f texturecoord) {
+		addVertex(new Vector3f(vertex.x, vertex.y, 0f), c, texturecoord, new Vector3f(0, 0, 1));
+	}
+
+	public void setVertex(int id, Vector2f vertex) {
+		setVertex(id, new Vector3f(vertex.x, vertex.y, 0f));
+	}
+
+	public void setVertex(int id, Vector2f vertex, Color c) {
+		setVertex(id, new Vector3f(vertex.x, vertex.y, 0f), c);
+	}
+
+	public void setVertex(int id, Vector2f vertex, Color c, Vector2f texturecoord) {
+		setVertex(id, new Vector3f(vertex.x, vertex.y, 0f), c, texturecoord, new Vector3f(0, 0, 1));
+	}
+
+	public void setVertex(int id, Vector2f vertex, Vector3f c, Vector2f texturecoord) {
+		setVertex(id, new Vector3f(vertex.x, vertex.y, 0f), c, texturecoord, new Vector3f(0, 0, 1));
+	}
+
 	// @Override
 	// public void translate(float x, float y) {
 	// translate(x, y, 0);

@@ -181,6 +181,28 @@ public class ShapedObject extends RenderedObject {
 		normals.add(normal);
 	}
 
+	public void setVertex(int id, Vector3f vertex) {
+		setVertex(id, vertex, Color.GRAY, new Vector2f(), new Vector3f());
+	}
+
+	public void setVertex(int id, Vector3f vertex, Color c) {
+		setVertex(id, vertex, c, new Vector2f(), new Vector3f());
+	}
+
+	public void setVertex(int id, Vector3f vertex, Color c, Vector2f texturecoord, Vector3f normal) {
+		vertices.set(id, vertex);
+		vertcolors.set(id, new Vector3f(c.getRed(), c.getGreen(), c.getBlue()));
+		texturecoords.set(id, texturecoord);
+		normals.set(id, normal);
+	}
+
+	public void setVertex(int id, Vector3f vertex, Vector3f c, Vector2f texturecoord, Vector3f normal) {
+		vertices.set(id, vertex);
+		vertcolors.set(id, c);
+		texturecoords.set(id, texturecoord);
+		normals.set(id, normal);
+	}
+
 	public void removeVertex(int id) {
 		vertices.remove(id);
 		vertcolors.remove(id);
@@ -419,6 +441,10 @@ public class ShapedObject extends RenderedObject {
 
 	public void setIndices(List<Integer> inds) {
 		indices = inds;
+	}
+
+	public void setIndex(int indexid, int value) {
+		indices.set(indexid, value);
 	}
 
 	public void setNormal(int normalid, Vector3f normal) {

@@ -34,7 +34,7 @@ import org.lwjgl.BufferUtils;
 import matrix.Matrix2f;
 import matrix.Matrix3f;
 import matrix.Matrix4f;
-import objects.RenderedObject;
+import objects.RenderableObject;
 import objects.ViewProjection;
 import texture.Texture;
 import utils.Pair;
@@ -48,7 +48,7 @@ public class Shader implements ViewProjection {
 	private List<Integer> uniformtypes;
 	private List<Object> uniformarguments;
 	private HashMap<String, Integer> uniformnames;
-	private List<RenderedObject> objects;
+	private List<RenderableObject> objects;
 	private boolean rendered = true;
 
 	public Shader(int shaderProgram) {
@@ -57,7 +57,7 @@ public class Shader implements ViewProjection {
 		uniformtypes = new ArrayList<Integer>();
 		uniformarguments = new ArrayList<Object>();
 		uniformnames = new HashMap<String, Integer>();
-		objects = new ArrayList<RenderedObject>();
+		objects = new ArrayList<RenderableObject>();
 	}
 
 	public Shader(int shaderProgram, List<String> argumentnames, List<Object> arguments) {
@@ -67,7 +67,7 @@ public class Shader implements ViewProjection {
 		uniformarguments = new ArrayList<Object>();
 		uniformnames = new HashMap<String, Integer>();
 		addArguments(argumentnames, arguments);
-		objects = new ArrayList<RenderedObject>();
+		objects = new ArrayList<RenderableObject>();
 	}
 
 	@SafeVarargs
@@ -79,7 +79,7 @@ public class Shader implements ViewProjection {
 		uniformnames = new HashMap<String, Integer>();
 		for (Pair<String, Object> a : arguments)
 			addArgument(a.getFirst(), a.getSecond());
-		objects = new ArrayList<RenderedObject>();
+		objects = new ArrayList<RenderableObject>();
 	}
 
 	public Shader(int shaderProgram, String argumentname, Object argument) {
@@ -89,7 +89,7 @@ public class Shader implements ViewProjection {
 		uniformarguments = new ArrayList<Object>();
 		uniformnames = new HashMap<String, Integer>();
 		addArgument(argumentname, argument);
-		objects = new ArrayList<RenderedObject>();
+		objects = new ArrayList<RenderableObject>();
 	}
 
 	public Shader(Shader shader) {
@@ -98,23 +98,23 @@ public class Shader implements ViewProjection {
 		uniformtypes = new ArrayList<Integer>(shader.getArgumentTypes());
 		uniformarguments = new ArrayList<Object>(shader.getArguments());
 		uniformnames = new HashMap<String, Integer>(shader.getUniformNames());
-		objects = new ArrayList<RenderedObject>();
+		objects = new ArrayList<RenderableObject>();
 	}
 
-	public void addObject(RenderedObject obj) {
+	public void addObject(RenderableObject obj) {
 		objects.add(obj);
 	}
 
-	public void removeObject(RenderedObject obj) {
+	public void removeObject(RenderableObject obj) {
 		objects.remove(obj);
 	}
 
-	public void addObjects(RenderedObject... objs) {
-		for (RenderedObject obj : objs)
+	public void addObjects(RenderableObject... objs) {
+		for (RenderableObject obj : objs)
 			objects.add(obj);
 	}
 
-	public List<RenderedObject> getObjects() {
+	public List<RenderableObject> getObjects() {
 		return objects;
 	}
 
@@ -288,7 +288,7 @@ public class Shader implements ViewProjection {
 	}
 
 	public void delete() {
-		for (RenderedObject obj : objects) {
+		for (RenderableObject obj : objects) {
 			obj.delete();
 		}
 
@@ -419,7 +419,7 @@ public class Shader implements ViewProjection {
 		if (rendered) {
 			bind();
 			int modelLocation = glGetUniformLocation(shaderProgram, "model");
-			for (RenderedObject obj : objects) {
+			for (RenderableObject obj : objects) {
 				glUniformMatrix4fv(modelLocation, false, obj.getMatrixBuffer());
 				obj.render();
 			}

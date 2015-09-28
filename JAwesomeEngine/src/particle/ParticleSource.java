@@ -1,34 +1,42 @@
 package particle;
 
-import objects.GameObject;
+import objects.RenderableObject;
 import objects.Updateable;
-import vector.Vector3f;
+import vector.Vector;
 
-public class ParticleSource extends GameObject implements Updateable {
-	protected Vector3f spawndistance, initialVelocity, gravity;
-	protected float spawningRate, lifetime;
-	private boolean randomposition = false, randomrate = false, radomlife = false;
+public abstract class ParticleSource<L extends Vector> implements Updateable, RenderableObject {
+	L center, spawnAreaHalfSize, minVelocity, diffVelocity;
+	int minLifeTime, diffLifeTime, minSpawnedParticles, diffSpawnedParticles;
+	float minSize, diffSize;
 
-	public ParticleSource(float x, float y, float z, float spawnrate, float lifetime) {
-		super();
-		translate(x, y, z);
-
+	public ParticleSource(L center, L spawnAreaHalfSize, L minVelocity, L maxVelocity, float minSize, float maxSize,
+			int minLifeTime, int maxLifeTime, int minSpawnedParticles, int maxSpawnedParticles) {
+		this.center = center;
+		this.spawnAreaHalfSize = spawnAreaHalfSize;
+		setParticleVelocity(minVelocity, maxVelocity);
+		setParticleSize(minSize, maxSize);
+		setParticleLifeTime(minLifeTime, maxLifeTime);
+		setParticleSpawnRate(minSpawnedParticles, maxSpawnedParticles);
 	}
 
-	public ParticleSource(Vector3f position, float spawnrate, float lifetime) {
-		super();
-		translate(position);
+	public abstract void setParticleVelocity(L minVelocity, L maxVelocity);
 
+	public void setParticleSize(float minSize, float maxSize) {
+		this.minSize = minSize;
+		diffSize = maxSize - minSize;
 	}
 
-	private void init(Vector3f spawnrate, Vector3f initialVelocity, Vector3f gravity, float spawnratetime,
-			float lifetime) {
-		this.spawningRate = spawnratetime;
-		this.lifetime = lifetime;
+	public void setParticleSpawnRate(int minSpawnedParticles, int maxSpawnedParticles) {
+		this.minSpawnedParticles = minSpawnedParticles;
+		diffSpawnedParticles = maxSpawnedParticles - minSpawnedParticles;
 	}
 
-	@Override
-	public void update(int delta) {
-
+	public void setParticleLifeTime(int minLifeTime, int maxLifeTime) {
+		this.minLifeTime = minLifeTime;
+		diffLifeTime = maxLifeTime - minLifeTime;
 	}
+
+	public abstract void addParticle(L position, L velocity, float size, int lifetime);
+
+	public abstract void updateParticles(int delta);
 }
