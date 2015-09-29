@@ -92,11 +92,10 @@ public class ShaderTest4 extends StandardGame {
 		bumpmapshader.addObject(c);
 
 		// Shader Test 4
-
 		Shader cubemapshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/cubemapshader.vert", "res/shaders/cubemapshader.frag"));
 		cubemapshader.addArgumentNames("u_cubeMap");
-		cubemapshader.addArguments(new CubeMap(cubemapper.getTextureID()));
+		cubemapshader.addArgument(new CubeMap(cubemapper.getTextureID()));
 		cubemapshader.addObject(s);
 		addShader(cubemapshader);
 

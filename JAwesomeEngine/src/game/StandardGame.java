@@ -24,6 +24,7 @@ import static org.lwjgl.opengl.GL11.glDepthFunc;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glHint;
 import static org.lwjgl.opengl.GL11.glShadeModel;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -131,17 +132,14 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 				current.clear();
 				((Texture) s.getArgument("u_texture")).setTextureID(p ? tex0 : tex1);
 				((Texture) s.getArgument("u_depthTexture")).setTextureID(p ? tex0depth : tex1depth);
-				// s.bind();
-				// screen.render();
-				// s.unbind();
 				s.render();
 				current.unbind();
 				p = !p;
 			}
 		}
 		glBindTexture(GL_TEXTURE_2D, p ? tex0 : tex1);
+		glViewport(0, 0, display.getWidth(), display.getHeight());
 		screenShader.render();
-		// screen.render();
 	}
 
 	@Override

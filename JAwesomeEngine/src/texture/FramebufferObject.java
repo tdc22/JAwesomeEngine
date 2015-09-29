@@ -19,6 +19,7 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
@@ -161,6 +162,7 @@ public class FramebufferObject {
 
 	public void bind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+		glViewport(0, 0, width, height);
 	}
 
 	public void clear() {

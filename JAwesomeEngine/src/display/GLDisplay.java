@@ -45,7 +45,6 @@ import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.ByteBuffer;
@@ -155,7 +154,8 @@ public class GLDisplay extends Display {
 				public void invoke(long arg0, int w, int h) {
 					width = w;
 					height = h;
-					glViewport(0, 0, width, height);
+					// glViewport(0, 0, width, height);//Put into rendering
+					// code....
 				}
 			});
 		}

@@ -49,7 +49,7 @@ public class Tutorial extends StandardGame {
 	final float PLAYER_HEIGHT = 1.7f;
 	final Vector3f PLAYER_START_POSITION = new Vector3f(0, 5, 0);
 	final float GROUNDCHECKER_RADIUS = PLAYER_RADIUS - 0.1f;
-	final float GROUNDCHECKER_HEIGHT = 0.01f;
+	final float GROUNDCHECKER_HEIGHT = 0.05f;
 	final float TINY_SPACE = 0.001f;
 
 	final float STARTBOX_SIZE_X = 8f;
