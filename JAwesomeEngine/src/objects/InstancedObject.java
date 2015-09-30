@@ -148,7 +148,7 @@ public class InstancedObject extends ShapedObject {
 		for (int v = 0; v < allVertices; v++) {
 			Vector3f vertex = vertices.get(v);
 			vertexData.put(new float[] { vertex.x, vertex.y, vertex.z, 1 });
-			Color vertcolor = vertcolors.get(v);
+			Color vertcolor = colors.get(v);
 			colorData.put(new float[] { vertcolor.getRed(), vertcolor.getGreen(), vertcolor.getBlue() });
 			Vector2f tex = texturecoords.get(v);
 			textureData.put(new float[] { tex.x, tex.y });

@@ -1,4 +1,4 @@
-package particleSimple2d;
+package particleSimple;
 
 import display.DisplayMode;
 import display.GLDisplay;
@@ -9,17 +9,15 @@ import gui.Font;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
-import particle.SimpleParticleSource2;
+import particle.SimpleParticleSource;
 import shader.Shader;
 import texture.Texture;
 import utils.Debugger;
-import vector.Vector1f;
-import vector.Vector2f;
 import vector.Vector3f;
 
-public class Particle2d extends StandardGame {
+public class Particle extends StandardGame {
 	Debugger debugger;
-	SimpleParticleSource2 particlesource;
+	SimpleParticleSource particlesource;
 
 	@Override
 	public void init() {
@@ -28,6 +26,7 @@ public class Particle2d extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
+		display.bindMouse();
 
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
@@ -46,21 +45,22 @@ public class Particle2d extends StandardGame {
 		particleshader.addArgument(texture);
 		particleshader.addArgumentName("u_color");
 		particleshader.addArgument(new Vector3f(1, 0, 0));
-		addShader2d(particleshader);
+		addShader(particleshader);
 
-		particlesource = new SimpleParticleSource2(new Vector2f(200, 150), new Vector2f(), new Vector1f(0),
-				new Vector1f(360), 0.1f, 0.2f, 10f, 10f, 3000, 3500, 1f);
+		particlesource = new SimpleParticleSource(new Vector3f(0, 0, 0), new Vector3f(), new Vector3f(0, 0, 0),
+				new Vector3f(360, 360, 360), 0.001f, 0.002f, 0.3f, 0.3f, 3000, 3500, 1f, cam);
 		particlesource.getObject().setRenderHints(true, true, false);
 		particleshader.addObject(particlesource);
 	}
 
 	@Override
 	public void render() {
+		debugger.begin();
+		renderScene();
 	}
 
 	@Override
 	public void render2d() {
-		debugger.begin();
 		render2dScene();
 		debugger.end();
 	}

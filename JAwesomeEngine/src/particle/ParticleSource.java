@@ -4,31 +4,34 @@ import objects.RenderableObject;
 import objects.Updateable;
 import vector.Vector;
 
-public abstract class ParticleSource<L extends Vector> implements Updateable, RenderableObject {
-	L center, spawnAreaHalfSize, minVelocity, diffVelocity;
-	int minLifeTime, diffLifeTime, minSpawnedParticles, diffSpawnedParticles;
-	float minSize, diffSize;
+public abstract class ParticleSource<L extends Vector, A extends Vector> implements Updateable, RenderableObject {
+	L center, spawnAreaHalfSize;
+	A minAngle, diffAngle;
+	int minLifeTime, diffLifeTime;
+	float minSize, diffSize, minVelocity, diffVelocity, spawnRate, lastparticle;
 
-	public ParticleSource(L center, L spawnAreaHalfSize, L minVelocity, L maxVelocity, float minSize, float maxSize,
-			int minLifeTime, int maxLifeTime, int minSpawnedParticles, int maxSpawnedParticles) {
+	public ParticleSource(L center, L spawnAreaHalfSize, A minAngle, A maxAngle, float minVelocity, float maxVelocity,
+			float minSize, float maxSize, int minLifeTime, int maxLifeTime, float spawnRate) {
 		this.center = center;
 		this.spawnAreaHalfSize = spawnAreaHalfSize;
+		setParticleAngle(minAngle, maxAngle);
 		setParticleVelocity(minVelocity, maxVelocity);
 		setParticleSize(minSize, maxSize);
 		setParticleLifeTime(minLifeTime, maxLifeTime);
-		setParticleSpawnRate(minSpawnedParticles, maxSpawnedParticles);
+		this.spawnRate = spawnRate;
+		lastparticle = 0;
 	}
 
-	public abstract void setParticleVelocity(L minVelocity, L maxVelocity);
+	public abstract void setParticleAngle(A minAngle, A maxAngle);
+
+	public void setParticleVelocity(float minVelocity, float maxVelocity) {
+		this.minVelocity = minVelocity;
+		diffVelocity = maxVelocity - minVelocity;
+	}
 
 	public void setParticleSize(float minSize, float maxSize) {
 		this.minSize = minSize;
 		diffSize = maxSize - minSize;
-	}
-
-	public void setParticleSpawnRate(int minSpawnedParticles, int maxSpawnedParticles) {
-		this.minSpawnedParticles = minSpawnedParticles;
-		diffSpawnedParticles = maxSpawnedParticles - minSpawnedParticles;
 	}
 
 	public void setParticleLifeTime(int minLifeTime, int maxLifeTime) {
