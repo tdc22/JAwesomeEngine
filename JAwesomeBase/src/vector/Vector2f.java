@@ -187,11 +187,8 @@ public class Vector2f extends Vector2 {
 
 	@Override
 	public void transform(Matrix2 transform) {
-		Vector2 v1 = transform.getRow(0);
-		Vector2 v2 = transform.getRow(1);
-
-		x = v1.getXf() * x + v1.getYf() * y;
-		y = v2.getXf() * x + v2.getYf() * y;
+		x = transform.getf(0, 0) * x + transform.getf(0, 1) * y;
+		y = transform.getf(1, 0) * x + transform.getf(1, 1) * y;
 	}
 
 	@Override

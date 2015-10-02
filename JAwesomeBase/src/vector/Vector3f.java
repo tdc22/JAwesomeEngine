@@ -237,13 +237,9 @@ public class Vector3f extends Vector3 {
 
 	@Override
 	public void transform(Matrix3 transform) {
-		Vector3 v1 = transform.getRow(0);
-		Vector3 v2 = transform.getRow(1);
-		Vector3 v3 = transform.getRow(2);
-
-		x = v1.getXf() * x + v1.getYf() * y + v1.getZf() * z;
-		y = v2.getXf() * x + v2.getYf() * y + v2.getZf() * z;
-		z = v3.getXf() * x + v3.getYf() * y + v3.getZf() * z;
+		x = transform.getf(0, 0) * x + transform.getf(0, 1) * y + transform.getf(0, 2) * z;
+		y = transform.getf(1, 0) * x + transform.getf(1, 1) * y + transform.getf(1, 2) * z;
+		z = transform.getf(2, 0) * x + transform.getf(2, 1) * y + transform.getf(2, 2) * z;
 	}
 
 	@Override

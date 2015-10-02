@@ -289,15 +289,10 @@ public class Vector4f extends Vector4 {
 
 	@Override
 	public void transform(Matrix4 transform) {
-		Vector4 v1 = transform.getRow(0);
-		Vector4 v2 = transform.getRow(1);
-		Vector4 v3 = transform.getRow(2);
-		Vector4 v4 = transform.getRow(3);
-
-		x = v1.getXf() * x + v1.getYf() * y + v1.getZf() * z + v1.getWf() * w;
-		y = v2.getXf() * x + v2.getYf() * y + v2.getZf() * z + v2.getWf() * w;
-		z = v3.getXf() * x + v3.getYf() * y + v3.getZf() * z + v3.getWf() * w;
-		z = v4.getXf() * x + v4.getYf() * y + v4.getZf() * z + v4.getWf() * w;
+		x = transform.getf(0, 0) * x + transform.getf(0, 1) * y + transform.getf(0, 2) * z + transform.getf(0, 3) * w;
+		y = transform.getf(1, 0) * x + transform.getf(1, 1) * y + transform.getf(1, 2) * z + transform.getf(1, 3) * w;
+		z = transform.getf(2, 0) * x + transform.getf(2, 1) * y + transform.getf(2, 2) * z + transform.getf(2, 3) * w;
+		w = transform.getf(3, 0) * x + transform.getf(3, 1) * y + transform.getf(3, 2) * z + transform.getf(3, 3) * w;
 	}
 
 	@Override

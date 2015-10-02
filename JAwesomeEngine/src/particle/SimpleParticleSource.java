@@ -1,11 +1,15 @@
 package particle;
 
+import static org.lwjgl.opengl.GL11.glDepthMask;
+
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 import org.lwjgl.opengl.GL11;
 
+import math.QuatMath;
+import math.VecMath;
 import objects.Camera;
 import objects.ShapedObject;
 import vector.Vector2f;
@@ -17,6 +21,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 	LinkedList<Integer> freevertices, freeindices;
 	int maxParticles;
 	Camera cam;
+	// List<Particle> distanceList;
 
 	private final Vector3f normal = new Vector3f(0, 0, 1);
 	private final Vector2f topleft = new Vector2f(0, 0), bottomleft = new Vector2f(0, 1),
@@ -32,6 +37,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 		particleList = new HashMap<Integer, Particle>();
 		freevertices = new LinkedList<Integer>();
 		freeindices = new LinkedList<Integer>();
+		// distanceList = new ArrayList<Particle>();
 		maxParticles = 0;
 		setCamera(cam);
 	}
@@ -73,40 +79,56 @@ public class SimpleParticleSource extends ParticleSource3 {
 			particles.addIndices(pos, pos + 1, pos + 2, pos, pos + 2, pos + 3);
 			maxParticles++;
 		}
-		particleList.put(insertpos, new Particle(position, velocity, lifetime));
+		Particle particle = new Particle(position, velocity, lifetime, size);
+		particleList.put(insertpos, particle);
+		// distanceList.add(particle);
 	}
 
 	@Override
 	public void updateParticles(int delta) {
 		// TODO: parallel
 		float maxLifeTime = minLifeTime + diffLifeTime;
+		Vector3f right = QuatMath.transform(cam.getRotation(), new Vector3f(1, 0, 0));
+		right.normalize();
+		Vector3f up = VecMath.crossproduct(right, cam.getDirection());
+		Vector2f urA = new Vector2f(right.x + up.x, right.z + up.z);
+		Vector2f urB = new Vector2f(right.x - up.x, right.z - up.z);
 		for (int i = 0; i < maxParticles; i++) {
 			Particle p = particleList.get(i);
 			if (p != null) {
 				if (p.lifetime > delta) {
 					p.lifetime -= delta;
-					float stepX = p.velocity.x * delta;
-					float stepY = p.velocity.y * delta;
-					float stepZ = p.velocity.z * delta;
-					p.position.x += stepX;
-					p.position.y += stepY;
-					p.position.z += stepZ;
-					p.distance = Math.abs(p.position.x - cam.getTranslation().x)
-							+ Math.abs(p.position.y - cam.getTranslation().y)
-							+ Math.abs(p.position.z - cam.getTranslation().z);
+					p.position.x += p.velocity.x * delta;
+					p.position.y += p.velocity.y * delta;
+					p.position.z += p.velocity.z * delta;
+					// TODO: optimize
+					p.distance = (float) VecMath.subtraction(p.position, cam.getTranslation())
+							.length();/*
+										 * Math.abs(p.position.x -
+										 * cam.getTranslation().x) +
+										 * Math.abs(p.position.y -
+										 * cam.getTranslation().y) +
+										 * Math.abs(p.position.z -
+										 * cam.getTranslation().z);
+										 */
 					int i4 = i * 4;
-					particles.getVertex(i4).x += stepX;
-					particles.getVertex(i4).y += stepY;
-					particles.getVertex(i4).z += stepZ;
-					particles.getVertex(i4 + 1).x += stepX;
-					particles.getVertex(i4 + 1).y += stepY;
-					particles.getVertex(i4 + 1).z += stepZ;
-					particles.getVertex(i4 + 2).x += stepX;
-					particles.getVertex(i4 + 2).y += stepY;
-					particles.getVertex(i4 + 2).z += stepZ;
-					particles.getVertex(i4 + 3).x += stepX;
-					particles.getVertex(i4 + 3).y += stepY;
-					particles.getVertex(i4 + 3).z += stepZ;
+					float uy = up.y * p.size;
+					float ax = urA.x * p.size;
+					float ay = urA.y * p.size;
+					float bx = urB.x * p.size;
+					float by = urB.y * p.size;
+					particles.getVertex(i4).x = p.position.x - ax;
+					particles.getVertex(i4).y = p.position.y - uy;
+					particles.getVertex(i4).z = p.position.z - ay;
+					particles.getVertex(i4 + 1).x = p.position.x + bx;
+					particles.getVertex(i4 + 1).y = p.position.y - uy;
+					particles.getVertex(i4 + 1).z = p.position.z + by;
+					particles.getVertex(i4 + 2).x = p.position.x + ax;
+					particles.getVertex(i4 + 2).y = p.position.y + uy;
+					particles.getVertex(i4 + 2).z = p.position.z + ay;
+					particles.getVertex(i4 + 3).x = p.position.x - bx;
+					particles.getVertex(i4 + 3).y = p.position.y + uy;
+					particles.getVertex(i4 + 3).z = p.position.z - by;
 					float particleAlpha = p.lifetime / (float) maxLifeTime;
 					particles.getColor(i4).x = particleAlpha;
 					particles.getColor(i4 + 1).x = particleAlpha;
@@ -114,6 +136,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 					particles.getColor(i4 + 3).x = particleAlpha;
 				} else {
 					particleList.remove(i);
+					// distanceList.remove(p);
 					int i4 = i * 4;
 					Vector3f nullvec = new Vector3f();
 					particles.setVertex(i4 + 3, nullvec);
@@ -133,12 +156,28 @@ public class SimpleParticleSource extends ParticleSource3 {
 			}
 		}
 		// TODO: depth-sorting by insertion sort
-		for (int i = 0; i < maxParticles; i++) {
-			Particle p = particleList.get(i);
-			if (p != null) {
-
-			}
-		}
+		// TODO: insert at right position to speed up sorting for new particles
+		/*
+		 * for (int i = 0; i < distanceList.size(); i++) { Particle p =
+		 * distanceList.get(i); int i6 = i * 6; int index0 =
+		 * particles.getIndex(i6); int index1 = particles.getIndex(i6+1); int
+		 * index2 = particles.getIndex(i6+2); int index3 =
+		 * particles.getIndex(i6+3); int index4 = particles.getIndex(i6+4); int
+		 * index5 = particles.getIndex(i6+5); int j = i; while(j > 0 &&
+		 * distanceList.get(j-1).distance > p.distance) { distanceList.set(j,
+		 * distanceList.get(j-1)); int j6 = j * 6; particles.setIndex(j6,
+		 * particles.getIndex(j6-6)); particles.setIndex(j6+1,
+		 * particles.getIndex(j6-5)); particles.setIndex(j6+2,
+		 * particles.getIndex(j6-4)); particles.setIndex(j6+3,
+		 * particles.getIndex(j6-3)); particles.setIndex(j6+4,
+		 * particles.getIndex(j6-2)); particles.setIndex(j6+5,
+		 * particles.getIndex(j6-1)); j--; } distanceList.set(j, p); int j6 = j
+		 * * 6; particles.setIndex(j6, index0); particles.setIndex(j6+1,
+		 * index1); particles.setIndex(j6+2, index2); particles.setIndex(j6+3,
+		 * index3); particles.setIndex(j6+4, index4); particles.setIndex(j6+5,
+		 * index5); } /*System.out.println("--------------------------------");
+		 * for(Particle p : distanceList) System.out.println(p.distance);
+		 */
 		particles.prerender();
 	}
 
@@ -149,18 +188,21 @@ public class SimpleParticleSource extends ParticleSource3 {
 	protected class Particle {
 		Vector3f position, velocity;
 		int lifetime;
-		float distance;
+		float size, distance;
 
-		protected Particle(Vector3f position, Vector3f velocity, int lifetime) {
+		protected Particle(Vector3f position, Vector3f velocity, int lifetime, float size) {
 			this.position = position;
 			this.velocity = velocity;
 			this.lifetime = lifetime;
+			this.size = size;
 		}
 	}
 
 	@Override
 	public void render() {
+		glDepthMask(false);
 		particles.render();
+		glDepthMask(true);
 	}
 
 	@Override

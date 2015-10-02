@@ -135,7 +135,7 @@ public class Vector1d extends Vector1 {
 
 	@Override
 	public void transform(Matrix1 transform) {
-		x = transform.getRow(0).getX() * x;
+		x = transform.get(0, 0) * x;
 	}
 
 	@Override

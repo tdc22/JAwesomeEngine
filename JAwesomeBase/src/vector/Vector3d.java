@@ -237,13 +237,9 @@ public class Vector3d extends Vector3 {
 
 	@Override
 	public void transform(Matrix3 transform) {
-		Vector3 v1 = transform.getRow(0);
-		Vector3 v2 = transform.getRow(1);
-		Vector3 v3 = transform.getRow(2);
-
-		x = v1.getX() * x + v1.getY() * y + v1.getZ() * z;
-		y = v2.getX() * x + v2.getY() * y + v2.getZ() * z;
-		z = v3.getX() * x + v3.getY() * y + v3.getZ() * z;
+		x = transform.get(0, 0) * x + transform.get(0, 1) * y + transform.get(0, 2) * z;
+		y = transform.get(1, 0) * x + transform.get(1, 1) * y + transform.get(1, 2) * z;
+		z = transform.get(2, 0) * x + transform.get(2, 1) * y + transform.get(2, 2) * z;
 	}
 
 	@Override
