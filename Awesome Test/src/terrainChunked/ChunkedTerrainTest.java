@@ -49,7 +49,7 @@ public class ChunkedTerrainTest extends StandardGame {
 	public void render() {
 		debugger.update3d();
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override

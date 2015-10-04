@@ -28,12 +28,12 @@ public class MassBoxesTest extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
+		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshaderInterface);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
 
@@ -54,12 +54,17 @@ public class MassBoxesTest extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 

@@ -61,6 +61,12 @@ public class InputTest extends StandardGame {
 	}
 
 	@Override
+	public void renderInterface() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void update(int delta) {
 		if (inputs.isEventActive("MouseMoved"))
 			System.out.println("Mouse movement: " + inputs.getMouseDX() + "; " + inputs.getMouseDY());
@@ -89,5 +95,4 @@ public class InputTest extends StandardGame {
 			System.out.println("Stick Active: " + inputs.getGamepadStickValue(0, 0, "x") + "; "
 					+ inputs.getGamepadStickValue(0, 0, "y"));
 	}
-
 }

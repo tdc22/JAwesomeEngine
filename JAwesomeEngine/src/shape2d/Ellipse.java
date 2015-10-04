@@ -42,12 +42,14 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 		this.slices = slices;
 		Color color = Color.GRAY;
 
-		float anglestep = 360 / (float) slices;
-		addVertex(new Vector2f(0, 0), color, new Vector2f(0, 0));
+		float anglestep = (float) (2 * Math.PI / (float) slices);
+		addVertex(new Vector2f(0, 0), color, new Vector2f(0.5f, 0.5f));
 		for (int s = 0; s < slices; s++) {
-			Vector2f v = new Vector2f(radius * (float) (Math.sin(Math.toRadians(s * anglestep))),
-					halfheight * (float) (Math.cos(Math.toRadians(s * anglestep))));
-			addVertex(v, color, v);
+			Vector2f t = new Vector2f(Math.sin(s * anglestep), Math.cos(s * anglestep));
+			Vector2f v = new Vector2f(radius * t.x, halfheight * t.y);
+			t.x = (t.x + 1) * 0.5f;
+			t.y = 1 - (t.y + 1) * 0.5f;
+			addVertex(v, color, t);
 		}
 		for (int s = 0; s < slices - 1; s++) {
 			addTriangle(0, s + 1, s + 2);

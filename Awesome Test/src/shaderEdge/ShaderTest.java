@@ -27,12 +27,12 @@ public class ShaderTest extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
+		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshaderInterface);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		edgeshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/edgeshader.vert", "res/shaders/edgeshader.frag",
@@ -48,7 +48,7 @@ public class ShaderTest extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 		// if (!debugger.isWireframeRendered()) {
 		// edgeshader.bind();
 		// renderScene();
@@ -58,7 +58,12 @@ public class ShaderTest extends StandardGame {
 
 	@Override
 	public void render2d() {
-		render2dScene();
+
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 

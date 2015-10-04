@@ -3,7 +3,7 @@ package objects;
 import matrix.Matrix4f;
 import vector.Vector2f;
 
-public class Camera2 extends GameObject {
+public class Camera2 extends Camera {
 	public Camera2() {
 		super();
 		init(new Vector2f());

@@ -76,7 +76,12 @@ public class Test2d extends StandardGame {
 
 	@Override
 	public void render2d() {
-		render2dScene();
+		render2dLayer();
+	}
+
+	@Override
+	public void renderInterface() {
+
 	}
 
 	@Override

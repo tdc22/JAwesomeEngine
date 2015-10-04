@@ -103,12 +103,12 @@ public class Scatterplot extends StandardGame {
 
 	@Override
 	public void render() {
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+		render2dLayer();
 	}
 
 	@Override

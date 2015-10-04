@@ -130,12 +130,17 @@ public class CollisionDetectionTest2d extends StandardGame {
 
 	@Override
 	public void render2d() {
-		render2dScene();
+		render2dLayer();
 		for (ManifoldVisualization mv : manifolds) {
 			defaultshader.removeObject(mv);
 			mv.delete();
 		}
 		manifolds.clear();
+	}
+
+	@Override
+	public void renderInterface() {
+
 	}
 
 	@Override

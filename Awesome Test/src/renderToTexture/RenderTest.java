@@ -8,7 +8,8 @@ import game.StandardGame;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
-import objects.Camera;
+import objects.Camera3;
+import objects.ViewProjection;
 import shader.Shader;
 import shape.Box;
 import texture.FramebufferObject;
@@ -31,16 +32,16 @@ public class RenderTest extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
+		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshaderInterface);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
 
-		rtt = new FramebufferObject(this, 800, 800, 0, new Camera(new Vector3f(0, 2, 8), 0, 0));
+		rtt = new FramebufferObject((ViewProjection) this, 800, 800, 0, new Camera3(new Vector3f(0, 2, 8), 0, 0));
 		rtt.updateTexture();
 
 		Shader screenshader = new Shader(
@@ -57,12 +58,17 @@ public class RenderTest extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 

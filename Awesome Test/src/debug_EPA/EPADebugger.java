@@ -320,14 +320,14 @@ public class EPADebugger extends StandardGame {
 	public void render() {
 		debugger.update3d();
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 		simplex.render();
 		support1.render();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+		render2dLayer();
 		debugger.end();
 		debugger.render2d(fps, objects.size(), objects2d.size());
 	}

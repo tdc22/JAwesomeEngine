@@ -8,7 +8,8 @@ import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
-import objects.Camera;
+import objects.Camera3;
+import objects.ViewProjection;
 import shader.Shader;
 import shape.Box;
 import shape.Sphere;
@@ -39,12 +40,12 @@ public class ShaderTest4 extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
+		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshaderInterface);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		// Shader Test 1
 		Shader colorshader = new Shader(
@@ -61,7 +62,7 @@ public class ShaderTest4 extends StandardGame {
 		cubemapper = new CubeEnvironmentMap(this, s.getTranslation());
 		cubemapper.updateTexture();
 
-		rtt = new FramebufferObject(this, 1024, 1024, 0, new Camera(new Vector3f(0, 0, 12), 0, 0));
+		rtt = new FramebufferObject((ViewProjection) this, 1024, 1024, 0, new Camera3(new Vector3f(0, 0, 12), 0, 0));
 		rtt.updateTexture();
 
 		// Shader Test 2
@@ -106,12 +107,17 @@ public class ShaderTest4 extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 

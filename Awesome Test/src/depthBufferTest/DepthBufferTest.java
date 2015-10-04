@@ -64,7 +64,7 @@ public class DepthBufferTest extends StandardGame {
 	@Override
 	public void render() {
 		debugmanager.update3d();
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override

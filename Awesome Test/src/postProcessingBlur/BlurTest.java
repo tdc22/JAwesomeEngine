@@ -11,6 +11,7 @@ import input.KeyInput;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
+import shader.PostProcessingShader;
 import shader.Shader;
 import texture.Texture;
 import utils.Debugger;
@@ -30,12 +31,12 @@ public class BlurTest extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
+		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshaderInterface);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
 
 		Shader blurPPShader = new Shader(
@@ -47,7 +48,7 @@ public class BlurTest extends StandardGame {
 		blurPPShader.addArgumentName("u_shift");
 		blurPPShader.addArgument(new Vector2f(0.001f, 0));
 
-		addPostProcessingShader(blurPPShader);
+		addPostProcessingShader(new PostProcessingShader(blurPPShader, 20));
 
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
@@ -56,12 +57,17 @@ public class BlurTest extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 

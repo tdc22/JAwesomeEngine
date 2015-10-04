@@ -32,12 +32,12 @@ public class Particle2d extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
+		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshaderInterface);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
 
 		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/particle.png"));
 		Shader particleshader = new Shader(
@@ -61,7 +61,12 @@ public class Particle2d extends StandardGame {
 	@Override
 	public void render2d() {
 		debugger.begin();
-		render2dScene();
+		render2dLayer();
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 

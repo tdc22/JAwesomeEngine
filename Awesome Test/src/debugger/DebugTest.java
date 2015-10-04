@@ -28,12 +28,12 @@ public class DebugTest extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
+		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshaderInterface);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
 		// GameProfiler gp = new SimpleGameProfiler();
 		// setProfiler(gp);
 		// profiler = new Profiler(inputs, font, gp, null);
@@ -48,14 +48,18 @@ public class DebugTest extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
-		debugger.end();
 		// profiler.render2d();
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
+		debugger.end();
 	}
 
 	@Override

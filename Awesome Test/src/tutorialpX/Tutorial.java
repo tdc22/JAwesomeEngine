@@ -114,6 +114,8 @@ public class Tutorial extends StandardGame {
 				new VideoSettings());
 		display.bindMouse();
 		cam.rotateTo(225, 0);
+		
+		setRendered(true, false, true);
 
 		Cylinder player = new Cylinder(PLAYER_START_POSITION, PLAYER_RADIUS, PLAYER_HEIGHT / 2f, 50);
 		player.setRenderHints(false, false, true);
@@ -203,12 +205,12 @@ public class Tutorial extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
+		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshaderInterface);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
 
 		generateLevel();
@@ -217,7 +219,7 @@ public class Tutorial extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 		// setShadersActive(false);
 		// if (!debugger.isWireframeRendered()) {
 		// edgeshader.bind();
@@ -230,7 +232,12 @@ public class Tutorial extends StandardGame {
 
 	@Override
 	public void render2d() {
-		render2dScene();
+
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 

@@ -11,6 +11,7 @@ import input.KeyInput;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
+import shader.PostProcessingShader;
 import shader.Shader;
 import shape.Box;
 import texture.Texture;
@@ -19,7 +20,7 @@ import utils.Debugger;
 public class DepthTest extends StandardGame {
 	Debugger debugger;
 	InputEvent toggleMouseBind, toggleDepthPP;
-	Shader depthPPShader;
+	PostProcessingShader depthPPShader;
 	boolean depthPPActive;
 
 	@Override
@@ -32,26 +33,27 @@ public class DepthTest extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
+		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshaderInterface);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
-		depthPPShader = new Shader(
+		Shader depthShader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/ppDepthshader.vert", "res/shaders/ppDepthshader.frag"));
-		depthPPShader.addArgumentName("u_texture");
-		depthPPShader.addArgument(new Texture());
-		depthPPShader.addArgumentName("u_depthTexture");
-		depthPPShader.addArgument(new Texture());
-		depthPPShader.addArgumentName("u_depthMin");
-		depthPPShader.addArgument(settings.getZNear());
-		depthPPShader.addArgumentName("u_depthMax");
-		depthPPShader.addArgument(settings.getZFar());
+		depthShader.addArgumentName("u_texture");
+		depthShader.addArgument(new Texture());
+		depthShader.addArgumentName("u_depthTexture");
+		depthShader.addArgument(new Texture());
+		depthShader.addArgumentName("u_depthMin");
+		depthShader.addArgument(settings.getZNear());
+		depthShader.addArgumentName("u_depthMax");
+		depthShader.addArgument(settings.getZFar());
+
+		depthPPShader = new PostProcessingShader(depthShader, 1);
 
 		addPostProcessingShader(depthPPShader);
-		setPostProcessingIterations(1);
 		depthPPActive = true;
 
 		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
@@ -70,12 +72,17 @@ public class DepthTest extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 

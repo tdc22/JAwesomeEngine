@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import math.QuatMath;
 import math.VecMath;
-import objects.Camera;
+import objects.Camera3;
 import objects.ShapedObject;
 import vector.Vector2f;
 import vector.Vector3f;
@@ -20,7 +20,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 	HashMap<Integer, Particle> particleList;
 	LinkedList<Integer> freevertices, freeindices;
 	int maxParticles;
-	Camera cam;
+	Camera3 cam;
 	// List<Particle> distanceList;
 
 	private final Vector3f normal = new Vector3f(0, 0, 1);
@@ -29,7 +29,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 
 	public SimpleParticleSource(Vector3f center, Vector3f spawnAreaHalfSize, Vector3f minAngle, Vector3f maxAngle,
 			float minVelocity, float maxVelocity, float minSize, float maxSize, int minLifeTime, int maxLifeTime,
-			float spawnRate, Camera cam) {
+			float spawnRate, Camera3 cam) {
 		super(center, spawnAreaHalfSize, minAngle, maxAngle, minVelocity, maxVelocity, minSize, maxSize, minLifeTime,
 				maxLifeTime, spawnRate);
 		particles = new ShapedObject(center);
@@ -181,7 +181,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 		particles.prerender();
 	}
 
-	public void setCamera(Camera cam) {
+	public void setCamera(Camera3 cam) {
 		this.cam = cam;
 	}
 

@@ -53,10 +53,13 @@ public class CompoundTest2d extends StandardGame {
 		defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader2);
+		Shader defaultshaderInterface = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShaderInterface(defaultshaderInterface);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
-		physicsdebug = new PhysicsDebug2(inputs, defaultshader2, font, space);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
+		physicsdebug = new PhysicsDebug2(inputs, defaultshaderInterface, font, space);
 
 		Quad ground = new Quad(400, 550, 300, 20);
 		RigidBody2 rb = new RigidBody2(PhysicsShapeCreator.create(ground));
@@ -84,7 +87,12 @@ public class CompoundTest2d extends StandardGame {
 	@Override
 	public void render2d() {
 		debugger.begin();
-		render2dScene();
+		render2dLayer();
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 

@@ -9,7 +9,7 @@ import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import matrix.Matrix4f;
-import objects.Camera;
+import objects.Camera3;
 import shader.Shader;
 import shape.Box;
 import shape.Cylinder;
@@ -26,7 +26,7 @@ public class ShadowTest extends StandardGame {
 	Shader shadowshader;
 	boolean shadow = false;
 
-	Camera lightCam;
+	Camera3 lightCam;
 
 	@Override
 	public void init() {
@@ -41,17 +41,20 @@ public class ShadowTest extends StandardGame {
 		addShader(defaultshader);
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshader2);
+		Shader defaultshaderInterface = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShaderInterface(defaultshaderInterface);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		defaultshader.addObject(new Box(0, -1, 0, 100, 0.5f, 100));
 		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
 		defaultshader.addObject(new Sphere(2, 0, 0, 1, 36, 36));
 		defaultshader.addObject(new Cylinder(8, 0, 0, 1, 2, 36));
 
-		lightCam = new Camera(new Vector3f(0, 10, 0), 0, -80);
+		lightCam = new Camera3(new Vector3f(0, 10, 0), 0, -80);
 		depthMap = new FramebufferObject(this, 1024, 1024, 0, lightCam, true, true, true, true);
 
 		shadowshader = new Shader(
@@ -87,14 +90,19 @@ public class ShadowTest extends StandardGame {
 		debugger.begin();
 		if (shadow)
 			shadowshader.bind();
-		renderScene();
+		render3dLayer();
 		if (shadow)
 			shadowshader.unbind();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 

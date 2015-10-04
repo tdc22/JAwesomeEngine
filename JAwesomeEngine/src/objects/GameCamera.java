@@ -9,7 +9,7 @@ import utils.DefaultValues;
 import vector.Vector3d;
 import vector.Vector3f;
 
-public class GameCamera extends Camera implements Updateable {
+public class GameCamera extends Camera3 implements Updateable {
 	boolean flycam, invertX, invertY;
 	float minVAngle, maxVAngle, speed;
 

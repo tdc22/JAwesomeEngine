@@ -34,12 +34,17 @@ public class ShaderTest extends StandardGame {
 	@Override
 	public void render() {
 		shader.bind();
-		renderScene();
+		render3dLayer();
 		shader.unbind();
 	}
 
 	@Override
 	public void render2d() {
+
+	}
+
+	@Override
+	public void renderInterface() {
 
 	}
 

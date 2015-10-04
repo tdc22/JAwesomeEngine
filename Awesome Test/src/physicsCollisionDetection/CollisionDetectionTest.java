@@ -59,9 +59,9 @@ public class CollisionDetectionTest extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
+		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshaderInterface);
 
 		int shaderprogram = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
 				"res/shaders/colorshader.frag");
@@ -115,8 +115,8 @@ public class CollisionDetectionTest extends StandardGame {
 		s5.addObject(c1);
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "R", KeyInput.KEY_PRESSED));
 		giveMeData = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "P", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
@@ -126,7 +126,7 @@ public class CollisionDetectionTest extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 		for (ManifoldVisualization mv : manifolds) {
 			mv.render();
 			mv.delete();
@@ -136,6 +136,12 @@ public class CollisionDetectionTest extends StandardGame {
 
 	@Override
 	public void render2d() {
+
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 

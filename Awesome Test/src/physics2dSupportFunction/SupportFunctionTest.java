@@ -6,9 +6,6 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.InputLoader;
@@ -37,7 +34,6 @@ public class SupportFunctionTest extends StandardGame {
 	DirectionRenderer dirrenderer;
 	RigidBody2 rb2, rb3;
 	Debugger debugger;
-	InputEvent toggleMouseBind;
 
 	CompoundObject2 rb1;
 	Quad q;
@@ -57,10 +53,13 @@ public class SupportFunctionTest extends StandardGame {
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader2);
+		Shader defaultshaderInterface = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShaderInterface(defaultshaderInterface);
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
-				cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(new EPA2()), new NullResolution(),
 				new NullCorrection(), new SimpleManifoldManager<Vector2f>());
@@ -112,20 +111,22 @@ public class SupportFunctionTest extends StandardGame {
 		// addObject(new ResultTetrahedron(new ArrayList<Vector3f>() {{add(new
 		// Vector3f(2,5,2)); add(new Vector3f(8,5,2)); add(new Vector3f(2,5,8));
 		// add(new Vector3f(4,8,4)); }}));
-
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
-		inputs.addEvent(toggleMouseBind);
 	}
 
 	@Override
 	public void render() {
-		debugger.begin();
-		renderScene();
+
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+		debugger.begin();
+		render2dLayer();
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 
@@ -156,13 +157,6 @@ public class SupportFunctionTest extends StandardGame {
 		if (inputs.isEventActive("Rotate3")) {
 			rb1.rotate(-delta / 10f);
 			moved = true;
-		}
-
-		if (toggleMouseBind.isActive()) {
-			if (!display.isMouseBound())
-				display.bindMouse();
-			else
-				display.unbindMouse();
 		}
 
 		if (moved) {

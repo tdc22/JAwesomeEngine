@@ -31,12 +31,12 @@ public class Particle extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(
+		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader2);
+		addShaderInterface(defaultshaderInterface);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshader2, font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
 
 		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/particle.png"));
 		Shader particleshader = new Shader(
@@ -56,23 +56,23 @@ public class Particle extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 		debugger.end();
 	}
 
 	@Override
 	public void update(int delta) {
 		particlesource.update(delta);
-
-		if (inputs.isKeyDown("I"))
-			cam2d.translate(delta, 0);
-		if (inputs.isKeyDown("U"))
-			cam2d.translate(-delta, 0);
 
 		debugger.update(fps, 0, 0);
 		cam.update(delta);

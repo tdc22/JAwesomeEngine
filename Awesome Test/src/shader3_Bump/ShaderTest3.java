@@ -70,11 +70,16 @@ public class ShaderTest3 extends StandardGame {
 
 	@Override
 	public void render() {
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
+
+	}
+
+	@Override
+	public void renderInterface() {
 
 	}
 

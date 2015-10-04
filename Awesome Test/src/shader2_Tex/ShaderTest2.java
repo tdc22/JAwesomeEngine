@@ -48,12 +48,16 @@ public class ShaderTest2 extends StandardGame {
 
 	@Override
 	public void render() {
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
-		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void renderInterface() {
 
 	}
 

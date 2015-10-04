@@ -36,9 +36,6 @@ public class ImpulseTest2d extends StandardGame {
 		cam.rotateTo(0, 0);
 		// mouse.setGrabbed(false);
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader(defaultshader);
 		Shader defaultshader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader2);
@@ -56,12 +53,16 @@ public class ImpulseTest2d extends StandardGame {
 
 	@Override
 	public void render() {
-		renderScene();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+		render2dLayer();
+	}
+
+	@Override
+	public void renderInterface() {
+		renderInterfaceLayer();
 	}
 
 	@Override

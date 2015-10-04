@@ -28,13 +28,13 @@ public class RotationTest extends StandardGame {
 	@Override
 	public void render() {
 		debugmanager.update3d();
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
 		debugmanager.render2d(fps, objects.size());
-		render2dScene();
+		render2dLayer();
 	}
 
 	@Override

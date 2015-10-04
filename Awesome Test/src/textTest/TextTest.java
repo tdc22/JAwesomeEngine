@@ -34,12 +34,17 @@ public class TextTest extends StandardGame {
 
 	@Override
 	public void render() {
-		renderScene();
+
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+		render2dLayer();
+	}
+
+	@Override
+	public void renderInterface() {
+
 	}
 
 	@Override

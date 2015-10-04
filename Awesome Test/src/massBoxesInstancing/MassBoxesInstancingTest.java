@@ -72,12 +72,12 @@ public class MassBoxesInstancingTest extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		renderScene();
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
-		render2dScene();
+		render2dLayer();
 		debugger.end();
 	}
 

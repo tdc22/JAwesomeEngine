@@ -25,7 +25,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
 
 import java.nio.FloatBuffer;
 
-import objects.Camera;
+import objects.Camera3;
 import objects.ViewProjection;
 import utils.DefaultValues;
 import utils.ViewFrustum;
@@ -131,17 +131,17 @@ public class CubeEnvironmentMap {
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
 				(java.nio.ByteBuffer) null);
 
-		top = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 0, 90),
+		top = new FramebufferObject(render, resX, resY, 0, new Camera3(pos, 0, 90),
 				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_POSITIVE_Y));
-		bottom = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 0, -90),
+		bottom = new FramebufferObject(render, resX, resY, 0, new Camera3(pos, 0, -90),
 				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_NEGATIVE_Y));
-		left = new FramebufferObject(render, resX, resY, 0, new Camera(pos, -90, 180),
+		left = new FramebufferObject(render, resX, resY, 0, new Camera3(pos, -90, 180),
 				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_NEGATIVE_X));
-		right = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 90, 180),
+		right = new FramebufferObject(render, resX, resY, 0, new Camera3(pos, 90, 180),
 				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X));
-		front = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 180, 180),
+		front = new FramebufferObject(render, resX, resY, 0, new Camera3(pos, 180, 180),
 				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_NEGATIVE_Z));
-		back = new FramebufferObject(render, resX, resY, 0, new Camera(pos, 0, 180),
+		back = new FramebufferObject(render, resX, resY, 0, new Camera3(pos, 0, 180),
 				new Texture(cubemap.getTextureID(), GL_TEXTURE_CUBE_MAP_POSITIVE_Z));
 
 		cubemap.unbind();

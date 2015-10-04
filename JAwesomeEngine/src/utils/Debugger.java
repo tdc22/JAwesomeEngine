@@ -22,7 +22,7 @@ import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
-import objects.Camera;
+import objects.Camera3;
 import objects.ShapedObject;
 import shader.Shader;
 import vector.Vector3f;
@@ -67,13 +67,13 @@ public class Debugger {
 	boolean isFirstError = true;
 	String firsterror;
 	Text text;
-	Camera cam;
+	Camera3 cam;
 	Vector3f range;
 	private ShapedObject xaxis, yaxis, zaxis, grid, gridXZAxis;
 
 	InputEvent toggledata, toggleaxis, togglegrid, togglewireframe;
 
-	public Debugger(InputManager input, Shader shader, Shader shader2d, Font font, Camera cam) {
+	public Debugger(InputManager input, Shader shader, Shader shader2d, Font font, Camera3 cam) {
 		this.cam = cam;
 
 		text = new Text("", 10, 20, font);

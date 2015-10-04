@@ -20,6 +20,11 @@ public class DisplayTest extends StandardGame {
 	}
 
 	@Override
+	public void renderInterface() {
+
+	}
+
+	@Override
 	public void update(int delta) {
 
 	}
