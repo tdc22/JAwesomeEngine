@@ -3,6 +3,7 @@ package space;
 import integration.IntegrationSolver;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -90,7 +91,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		objects = new ArrayList<RigidBody<L, A1, A2, A3>>();
 		compoundObjects = new ArrayList<CompoundObject<L, A2>>();
 		overlaps = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
-		collisionfilter = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
+		collisionfilter = new HashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
 		constraints = new ArrayList<Constraint<L, A1, A2, A3>>();
 		profiler = new NullPhysicsProfiler();
 		broadphase.addListener(new CompoundListener());
