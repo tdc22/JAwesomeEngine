@@ -37,7 +37,6 @@ import matrix.Matrix4f;
 import objects.RenderableObject;
 import objects.ViewProjection;
 import texture.Texture;
-import utils.Pair;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
@@ -67,18 +66,6 @@ public class Shader implements ViewProjection {
 		uniformarguments = new ArrayList<Object>();
 		uniformnames = new HashMap<String, Integer>();
 		addArguments(argumentnames, arguments);
-		objects = new ArrayList<RenderableObject>();
-	}
-
-	@SafeVarargs
-	public Shader(int shaderProgram, Pair<String, Object>... arguments) {
-		this.shaderProgram = shaderProgram;
-		uniformpositions = new ArrayList<Integer>();
-		uniformtypes = new ArrayList<Integer>();
-		uniformarguments = new ArrayList<Object>();
-		uniformnames = new HashMap<String, Integer>();
-		for (Pair<String, Object> a : arguments)
-			addArgument(a.getFirst(), a.getSecond());
 		objects = new ArrayList<RenderableObject>();
 	}
 

@@ -105,9 +105,9 @@ public class OBJLoader {
 				} else {
 					System.err.println("Number of vertices per face must be 3 or 4");
 				}
-			} else
-				if (line.startsWith("v ") || line.startsWith("vn ") || line.startsWith("#") || line.startsWith("mtllib")
-						|| line.startsWith("o ") || line.startsWith("s ") || line.startsWith("usemtl")) {
+			} else if (line.startsWith("v ") || line.startsWith("vn ") || line.startsWith("#")
+					|| line.startsWith("mtllib") || line.startsWith("o ") || line.startsWith("s ")
+					|| line.startsWith("usemtl")) {
 				writer.write(line);
 				writer.newLine();
 			}

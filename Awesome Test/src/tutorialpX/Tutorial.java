@@ -114,7 +114,7 @@ public class Tutorial extends StandardGame {
 				new VideoSettings());
 		display.bindMouse();
 		cam.rotateTo(225, 0);
-		
+
 		setRendered(true, false, true);
 
 		Cylinder player = new Cylinder(PLAYER_START_POSITION, PLAYER_RADIUS, PLAYER_HEIGHT / 2f, 50);
