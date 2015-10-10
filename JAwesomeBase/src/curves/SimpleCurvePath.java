@@ -5,12 +5,12 @@ import java.util.List;
 
 import vector.Vector;
 
-public class LinearCurvePath<L extends Vector> {
+public class SimpleCurvePath<L extends Vector> {
 	List<Curve<L>> curves;
 	int numBezierCurves = 0;
 	float oneOverNum = 0;
 
-	public LinearCurvePath() {
+	public SimpleCurvePath() {
 		curves = new ArrayList<Curve<L>>();
 	}
 

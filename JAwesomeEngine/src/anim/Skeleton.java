@@ -5,16 +5,18 @@ import java.util.List;
 
 import objects.BaseObject;
 import objects.Updateable;
+import quaternion.Quaternionf;
+import quaternion.Rotation;
 import vector.Vector;
 import vector.Vector3f;
 
-public abstract class Skeleton<L extends Vector> implements Updateable {
+public abstract class Skeleton<L extends Vector, A extends Rotation> implements Updateable {
 	List<BaseObject> bodyparts;
 	BaseObject attachedTo;
-	Animation<L> animation;
+	Animation<L, A> animation;
 	float animationTimer = 0;
 
-	public Skeleton(Animation<L> animation, BaseObject... bodypart) {
+	public Skeleton(Animation<L, A> animation, BaseObject... bodypart) {
 		bodyparts = new ArrayList<BaseObject>();
 		for (BaseObject part : bodypart) {
 			bodyparts.add(part);
@@ -22,7 +24,7 @@ public abstract class Skeleton<L extends Vector> implements Updateable {
 		setAnimation(animation);
 	}
 
-	public void setAnimation(Animation<L> animation) {
+	public void setAnimation(Animation<L, A> animation) {
 		this.animation = animation;
 		animationTimer = 0;
 	}
@@ -41,11 +43,14 @@ public abstract class Skeleton<L extends Vector> implements Updateable {
 		if (attachedTo != null) {
 			for (BaseObject part : bodyparts) {
 				part.translateTo(attachedTo.getTranslation());
+				part.rotateTo(attachedTo.getRotation());
 			}
 		} else {
-			Vector3f nullvec = new Vector3f();
+			Vector3f unitvec = new Vector3f();
+			Quaternionf unitquat = new Quaternionf();
 			for (BaseObject part : bodyparts) {
-				part.translateTo(nullvec);
+				part.translateTo(unitvec);
+				part.rotateTo(unitquat);
 			}
 		}
 

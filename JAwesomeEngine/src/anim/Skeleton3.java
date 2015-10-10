@@ -1,11 +1,12 @@
 package anim;
 
 import objects.BaseObject;
+import quaternion.Quaternionf;
 import vector.Vector3f;
 
-public class Skeleton3 extends Skeleton<Vector3f> {
+public class Skeleton3 extends Skeleton<Vector3f, Quaternionf> {
 
-	public Skeleton3(Animation<Vector3f> animation, BaseObject... bodypart) {
+	public Skeleton3(Animation<Vector3f, Quaternionf> animation, BaseObject... bodypart) {
 		super(animation, bodypart);
 	}
 
@@ -13,7 +14,8 @@ public class Skeleton3 extends Skeleton<Vector3f> {
 	protected void updateAnimation(float animationTimer) {
 		for (int i = 0; i < bodyparts.size(); i++) {
 			BaseObject part = bodyparts.get(i);
-			part.translate(animation.getAnimationPath(i).getPoint(animationTimer));
+			part.translate(animation.getAnimationTranslationPath(i).getPoint(animationTimer));
+			part.rotate(animation.getAnimationRotationPath(i).getRotation(animationTimer));
 		}
 	}
 

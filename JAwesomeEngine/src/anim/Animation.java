@@ -3,16 +3,20 @@ package anim;
 import java.util.ArrayList;
 import java.util.List;
 
-import curves.LinearCurvePath;
+import curves.SimpleAngularCurvePath;
+import curves.SimpleCurvePath;
+import quaternion.Rotation;
 import vector.Vector;
 
-public class Animation<L extends Vector> {
-	List<LinearCurvePath<L>> animationPaths;
+public class Animation<L extends Vector, A extends Rotation> {
+	List<SimpleCurvePath<L>> animationTranslationPaths;
+	List<SimpleAngularCurvePath<A>> animationRotationPaths;
 	boolean loops = true;
 	float speed = 0.001f;
 
 	public Animation() {
-		animationPaths = new ArrayList<LinearCurvePath<L>>();
+		animationTranslationPaths = new ArrayList<SimpleCurvePath<L>>();
+		animationRotationPaths = new ArrayList<SimpleAngularCurvePath<A>>();
 	}
 
 	public void setSpeed(float speed) {
@@ -31,11 +35,24 @@ public class Animation<L extends Vector> {
 		return loops;
 	}
 
-	public void addAnimationPath(LinearCurvePath<L> path) {
-		animationPaths.add(path);
+	public void addAnimationPath(SimpleCurvePath<L> path, SimpleAngularCurvePath<A> angularpath) {
+		animationTranslationPaths.add(path);
+		animationRotationPaths.add(angularpath);
 	}
 
-	public LinearCurvePath<L> getAnimationPath(int id) {
-		return animationPaths.get(id);
+	public void addAnimationTranslationPath(SimpleCurvePath<L> path) {
+		animationTranslationPaths.add(path);
+	}
+
+	public void addAnimationRotationPath(SimpleAngularCurvePath<A> angularpath) {
+		animationRotationPaths.add(angularpath);
+	}
+
+	public SimpleCurvePath<L> getAnimationTranslationPath(int id) {
+		return animationTranslationPaths.get(id);
+	}
+
+	public SimpleAngularCurvePath<A> getAnimationRotationPath(int id) {
+		return animationRotationPaths.get(id);
 	}
 }

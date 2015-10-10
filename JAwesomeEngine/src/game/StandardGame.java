@@ -64,7 +64,7 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 	public Display display;
 	public GameCamera cam;
 	public Camera2 cam2d;
-	protected FloatBuffer projectionMatrix, projectionMatrix2;
+	protected FloatBuffer projectionMatrix, projectionMatrix2, projectionMatrixInterface;
 	protected GameProfiler profiler;
 
 	public InputManager inputs;
@@ -86,7 +86,7 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 	}
 
 	public void addShaderInterface(Shader s) {
-		s.addArgument("projection", projectionMatrix2);
+		s.addArgument("projection", projectionMatrixInterface);
 		s.addArgument("view", new Matrix4f());
 		layerInterface.shader.add(s);
 	}
@@ -113,12 +113,21 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		layer2d.postProcessing.add(shader);
 	}
 
+	public void addPostProcessingShaderInterface(PostProcessingShader shader) {
+		shader.getShader().addObject(screen);
+		layerInterface.postProcessing.add(shader);
+	}
+
 	public void removePostProcessingShader(PostProcessingShader shader) {
 		layer3d.postProcessing.remove(shader);
 	}
 
 	public void removePostProcessingShader2d(PostProcessingShader shader) {
 		layer2d.postProcessing.remove(shader);
+	}
+
+	public void removePostProcessingShaderInterface(PostProcessingShader shader) {
+		layerInterface.postProcessing.remove(shader);
 	}
 
 	public void setRendered(boolean render3d, boolean render2d, boolean renderInterface) {
@@ -230,6 +239,8 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 				settings.getResolutionX() / (float) settings.getResolutionY(), settings.getZNear(),
 				settings.getZFar()));
 		projectionMatrix2 = storeMatrix(
+				ProjectionHelper.ortho(0, settings.getResolutionX(), settings.getResolutionY(), 0, -1, 1));
+		projectionMatrixInterface = storeMatrix(
 				ProjectionHelper.ortho(0, settings.getResolutionX(), settings.getResolutionY(), 0, -1, 1));
 	}
 

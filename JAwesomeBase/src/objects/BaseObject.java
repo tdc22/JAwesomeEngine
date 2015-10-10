@@ -1,6 +1,7 @@
 package objects;
 
 import matrix.Matrix4f;
+import quaternion.Complex;
 import quaternion.Quaternion;
 import quaternion.Quaternionf;
 import vector.Vector1;
@@ -180,6 +181,17 @@ public class BaseObject {
 	}
 
 	/**
+	 * Rotates the object by a complex number.
+	 * 
+	 * @param comp
+	 *            complex number to rotate by
+	 */
+	public void rotate(Complex comp) {
+		// TODO: improve (optimize)
+		rotation.rotate(new Quaternionf(comp.getRealf(), 0, 0, comp.getImaginaryf()));
+	}
+
+	/**
 	 * Rotates the object by a vector.
 	 * 
 	 * @param rot
@@ -240,8 +252,7 @@ public class BaseObject {
 	 * @see BaseObject#rotateTo(Vector1)
 	 */
 	public void rotateTo(Quaternion rot) {
-		rotation.setIdentity();
-		rotate(rot);
+		rotation.set(rot);
 	}
 
 	/**
