@@ -21,6 +21,7 @@ import narrowphase.GJK2;
 import objects.CompoundObject2;
 import objects.RigidBody;
 import objects.RigidBody2;
+import objects.ShapedObject2;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
 import positionalcorrection.NullCorrection;
@@ -46,7 +47,6 @@ public class CollisionDetectionTest2d extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
-		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
@@ -116,7 +116,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 		rb6.addCollisionShape(PhysicsShapeCreator.create(c));
 		rb6.setMass(1f);
 		rb6.setInertia(new Matrix1f(1));
-		space.addCompoundObject(rb6, q, c);
+		space.addCompoundObject(rb6, new ShapedObject2[] { q, c });
 		s6.addObject(q);
 		s6.addObject(c);
 
@@ -176,8 +176,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 		s5.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s6.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 
-		Set<Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>>> overlaps = space.getBroadphase()
-				.getOverlaps();
+		Set<Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>>> overlaps = space.getOverlaps();
 		for (Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>> o : overlaps) {
 			if (o.contains(rb1))
 				s1.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
@@ -197,7 +196,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 			ManifoldVisualization mv = new ManifoldVisualization(cm);
 			defaultshader.addObject(mv);
 			manifolds.add(mv);
-			System.out.println(cm.getCollisionNormal() + "; " + cm.getObjects().getFirst().getTranslation2() + "; "
+			System.out.println(cm.getCollisionNormal() + "; " + cm.getObjects().getFirst().getTranslation() + "; "
 					+ cm.getObjects().getSecond());
 			Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>> o = cm.getObjects();
 			if (o.contains(rb1))

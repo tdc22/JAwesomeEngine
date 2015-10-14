@@ -6,16 +6,17 @@ import java.util.List;
 
 import math.QuatMath;
 import objects.CollisionShape;
-import objects.ShapedObject;
+import objects.ShapedObject3;
+import quaternion.Quaternionf;
 import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class SupportObject extends ShapedObject {
-	ShapedObject so;
-	CollisionShape<Vector3f, ?, ?> rb;
+public class SupportObject extends ShapedObject3 {
+	ShapedObject3 so;
+	CollisionShape<Vector3f, Quaternionf, ?> rb;
 
-	public SupportObject(ShapedObject s, CollisionShape<Vector3f, ?, ?> r) {
+	public SupportObject(ShapedObject3 s, CollisionShape<Vector3f, Quaternionf, ?> r) {
 		rendermode = GLConstants.POINTS;
 		so = s;
 		rb = r;

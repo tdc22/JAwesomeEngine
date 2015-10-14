@@ -9,7 +9,6 @@ import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import objects.Camera3;
-import objects.ViewProjection;
 import shader.Shader;
 import shape.Box;
 import texture.FramebufferObject;
@@ -41,7 +40,7 @@ public class RenderTest extends StandardGame {
 
 		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
 
-		rtt = new FramebufferObject((ViewProjection) this, 800, 800, 0, new Camera3(new Vector3f(0, 2, 8), 0, 0));
+		rtt = new FramebufferObject(layer3d, 800, 800, 0, new Camera3(new Vector3f(0, 2, 8), 0, 0));
 		rtt.updateTexture();
 
 		Shader screenshader = new Shader(

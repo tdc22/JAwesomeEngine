@@ -18,13 +18,13 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 	A1 angularfactor, angularvelocity, torqueaccumulator;
 	A3 invinertia;
 
-	public RigidBody() {
-		super();
+	public RigidBody(L rotationcenter, L translation, A2 rotation, L scale) {
+		super(rotationcenter, translation, rotation, scale);
 		init();
 	}
 
-	public RigidBody(CollisionShape<L, A2, A3> cs) {
-		super(cs);
+	public RigidBody(CollisionShape<L, A2, A3> cs, L rotationcenter, L translation, A2 rotation, L scale) {
+		super(cs, rotationcenter, translation, rotation, scale);
 		init();
 	}
 
@@ -113,7 +113,7 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 		invMass = 0;
 		restitution = 0.2f;// 0.5f;
 		staticfriction = 0.3f;
-		// Dynamic and rolling frictin in RigidBody2 and RigidBody3
+		// Dynamic and rolling friction in RigidBody2 and RigidBody3
 		lineardamping = 0.05f;
 		angulardamping = 0.05f;
 		/*

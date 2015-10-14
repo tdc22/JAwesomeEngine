@@ -1,6 +1,6 @@
 package shapedata2d;
 
-import objects.DataObject;
+import objects.DataObject2;
 import vector.Vector2f;
 
 /**
@@ -10,7 +10,7 @@ import vector.Vector2f;
  * 
  */
 
-public class CircleData extends DataObject implements CircleStructure {
+public class CircleData extends DataObject2 implements CircleStructure {
 	float radius;
 
 	public CircleData(float x, float y, float radius) {

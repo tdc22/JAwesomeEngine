@@ -69,12 +69,6 @@ public abstract class Matrix implements Rotation {
 	public abstract int getSizeY();
 
 	/**
-	 * Inverts the matrix.
-	 */
-	@Override
-	public abstract void invert();
-
-	/**
 	 * Loads the matrix from a FloatBuffer.
 	 * 
 	 * @param buf
@@ -137,11 +131,6 @@ public abstract class Matrix implements Rotation {
 	 * @see Matrix#setArray(double[][])
 	 */
 	public abstract void setArray(float[][] array);
-
-	/**
-	 * Sets the matrix to the identity.
-	 */
-	public abstract void setIdentity();
 
 	/**
 	 * Stores the matrix in a FloatBuffer.

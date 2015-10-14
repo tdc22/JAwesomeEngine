@@ -1,5 +1,6 @@
 package shapedata;
 
+import objects.ShapeStructure;
 import vector.Vector3f;
 
 /**
@@ -9,7 +10,7 @@ import vector.Vector3f;
  * 
  */
 
-public interface BoxStructure extends ShapeStructure {
+public interface BoxStructure extends ShapeStructure<Vector3f> {
 	/**
 	 * Gets the half size vector of the box.
 	 * 

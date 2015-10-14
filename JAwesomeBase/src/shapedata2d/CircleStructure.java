@@ -1,5 +1,8 @@
 package shapedata2d;
 
+import objects.ShapeStructure;
+import vector.Vector2f;
+
 /**
  * Class structure for circles.
  * 
@@ -7,7 +10,7 @@ package shapedata2d;
  * 
  */
 
-public interface CircleStructure extends ShapeStructure2 {
+public interface CircleStructure extends ShapeStructure<Vector2f> {
 	/**
 	 * Gets the radius of the circle.
 	 * 

@@ -6,7 +6,6 @@ import java.util.LinkedList;
 
 import org.lwjgl.opengl.GL11;
 
-import objects.ShapedObject;
 import objects.ShapedObject2;
 import vector.Vector1f;
 import vector.Vector2f;
@@ -146,7 +145,7 @@ public class SimpleParticleSource2 extends ParticleSource2 {
 		return particles.getMatrixBuffer();
 	}
 
-	public ShapedObject getObject() {
+	public ShapedObject2 getObject() {
 		return particles;
 	}
 }

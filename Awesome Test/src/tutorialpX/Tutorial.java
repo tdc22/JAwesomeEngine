@@ -253,7 +253,7 @@ public class Tutorial extends StandardGame {
 			mousedx = -inputs.getMouseDX() * mousesensitivity;
 			float mousedy = -inputs.getMouseDY() * mousesensitivity;
 			cam.rotate(mousedx, mousedy);
-			playerbody.rotate(new Vector3f(0, mousedx, 0));
+			playerbody.rotate(0, mousedx, 0);
 		}
 
 		Vector3f move = new Vector3f();

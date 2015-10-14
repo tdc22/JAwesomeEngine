@@ -15,6 +15,7 @@ import narrowphase.EPA2;
 import narrowphase.GJK2;
 import objects.CompoundObject2;
 import objects.RigidBody2;
+import objects.ShapedObject2;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
 import positionalcorrection.NullCorrection;
@@ -72,7 +73,7 @@ public class SupportFunctionTest extends StandardGame {
 		rb1 = new CompoundObject2();
 		rb1.addCollisionShape(PhysicsShapeCreator.create(q));
 		rb1.addCollisionShape(PhysicsShapeCreator.create(c));
-		space.addCompoundObject(rb1, q, c);
+		space.addCompoundObject(rb1, new ShapedObject2[] { q, c });
 		// addObject(b1);
 
 		q2 = new Quad(400, 200, 25, 25);
@@ -169,7 +170,7 @@ public class SupportFunctionTest extends StandardGame {
 			dirrenderer.setDirections(support2.updateShape());
 		}
 
-		System.out.println(rb1.getInverseRotation() + "; " + rb1.getCollisionShapes().get(0).getInverseRotation());
+		System.out.println(rb1.getRotation() + "; " + rb1.getInverseRotation());
 		// if(space.testlist.size() > 0) {
 		// for(List<Vector2f> v : space.testlist) {
 		// addObject(new ResultTetrahedron(v));

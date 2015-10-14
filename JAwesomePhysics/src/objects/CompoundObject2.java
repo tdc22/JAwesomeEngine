@@ -84,7 +84,7 @@ public class CompoundObject2 extends RigidBody2 implements
 	}
 
 	public void addCollisionShape(CollisionShape2 collisionshape) {
-		addCollisionShape(collisionshape, collisionshape.getTranslation2());
+		addCollisionShape(collisionshape, new Vector2f(collisionshape.getTranslation()));
 	}
 
 	public void addCollisionShape(CollisionShape2 collisionshape,
@@ -95,7 +95,7 @@ public class CompoundObject2 extends RigidBody2 implements
 		localtranslations.add(translation);
 		updateCenterAndAABB();
 
-		collisionshape.translateTo(VecMath.addition(getTranslation2(),
+		collisionshape.translateTo(VecMath.addition(getTranslation(),
 				translation));
 		collisionshape.setRotation(getRotation());
 		collisionshape.invrotation = this.invrotation;
@@ -106,8 +106,8 @@ public class CompoundObject2 extends RigidBody2 implements
 	public void updateTransformations() {
 		for (int i = 0; i < collisionshapes.size(); i++) {
 			collisionshapes.get(i).translateTo(
-					VecMath.addition(getTranslation2(), ComplexMath.transform(
-							this.getRotation().get2dRotationf(),
+					VecMath.addition(getTranslation(), ComplexMath.transform(
+							this.getRotation(),
 							localtranslations.get(i))));
 		}
 	}
@@ -124,7 +124,7 @@ public class CompoundObject2 extends RigidBody2 implements
 		Vector2f max = new Vector2f(-Float.MAX_VALUE, -Float.MAX_VALUE);
 		for (int i = 0; i < collisionshapes.size(); i++) {
 			CollisionShape<Vector2f, ?, ?> cs = collisionshapes.get(i);
-			Vector2f trans = cs.getTranslation2();
+			Vector2f trans = cs.getTranslation();
 			Vector2f csmin = VecMath.addition(cs.getAABB().getMin(), trans);
 			Vector2f csmax = VecMath.addition(cs.getAABB().getMax(), trans);
 			if (csmin.x < min.x)

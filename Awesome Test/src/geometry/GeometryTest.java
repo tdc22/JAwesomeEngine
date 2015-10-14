@@ -20,6 +20,7 @@ public class GeometryTest extends StandardGame {
 
 	@Override
 	public void init() {
+		useFBO = false;
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 		display.bindMouse();
 		cam.setFlyCam(true);

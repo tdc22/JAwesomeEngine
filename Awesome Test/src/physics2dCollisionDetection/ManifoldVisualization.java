@@ -11,10 +11,10 @@ import vector.Vector2f;
 public class ManifoldVisualization extends ShapedObject2 {
 	ManifoldVisualization(CollisionManifold<Vector2f> cm) {
 		setRenderMode(GLConstants.LINES);
-		Vector2f ca = VecMath.subtraction(cm.getContactPointA(), cm.getObjects().getFirst().getTranslation2());
-		Vector2f cb = VecMath.subtraction(cm.getContactPointB(), cm.getObjects().getSecond().getTranslation2());
-		Vector2f center1 = VecMath.addition(cm.getObjects().getFirst().getTranslation2(), ca);
-		Vector2f center2 = VecMath.addition(cm.getObjects().getSecond().getTranslation2(), cb);
+		Vector2f ca = VecMath.subtraction(cm.getContactPointA(), cm.getObjects().getFirst().getTranslation());
+		Vector2f cb = VecMath.subtraction(cm.getContactPointB(), cm.getObjects().getSecond().getTranslation());
+		Vector2f center1 = VecMath.addition(cm.getObjects().getFirst().getTranslation(), ca);
+		Vector2f center2 = VecMath.addition(cm.getObjects().getSecond().getTranslation(), cb);
 		Vector2f normal1 = VecMath.subtraction(center1,
 				VecMath.scale(cm.getCollisionNormal(), cm.getPenetrationDepth()));
 		Vector2f normal2 = VecMath.addition(center2, VecMath.scale(cm.getCollisionNormal(), cm.getPenetrationDepth()));

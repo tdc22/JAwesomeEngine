@@ -3,12 +3,12 @@ package shape;
 import java.awt.Color;
 
 import math.VecMath;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import shapedata.CylinderStructure;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class Cylinder extends ShapedObject implements CylinderStructure {
+public class Cylinder extends ShapedObject3 implements CylinderStructure {
 	float radius, halfheight;
 	int slices;
 

@@ -11,11 +11,11 @@ import input.KeyInput;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import math.FastMath;
-import objects.RenderedObject;
+import objects.ShapedObject3;
 import shader.Shader;
 
 public class TransRot extends StandardGame {
-	RenderedObject rabbit1, rabbit2;
+	ShapedObject3 rabbit1, rabbit2;
 	float r2y;
 	InputEvent toggleMouseBind;
 

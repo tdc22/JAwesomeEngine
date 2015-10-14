@@ -51,113 +51,77 @@ import static org.lwjgl.opengl.GL32.glTexImage2DMultisample;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import game.Layer;
 import objects.Camera;
-import objects.ViewProjection;
-import objects.ViewProjection2;
 import utils.DefaultValues;
 import utils.ViewFrustum;
 
 public class FramebufferObject {
-	ViewProjection render;
-	ViewProjection2 render2d;
+	Layer render;
 	int frameBufferID, colorRBID, depthRBID, samples;
 	Texture colorTexture, depthTexture;
 	int width, height;
 	IntBuffer imageData;
-	FloatBuffer viewTemp, projectionTemp, viewTemp2, projectionTemp2;
+	FloatBuffer viewTemp, projectionTemp;
 	boolean multisampled, useCam, useFrustum, renderColor, renderDepth, renderColorToTexture, renderDepthToTexture,
 			render3, render2;
 	Camera cam;
 	ViewFrustum frustum;
 
-	public FramebufferObject(ViewProjection render) {
-		init(render, null, DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_X,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_Y, DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null,
-				null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
-				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
-	}
-
-	public FramebufferObject(ViewProjection2 render2) {
-		init(null, render2, DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_X,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_Y, DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null,
-				null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
-				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
-	}
-
-	public FramebufferObject(ViewProjection render, int width, int height) {
-		init(render, null, width, height, DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null, null,
+	public FramebufferObject(Layer render) {
+		init(render, DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_X, DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_Y,
+				DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
 				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(ViewProjection2 render2, int width, int height) {
-		init(null, render2, width, height, DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null, null,
+	public FramebufferObject(Layer render, int width, int height) {
+		init(render, width, height, DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
 				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(ViewProjection render, int width, int height, int samples) {
-		init(render, null, width, height, samples, null, null, null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
+	public FramebufferObject(Layer render, int width, int height, int samples) {
+		init(render, width, height, samples, null, null, null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(ViewProjection2 render2, int width, int height, int samples) {
-		init(null, render2, width, height, samples, null, null, null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
+	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam) {
+		init(render, width, height, samples, cam, null, null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(ViewProjection render, int width, int height, int samples, Camera cam) {
-		init(render, null, width, height, samples, cam, null, null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
-	}
-
-	public FramebufferObject(ViewProjection2 render2, int width, int height, int samples, Camera cam) {
-		init(null, render2, width, height, samples, cam, null, null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
-	}
-
-	public FramebufferObject(ViewProjection render, int width, int height, int samples, Camera cam, boolean renderColor,
+	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam, boolean renderColor,
 			boolean renderDepth) {
-		init(render, null, width, height, samples, cam, null, null, renderColor, renderDepth,
+		init(render, width, height, samples, cam, null, null, renderColor, renderDepth,
 				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(ViewProjection render, int width, int height, int samples, Camera cam, boolean renderColor,
+	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam, boolean renderColor,
 			boolean renderDepth, boolean renderColorToTexture, boolean renderDepthToTexture) {
-		init(render, null, width, height, samples, cam, null, null, renderColor, renderDepth, renderColorToTexture,
+		init(render, width, height, samples, cam, null, null, renderColor, renderDepth, renderColorToTexture,
 				renderDepthToTexture);
 	}
 
-	public FramebufferObject(ViewProjection render, int width, int height, int samples, Camera cam,
-			Texture colorbuffer) {
-		init(render, null, width, height, samples, cam, colorbuffer, null,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
-				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
-	}
-
-	public FramebufferObject(ViewProjection render, int width, int height, int samples, Camera cam,
-			ViewFrustum frustum) {
-		init(render, null, width, height, samples, cam, null, frustum, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
+	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam, Texture colorbuffer) {
+		init(render, width, height, samples, cam, colorbuffer, null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
 				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(ViewProjection render, int width, int height, int samples, Camera cam, Texture colorbuffer,
-			ViewFrustum frustum) {
-		init(render, null, width, height, samples, cam, colorbuffer, frustum,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
-				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam, ViewFrustum frustum) {
+		init(render, width, height, samples, cam, null, frustum, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
-	public FramebufferObject(ViewProjection2 render, int width, int height, int samples, Camera cam,
-			Texture colorbuffer, ViewFrustum frustum) {
-		init(null, render, width, height, samples, cam, colorbuffer, frustum,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
-				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam, Texture colorbuffer,
+			ViewFrustum frustum) {
+		init(render, width, height, samples, cam, colorbuffer, frustum, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
 	}
 
 	public void begin() {
@@ -178,19 +142,6 @@ public class FramebufferObject {
 				render.setProjectionMatrix(frustum.getMatrixBuffer());
 			}
 		}
-		if (render2) {
-			if (useCam && useFrustum) {
-				viewTemp2 = render2d.getViewMatrixBuffer2();
-				projectionTemp2 = render2d.getProjectionMatrixBuffer2();
-				render2d.setViewProjectionMatrix2(cam.getMatrixBuffer(), frustum.getMatrixBuffer());
-			} else if (useCam) {
-				viewTemp2 = render2d.getViewMatrixBuffer2();
-				render2d.setViewMatrix2(cam.getMatrixBuffer());
-			} else if (useFrustum) {
-				projectionTemp2 = render2d.getProjectionMatrixBuffer2();
-				render2d.setProjectionMatrix2(frustum.getMatrixBuffer());
-			}
-		}
 
 		bind();
 		clear();
@@ -199,15 +150,6 @@ public class FramebufferObject {
 	public void end() {
 		unbind();
 
-		if (render2) {
-			if (useCam && useFrustum) {
-				render2d.setViewProjectionMatrix2(viewTemp2, projectionTemp2);
-			} else if (useCam) {
-				render2d.setViewMatrix2(viewTemp2);
-			} else if (useFrustum) {
-				render2d.setProjectionMatrix2(projectionTemp2);
-			}
-		}
 		if (render3) {
 			if (useCam && useFrustum) {
 				render.setViewProjectionMatrix(viewTemp, projectionTemp);
@@ -291,9 +233,9 @@ public class FramebufferObject {
 		return width;
 	}
 
-	private void init(ViewProjection render, ViewProjection2 render2d, int width, int height, int samples,
-			Camera camera, Texture colorbuffer, ViewFrustum frustum, boolean renderColor, boolean renderDepth,
-			boolean renderColorToTexture, boolean renderDepthToTexture) {
+	private void init(Layer render, int width, int height, int samples, Camera camera, Texture colorbuffer,
+			ViewFrustum frustum, boolean renderColor, boolean renderDepth, boolean renderColorToTexture,
+			boolean renderDepthToTexture) {
 		this.render = render;
 		this.width = width;
 		this.height = height;
@@ -302,11 +244,6 @@ public class FramebufferObject {
 		this.renderDepth = renderDepth;
 		this.renderColorToTexture = renderColorToTexture;
 		this.renderDepthToTexture = renderDepthToTexture;
-
-		if (render3 = (render != null))
-			this.render = render;
-		if (render2 = (render2d != null))
-			this.render2d = render2d;
 
 		if (useCam = (camera != null))
 			this.cam = camera;
@@ -457,10 +394,7 @@ public class FramebufferObject {
 
 	public void updateTexture() {
 		begin();
-		if (render3)
-			render.render();
-		if (render2)
-			render2d.render2d();
+		render.render();
 		end();
 	}
 }

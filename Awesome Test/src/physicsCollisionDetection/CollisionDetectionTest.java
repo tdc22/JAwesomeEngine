@@ -41,7 +41,7 @@ public class CollisionDetectionTest extends StandardGame {
 	Box b1, b2, b3;
 	Sphere sp1;
 	Cylinder c1;
-	Shader s1, s2, s3, s4, s5;
+	Shader defaultshader, s1, s2, s3, s4, s5;
 	RigidBody3 rb1, rb2, rb3, rb4, rb5;
 	Debugger debugger;
 	List<ManifoldVisualization> manifolds;
@@ -56,7 +56,7 @@ public class CollisionDetectionTest extends StandardGame {
 		cam.rotateTo(0, 0);
 		// mouse.setGrabbed(false);
 
-		Shader defaultshader = new Shader(
+		defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
@@ -128,7 +128,7 @@ public class CollisionDetectionTest extends StandardGame {
 		debugger.begin();
 		render3dLayer();
 		for (ManifoldVisualization mv : manifolds) {
-			mv.render();
+			defaultshader.removeObject(mv);
 			mv.delete();
 		}
 		manifolds.clear();
@@ -190,8 +190,7 @@ public class CollisionDetectionTest extends StandardGame {
 		s4.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s5.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 
-		Set<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>> overlaps = space.getBroadphase()
-				.getOverlaps();
+		Set<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>> overlaps = space.getOverlaps();
 		for (Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>> o : overlaps) {
 			if (o.contains(rb1))
 				s1.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
@@ -206,7 +205,9 @@ public class CollisionDetectionTest extends StandardGame {
 		}
 
 		for (CollisionManifold<Vector3f> cm : space.getCollisionManifolds()) {
-			manifolds.add(new ManifoldVisualization(cm));
+			ManifoldVisualization mv = new ManifoldVisualization(cm);
+			defaultshader.addObject(mv);
+			manifolds.add(mv);
 			Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>> o = cm.getObjects();
 			if (o.contains(rb1))
 				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
@@ -219,7 +220,6 @@ public class CollisionDetectionTest extends StandardGame {
 			if (o.contains(rb5))
 				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 		}
-		System.out.println(rb1.getTranslation() + "; " + rb1.getRotation() + "; ");
 
 		debugger.update(fps, 0, 0);
 		cam.update(delta);

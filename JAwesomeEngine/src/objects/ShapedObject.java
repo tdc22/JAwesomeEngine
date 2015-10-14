@@ -25,20 +25,20 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
-import math.VecMath;
-import utils.GLConstants;
+import quaternion.Rotation;
+import vector.Vector;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class ShapedObject extends RenderedObject {
+public abstract class ShapedObject<L extends Vector, A extends Rotation> extends RenderedObject<L, A> {
 	protected static final int VERTEX_POSITION = 0;
 	protected static final int COLOR_POSITION = 1;
 	protected static final int TEXTURE_POSITION = 2;
 	protected static final int NORMAL_POSITION = 3;
 
 	protected List<Integer> indices;
-	protected List<Vector3f> vertices;
-	protected List<Vector3f> normals;
+	protected List<L> vertices;
+	protected List<L> normals;
 	protected List<Vector3f> colors;
 	protected List<Vector2f> texturecoords;
 
@@ -62,34 +62,18 @@ public class ShapedObject extends RenderedObject {
 	protected int colorsize = 3;
 	protected int texsize = 2;
 
-	public ShapedObject() {
-		super();
-		init();
-	}
-
-	public ShapedObject(float x, float y, float z) {
-		super();
-		translateTo(x, y, z);
-		init();
-	}
-
-	public ShapedObject(Vector3f pos) {
-		super();
-		translateTo(pos);
+	public ShapedObject(L rotcenter, L translation, A rotation, L scale) {
+		super(rotcenter, translation, rotation, scale);
 		init();
 	}
 
 	private void init() {
 		indices = new ArrayList<Integer>();
-		vertices = new ArrayList<Vector3f>();
-		normals = new ArrayList<Vector3f>();
 		colors = new ArrayList<Vector3f>();
 		texturecoords = new ArrayList<Vector2f>();
-
-		rendermode = GLConstants.TRIANGLE_ADJACENCY;
 	}
 
-	public void copy(ShapedObject original) {
+	public void copy(ShapedObject<L, A> original) {
 		indices.addAll(original.getIndices());
 		vertices.addAll(original.getVertices());
 		normals.addAll(original.getNormals());
@@ -144,59 +128,40 @@ public class ShapedObject extends RenderedObject {
 			addIndex(index);
 	}
 
-	public void addQuad(int index1, int adjacency1, int index2, int adjacency2, int index3, int adjacency3, int index4,
-			int adjacency4) {
-		addTriangle(index1, adjacency1, index2, adjacency2, index3, index4);
-		addTriangle(index1, index2, index3, adjacency3, index4, adjacency4);
-	}
+	public abstract void addVertex(L vertex);
 
-	public void addTriangle(int index1, int adjacency1, int index2, int adjacency2, int index3, int adjacency3) {
-		addIndex(index1);
-		addIndex(adjacency1);
-		addIndex(index2);
-		addIndex(adjacency2);
-		addIndex(index3);
-		addIndex(adjacency3);
-	}
+	public abstract void addVertex(L vertex, Color c);
 
-	public void addVertex(Vector3f vertex) {
-		addVertex(vertex, Color.GRAY, new Vector2f(), new Vector3f());
-	}
+	public abstract void addVertex(L vertex, Color c, Vector2f texturecoord);
 
-	public void addVertex(Vector3f vertex, Color c) {
-		addVertex(vertex, c, new Vector2f(), new Vector3f());
-	}
-
-	public void addVertex(Vector3f vertex, Color c, Vector2f texturecoord, Vector3f normal) {
+	public void addVertex(L vertex, Color c, Vector2f texturecoord, L normal) {
 		vertices.add(vertex);
 		colors.add(new Vector3f(c.getRed(), c.getGreen(), c.getBlue()));
 		texturecoords.add(texturecoord);
 		normals.add(normal);
 	}
 
-	public void addVertex(Vector3f vertex, Vector3f c, Vector2f texturecoord, Vector3f normal) {
+	public void addVertex(L vertex, Vector3f c, Vector2f texturecoord, L normal) {
 		vertices.add(vertex);
 		colors.add(c);
 		texturecoords.add(texturecoord);
 		normals.add(normal);
 	}
 
-	public void setVertex(int id, Vector3f vertex) {
-		setVertex(id, vertex, Color.GRAY, new Vector2f(), new Vector3f());
-	}
+	public abstract void setVertex(int id, L vertex);
 
-	public void setVertex(int id, Vector3f vertex, Color c) {
-		setVertex(id, vertex, c, new Vector2f(), new Vector3f());
-	}
+	public abstract void setVertex(int id, L vertex, Color c);
 
-	public void setVertex(int id, Vector3f vertex, Color c, Vector2f texturecoord, Vector3f normal) {
+	public abstract void setVertex(int id, L vertex, Color c, Vector2f texturecoord);
+
+	public void setVertex(int id, L vertex, Color c, Vector2f texturecoord, L normal) {
 		vertices.set(id, vertex);
 		colors.set(id, new Vector3f(c.getRed(), c.getGreen(), c.getBlue()));
 		texturecoords.set(id, texturecoord);
 		normals.set(id, normal);
 	}
 
-	public void setVertex(int id, Vector3f vertex, Vector3f c, Vector2f texturecoord, Vector3f normal) {
+	public void setVertex(int id, L vertex, Vector3f c, Vector2f texturecoord, L normal) {
 		vertices.set(id, vertex);
 		colors.set(id, c);
 		texturecoords.set(id, texturecoord);
@@ -210,30 +175,7 @@ public class ShapedObject extends RenderedObject {
 		normals.remove(id);
 	}
 
-	public void computeNormals() {
-		int indicesnumber = indices.size();
-		int vertexnumber = vertices.size();
-		for (int n = 0; n < vertexnumber; n++) {
-			if (n < normals.size())
-				normals.set(n, new Vector3f(0, 0, 0));
-			else
-				normals.add(new Vector3f(0, 0, 0));
-		}
-		int ci = 0;
-		for (int i = 0; i < indicesnumber / 3; i++) {
-			int index1 = indices.get(ci);
-			int index2 = indices.get(ci + 1);
-			int index3 = indices.get(ci + 2);
-			Vector3f normal1 = getNormal(index1);
-			Vector3f normal2 = getNormal(index2);
-			Vector3f normal3 = getNormal(index3);
-			Vector3f newnormal = VecMath.computeNormal(getVertex(index1), getVertex(index2), getVertex(index3));
-			setNormal(index1, VecMath.normalize(VecMath.addition(normal1, newnormal)));
-			setNormal(index2, VecMath.normalize(VecMath.addition(normal2, newnormal)));
-			setNormal(index3, VecMath.normalize(VecMath.addition(normal3, newnormal)));
-			ci += 3;
-		}
-	}
+	public abstract void computeNormals();
 
 	@Override
 	public void delete() {
@@ -278,11 +220,11 @@ public class ShapedObject extends RenderedObject {
 		return indices;
 	}
 
-	public Vector3f getNormal(int normalid) {
+	public L getNormal(int normalid) {
 		return normals.get(normalid);
 	}
 
-	public Vector3f getVertex(int vertexid) {
+	public L getVertex(int vertexid) {
 		return vertices.get(vertexid);
 	}
 
@@ -298,7 +240,7 @@ public class ShapedObject extends RenderedObject {
 		return vertices.size();
 	}
 
-	public List<Vector3f> getVertices() {
+	public List<L> getVertices() {
 		return vertices;
 	}
 
@@ -310,7 +252,7 @@ public class ShapedObject extends RenderedObject {
 		return colors;
 	}
 
-	public List<Vector3f> getNormals() {
+	public List<L> getNormals() {
 		return normals;
 	}
 
@@ -329,6 +271,9 @@ public class ShapedObject extends RenderedObject {
 		prerender();
 	}
 
+	protected abstract void fillBuffers(int allVertices, IntBuffer indexData, FloatBuffer vertexData,
+			FloatBuffer colorData, FloatBuffer textureData, FloatBuffer normalData);
+
 	public void prerender() {
 		deleteGPUData();
 
@@ -341,16 +286,7 @@ public class ShapedObject extends RenderedObject {
 		FloatBuffer textureData = BufferUtils.createFloatBuffer(allVertices * texsize);
 		FloatBuffer normalData = BufferUtils.createFloatBuffer(allVertices * vertexsize);
 
-		for (int v = 0; v < allVertices; v++) {
-			Vector3f vertex = vertices.get(v);
-			vertexData.put(new float[] { vertex.x, vertex.y, vertex.z, 1 });
-			Vector3f vertcolor = colors.get(v);
-			colorData.put(new float[] { vertcolor.x, vertcolor.y, vertcolor.z });
-			Vector2f tex = texturecoords.get(v);
-			textureData.put(new float[] { tex.x, tex.y });
-			Vector3f normal = normals.get(v);
-			normalData.put(new float[] { normal.x, normal.y, normal.z, 0 });
-		}
+		fillBuffers(allVertices, indexData, vertexData, colorData, textureData, normalData);
 		for (int i = 0; i < renderedIndexCount; i++) {
 			indexData.put(indices.get(i));
 		}
@@ -455,7 +391,7 @@ public class ShapedObject extends RenderedObject {
 		indices.set(indexid, value);
 	}
 
-	public void setNormal(int normalid, Vector3f normal) {
+	public void setNormal(int normalid, L normal) {
 		normals.set(normalid, normal);
 	}
 
@@ -485,7 +421,7 @@ public class ShapedObject extends RenderedObject {
 		rendermode = mode;
 	}
 
-	public void setVertices(List<Vector3f> verts) {
+	public void setVertices(List<L> verts) {
 		vertices = verts;
 	}
 
@@ -493,7 +429,7 @@ public class ShapedObject extends RenderedObject {
 		this.colors = colors;
 	}
 
-	public void setNormals(List<Vector3f> normals) {
+	public void setNormals(List<L> normals) {
 		this.normals = normals;
 	}
 

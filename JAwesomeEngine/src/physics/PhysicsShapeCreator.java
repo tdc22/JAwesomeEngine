@@ -12,15 +12,14 @@ import collisionshape2d.EllipseShape;
 import collisionshape2d.QuadShape;
 import convexhull.Quickhull;
 import convexhull.Quickhull2;
-import objects.ShapedObject;
 import objects.ShapedObject2;
+import objects.ShapedObject3;
 import shapedata.BoxStructure;
 import shapedata.CapsuleStructure;
 import shapedata.CylinderStructure;
 import shapedata2d.EllipseStructure;
 import shapedata2d.QuadStructure;
 import vector.Vector2f;
-import vector.Vector3f;
 
 public class PhysicsShapeCreator {
 	public static BoxShape create(BoxStructure box) {
@@ -36,14 +35,14 @@ public class PhysicsShapeCreator {
 	}
 
 	public static EllipseShape create(EllipseStructure ellipse) {
-		return new EllipseShape(ellipse.getTranslation2(), ellipse.getRadius(), ellipse.getHalfHeight());
+		return new EllipseShape(ellipse.getTranslation(), ellipse.getRadius(), ellipse.getHalfHeight());
 	}
 
 	public static QuadShape create(QuadStructure quad) {
-		return new QuadShape(quad.getTranslation2(), quad.getHalfSize());
+		return new QuadShape(quad.getTranslation(), quad.getHalfSize());
 	}
 
-	public static ConvexShape createHull(ShapedObject shapedobject) {
+	public static ConvexShape createHull(ShapedObject3 shapedobject) {
 		ConvexShape hull = Quickhull.computeConvexHull(shapedobject.getVertices());
 		hull.translateTo(shapedobject.getTranslation());
 		return hull;
@@ -51,10 +50,10 @@ public class PhysicsShapeCreator {
 
 	public static ConvexShape2 createHull(ShapedObject2 shapedobject) {
 		List<Vector2f> vertices = new ArrayList<Vector2f>();
-		for (Vector3f v : shapedobject.getVertices())
+		for (Vector2f v : shapedobject.getVertices())
 			vertices.add(new Vector2f(v.x, v.y));
 		ConvexShape2 hull = Quickhull2.computeConvexHull(vertices);
-		hull.translateTo(shapedobject.getTranslation2());
+		hull.translateTo(shapedobject.getTranslation());
 		return hull;
 	}
 }

@@ -15,7 +15,7 @@ import game.StandardGame;
 import gui.Font;
 import loader.FontLoader;
 import loader.ShaderLoader;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import shader.Shader;
 import utils.Debugger;
 import utils.GLConstants;
@@ -90,7 +90,7 @@ public class ConvexHullTest extends StandardGame {
 		cam.update(delta);
 	}
 
-	private class PointCloud extends ShapedObject {
+	private class PointCloud extends ShapedObject3 {
 		public PointCloud(List<Vector3f> points) {
 			setRenderMode(GLConstants.POINTS);
 			for (int i = 0; i < points.size(); i++) {
@@ -101,7 +101,7 @@ public class ConvexHullTest extends StandardGame {
 		}
 	}
 
-	private class ConvexHull extends ShapedObject {
+	private class ConvexHull extends ShapedObject3 {
 		public ConvexHull(List<Vector3f> vertices, HashMap<Integer, Integer[]> adjacents) {
 			setRenderMode(GLConstants.TRIANGLES);
 			List<Vector3f[]> triangles = new ArrayList<Vector3f[]>();

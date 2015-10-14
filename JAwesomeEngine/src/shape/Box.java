@@ -3,12 +3,12 @@ package shape;
 import java.awt.Color;
 
 import math.VecMath;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import shapedata.BoxStructure;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class Box extends ShapedObject implements BoxStructure {
+public class Box extends ShapedObject3 implements BoxStructure {
 	Vector3f halfsize;
 
 	public Box(float x, float y, float z, float halfsizeX, float halfsizeY, float halfsizeZ) {

@@ -25,10 +25,7 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glHint;
 import static org.lwjgl.opengl.GL11.glShadeModel;
 
-import java.nio.FloatBuffer;
 import java.util.List;
-
-import org.lwjgl.BufferUtils;
 
 import display.Display;
 import display.DisplayMode;
@@ -41,13 +38,10 @@ import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
 import loader.ShaderLoader;
-import math.VecMath;
 import matrix.Matrix4f;
 import objects.Camera2;
 import objects.GameCamera;
 import objects.Updateable;
-import objects.ViewProjection;
-import objects.ViewProjection2;
 import shader.PostProcessingShader;
 import shader.Shader;
 import shape2d.Quad;
@@ -56,7 +50,7 @@ import utils.GameProfiler;
 import utils.NullGameProfiler;
 import utils.ProjectionHelper;
 
-public abstract class StandardGame extends AbstractGame implements ViewProjection, ViewProjection2, Updateable {
+public abstract class StandardGame extends AbstractGame implements Updateable {
 	public VideoSettings settings;
 	protected Layer layer3d, layer2d, layerInterface;
 	protected Quad screen;
@@ -64,29 +58,27 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 	public Display display;
 	public GameCamera cam;
 	public Camera2 cam2d;
-	protected FloatBuffer projectionMatrix, projectionMatrix2, projectionMatrixInterface;
 	protected GameProfiler profiler;
 
 	public InputManager inputs;
 	protected InputEvent closeEvent;
 
-	private FloatBuffer identity;
 	protected boolean useFBO = true;
 
 	public void addShader(Shader s) {
-		s.addArgument("projection", projectionMatrix);
+		s.addArgument("projection", layer3d.projectionMatrix);
 		s.addArgument("view", new Matrix4f());
 		layer3d.shader.add(s);
 	}
 
 	public void addShader2d(Shader s) {
-		s.addArgument("projection", projectionMatrix2);
+		s.addArgument("projection", layer2d.projectionMatrix);
 		s.addArgument("view", new Matrix4f());
 		layer2d.shader.add(s);
 	}
 
 	public void addShaderInterface(Shader s) {
-		s.addArgument("projection", projectionMatrixInterface);
+		s.addArgument("projection", layerInterface.projectionMatrix);
 		s.addArgument("view", new Matrix4f());
 		layerInterface.shader.add(s);
 	}
@@ -220,12 +212,9 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 			((GLFWInputReader) inputs.getInputReader()).addWindowID(((GLDisplay) display).getWindowID());
 
 		if (useFBO) {
-			layer3d.initLayer((ViewProjection) this, settings.getResolutionX(), settings.getResolutionY(),
-					pixelformat.getSamples());
-			layer2d.initLayer((ViewProjection) this, settings.getResolutionX(), settings.getResolutionY(),
-					pixelformat.getSamples());
-			layerInterface.initLayer((ViewProjection) this, settings.getResolutionX(), settings.getResolutionY(),
-					pixelformat.getSamples());
+			layer3d.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples());
+			layer2d.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples());
+			layerInterface.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples());
 
 			screen = new Quad(0, 0, 1, -1);
 			screen.setRenderHints(false, true, false);
@@ -235,21 +224,17 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 			screenShader.addObject(screen);
 		}
 
-		projectionMatrix = storeMatrix(ProjectionHelper.perspective(settings.getFOVy(),
+		layer3d.setProjectionMatrix(ProjectionHelper.perspective(settings.getFOVy(),
 				settings.getResolutionX() / (float) settings.getResolutionY(), settings.getZNear(),
 				settings.getZFar()));
-		projectionMatrix2 = storeMatrix(
+		layer2d.setProjectionMatrix(
 				ProjectionHelper.ortho(0, settings.getResolutionX(), settings.getResolutionY(), 0, -1, 1));
-		projectionMatrixInterface = storeMatrix(
+		layerInterface.setProjectionMatrix(
 				ProjectionHelper.ortho(0, settings.getResolutionX(), settings.getResolutionY(), 0, -1, 1));
 	}
 
 	@Override
 	protected void initEngine() {
-		layer3d = new Layer();
-		layer2d = new Layer();
-		layerInterface = new Layer();
-
 		// JInputReader jinput = new JInputReader();
 		// if (jinput.isUseable()) {
 		// inputs = new InputManager(jinput);
@@ -264,9 +249,9 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		cam = new GameCamera(inputs);
 		cam2d = new Camera2();
 
-		identity = BufferUtils.createFloatBuffer(16);
-		VecMath.identityMatrix().store(identity);
-		identity.flip();
+		layer3d = new Layer();
+		layer2d = new Layer();
+		layerInterface = new Layer();
 
 		profiler = new NullGameProfiler();
 
@@ -298,7 +283,6 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		return !display.isCloseRequested() && running;
 	}
 
-	@Override
 	public abstract void render();
 
 	public abstract void render2d();
@@ -336,14 +320,15 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 			update(delta);
 			profiler.updateRender3d();
 			display.clear();
-			updateShaderMatrices();
 			if (layer3d.isActive()) {
+				layer3d.setViewMatrix(cam.getMatrixBuffer());
 				start3d();
 				render();
 				end3d();
 			}
 			profiler.render3dRender2d();
 			if (layer2d.isActive()) {
+				layer2d.setViewMatrix(cam2d.getMatrixBuffer());
 				start2d();
 				render2d();
 				end2d();
@@ -365,15 +350,6 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 		System.exit(0);
 	}
 
-	protected void updateShaderMatrices() {
-		for (Shader s : layer3d.shader) {
-			s.setArgumentDirect("view", cam.getMatrixBuffer());
-		}
-		for (Shader s : layer2d.shader) {
-			s.setArgumentDirect("view", cam2d.getMatrixBuffer());
-		}
-	}
-
 	protected void updateEngine() {
 		display.pollInputs();
 		inputs.update();
@@ -381,128 +357,5 @@ public abstract class StandardGame extends AbstractGame implements ViewProjectio
 			display.resetMouse();
 		if (closeEvent.isActive())
 			running = false;
-	}
-
-	@Override
-	public void setViewMatrix(FloatBuffer buffer) {
-		for (Shader s : layer3d.shader) {
-			s.setArgumentDirect("view", buffer);
-		}
-	}
-
-	@Override
-	public void setProjectionMatrix(FloatBuffer buffer) {
-		for (Shader s : layer3d.shader) {
-			s.setArgumentDirect("projection", buffer);
-		}
-	}
-
-	@Override
-	public void setViewProjectionMatrix(FloatBuffer viewBuffer, FloatBuffer projectionBuffer) {
-		for (Shader s : layer3d.shader) {
-			s.setArgumentDirect("view", viewBuffer);
-			s.setArgumentDirect("projection", projectionBuffer);
-		}
-	}
-
-	@Override
-	public void setViewMatrix(Matrix4f matrix) {
-		FloatBuffer buf = storeMatrix(matrix);
-		for (Shader s : layer3d.shader) {
-			s.setArgumentDirect("view", buf);
-		}
-	}
-
-	@Override
-	public void setProjectionMatrix(Matrix4f matrix) {
-		FloatBuffer buf = storeMatrix(matrix);
-		for (Shader s : layer3d.shader) {
-			s.setArgumentDirect("projection", buf);
-		}
-	}
-
-	@Override
-	public void setViewProjectionMatrix(Matrix4f viewMatrix, Matrix4f projectionMatrix) {
-		FloatBuffer viewBuf = storeMatrix(viewMatrix);
-		FloatBuffer projBuf = storeMatrix(projectionMatrix);
-		for (Shader s : layer3d.shader) {
-			s.setArgumentDirect("view", viewBuf);
-			s.setArgumentDirect("projection", projBuf);
-		}
-	}
-
-	@Override
-	public FloatBuffer getViewMatrixBuffer() {
-		return cam.getMatrixBuffer();
-	}
-
-	@Override
-	public FloatBuffer getProjectionMatrixBuffer() {
-		return projectionMatrix;
-	}
-
-	@Override
-	public void setViewMatrix2(FloatBuffer buffer) {
-		for (Shader s : layer2d.shader) {
-			s.setArgumentDirect("view", buffer);
-		}
-	}
-
-	@Override
-	public void setProjectionMatrix2(FloatBuffer buffer) {
-		for (Shader s : layer2d.shader) {
-			s.setArgumentDirect("projection", buffer);
-		}
-	}
-
-	@Override
-	public void setViewProjectionMatrix2(FloatBuffer viewBuffer, FloatBuffer projectionBuffer) {
-		for (Shader s : layer2d.shader) {
-			s.setArgumentDirect("view", viewBuffer);
-			s.setArgumentDirect("projection", projectionBuffer);
-		}
-	}
-
-	@Override
-	public void setViewMatrix2(Matrix4f matrix) {
-		FloatBuffer buf = storeMatrix(matrix);
-		for (Shader s : layer2d.shader) {
-			s.setArgumentDirect("view", buf);
-		}
-	}
-
-	@Override
-	public void setProjectionMatrix2(Matrix4f matrix) {
-		FloatBuffer buf = storeMatrix(matrix);
-		for (Shader s : layer2d.shader) {
-			s.setArgumentDirect("projection", buf);
-		}
-	}
-
-	@Override
-	public void setViewProjectionMatrix2(Matrix4f viewMatrix, Matrix4f projectionMatrix) {
-		FloatBuffer viewBuf = storeMatrix(viewMatrix);
-		FloatBuffer projBuf = storeMatrix(projectionMatrix);
-		for (Shader s : layer2d.shader) {
-			s.setArgumentDirect("view", viewBuf);
-			s.setArgumentDirect("projection", projBuf);
-		}
-	}
-
-	@Override
-	public FloatBuffer getViewMatrixBuffer2() {
-		return cam2d.getMatrixBuffer();
-	}
-
-	@Override
-	public FloatBuffer getProjectionMatrixBuffer2() {
-		return projectionMatrix2;
-	}
-
-	protected FloatBuffer storeMatrix(Matrix4f mat) {
-		FloatBuffer buf = BufferUtils.createFloatBuffer(16);
-		mat.store(buf);
-		buf.flip();
-		return buf;
 	}
 }

@@ -6,7 +6,6 @@ import input.InputManager;
 import input.KeyInput;
 import math.VecMath;
 import utils.DefaultValues;
-import vector.Vector3d;
 import vector.Vector3f;
 
 public class GameCamera extends Camera3 implements Updateable {
@@ -156,7 +155,7 @@ public class GameCamera extends Camera3 implements Updateable {
 				rotate(mousedx / 10f, mousedy / 10f);
 			}
 
-			Vector3d move = new Vector3d(0, 0, 0);
+			Vector3f move = new Vector3f(0, 0, 0);
 			if (forwards.isActive()) {
 				move = VecMath.addition(move, direction);
 			}

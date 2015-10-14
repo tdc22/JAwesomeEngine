@@ -78,12 +78,6 @@ public abstract class Quaternion implements Rotation {
 	public abstract float getQ3f();
 
 	/**
-	 * Inverts the quaternion.
-	 */
-	@Override
-	public abstract void invert();
-
-	/**
 	 * Calculates the magnitude of the quaternion.
 	 * 
 	 * @return magnitude of the quaternion
@@ -132,6 +126,21 @@ public abstract class Quaternion implements Rotation {
 	 *            rotation quaternion
 	 */
 	public abstract void rotate(Quaternion quat);
+
+	/**
+	 * Rotates the quaternion by another one.
+	 * 
+	 * @param q0
+	 * @param q1
+	 * @param q2
+	 * @param q3
+	 */
+	public abstract void rotate(double q0, double q1, double q2, double q3);
+
+	/**
+	 * @see Quaternion#rotate(double, double, double, double)
+	 */
+	public abstract void rotate(float q0, float q1, float q2, float q3);
 
 	/**
 	 * Scales the quaternion by a factor.
@@ -185,11 +194,6 @@ public abstract class Quaternion implements Rotation {
 	 * @see Quaternion#setAll(double)
 	 */
 	public abstract void setAll(float all);
-
-	/**
-	 * Sets the identity.
-	 */
-	public abstract void setIdentity();
 
 	/**
 	 * Converts the quaternion to a rotation matrix.

@@ -1,5 +1,8 @@
 package shapedata2d;
 
+import objects.ShapeStructure;
+import vector.Vector2f;
+
 /**
  * Class structure for ellipses.
  * 
@@ -7,7 +10,7 @@ package shapedata2d;
  * 
  */
 
-public interface EllipseStructure extends ShapeStructure2 {
+public interface EllipseStructure extends ShapeStructure<Vector2f> {
 	/**
 	 * Gets the height of the ellipse.
 	 * 

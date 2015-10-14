@@ -16,7 +16,6 @@ import math.VecMath;
 import matrix.Matrix1f;
 import objects.AABB;
 import objects.RigidBody;
-import objects.ShapedObject;
 import objects.ShapedObject2;
 import quaternion.Complexf;
 import shader.Shader;
@@ -35,7 +34,7 @@ public class PhysicsDebug2 {
 	private InputEvent toggleAABBs, toggleCollisionNormals, toggleVelocities, toggleCollisionTangents;
 	private List<Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>> aabbObjects;
 	private List<Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>> velocityObjects;
-	private List<ShapedObject> lastNormals;
+	private List<ShapedObject2> lastNormals;
 
 	Shader shader;
 	ShapedObject2 normal1, normal2, tangent1, tangent2, velocity;
@@ -45,7 +44,7 @@ public class PhysicsDebug2 {
 		shader = s;
 		this.physics = physics;
 		setupEvents(inputs);
-		lastNormals = new ArrayList<ShapedObject>();
+		lastNormals = new ArrayList<ShapedObject2>();
 	}
 
 	private void clearAABBObjects() {
@@ -89,7 +88,7 @@ public class PhysicsDebug2 {
 			Vector2f velocity = rb.getLinearVelocity();
 			ShapedObject2 velocityObj = new ShapedObject2();
 			velocityObj.setRenderMode(GL11.GL_LINES);
-			velocityObj.translateTo(rb.getTranslation2());
+			velocityObj.translateTo(rb.getTranslation());
 			velocityObj.addVertex(new Vector2f(), c);
 			velocityObj.addVertex(velocity, c);
 			velocityObj.addIndices(0, 1);
@@ -143,7 +142,7 @@ public class PhysicsDebug2 {
 	}
 
 	private void clearLastNormals() {
-		for (ShapedObject normal : lastNormals) {
+		for (ShapedObject2 normal : lastNormals) {
 			normal.delete();
 			shader.removeObject(normal);
 		}

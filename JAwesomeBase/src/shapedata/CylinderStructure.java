@@ -1,5 +1,8 @@
 package shapedata;
 
+import objects.ShapeStructure;
+import vector.Vector3f;
+
 /**
  * Class structure for cylinders.
  * 
@@ -7,7 +10,7 @@ package shapedata;
  * 
  */
 
-public interface CylinderStructure extends ShapeStructure {
+public interface CylinderStructure extends ShapeStructure<Vector3f> {
 	/**
 	 * Gets the half height of the cylinder.
 	 * 

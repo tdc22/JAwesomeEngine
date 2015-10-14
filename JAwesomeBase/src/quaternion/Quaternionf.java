@@ -167,7 +167,7 @@ public class Quaternionf extends Quaternion {
 		float nq2 = axis.getYf() * sina;
 		float nq3 = axis.getZf() * sina;
 		float nq0 = (float) Math.cos(halfangle);
-		rotate(new Quaternionf(nq0, nq1, nq2, nq3));
+		rotate(nq0, nq1, nq2, nq3);
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class Quaternionf extends Quaternion {
 		float nq2 = axis.getYf() * sina;
 		float nq3 = axis.getZf() * sina;
 		float nq0 = (float) Math.cos(halfangle);
-		rotate(new Quaternionf(nq0, nq1, nq2, nq3));
+		rotate(nq0, nq1, nq2, nq3);
 	}
 
 	/**
@@ -326,5 +326,27 @@ public class Quaternionf extends Quaternion {
 		sb.append(q3);
 		sb.append(']');
 		return sb.toString();
+	}
+
+	@Override
+	public void rotate(double q0, double q1, double q2, double q3) {
+		float tq1 = (float) (this.q0 * q1 + this.q1 * q0 + this.q2 * q3 - this.q3 * q2);
+		float tq2 = (float) (this.q0 * q2 + this.q2 * q0 + this.q3 * q1 - this.q1 * q3);
+		float tq3 = (float) (this.q0 * q3 + this.q3 * q0 + this.q1 * q2 - this.q2 * q1);
+		this.q0 = (float) (this.q0 * q0 - this.q1 * q1 - this.q2 * q2 - this.q3 * q3);
+		this.q1 = tq1;
+		this.q2 = tq2;
+		this.q3 = tq3;
+	}
+
+	@Override
+	public void rotate(float q0, float q1, float q2, float q3) {
+		float tq1 = this.q0 * q1 + this.q1 * q0 + this.q2 * q3 - this.q3 * q2;
+		float tq2 = this.q0 * q2 + this.q2 * q0 + this.q3 * q1 - this.q1 * q3;
+		float tq3 = this.q0 * q3 + this.q3 * q0 + this.q1 * q2 - this.q2 * q1;
+		this.q0 = this.q0 * q0 - this.q1 * q1 - this.q2 * q2 - this.q3 * q3;
+		this.q1 = tq1;
+		this.q2 = tq2;
+		this.q3 = tq3;
 	}
 }

@@ -15,7 +15,7 @@ import manifold.CollisionManifold;
 import math.VecMath;
 import objects.AABB;
 import objects.RigidBody;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import quaternion.Quaternionf;
 import space.Space3;
 import utils.Pair;
@@ -29,7 +29,7 @@ public class PhysicsDebug {
 	boolean showCollisionNormals = false;
 	boolean showCollisionTangents = false;
 	private InputEvent toggleAABBs, toggleCollisionNormals, toggleVelocities, toggleCollisionTangents;
-	private List<Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>> aabbObjects;
+	private List<Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>> aabbObjects;
 
 	public PhysicsDebug(InputManager inputs, Font f, Space3 physics) {
 		font = f;
@@ -38,18 +38,18 @@ public class PhysicsDebug {
 	}
 
 	private void clearAABBObjects() {
-		for (Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> obj : aabbObjects) {
+		for (Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> obj : aabbObjects) {
 			obj.getFirst().delete();
 		}
 		aabbObjects.clear();
 	}
 
 	private void initAABBObjects() {
-		aabbObjects = new ArrayList<Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>>();
+		aabbObjects = new ArrayList<Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>>();
 		Color c = Color.YELLOW;
 		for (RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> rb : physics.getObjects()) {
 			AABB<Vector3f> aabb = rb.getAABB();
-			ShapedObject aabbobj = new ShapedObject();
+			ShapedObject3 aabbobj = new ShapedObject3();
 			Vector3f min = aabb.getMin();
 			Vector3f max = aabb.getMax();
 			aabbobj.setRenderMode(GL11.GL_LINES);
@@ -64,7 +64,7 @@ public class PhysicsDebug {
 			aabbobj.addIndices(0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 2, 4, 2, 6, 3, 6, 3, 5, 4, 7, 5, 7, 6, 7);
 			aabbobj.prerender();
 			aabbObjects
-					.add(new Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(aabbobj, rb));
+					.add(new Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(aabbobj, rb));
 		}
 	}
 
@@ -90,7 +90,7 @@ public class PhysicsDebug {
 
 	public void render3d() {
 		if (showAABBs) {
-			for (Pair<ShapedObject, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> aabbobj : aabbObjects) {
+			for (Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> aabbobj : aabbObjects) {
 				aabbobj.getFirst().translateTo(aabbobj.getSecond().getTranslation());
 				aabbobj.getFirst().render();
 			}
@@ -99,8 +99,8 @@ public class PhysicsDebug {
 			List<CollisionManifold<Vector3f>> manifolds = physics.getCollisionManifolds();
 			for (CollisionManifold<Vector3f> cm : manifolds) {
 				Color c = Color.RED;
-				ShapedObject normal1 = new ShapedObject();
-				ShapedObject normal2 = new ShapedObject();
+				ShapedObject3 normal1 = new ShapedObject3();
+				ShapedObject3 normal2 = new ShapedObject3();
 				normal1.setRenderMode(GL11.GL_LINES);
 				normal2.setRenderMode(GL11.GL_LINES);
 				normal1.addVertex(cm.getContactPointA(), c);
@@ -121,8 +121,8 @@ public class PhysicsDebug {
 			List<CollisionManifold<Vector3f>> manifolds = physics.getCollisionManifolds();
 			for (CollisionManifold<Vector3f> cm : manifolds) {
 				Color c = Color.GREEN;
-				ShapedObject tangent1 = new ShapedObject();
-				ShapedObject tangent2 = new ShapedObject();
+				ShapedObject3 tangent1 = new ShapedObject3();
+				ShapedObject3 tangent2 = new ShapedObject3();
 				tangent1.setRenderMode(GL11.GL_LINES);
 				tangent2.setRenderMode(GL11.GL_LINES);
 				tangent1.addVertex(cm.getContactPointA(), c);
@@ -143,7 +143,7 @@ public class PhysicsDebug {
 			List<RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> objs = physics.getObjects();
 			for (RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> o : objs) {
 				Color c = Color.BLUE;
-				ShapedObject velocity = new ShapedObject();
+				ShapedObject3 velocity = new ShapedObject3();
 				velocity.setRenderMode(GL11.GL_LINES);
 				velocity.addVertex(o.getTranslation(), c);
 				velocity.addVertex(VecMath.addition(o.getTranslation(), o.getLinearVelocity()), c);

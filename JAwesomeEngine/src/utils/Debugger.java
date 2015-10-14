@@ -23,7 +23,7 @@ import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
 import objects.Camera3;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import shader.Shader;
 import vector.Vector3f;
 
@@ -69,7 +69,7 @@ public class Debugger {
 	Text text;
 	Camera3 cam;
 	Vector3f range;
-	private ShapedObject xaxis, yaxis, zaxis, grid, gridXZAxis;
+	private ShapedObject3 xaxis, yaxis, zaxis, grid, gridXZAxis;
 
 	InputEvent toggledata, toggleaxis, togglegrid, togglewireframe;
 
@@ -79,11 +79,11 @@ public class Debugger {
 		text = new Text("", 10, 20, font);
 		shader2d.addObject(text);
 
-		xaxis = new ShapedObject();
-		yaxis = new ShapedObject();
-		zaxis = new ShapedObject();
-		grid = new ShapedObject();
-		gridXZAxis = new ShapedObject();
+		xaxis = new ShapedObject3();
+		yaxis = new ShapedObject3();
+		zaxis = new ShapedObject3();
+		grid = new ShapedObject3();
+		gridXZAxis = new ShapedObject3();
 		xaxis.setRenderMode(GLConstants.LINES);
 		yaxis.setRenderMode(GLConstants.LINES);
 		zaxis.setRenderMode(GLConstants.LINES);

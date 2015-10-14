@@ -1,7 +1,7 @@
 package shapedata;
 
 import math.VecMath;
-import objects.DataObject;
+import objects.DataObject3;
 import vector.Vector3f;
 
 /**
@@ -11,7 +11,7 @@ import vector.Vector3f;
  * 
  */
 
-public class BoxData extends DataObject implements BoxStructure {
+public class BoxData extends DataObject3 implements BoxStructure {
 	Vector3f halfsize;
 
 	public BoxData(float x, float y, float z, float halfsizex, float halfsizey, float halfsizez) {

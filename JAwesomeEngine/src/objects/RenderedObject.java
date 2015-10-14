@@ -1,20 +1,13 @@
 package objects;
 
-public abstract class RenderedObject extends DataGameObject implements RenderableObject {
-	// protected Shader shader;
-	// protected boolean shadered = false;
-	// protected boolean shaderactive = true;
+import quaternion.Rotation;
+import vector.Vector;
 
-	// public Shader getShader() {
-	// return shader;
-	// }
-	//
-	// public void setShader(Shader shader) {
-	// this.shader = shader;
-	// shadered = true;
-	// }
-	//
-	// public void setShaderActive(boolean active) {
-	// shaderactive = active;
-	// }
+public abstract class RenderedObject<L extends Vector, A extends Rotation> extends GameObject<L, A>
+		implements RenderableObject {
+
+	public RenderedObject(L rotcenter, L translation, A rotation, L scale) {
+		super(rotcenter, translation, rotation, scale);
+	}
+
 }

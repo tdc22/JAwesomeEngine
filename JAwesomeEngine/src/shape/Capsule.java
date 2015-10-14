@@ -3,12 +3,12 @@ package shape;
 import java.awt.Color;
 
 import math.VecMath;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import shapedata.CapsuleStructure;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class Capsule extends ShapedObject implements CapsuleStructure {
+public class Capsule extends ShapedObject3 implements CapsuleStructure {
 	float radiusX, radiusY;
 	int trisH, trisV;
 

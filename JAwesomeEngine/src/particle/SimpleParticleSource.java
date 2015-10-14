@@ -12,11 +12,12 @@ import math.QuatMath;
 import math.VecMath;
 import objects.Camera3;
 import objects.ShapedObject;
+import objects.ShapedObject3;
 import vector.Vector2f;
 import vector.Vector3f;
 
 public class SimpleParticleSource extends ParticleSource3 {
-	ShapedObject particles;
+	ShapedObject3 particles;
 	HashMap<Integer, Particle> particleList;
 	LinkedList<Integer> freevertices, freeindices;
 	int maxParticles;
@@ -32,7 +33,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 			float spawnRate, Camera3 cam) {
 		super(center, spawnAreaHalfSize, minAngle, maxAngle, minVelocity, maxVelocity, minSize, maxSize, minLifeTime,
 				maxLifeTime, spawnRate);
-		particles = new ShapedObject(center);
+		particles = new ShapedObject3(center);
 		particles.setRenderMode(GL11.GL_TRIANGLES);
 		particleList = new HashMap<Integer, Particle>();
 		freevertices = new LinkedList<Integer>();

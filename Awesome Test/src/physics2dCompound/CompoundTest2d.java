@@ -16,6 +16,7 @@ import narrowphase.EPA2;
 import narrowphase.GJK2;
 import objects.CompoundObject2;
 import objects.RigidBody2;
+import objects.ShapedObject2;
 import physics.PhysicsDebug2;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
@@ -73,7 +74,7 @@ public class CompoundTest2d extends StandardGame {
 		rb1.addCollisionShape(PhysicsShapeCreator.create(c));
 		rb1.setMass(1f);
 		rb1.setInertia(new Matrix1f(1));
-		space.addCompoundObject(rb1, q, c);
+		space.addCompoundObject(rb1, new ShapedObject2[] { q, c });
 		defaultshader2.addObject(q);
 		defaultshader2.addObject(c);
 		tempdelta = 0;
@@ -107,7 +108,7 @@ public class CompoundTest2d extends StandardGame {
 				rb.addCollisionShape(PhysicsShapeCreator.create(c));
 				rb.setMass(1f);
 				rb.setInertia(new Matrix1f(1));
-				space.addCompoundObject(rb, q, c);
+				space.addCompoundObject(rb, new ShapedObject2[] { q, c });
 				defaultshader2.addObject(q);
 				defaultshader2.addObject(c);
 				tempdelta = 0;
@@ -129,7 +130,7 @@ public class CompoundTest2d extends StandardGame {
 				rb.addCollisionShape(PhysicsShapeCreator.create(c2));
 				rb.setMass(1f);
 				rb.setInertia(new Matrix1f(1));
-				space.addCompoundObject(rb, c1, c2);
+				space.addCompoundObject(rb, new ShapedObject2[] { c1, c2 });
 				defaultshader2.addObject(c1);
 				defaultshader2.addObject(c2);
 				tempdelta = 0;

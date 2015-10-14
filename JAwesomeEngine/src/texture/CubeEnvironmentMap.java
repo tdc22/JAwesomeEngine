@@ -25,6 +25,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
 
 import java.nio.FloatBuffer;
 
+import game.Layer;
 import objects.Camera3;
 import objects.ViewProjection;
 import utils.DefaultValues;
@@ -39,18 +40,18 @@ public class CubeEnvironmentMap {
 	int width, height;
 	ViewFrustum frustum;
 
-	public CubeEnvironmentMap(ViewProjection render, Vector3f pos) {
+	public CubeEnvironmentMap(Layer render, Vector3f pos) {
 		init(render, pos, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_X,
 				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_RESOLUTION_Y, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
 				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR);
 	}
 
-	public CubeEnvironmentMap(ViewProjection render, Vector3f pos, int resX, int resY) {
+	public CubeEnvironmentMap(Layer render, Vector3f pos, int resX, int resY) {
 		init(render, pos, resX, resY, DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZNEAR,
 				DefaultValues.DEFAULT_ENVIRONMENT_CUBEMAP_ZFAR);
 	}
 
-	public CubeEnvironmentMap(ViewProjection render, Vector3f pos, int resX, int resY, float zNear, float zFar) {
+	public CubeEnvironmentMap(Layer render, Vector3f pos, int resX, int resY, float zNear, float zFar) {
 		init(render, pos, resX, resY, zNear, zFar);
 	}
 
@@ -100,7 +101,7 @@ public class CubeEnvironmentMap {
 		return width;
 	}
 
-	private void init(ViewProjection render, Vector3f pos, int resX, int resY, float zNear, float zFar) {
+	private void init(Layer render, Vector3f pos, int resX, int resY, float zNear, float zFar) {
 		this.render = render;
 		this.width = resX;
 		this.height = resY;

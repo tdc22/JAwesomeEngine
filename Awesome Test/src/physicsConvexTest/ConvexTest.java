@@ -18,7 +18,7 @@ import math.VecMath;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import objects.RigidBody3;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
@@ -69,7 +69,7 @@ public class ConvexTest extends StandardGame {
 		space.addRigidBody(ground, rb);
 		defaultshader.addObject(ground);
 
-		ShapedObject bunny = ModelLoader.load("res/models/bunny.mobj");
+		ShapedObject3 bunny = ModelLoader.load("res/models/bunny.mobj");
 		RigidBody3 bunnyBody = new RigidBody3(PhysicsShapeCreator.createHull(bunny));
 
 		space.addRigidBody(bunny, bunnyBody);

@@ -5,7 +5,7 @@ import java.awt.Color;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class SimpleBoxVoxelObject extends ShapedObject {
+public class SimpleBoxVoxelObject extends ShapedObject3 {
 	int[][][] data;
 
 	public SimpleBoxVoxelObject(int sizex, int sizey, int sizez) {

@@ -1,7 +1,7 @@
 package shapedata2d;
 
 import math.VecMath;
-import objects.DataObject;
+import objects.DataObject2;
 import vector.Vector2f;
 
 /**
@@ -11,7 +11,7 @@ import vector.Vector2f;
  * 
  */
 
-public class QuadData extends DataObject implements QuadStructure {
+public class QuadData extends DataObject2 implements QuadStructure {
 	Vector2f halfsize;
 
 	public QuadData(float x, float y, float halfsizex, float halfsizey) {

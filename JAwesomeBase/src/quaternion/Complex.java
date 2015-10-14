@@ -34,12 +34,6 @@ public abstract class Complex implements Rotation {
 	public abstract float getRealf();
 
 	/**
-	 * Inverts the complex number.
-	 */
-	@Override
-	public abstract void invert();
-
-	/**
 	 * Calculates the magnitude of the complex number.
 	 * 
 	 * @return magnitude of the complex number
@@ -73,6 +67,21 @@ public abstract class Complex implements Rotation {
 	 *            rotation complex number
 	 */
 	public abstract void rotate(Complex comp);
+
+	/**
+	 * Rotate the complex number by another one.
+	 * 
+	 * @param real
+	 *            real part of the complex number
+	 * @param imaginary
+	 *            imaginary part of the complex number
+	 */
+	public abstract void rotate(double real, double imaginary);
+
+	/**
+	 * @see Complex#rotate(double, double)
+	 */
+	public abstract void rotate(float real, float imaginary);
 
 	/**
 	 * Rotates the complex number by an angle around an axis.
@@ -137,11 +146,6 @@ public abstract class Complex implements Rotation {
 	public abstract void setAll(float all);
 
 	/**
-	 * Sets the identity.
-	 */
-	public abstract void setIdentity();
-
-	/**
 	 * Converts the complex number to a rotation matrix.
 	 * 
 	 * @return rotation matrix
@@ -158,18 +162,6 @@ public abstract class Complex implements Rotation {
 	 */
 	@Override
 	public abstract String toString();
-
-	/*
-	 * Calculates the squared length in polar coordinates.
-	 */
-	public abstract double lengthSquared();
-
-	/*
-	 * Calculates the length in polar coordinates.
-	 */
-	public double length() {
-		return Math.sqrt(lengthSquared());
-	}
 
 	/*
 	 * Calculates the angle in polar coordinates.

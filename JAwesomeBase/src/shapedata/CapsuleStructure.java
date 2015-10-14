@@ -1,5 +1,8 @@
 package shapedata;
 
+import objects.ShapeStructure;
+import vector.Vector3f;
+
 /**
  * Class structure for capsules.
  * 
@@ -7,7 +10,7 @@ package shapedata;
  * 
  */
 
-public interface CapsuleStructure extends ShapeStructure {
+public interface CapsuleStructure extends ShapeStructure<Vector3f> {
 	/**
 	 * Gets the height of the capsule.
 	 * 

@@ -5,11 +5,11 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import math.VecMath;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class Terrain extends ShapedObject {
+public class Terrain extends ShapedObject3 {
 	int terrainsizex, terrainsizey;
 	float maxheight, minheight, halfheightdiff;
 

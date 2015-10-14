@@ -1,5 +1,6 @@
 package shapedata2d;
 
+import objects.ShapeStructure;
 import vector.Vector2f;
 
 /**
@@ -9,7 +10,7 @@ import vector.Vector2f;
  * 
  */
 
-public interface QuadStructure extends ShapeStructure2 {
+public interface QuadStructure extends ShapeStructure<Vector2f> {
 	/**
 	 * Gets the half size of the quad.
 	 * 

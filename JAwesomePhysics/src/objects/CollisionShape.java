@@ -11,16 +11,17 @@ import vector.Vector;
  */
 
 public abstract class CollisionShape<L extends Vector, A1 extends Rotation, A2 extends Rotation>
-		extends BaseObject implements SupportMap<L> {
+		extends BaseObject<L, A1> implements SupportMap<L> {
 	AABB<L> aabb;
 	A1 invrotation;
 	protected SupportCalculator<L> supportcalculator;
 
-	public CollisionShape() {
-
+	public CollisionShape(L rotationcenter, L translation, A1 rotation, L scale) {
+		super(rotationcenter, translation, rotation, scale);
 	}
 
-	public CollisionShape(CollisionShape<L, A1, A2> cs) {
+	public CollisionShape(CollisionShape<L, A1, A2> cs, L rotationcenter, L translation, A1 rotation, L scale) {
+		super(rotationcenter, translation, rotation, scale);
 		aabb = cs.getAABB();
 		translation = cs.getTranslation();
 		invrotation = cs.getInverseRotation();

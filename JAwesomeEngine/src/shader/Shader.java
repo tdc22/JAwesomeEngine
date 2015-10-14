@@ -402,7 +402,7 @@ public class Shader implements ViewProjection {
 
 	@Override
 	public void render() {
-		// TODO: Optimize!
+		// TODO: Optimize! And improve!
 		if (rendered) {
 			bind();
 			int modelLocation = glGetUniformLocation(shaderProgram, "model");

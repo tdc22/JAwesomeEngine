@@ -1,6 +1,6 @@
 package shapedata;
 
-import objects.DataObject;
+import objects.DataObject3;
 import vector.Vector3f;
 
 /**
@@ -10,7 +10,7 @@ import vector.Vector3f;
  * 
  */
 
-public class SphereData extends DataObject implements SphereStructure {
+public class SphereData extends DataObject3 implements SphereStructure {
 	float radius;
 
 	public SphereData(float x, float y, float z, float radius) {

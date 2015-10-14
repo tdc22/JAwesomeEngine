@@ -8,16 +8,17 @@ import math.VecMath;
 import matrix.Matrix4f;
 import objects.CollisionShape;
 import objects.ShapedObject;
+import objects.ShapedObject3;
 import objects.SupportMap;
 import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class SupportDifferenceObject extends ShapedObject {
+public class SupportDifferenceObject extends ShapedObject3 {
 	ShapedObject so1, so2;
 	CollisionShape<Vector3f, ?, ?> rb1, rb2;
 
-	public SupportDifferenceObject(ShapedObject s1, CollisionShape<Vector3f, ?, ?> r1, ShapedObject s2,
+	public SupportDifferenceObject(ShapedObject3 s1, CollisionShape<Vector3f, ?, ?> r1, ShapedObject3 s2,
 			CollisionShape<Vector3f, ?, ?> r2) {
 		rendermode = GLConstants.POINTS;
 		so1 = s1;

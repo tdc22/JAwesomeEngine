@@ -1,6 +1,6 @@
 package shapedata;
 
-import objects.DataObject;
+import objects.DataObject3;
 import vector.Vector3f;
 
 /**
@@ -10,7 +10,7 @@ import vector.Vector3f;
  * 
  */
 
-public class CapsuleData extends DataObject implements CapsuleStructure {
+public class CapsuleData extends DataObject3 implements CapsuleStructure {
 	float radius, halfheight;
 
 	public CapsuleData(float x, float y, float z, float radius, float halfheight) {

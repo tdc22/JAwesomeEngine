@@ -18,7 +18,6 @@ import shader.Shader;
 import shape2d.Quad;
 import space.PhysicsProfiler;
 import vector.Vector2f;
-import vector.Vector3f;
 import vector.Vector4f;
 
 public class Profiler implements Updateable {
@@ -382,15 +381,15 @@ public class Profiler implements Updateable {
 				scaleMax.setText(maxvalue / 1000f + " ms");
 				scaleProfileLines(maxvalue);
 			}
-			for (Vector3f v : getVertices()) {
-				v.translate(1, 0, 0);
+			for (Vector2f v : getVertices()) {
+				v.translate(1, 0);
 			}
 			addIndex(getVertexCount());
 			addVertex(new Vector2f(0, -value));
 		}
 
 		public void scaleProfile(float scale) {
-			scaleTo(1, scale, 1);
+			scaleTo(1, scale);
 		}
 
 		public void removeLastValue() {

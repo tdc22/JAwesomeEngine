@@ -1,5 +1,9 @@
 package objects;
 
-public class Camera extends GameObject {
+import java.nio.FloatBuffer;
 
+public interface Camera {
+	public void delete();
+
+	public FloatBuffer getMatrixBuffer();
 }

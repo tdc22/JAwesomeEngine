@@ -5,14 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import math.VecMath;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import shapedata.SphereStructure;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class IsoSphere extends ShapedObject implements SphereStructure {
+public class IsoSphere extends ShapedObject3 implements SphereStructure {
 	public final static int POINT_SUBDIVISION = 0;
-
 	public final static int TRIANGLE_SUBDIVISION = 1;
 	float radius;
 

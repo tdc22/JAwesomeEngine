@@ -4,12 +4,12 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class DirectionRenderer extends ShapedObject {
+public class DirectionRenderer extends ShapedObject3 {
 	public DirectionRenderer() {
 		rendermode = GLConstants.LINES;
 		setDirections(new ArrayList<Vector3f>());

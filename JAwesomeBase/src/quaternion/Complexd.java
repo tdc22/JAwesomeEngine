@@ -2,6 +2,7 @@ package quaternion;
 
 import matrix.Matrix2d;
 import matrix.Matrix2f;
+import matrix.Matrix3d;
 
 public class Complexd extends Complex {
 	double real, imaginary;
@@ -13,11 +14,6 @@ public class Complexd extends Complex {
 	public Complexd(Complex comp) {
 		real = comp.getReal();
 		imaginary = comp.getImaginary();
-	}
-
-	public Complexd(double angle) {
-		real = Math.cos(Math.toRadians(angle));
-		imaginary = Math.sin(Math.toRadians(angle));
 	}
 
 	public Complexd(double real, double imaginary) {
@@ -94,10 +90,9 @@ public class Complexd extends Complex {
 	 */
 	@Override
 	public void rotate(Complex comp) {
-		double r = comp.getReal();
-		double i = comp.getImaginary();
-		real = real * r - imaginary * i;
-		imaginary = real * i + imaginary * r;
+		double tmp = real * comp.getImaginary() + imaginary * comp.getReal();
+		real = real * comp.getReal() - imaginary * comp.getImaginary();
+		imaginary = tmp;
 	}
 
 	/**
@@ -105,7 +100,8 @@ public class Complexd extends Complex {
 	 */
 	@Override
 	public void rotate(double angle) {
-		rotate(new Complexd(angle));
+		double mangle = -Math.toRadians(angle);
+		rotate(Math.cos(mangle), Math.sin(mangle));
 	}
 
 	/**
@@ -113,7 +109,8 @@ public class Complexd extends Complex {
 	 */
 	@Override
 	public void rotate(float angle) {
-		rotate(new Complexf(angle));
+		double mangle = -Math.toRadians(angle);
+		rotate(Math.cos(mangle), Math.sin(mangle));
 	}
 
 	/**
@@ -193,8 +190,7 @@ public class Complexd extends Complex {
 	 */
 	@Override
 	public Matrix2d toMatrix() {
-		return new Matrix2d(1 - 2 * imaginary * imaginary, -2 * imaginary * real, 2 * imaginary * real,
-				1 - 2 * imaginary * imaginary);
+		return new Matrix2d(real, -imaginary, imaginary, real);
 	}
 
 	/**
@@ -202,8 +198,7 @@ public class Complexd extends Complex {
 	 */
 	@Override
 	public Matrix2f toMatrixf() {
-		return new Matrix2f((float) (1 - 2 * imaginary * imaginary), (float) (-2 * imaginary * real),
-				(float) (2 * imaginary * real), (float) (1 - 2 * imaginary * imaginary));
+		return new Matrix2f((float)real, (float)-imaginary, (float)imaginary, (float)real);
 	}
 
 	/**
@@ -221,11 +216,6 @@ public class Complexd extends Complex {
 	}
 
 	@Override
-	public double lengthSquared() {
-		return real * real + imaginary * imaginary;
-	}
-
-	@Override
 	public double angle() {
 		if (real > 0)
 			return Math.atan(imaginary / real);
@@ -240,5 +230,19 @@ public class Complexd extends Complex {
 		if (imaginary < 0)
 			return -Math.PI / 2f;
 		return 0;
+	}
+
+	@Override
+	public void rotate(double real, double imaginary) {
+		double tmp = this.real * imaginary + this.imaginary * real;
+		this.real = this.real * real - this.imaginary * imaginary;
+		this.imaginary = tmp;
+	}
+
+	@Override
+	public void rotate(float real, float imaginary) {
+		double tmp = this.real * imaginary + this.imaginary * real;
+		this.real = this.real * real - this.imaginary * imaginary;
+		this.imaginary = tmp;
 	}
 }

@@ -7,7 +7,7 @@ import display.VideoSettings;
 import game.StandardGame;
 import loader.ModelLoader;
 import loader.ShaderLoader;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import shader.Shader;
 import shape.Box;
 import shape.Sphere;
@@ -44,13 +44,13 @@ public class NormalTest extends StandardGame {
 		defaultshader.addObject(box);
 		normalshader.addObject(box);
 
-		ShapedObject model = ModelLoader.load("res/models/bunny.mobj");
+		ShapedObject3 model = ModelLoader.load("res/models/bunny.mobj");
 		model.translate(-5f, 0f, -5f);
 		model.setRenderHints(true, false, true);
 		defaultshader.addObject(model);
 		normalshader.addObject(model);
 
-		ShapedObject model2 = ModelLoader.load("res/models/cone.mobj");
+		ShapedObject3 model2 = ModelLoader.load("res/models/cone.mobj");
 		model2.translate(-5f, 0f, 5f);
 		model2.setRenderHints(true, false, true);
 		defaultshader.addObject(model2);

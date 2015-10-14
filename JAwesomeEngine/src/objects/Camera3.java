@@ -5,7 +5,7 @@ import matrix.Matrix4f;
 import utils.DefaultValues;
 import vector.Vector3f;
 
-public class Camera3 extends Camera {
+public class Camera3 extends GameObject3 implements Camera {
 	Vector3f direction;
 	float hrot, vrot;
 
@@ -16,10 +16,12 @@ public class Camera3 extends Camera {
 	}
 
 	public Camera3(Vector3f pos) {
+		super();
 		init(pos, DefaultValues.DEFAULT_CAMERA_HORIZONTAL_ROTATION, DefaultValues.DEFAULT_CAMERA_VERTICAL_ROTATION);
 	}
 
 	public Camera3(Vector3f pos, float hRotation, float vRotation) {
+		super();
 		init(pos, hRotation, vRotation);
 	}
 

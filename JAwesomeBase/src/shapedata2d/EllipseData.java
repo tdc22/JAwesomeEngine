@@ -1,6 +1,6 @@
 package shapedata2d;
 
-import objects.DataObject;
+import objects.DataObject2;
 import vector.Vector2f;
 
 /**
@@ -10,7 +10,7 @@ import vector.Vector2f;
  * 
  */
 
-public class EllipseData extends DataObject implements EllipseStructure {
+public class EllipseData extends DataObject2 implements EllipseStructure {
 	float radius, halfheight;
 
 	public EllipseData(float x, float y, float radius, float halfheight) {

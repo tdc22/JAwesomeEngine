@@ -5,7 +5,7 @@ import math.VecMath;
 import objects.ShapedObject2;
 import utils.DefaultValues;
 import utils.GLConstants;
-import vector.Vector3f;
+import vector.Vector2f;
 
 public class Text extends ShapedObject2 {
 	String text;
@@ -77,12 +77,12 @@ public class Text extends ShapedObject2 {
 		char[] chars = text.toCharArray();
 
 		delete();
-		Vector3f position = new Vector3f();
+		Vector2f position = new Vector2f();
 		int indexCount = 0;
 		for (int i = 0; i < chars.length; i++) {
 			char c = chars[i];
 			FontCharacter character = font.getCharacter(c);
-			for (Vector3f v : character.getVertices()) {
+			for (Vector2f v : character.getVertices()) {
 				this.addVertex(VecMath.addition(position, v));
 			}
 			for (Integer index : character.getIndices()) {

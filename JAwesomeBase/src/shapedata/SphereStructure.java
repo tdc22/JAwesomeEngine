@@ -1,5 +1,8 @@
 package shapedata;
 
+import objects.ShapeStructure;
+import vector.Vector3f;
+
 /**
  * Class structure for spheres.
  * 
@@ -7,7 +10,7 @@ package shapedata;
  * 
  */
 
-public interface SphereStructure extends ShapeStructure {
+public interface SphereStructure extends ShapeStructure<Vector3f> {
 	/**
 	 * Gets the radius of the sphere.
 	 * 

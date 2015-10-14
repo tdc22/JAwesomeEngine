@@ -20,6 +20,7 @@ import narrowphase.EPA;
 import narrowphase.GJK;
 import objects.CompoundObject3;
 import objects.RigidBody3;
+import objects.ShapedObject3;
 import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
@@ -108,7 +109,7 @@ public class CompoundTest extends StandardGame {
 				rb.addCollisionShape(PhysicsShapeCreator.create(s));
 				rb.setMass(0.1f);
 				rb.setInertia(new Quaternionf(0.1f, 0, 0, 0));
-				space.addCompoundObject(rb, b, s);
+				space.addCompoundObject(rb, new ShapedObject3[] { b, s });
 				defaultshader.addObject(b);
 				defaultshader.addObject(s);
 				tempdelta = 0;
@@ -133,7 +134,7 @@ public class CompoundTest extends StandardGame {
 				rb.addCollisionShape(PhysicsShapeCreator.create(s2));
 				rb.setMass(0.1f);
 				rb.setInertia(new Quaternionf(0.1f, 0, 0, 0));
-				space.addCompoundObject(rb, s1, s2);
+				space.addCompoundObject(rb, new ShapedObject3[] { s1, s2 });
 				defaultshader.addObject(s1);
 				defaultshader.addObject(s2);
 				tempdelta = 0;

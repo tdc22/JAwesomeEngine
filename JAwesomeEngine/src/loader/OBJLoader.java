@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -212,8 +212,8 @@ public class OBJLoader {
 	/*
 	 * Converts a given *.obj-File to a *.mobj-File.
 	 */
-	public static ShapedObject loadMOBJ(File f) throws IOException {
-		ShapedObject object = new ShapedObject();
+	public static ShapedObject3 loadMOBJ(File f) throws IOException {
+		ShapedObject3 object = new ShapedObject3();
 
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		String line;
@@ -259,8 +259,8 @@ public class OBJLoader {
 		return object;
 	}
 
-	public static ShapedObject loadModel(File f) throws FileNotFoundException, IOException {
-		ShapedObject object = new ShapedObject();
+	public static ShapedObject3 loadModel(File f) throws FileNotFoundException, IOException {
+		ShapedObject3 object = new ShapedObject3();
 		if (f.getName().endsWith(".mobj")) {
 			object = loadMOBJ(f);
 		} else {
