@@ -63,8 +63,7 @@ public class FramebufferObject {
 	int width, height;
 	IntBuffer imageData;
 	FloatBuffer viewTemp, projectionTemp;
-	boolean multisampled, useCam, useFrustum, renderColor, renderDepth, renderColorToTexture, renderDepthToTexture,
-			render3, render2;
+	boolean multisampled, useCam, useFrustum, renderColor, renderDepth, renderColorToTexture, renderDepthToTexture;
 	Camera cam;
 	ViewFrustum frustum;
 
@@ -129,18 +128,16 @@ public class FramebufferObject {
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// System.out.println(useCam + "; " + useFrustum);
-		if (render3) {
-			if (useCam && useFrustum) {
-				viewTemp = render.getViewMatrixBuffer();
-				projectionTemp = render.getProjectionMatrixBuffer();
-				render.setViewProjectionMatrix(cam.getMatrixBuffer(), frustum.getMatrixBuffer());
-			} else if (useCam) {
-				viewTemp = render.getViewMatrixBuffer();
-				render.setViewMatrix(cam.getMatrixBuffer());
-			} else if (useFrustum) {
-				projectionTemp = render.getProjectionMatrixBuffer();
-				render.setProjectionMatrix(frustum.getMatrixBuffer());
-			}
+		if (useCam && useFrustum) {
+			viewTemp = render.getViewMatrixBuffer();
+			projectionTemp = render.getProjectionMatrixBuffer();
+			render.setViewProjectionMatrix(cam.getMatrixBuffer(), frustum.getMatrixBuffer());
+		} else if (useCam) {
+			viewTemp = render.getViewMatrixBuffer();
+			render.setViewMatrix(cam.getMatrixBuffer());
+		} else if (useFrustum) {
+			projectionTemp = render.getProjectionMatrixBuffer();
+			render.setProjectionMatrix(frustum.getMatrixBuffer());
 		}
 
 		bind();
@@ -150,14 +147,12 @@ public class FramebufferObject {
 	public void end() {
 		unbind();
 
-		if (render3) {
-			if (useCam && useFrustum) {
-				render.setViewProjectionMatrix(viewTemp, projectionTemp);
-			} else if (useCam) {
-				render.setViewMatrix(viewTemp);
-			} else if (useFrustum) {
-				render.setProjectionMatrix(projectionTemp);
-			}
+		if (useCam && useFrustum) {
+			render.setViewProjectionMatrix(viewTemp, projectionTemp);
+		} else if (useCam) {
+			render.setViewMatrix(viewTemp);
+		} else if (useFrustum) {
+			render.setProjectionMatrix(projectionTemp);
 		}
 
 		glEnable(GL_TEXTURE_2D);

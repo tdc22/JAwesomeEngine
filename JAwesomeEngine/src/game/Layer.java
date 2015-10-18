@@ -11,7 +11,6 @@ import java.util.List;
 import org.lwjgl.BufferUtils;
 
 import matrix.Matrix4f;
-import objects.Camera;
 import objects.ViewProjection;
 import shader.PostProcessingShader;
 import shader.Shader;
@@ -22,8 +21,7 @@ public class Layer implements ViewProjection {
 	List<Shader> shader;
 	List<PostProcessingShader> postProcessing;
 	int postProcessingIterations = 20;
-	protected FloatBuffer projectionMatrix;
-	Camera cam;
+	protected FloatBuffer projectionMatrix, viewMatrix;
 	FramebufferObject framebufferMultisample, framebuffer, framebufferPostProcessing;
 	boolean active = true;
 
@@ -110,6 +108,7 @@ public class Layer implements ViewProjection {
 
 	@Override
 	public void setViewMatrix(FloatBuffer buffer) {
+		viewMatrix = buffer;
 		for (Shader s : shader) {
 			s.setArgumentDirect("view", buffer);
 		}
@@ -125,6 +124,7 @@ public class Layer implements ViewProjection {
 
 	@Override
 	public void setViewProjectionMatrix(FloatBuffer viewBuffer, FloatBuffer projectionBuffer) {
+		viewMatrix = viewBuffer;
 		projectionMatrix = projectionBuffer;
 		for (Shader s : shader) {
 			s.setArgumentDirect("view", viewBuffer);
@@ -134,9 +134,9 @@ public class Layer implements ViewProjection {
 
 	@Override
 	public void setViewMatrix(Matrix4f matrix) {
-		FloatBuffer buf = storeMatrix(matrix);
+		viewMatrix = storeMatrix(matrix);
 		for (Shader s : shader) {
-			s.setArgumentDirect("view", buf);
+			s.setArgumentDirect("view", viewMatrix);
 		}
 	}
 
@@ -150,17 +150,17 @@ public class Layer implements ViewProjection {
 
 	@Override
 	public void setViewProjectionMatrix(Matrix4f viewMatrix, Matrix4f projectionMatrix) {
-		FloatBuffer viewBuf = storeMatrix(viewMatrix);
+		this.viewMatrix = storeMatrix(viewMatrix);
 		this.projectionMatrix = storeMatrix(projectionMatrix);
 		for (Shader s : shader) {
-			s.setArgumentDirect("view", viewBuf);
+			s.setArgumentDirect("view", viewMatrix);
 			s.setArgumentDirect("projection", this.projectionMatrix);
 		}
 	}
 
 	@Override
 	public FloatBuffer getViewMatrixBuffer() {
-		return cam.getMatrixBuffer();
+		return viewMatrix;
 	}
 
 	@Override
