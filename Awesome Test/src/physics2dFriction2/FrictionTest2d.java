@@ -123,7 +123,7 @@ public class FrictionTest2d extends StandardGame {
 		debugger.update(fps, 0, 0);
 		if (inputs.isKeyDown("E") || step.isActive()) {
 			RigidBody2 obj = (RigidBody2) space.getObjects().get(space.getObjects().size() - 1);
-			System.out.println(obj.getTranslation2() + "; " + obj.getRotation() + "; " + space.hasCollision(obj));
+			System.out.println(obj.getTranslation() + "; " + obj.getRotation() + "; " + space.hasCollision(obj));
 			space.update(delta);
 		}
 		physicsdebug.update();

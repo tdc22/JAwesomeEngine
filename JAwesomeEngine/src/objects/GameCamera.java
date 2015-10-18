@@ -143,8 +143,8 @@ public class GameCamera extends Camera3 implements Updateable {
 	@Override
 	public void update(int delta) {
 		if (flycam) {
-			float mousedx = inputs.getMouseDX();
-			float mousedy = inputs.getMouseDY();
+			float mousedx = inputs.getMouseX();
+			float mousedy = inputs.getMouseY();
 
 			if ((mousedx != 0 || mousedy != 0)) {
 				if (!invertX)

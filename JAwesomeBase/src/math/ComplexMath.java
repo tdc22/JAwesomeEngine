@@ -118,49 +118,13 @@ public class ComplexMath {
 		return result;
 	}
 
-	public static Complexd slerp(Complex q1, Complex q2, double t) {
-		Complexd result;
-		double dot = dotproduct(q1, q2);
-		if (dot < 0) {
-			dot = -dot;
-			result = negate(q2);
-		} else {
-			result = new Complexd(q2);
-		}
-
-		if (dot < thresholdValue) {
-			double angle = Math.acos(dot);
-			Complex temp = scale(q1, Math.sin(angle * (1 - t)));
-			result.scale(Math.sin(angle * t));
-			result.set(result.getReal() + temp.getReal(), result.getImaginary() + temp.getImaginary());
-			result.scale(Math.sin(angle));
-			return result;
-		}
-
-		return lerp(q1, result, t);
-	}
-
-	public static Complexf slerp(Complexf q1, Complexf q2, float t) {
-		Complexf result;
-		float dot = dotproduct(q1, q2);
-		if (dot < 0) {
-			dot = -dot;
-			result = negate(q2);
-		} else {
-			result = new Complexf(q2);
-		}
-
-		if (dot < thresholdValue) {
-			double angle = Math.acos(dot);
-			Complexf temp = scale(q1, (float) Math.sin(angle * (1 - t)));
-			result.scale(Math.sin(angle * t));
-			result.set(result.getReal() + temp.getReal(), result.getImaginary() + temp.getImaginary());
-			result.scale(Math.sin(angle));
-			return result;
-		}
-
-		return lerp(q1, result, t);
-	}
+	// public static Complexd slerp(Complex q1, Complex q2, double t) {
+	// DIFFERENT FROM QUATERNIONS
+	// }
+	//
+	// public static Complexf slerp(Complexf q1, Complexf q2, float t) {
+	//
+	// }
 
 	public static Complexd slerpNoInvert(Complex q1, Complex q2, double t) {
 		double dot = dotproduct(q1, q2);
@@ -205,20 +169,20 @@ public class ComplexMath {
 	public static Vector2 transform(Complex c, Vector2 v) {
 		return new Vector2d(v.getX() * c.getReal() + v.getY() * c.getImaginary(),
 				v.getX() * -c.getImaginary() + v.getY() * c.getReal());
-//		return new Vector2d(
-//				(1 - 2 * c.getImaginary() * c.getImaginary()) * v.getX()
-//						+ (-2 * c.getImaginary() * c.getReal()) * v.getY(),
-//				(2 * c.getImaginary() * c.getReal()) * v.getX()
-//						+ (1 - 2 * c.getImaginary() * c.getImaginary()) * v.getY());
+		// return new Vector2d(
+		// (1 - 2 * c.getImaginary() * c.getImaginary()) * v.getX()
+		// + (-2 * c.getImaginary() * c.getReal()) * v.getY(),
+		// (2 * c.getImaginary() * c.getReal()) * v.getX()
+		// + (1 - 2 * c.getImaginary() * c.getImaginary()) * v.getY());
 	}
 
 	public static Vector2f transform(Complexf c, Vector2f v) {
 		return new Vector2f(v.getXf() * c.getRealf() + v.getYf() * c.getImaginaryf(),
 				v.getXf() * -c.getImaginaryf() + v.getYf() * c.getRealf());
-//		return new Vector2f(
-//				(1 - 2 * c.getImaginaryf() * c.getImaginaryf()) * v.getXf()
-//						+ (-2 * c.getImaginaryf() * c.getRealf()) * v.getYf(),
-//				(2 * c.getImaginaryf() * c.getRealf()) * v.getXf()
-//						+ (1 - 2 * c.getImaginaryf() * c.getImaginaryf()) * v.getYf());
+		// return new Vector2f(
+		// (1 - 2 * c.getImaginaryf() * c.getImaginaryf()) * v.getXf()
+		// + (-2 * c.getImaginaryf() * c.getRealf()) * v.getYf(),
+		// (2 * c.getImaginaryf() * c.getRealf()) * v.getXf()
+		// + (1 - 2 * c.getImaginaryf() * c.getImaginaryf()) * v.getYf());
 	}
 }

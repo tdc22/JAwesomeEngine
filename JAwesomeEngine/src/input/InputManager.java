@@ -36,12 +36,12 @@ public class InputManager {
 		return inputreader;
 	}
 
-	public float getMouseDX() {
-		return inputreader.getMouseDX();
+	public float getMouseX() {
+		return inputreader.getMouseX();
 	}
 
-	public float getMouseDY() {
-		return inputreader.getMouseDY();
+	public float getMouseY() {
+		return inputreader.getMouseY();
 	}
 
 	public boolean isEventActive(String eventname) {

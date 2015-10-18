@@ -2,7 +2,6 @@ package quaternion;
 
 import matrix.Matrix2d;
 import matrix.Matrix2f;
-import matrix.Matrix3d;
 
 public class Complexd extends Complex {
 	double real, imaginary;
@@ -198,7 +197,7 @@ public class Complexd extends Complex {
 	 */
 	@Override
 	public Matrix2f toMatrixf() {
-		return new Matrix2f((float)real, (float)-imaginary, (float)imaginary, (float)real);
+		return new Matrix2f((float) real, (float) -imaginary, (float) imaginary, (float) real);
 	}
 
 	/**

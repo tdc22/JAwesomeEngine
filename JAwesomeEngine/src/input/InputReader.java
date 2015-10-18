@@ -1,7 +1,7 @@
 package input;
 
 public abstract class InputReader {
-	protected float mousedx, mousedy;
+	protected float mousex, mousey;
 
 	public abstract int getGamepadCount();
 
@@ -13,12 +13,12 @@ public abstract class InputReader {
 
 	public abstract float getGamepadStickValue(int gamepad, int sticknum, String axis);
 
-	public float getMouseDX() {
-		return mousedx;
+	public float getMouseX() {
+		return mousex;
 	}
 
-	public float getMouseDY() {
-		return mousedy;
+	public float getMouseY() {
+		return mousey;
 	}
 
 	public abstract boolean isGamepadButtonDown(int gamepad, String button);
@@ -136,7 +136,7 @@ public abstract class InputReader {
 	public abstract boolean isMouseButtonDown(String button);
 
 	public boolean isMouseMoved() {
-		return (getMouseDX() != 0 || getMouseDY() != 0);
+		return (getMouseX() != 0 || getMouseY() != 0);
 	}
 
 	public abstract void update();

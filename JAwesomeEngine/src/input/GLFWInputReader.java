@@ -301,8 +301,8 @@ public class GLFWInputReader extends InputReader {
 
 	private void updateMouseData() {
 		double tmpmx, tmpmy;
-		mousedx = 0;
-		mousedy = 0;
+		mousex = 0;
+		mousey = 0;
 		for (Long id : windowids) {
 			glfwGetCursorPos(id, tmpMousePosX, tmpMousePosY);
 			tmpMousePosX.rewind();
@@ -310,8 +310,8 @@ public class GLFWInputReader extends InputReader {
 			tmpmx = tmpMousePosX.get(0);
 			tmpmy = tmpMousePosY.get(0);
 			if (tmpmx != 0 || tmpmy != 0) {
-				mousedx += tmpmx;
-				mousedy += tmpmy;
+				mousex += tmpmx;
+				mousey += tmpmy;
 			}
 		}
 	}

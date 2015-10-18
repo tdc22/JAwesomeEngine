@@ -69,7 +69,7 @@ public class InputTest extends StandardGame {
 	@Override
 	public void update(int delta) {
 		if (inputs.isEventActive("MouseMoved"))
-			System.out.println("Mouse movement: " + inputs.getMouseDX() + "; " + inputs.getMouseDY());
+			System.out.println("Mouse movement: " + inputs.getMouseX() + "; " + inputs.getMouseY());
 		if (inputs.isEventActive("MouseButton0"))
 			System.out.println("Mouse Button 1 Down");
 		if (inputs.isEventActive("MouseButton1Pressed"))

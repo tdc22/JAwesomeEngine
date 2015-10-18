@@ -69,6 +69,14 @@ public class Layer implements ViewProjection {
 		framebufferMultisample.copyTo(framebuffer);
 	}
 
+	public List<Shader> getShader() {
+		return shader;
+	}
+
+	public List<PostProcessingShader> getPostProcessingShader() {
+		return postProcessing;
+	}
+
 	public void setActive(boolean active) {
 		this.active = active;
 	}

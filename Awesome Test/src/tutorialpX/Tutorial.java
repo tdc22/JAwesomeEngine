@@ -250,8 +250,8 @@ public class Tutorial extends StandardGame {
 	public void update(int delta) {
 		float mousedx = 0;
 		if (inputs.isMouseMoved()) {
-			mousedx = -inputs.getMouseDX() * mousesensitivity;
-			float mousedy = -inputs.getMouseDY() * mousesensitivity;
+			mousedx = -inputs.getMouseX() * mousesensitivity;
+			float mousedy = -inputs.getMouseY() * mousesensitivity;
 			cam.rotate(mousedx, mousedy);
 			playerbody.rotate(0, mousedx, 0);
 		}

@@ -24,8 +24,8 @@ public class JInputReader extends InputReader {
 		keyboardcontrollers = new ArrayList<Keyboard>();
 		gamepadcontrollers = new ArrayList<Controller>();
 
-		mousedx = 0;
-		mousedy = 0;
+		mousex = 0;
+		mousey = 0;
 
 		keys = new HashMap<String, Key>();
 
@@ -227,13 +227,13 @@ public class JInputReader extends InputReader {
 
 	@Override
 	public void update() {
-		mousedx = 0;
-		mousedy = 0;
+		mousex = 0;
+		mousey = 0;
 		for (Mouse m : mousecontrollers) {
 			m.poll();
 			if (m.getX().getPollData() != 0 || m.getY().getPollData() != 0) {
-				mousedx += m.getX().getPollData();
-				mousedy += m.getY().getPollData();
+				mousex += m.getX().getPollData();
+				mousey += m.getY().getPollData();
 			}
 		}
 

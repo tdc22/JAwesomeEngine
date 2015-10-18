@@ -2,6 +2,7 @@ package display;
 
 public abstract class Display {
 	protected int width, height;
+	protected int positionX, positionY;
 
 	public abstract void bindMouse();
 
@@ -15,6 +16,14 @@ public abstract class Display {
 
 	public int getWidth() {
 		return width;
+	}
+
+	public int getPositionX() {
+		return positionX;
+	}
+
+	public int getPositionY() {
+		return positionY;
 	}
 
 	public abstract boolean isCloseRequested();
