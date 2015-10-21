@@ -1,5 +1,6 @@
 package animationEditor;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import curves.BezierCurve2;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
@@ -19,12 +21,15 @@ import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import input.MouseInput;
+import loader.FileLoader;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
+import math.ComplexMath;
 import math.VecMath;
 import matrix.Matrix4f;
 import objects.ShapedObject2;
+import quaternion.Complexf;
 import shader.Shader;
 import shape2d.Quad;
 import texture.Texture;
@@ -151,6 +156,8 @@ public class AnimationEditor extends StandardGame {
 		currentpath = new AnimationPath(defaultshader, markershader, t1, sizes[0]);
 		paths.add(currentpath);
 
+		loadFile();
+
 		leftMousePressed = new InputEvent("leftMousePressed",
 				new Input(Input.MOUSE_EVENT, "0", MouseInput.MOUSE_BUTTON_PRESSED));
 		leftMouseDown = new InputEvent("leftMouseDown",
@@ -229,26 +236,7 @@ public class AnimationEditor extends StandardGame {
 		}
 		if (addLayer.isActive()) {
 			if (paths.size() < MAXLAYERS) {
-				Text t = new Text("Layer " + paths.size(), 10, display.getHeight() - 16 * (paths.size()) - 6, font, 16);
-				Shader lta = new Shader(colorshader);
-				lta.addObject(t);
-				layertexts.add(lta);
-				addShaderInterface(lta);
-				layertexts.get(paths.size() - 1).setArgument("u_color", new Vector4f(1, 1, 1, 1));
-
-				Shader ta = new Shader(textureshader);
-				ta.addArgument("u_texture", textures[paths.size()]);
-				addShader2d(ta);
-				paths.add(new AnimationPath(defaultshader, markershader, ta, sizes[paths.size()]));
-				System.out.println("Layer added!");
-
-				layer2d.getShader().remove(defaultshader);
-				layer2d.getShader().remove(markershader);
-				layer2d.getShader().add(defaultshader);
-				layer2d.getShader().add(markershader);
-
-				currentpathID++;
-				currentpath = paths.get(currentpathID);
+				addLayer();
 			} else {
 				System.out.println("Maximum number of paths reached!");
 			}
@@ -279,7 +267,8 @@ public class AnimationEditor extends StandardGame {
 					bc.bezier.getP1().scale(invscale);
 					bc.bezier.getP2().scale(invscale);
 					bc.bezier.getP3().scale(invscale);
-					System.out.println(bc);
+					System.out.println(bc.toString().replace("BezierCurve[", "new BezierCurve2(")
+							.replace("Vector2f[", "new Vector2f(").replace("]", ")"));
 					bc.bezier.getP0().scale(scale);
 					bc.bezier.getP1().scale(scale);
 					bc.bezier.getP2().scale(scale);
@@ -291,7 +280,8 @@ public class AnimationEditor extends StandardGame {
 				}
 				System.out.println("Rotationpaths");
 				for (int b = 0; b < ap.squadcurves.size(); b++) {
-					System.out.println(ap.squadcurves.get(b));
+					System.out.println(ap.squadcurves.get(b).toString().replace("SquadCurve[", "new SquadCurve2(")
+							.replace("Complexf[", "new Complexf(").replace("]", ")"));
 				}
 			}
 			System.out.println("---------- End Output ----------");
@@ -300,6 +290,165 @@ public class AnimationEditor extends StandardGame {
 			showmarkers = !showmarkers;
 			markershader.setRendered(showmarkers);
 		}
+	}
+
+	private void addLayer() {
+		Text t = new Text("Layer " + paths.size(), 10, display.getHeight() - 16 * (paths.size()) - 6, font, 16);
+		Shader lta = new Shader(colorshader);
+		lta.addObject(t);
+		layertexts.add(lta);
+		addShaderInterface(lta);
+		layertexts.get(currentpathID).setArgument("u_color", new Vector4f(1, 1, 1, 1));
+
+		Shader ta = new Shader(textureshader);
+		ta.addArgument("u_texture", textures[paths.size()]);
+		addShader2d(ta);
+		paths.add(new AnimationPath(defaultshader, markershader, ta, sizes[paths.size()]));
+		System.out.println("Layer added!");
+
+		layer2d.getShader().remove(defaultshader);
+		layer2d.getShader().remove(markershader);
+		layer2d.getShader().add(defaultshader);
+		layer2d.getShader().add(markershader);
+
+		currentpathID++;
+		currentpath = paths.get(currentpathID);
+	}
+
+	private void loadFile() {
+		// try {
+		String input = null;
+		try {
+			input = FileLoader.readFile(
+					"/home/oliver/Projects/Git/JAwesomeEngine/Awesome Test/src/animationEditor/AnimationInput.txt");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("INPUT: " + input);
+		if (!input.isEmpty()) {
+			String[] lines = input.split("\n");
+			boolean lastBezier = true;
+			boolean lastSquad = false;
+			int numBezierLayer = 0;
+			int numSquadLayer = -1;
+			String lastlayername = "";
+			String layername = "";
+			boolean firstonPath = true;
+			for (int i = 0; i < lines.length; i++) {
+				String s = lines[i];
+				if (s.contains("BezierCurve")) {
+					layername = s.split("new BezierCurve")[0].replace(" ", "").replace("	", "");
+					System.out.println(layername + "; " + lastlayername);
+					if (!lastBezier || (lastlayername.length() > 0 && !lastlayername.equals(layername))) {
+						currentpath.closed = true;
+						currentpath.markers.get(currentpath.markers.size() - 1).delete();
+						currentpath.markers.set(currentpath.markers.size() - 1,
+								currentpath.markers.get(currentpath.markers.size() - 5));
+						numBezierLayer++;
+						firstonPath = true;
+						System.out.println(numBezierLayer + "; " + layername);
+						if (paths.size() <= numBezierLayer) {
+							addLayer();
+						} else {
+							currentpath = paths.get(numBezierLayer);
+						}
+					}
+					lastlayername = layername;
+					String[] p = s.replace(" ", "").replace("),", "").replace(")", "").replace(";", "")
+							.split("newVector2f\\(");
+					Vector2f a = new Vector2f(Float.parseFloat(p[1].split(",")[0]),
+							Float.parseFloat(p[1].split(",")[1]));
+					Vector2f b = new Vector2f(Float.parseFloat(p[2].split(",")[0]),
+							Float.parseFloat(p[2].split(",")[1]));
+					Vector2f c = new Vector2f(Float.parseFloat(p[3].split(",")[0]),
+							Float.parseFloat(p[3].split(",")[1]));
+					Vector2f d = new Vector2f(Float.parseFloat(p[4].split(",")[0]),
+							Float.parseFloat(p[4].split(",")[1]));
+					a.scale(scale);
+					b.scale(scale);
+					c.scale(scale);
+					d.scale(scale);
+					a.translate(animationcenter.getTranslation());
+					b.translate(animationcenter.getTranslation());
+					c.translate(animationcenter.getTranslation());
+					d.translate(animationcenter.getTranslation());
+					if (firstonPath)
+						currentpath.addQuadMarker(a);
+					else {
+						currentpath.markers.add(currentpath.markers.get(currentpath.markers.size() - 2));
+					}
+					currentpath.addCircleMarker(b);
+					currentpath.addQuadMarker(d);
+					currentpath.addCircleMarker(c);
+					currentpath.addBezierCurve(new BezierCurve2(a, b, c, d));
+					System.out.println("Path_ADDED " + currentpath.markers.size());
+					firstonPath = false;
+					lastBezier = true;
+				} else {
+					lastBezier = false;
+				}
+
+				if (s.contains("SquadCurve")) {
+					layername = s.split("new SquadCurve")[0].replace(" ", "").replace("	", "");
+					if (!lastSquad || (lastlayername.length() > 0 && !lastlayername.equals(layername))) {
+						numSquadLayer++;
+						System.out.println(numSquadLayer + "; " + layername);
+						if (paths.size() <= numSquadLayer) {
+							addLayer();
+						} else {
+							currentpath = paths.get(numSquadLayer);
+						}
+					}
+					lastlayername = layername;
+					String[] p = s.replace(" ", "").replace("),", "").replace(")", "").replace(";", "")
+							.split("newComplexf\\(");
+					// Complexf a = new
+					// Complexf(Float.parseFloat(p[1].split(",")[0]),
+					// Float.parseFloat(p[1].split(",")[1]));
+					Complexf b = new Complexf(Float.parseFloat(p[2].split(",")[0]),
+							Float.parseFloat(p[2].split(",")[1]));
+					// Complexf c = new
+					// Complexf(Float.parseFloat(p[3].split(",")[0]),
+					// Float.parseFloat(p[3].split(",")[1]));
+					// Complexf d = new
+					// Complexf(Float.parseFloat(p[4].split(",")[0]),
+					// Float.parseFloat(p[4].split(",")[1]));
+					currentpath.addRotationMarker(invertRotation(
+							currentpath.markers.get(currentpath.rotationreferences.size() * 4).getTranslation(), b));
+					lastSquad = true;
+				} else {
+					lastSquad = false;
+				}
+			}
+
+			currentpath.closed = true;
+			ShapedObject2 lastmarker = currentpath.markers.get(currentpath.markers.size() - 2);
+			currentpath.markershader.removeObject(lastmarker);
+			lastmarker.delete();
+			currentpath.markers.set(currentpath.markers.size() - 2, currentpath.markers.get(0));
+
+			currentpathID = 0;
+			currentpath = paths.get(currentpathID);
+
+			for (AnimationPath ap : paths) {
+				ap.updateSquad();
+				ap.updatePathMarker();
+			}
+		}
+		// }
+		// catch(Exception e) {
+		// System.err.println(e);
+		// System.out.println("No file found. Starting normally.");
+		// }
+	}
+
+	private Vector2f invertRotation(Vector2f pathmarker, Complexf rotation) {
+		Vector2f result = new Vector2f(1, 0);
+		ComplexMath.transform(rotation, result);
+		result.scale(10);
+		result.translate(pathmarker);
+		return result;
 	}
 
 	private class AnimationCenter extends ShapedObject2 {

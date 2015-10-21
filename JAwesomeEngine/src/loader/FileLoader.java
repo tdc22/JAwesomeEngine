@@ -13,21 +13,20 @@ public class FileLoader {
 		reader = new BufferedReader(new FileReader(file));
 		StringBuilder content = new StringBuilder();
 
-		boolean read = true;
 		try {
 			String line = reader.readLine();
-			while (read) {
+			while (line != null) {
+				System.out.println("APPEND");
 				content.append(line);
 				if ((line = reader.readLine()) != null) {
 					content.append("\n");
-				} else {
-					read = false;
 				}
 			}
 			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		String result = content.toString();
 
 		return result;

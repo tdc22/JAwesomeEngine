@@ -102,20 +102,34 @@ public class AnimationPath {
 					} else {
 						temppoint2 = markers.size();
 					}
-					Quad m = new Quad(pos, 1, 1);
-					markers.add(m);
-					markershader.addObject(m);
+					addQuadMarker(pos);
 
 					pos.x += 10;
-					RotationMarker rm = new RotationMarker(pos);
-					rotationreferences.add(rm);
-					markershader.addObject(rm);
+					addRotationMarker(pos);
 				} else {
 					markers.add(markers.get(markers.size() - 2));
 					skipPress = false;
 				}
 			}
 		}
+	}
+
+	public void addQuadMarker(Vector2f pos) {
+		Quad m = new Quad(pos, 1, 1);
+		markers.add(m);
+		markershader.addObject(m);
+	}
+
+	public void addCircleMarker(Vector2f pos) {
+		Circle m = new Circle(pos, 1, 10);
+		markers.add(m);
+		markershader.addObject(m);
+	}
+
+	public void addRotationMarker(Vector2f pos) {
+		RotationMarker rm = new RotationMarker(pos);
+		rotationreferences.add(rm);
+		markershader.addObject(rm);
 	}
 
 	public void downLeft(Vector2f pos) {
@@ -183,21 +197,13 @@ public class AnimationPath {
 			if (!closed) {
 				if (tempreference == -1) {
 					tempreference = markers.size();
-					Circle m = new Circle(pos, 1, 10);
-					markers.add(m);
-					markershader.addObject(m);
+					addCircleMarker(pos);
 				} else {
 					int p = markers.size();
-					Circle m = new Circle(pos, 1, 10);
-					markers.add(m);
-					markershader.addObject(m);
-					RenderedBezierCurve bezier = new RenderedBezierCurve(new BezierCurve2(
-							markers.get(temppoint).getTranslation(), markers.get(tempreference).getTranslation(),
-							markers.get(p).getTranslation(), markers.get(temppoint2).getTranslation()));
-					beziercurves.add(bezier);
-					numCurves++;
-					oneOverNum = 1 / (float) numCurves;
-					defaultshader.addObject(bezier);
+					addCircleMarker(pos);
+					addBezierCurve(new BezierCurve2(markers.get(temppoint).getTranslation(),
+							markers.get(tempreference).getTranslation(), markers.get(p).getTranslation(),
+							markers.get(temppoint2).getTranslation()));
 					updatePathMarker();
 
 					temppoint = temppoint2;
@@ -207,6 +213,17 @@ public class AnimationPath {
 				}
 			}
 		}
+	}
+
+	public void addBezierCurve(RenderedBezierCurve rbc) {
+		beziercurves.add(rbc);
+		numCurves++;
+		oneOverNum = 1 / (float) numCurves;
+		defaultshader.addObject(rbc);
+	}
+
+	public void addBezierCurve(BezierCurve2 bez) {
+		addBezierCurve(new RenderedBezierCurve(bez));
 	}
 
 	public void closePath() {
@@ -244,10 +261,7 @@ public class AnimationPath {
 			ref1 = VecMath.addition(markers.get(temppoint).getTranslation(), closevector);
 
 			markers.add(markers.get(temppoint));
-
-			Circle m2 = new Circle(ref1, 1, 10);
-			markers.add(m2);
-			markershader.addObject(m2);
+			addCircleMarker(ref1);
 
 			bezier = new RenderedBezierCurve(new BezierCurve2(pos1, ref1, ref2, pos2));
 		} else {
@@ -255,24 +269,15 @@ public class AnimationPath {
 			ref1 = VecMath.addition(markers.get(temppoint).getTranslation(), closevector);
 
 			markers.add(markers.get(markers.size() - 1));
-
-			Circle m2 = new Circle(ref1, 1, 10);
-			markers.add(m2);
-			markershader.addObject(m2);
+			addCircleMarker(ref1);
 
 			bezier = new RenderedBezierCurve(new BezierCurve2(pos1, ref1, ref2, pos2));
 		}
 
 		markers.add(markers.get(0));
+		addCircleMarker(ref2);
 
-		Circle m3 = new Circle(ref2, 1, 10);
-		markers.add(m3);
-		markershader.addObject(m3);
-
-		beziercurves.add(bezier);
-		numCurves++;
-		oneOverNum = 1 / (float) numCurves;
-		defaultshader.addObject(bezier);
+		addBezierCurve(bezier);
 
 		closed = true;
 		updateSquad();
@@ -292,7 +297,7 @@ public class AnimationPath {
 		updatePathMarker();
 	}
 
-	private void updatePathMarker() {
+	public void updatePathMarker() {
 		Vector2f pos = getPoint(animationTimer);
 		if (pos != null) {
 			pathmarker.translateTo(pos);
@@ -308,6 +313,7 @@ public class AnimationPath {
 	public void updateSquad() {
 		List<Complexf> rotations = new ArrayList<Complexf>();
 		squadcurves.clear();
+		System.out.println("AAA " + rotationreferences.size() + "; " + markers.size());
 		for (int i = 0; i < rotationreferences.size(); i++) {
 			rotations.add(getRotation(rotationreferences.get(i).getTranslation(), markers.get(i * 4).getTranslation()));
 		}
