@@ -9,7 +9,7 @@ import loader.ShaderLoader;
 import loader.TextureLoader;
 import shader.Shader;
 import shape.Box;
-import shape.Capsule;
+import shape.Ellipsoid;
 import shape.Cylinder;
 import shape.Sphere;
 import texture.Texture;
@@ -40,7 +40,7 @@ public class TextureCoordinateTest extends StandardGame {
 		s.setRenderHints(false, true, false);
 		textureshader.addObject(s);
 
-		Capsule c = new Capsule(5, 0, 0, 1, 2, 36, 36);
+		Ellipsoid c = new Ellipsoid(5, 0, 0, 1, 2, 36, 36);
 		c.setRenderHints(false, true, false);
 		textureshader.addObject(c);
 

@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glClearStencil;
 import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glHint;
 import static org.lwjgl.opengl.GL11.glShadeModel;
@@ -269,8 +270,12 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		if (settings.isBackfaceCulling()) {
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
+		} else {
+			glDisable(GL_CULL_FACE);
+		}
 
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);

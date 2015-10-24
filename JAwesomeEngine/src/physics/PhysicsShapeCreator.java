@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import collisionshape.BoxShape;
-import collisionshape.CapsuleShape;
+import collisionshape.EllipsoidShape;
 import collisionshape.ConvexShape;
 import collisionshape.CylinderShape;
 import collisionshape2d.ConvexShape2;
@@ -15,7 +15,7 @@ import convexhull.Quickhull2;
 import objects.ShapedObject2;
 import objects.ShapedObject3;
 import shapedata.BoxStructure;
-import shapedata.CapsuleStructure;
+import shapedata.EllipsoidStructure;
 import shapedata.CylinderStructure;
 import shapedata2d.EllipseStructure;
 import shapedata2d.QuadStructure;
@@ -26,8 +26,8 @@ public class PhysicsShapeCreator {
 		return new BoxShape(box.getTranslation(), box.getHalfSize());
 	}
 
-	public static CapsuleShape create(CapsuleStructure capsule) {
-		return new CapsuleShape(capsule.getTranslation(), capsule.getRadius(), capsule.getHalfHeight());
+	public static EllipsoidShape create(EllipsoidStructure capsule) {
+		return new EllipsoidShape(capsule.getTranslation(), capsule.getRadiusX(), capsule.getRadiusY(), capsule.getRadiusZ());
 	}
 
 	public static CylinderShape create(CylinderStructure cylinder) {

@@ -1,41 +1,8 @@
-headPath.addCurve(new BezierCurve2(new Vector2f(2.5216675, -5.2222223), new Vector2f(2.6047912, -5.166667), new Vector2f(2.6047912, -5.1944447), new Vector2f(2.5770836, -5.2222223)));
-headPath.addCurve(new BezierCurve2(new Vector2f(2.5770836, -5.2222223), new Vector2f(2.549375, -5.1944447), new Vector2f(2.549375, -5.166667), new Vector2f(2.5216675, -5.2222223)));
-bodyPath.addCurve(new BezierCurve2(new Vector2f(0.027917227, -0.02777799), new Vector2f(0.027917227, -0.083333336), new Vector2f(2.0853679E-4, -0.055555344), new Vector2f(0.027917227, -0.083333336)));
-bodyPath.addCurve(new BezierCurve2(new Vector2f(0.027917227, -0.083333336), new Vector2f(0.055624645, -0.055555344), new Vector2f(0.055624645, -0.055555344), new Vector2f(0.027917227, -0.02777799)));
-handPath1.addCurve(new BezierCurve2(new Vector2f(4.6552086, 2.0), new Vector2f(5.209375, 0.805556), new Vector2f(5.209375, 0.777778), new Vector2f(4.5997925, 2.0555553)));
-handPath1.addCurve(new BezierCurve2(new Vector2f(4.5997925, 2.0555553), new Vector2f(4.3781257, 3.6111107), new Vector2f(-1.2466667, 3.055556), new Vector2f(-1.8562502, 0.44444403)));
-handPath1.addCurve(new BezierCurve2(new Vector2f(-1.8562502, 0.44444403), new Vector2f(-1.9393749, -0.11111069), new Vector2f(-1.9670837, -0.16666667), new Vector2f(-1.8562502, 0.44444403)));
-handPath1.addCurve(new BezierCurve2(new Vector2f(-1.8562502, 0.44444403), new Vector2f(-1.2466667, 3.0277774), new Vector2f(4.4612503, 3.5833335), new Vector2f(4.6552086, 2.0)));
-handPath2.addCurve(new BezierCurve2(new Vector2f(-2.7429168, 0.19444403), new Vector2f(-2.936875, -0.4166667), new Vector2f(-2.936875, -0.4166667), new Vector2f(-2.7429168, 0.22222202)));
-handPath2.addCurve(new BezierCurve2(new Vector2f(-2.7429168, 0.22222202), new Vector2f(-2.2441669, 2.6944454), new Vector2f(3.3806255, 3.4166667), new Vector2f(3.851667, 1.7222227)));
-handPath2.addCurve(new BezierCurve2(new Vector2f(3.851667, 1.7222227), new Vector2f(4.4612503, 0.777778), new Vector2f(4.433542, 0.75), new Vector2f(3.8239582, 1.7222227)));
-handPath2.addCurve(new BezierCurve2(new Vector2f(3.8239582, 1.7222227), new Vector2f(3.5191665, 3.4166667), new Vector2f(-2.1056252, 2.6388893), new Vector2f(-2.7429168, 0.19444403)));
-footPath1.addCurve(new BezierCurve2(new Vector2f(4.1010413, 5.75), new Vector2f(4.7106247, 4.555555), new Vector2f(4.682916, 4.5), new Vector2f(4.045625, 5.7777786)));
-footPath1.addCurve(new BezierCurve2(new Vector2f(4.045625, 5.7777786), new Vector2f(3.630001, 7.166667), new Vector2f(-4.5993757, 5.9444456), new Vector2f(-4.9318748, 3.9722228)));
-footPath1.addCurve(new BezierCurve2(new Vector2f(-4.9318748, 3.9722228), new Vector2f(-5.153543, 3.3333335), new Vector2f(-5.1258335, 3.2777774), new Vector2f(-4.9595833, 3.9722228)));
-footPath1.addCurve(new BezierCurve2(new Vector2f(-4.9595833, 3.9722228), new Vector2f(-4.5716667, 5.9444456), new Vector2f(3.6854172, 7.166667), new Vector2f(4.1010413, 5.75)));
-footPath2.addCurve(new BezierCurve2(new Vector2f(-6.0402083, 4.666667), new Vector2f(-6.261875, 3.8333335), new Vector2f(-6.289583, 3.8333335), new Vector2f(-6.0125003, 4.5833335)));
-footPath2.addCurve(new BezierCurve2(new Vector2f(-6.0125003, 4.5833335), new Vector2f(-5.098125, 6.6388884), new Vector2f(2.410834, 7.222223), new Vector2f(2.8818755, 5.694444)));
-footPath2.addCurve(new BezierCurve2(new Vector2f(2.8818755, 5.694444), new Vector2f(3.4360416, 4.6388884), new Vector2f(3.4360416, 4.5833335), new Vector2f(2.8541667, 5.694444)));
-footPath2.addCurve(new BezierCurve2(new Vector2f(2.8541667, 5.694444), new Vector2f(2.410834, 7.3055563), new Vector2f(-5.1258335, 6.6111107), new Vector2f(-6.0402083, 4.666667)));
-
-headRotation.addCurve(new SquadCurve2(new Complexf(0.99989444, -0.014527661), new Complexf(0.99989444, -0.014527661), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0)));
-		headRotation.addCurve(new SquadCurve2(new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(0.99989444, -0.014527661), new Complexf(0.99989444, -0.014527661)));
-		bodyRotation.addCurve(new SquadCurve2(new Complexf(0.9998611, 0.016664097), new Complexf(0.9998611, 0.016664097), new Complexf(0.9998557, -0.016989315), new Complexf(0.9998557, -0.016989315)));
-		bodyRotation.addCurve(new SquadCurve2(new Complexf(0.9998557, -0.016989315), new Complexf(0.9998557, -0.016989315), new Complexf(0.9998611, 0.016664097), new Complexf(0.9998611, 0.016664097)));
-		handRotation1.addCurve(new SquadCurve2(new Complexf(0.9962681, -0.08631285), new Complexf(0.9962681, -0.08631285), new Complexf(0.9952511, -0.097340986), new Complexf(0.9952511, -0.097340986)));
-		handRotation1.addCurve(new SquadCurve2(new Complexf(0.9952511, -0.097340986), new Complexf(0.9952511, -0.097340986), new Complexf(0.9992381, -0.039029222), new Complexf(0.9992381, -0.039029222)));
-		handRotation1.addCurve(new SquadCurve2(new Complexf(0.9992381, -0.039029222), new Complexf(0.9992381, -0.039029222), new Complexf(0.9992381, -0.039029222), new Complexf(0.9992381, -0.039029222)));
-		handRotation1.addCurve(new SquadCurve2(new Complexf(0.9992381, -0.039029222), new Complexf(0.9992381, -0.039029222), new Complexf(0.9962681, -0.08631285), new Complexf(0.9962681, -0.08631285)));
-		handRotation2.addCurve(new SquadCurve2(new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(0.99951196, -0.031239508), new Complexf(0.99951196, -0.031239508)));
-		handRotation2.addCurve(new SquadCurve2(new Complexf(0.99951196, -0.031239508), new Complexf(0.99951196, -0.031239508), new Complexf(0.99902767, 0.044088047), new Complexf(0.99902767, 0.044088047)));
-		handRotation2.addCurve(new SquadCurve2(new Complexf(0.99902767, 0.044088047), new Complexf(0.99902767, 0.044088047), new Complexf(0.99989134, 0.014741239), new Complexf(0.99989134, 0.014741239)));
-		handRotation2.addCurve(new SquadCurve2(new Complexf(0.99989134, 0.014741239), new Complexf(0.99989134, 0.014741239), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0)));
-		footRotation1.addCurve(new SquadCurve2(new Complexf(0.99696124, -0.077899344), new Complexf(0.99696124, -0.077899344), new Complexf(0.99896806, -0.045417942), new Complexf(0.99896806, -0.045417942)));
-		footRotation1.addCurve(new SquadCurve2(new Complexf(0.99896806, -0.045417942), new Complexf(0.99896806, -0.045417942), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0)));
-		footRotation1.addCurve(new SquadCurve2(new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0)));
-		footRotation1.addCurve(new SquadCurve2(new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(0.99696124, -0.077899344), new Complexf(0.99696124, -0.077899344)));
-		footRotation2.addCurve(new SquadCurve2(new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0)));
-		footRotation2.addCurve(new SquadCurve2(new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0)));
-		footRotation2.addCurve(new SquadCurve2(new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0)));
-		footRotation2.addCurve(new SquadCurve2(new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0)));
+new BezierCurve2(new Vector2f(1.9120827, -3.833333), new Vector2f(1.8566666, -3.8055553), new Vector2f(1.9120827, -3.8055553), new Vector2f(1.8566666, -3.7777777))
+new BezierCurve2(new Vector2f(1.8566666, -3.7777777), new Vector2f(2.0229163, -3.75), new Vector2f(1.9397914, -3.7777777), new Vector2f(1.9120827, -3.833333))
+new SquadCurve2(new Complexf(0.99989444, -0.014527698), new Complexf(0.99989444, -0.014527698), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0))
+new SquadCurve2(new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(0.99989444, -0.014527698), new Complexf(0.99989444, -0.014527698))
+new BezierCurve2(new Vector2f(-0.5539583, 0.69444466), new Vector2f(-0.5539583, 0.69444466), new Vector2f(-0.52625024, 0.7222227), new Vector2f(-0.5539583, 0.69444466))
+new BezierCurve2(new Vector2f(-0.5539583, 0.69444466), new Vector2f(-0.52625024, 0.7222227), new Vector2f(-0.49854153, 0.69444466), new Vector2f(-0.5539583, 0.69444466))
+new SquadCurve2(new Complexf(0.9998611, 0.016664118), new Complexf(0.9998611, 0.016664118), new Complexf(0.9998557, -0.01698914), new Complexf(0.9998557, -0.01698914))
+new SquadCurve2(new Complexf(0.9998557, -0.01698914), new Complexf(0.9998557, -0.01698914), new Complexf(0.9998611, 0.016664118), new Complexf(0.9998611, 0.016664118))

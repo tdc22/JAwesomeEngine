@@ -45,6 +45,9 @@ public class CapsuleData extends DataObject3 implements CapsuleStructure {
 		return radius;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public float getHalfHeight() {
 		return halfheight;

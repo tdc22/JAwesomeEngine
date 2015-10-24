@@ -31,6 +31,7 @@ public class DefaultValues {
 	public static final float DEFAULT_VIDEO_FOVY = 90;
 	public static final float DEFAULT_VIDEO_ZNEAR = 0.1f;
 	public static final float DEFAULT_VIDEO_ZFAR = 200;
+	public static final boolean DEFAULT_VIDEO_BACKFACECULLING = true;
 	// Text values
 	public static final float DEFAULT_FONT_SIZE = 12;
 	public static final float DEFAULT_FONT_CHARACTER_MARGIN = 0.14f;

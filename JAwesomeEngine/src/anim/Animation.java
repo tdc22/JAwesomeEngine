@@ -11,10 +11,24 @@ import vector.Vector;
 public class Animation<L extends Vector, A extends Rotation> {
 	List<SimpleCurvePath<L>> animationTranslationPaths;
 	List<SimpleAngularCurvePath<A>> animationRotationPaths;
-	boolean loops = true;
-	float speed = 0.001f;
+	boolean loops;
+	float speed;
 
 	public Animation() {
+		init(0.001f, true);
+	}
+
+	public Animation(float animationspeed) {
+		init(animationspeed, true);
+	}
+
+	public Animation(float animationspeed, boolean loops) {
+		init(animationspeed, loops);
+	}
+
+	private void init(float animationspeed, boolean loops) {
+		this.speed = animationspeed;
+		this.loops = loops;
 		animationTranslationPaths = new ArrayList<SimpleCurvePath<L>>();
 		animationRotationPaths = new ArrayList<SimpleAngularCurvePath<A>>();
 	}

@@ -40,7 +40,7 @@ import vector.Vector4f;
 
 public class AnimationEditor extends StandardGame {
 	InputEvent leftMousePressed, leftMouseDown, leftMouseReleased, rightMouseReleased, closePath, deleteMarker,
-			addLayer, switchLayer, print, togglemarkers;
+			addLayer, switchLayer, print, togglemarkers, mirror;
 
 	Matrix4f clickprojectionmatrix;
 	Shader defaultshader, markershader, textureshader, colorshader;
@@ -68,6 +68,10 @@ public class AnimationEditor extends StandardGame {
 	private final static float handX = 1, handY = 1;
 	private final static float footX = 1.5f, footY = 0.8f;
 	final int MAXLAYERS = 6;
+
+	String[] pathnames = new String[] { "headPath", "bodyPath", "handPath1", "handPath2", "footPath1", "footPath2" };
+	String[] rotationnames = new String[] { "headRotation", "bodyRotation", "handRotation1", "handRotation2",
+			"footRotation1", "footRotation2" };
 
 	@Override
 	public void init() {
@@ -122,6 +126,20 @@ public class AnimationEditor extends StandardGame {
 		sizes[4] = new Vector2f(footX * scale, footY * scale);
 		sizes[5] = new Vector2f(footX * scale, footY * scale);
 
+		animationcenter = new AnimationCenter(new Vector2f(66, 50));
+
+		Texture testtexture = new Texture(
+				TextureLoader.loadTexture("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/testtexture.png"));
+		Shader testtextureshader = new Shader(new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag")));
+		testtextureshader.addArgumentName("u_texture");
+		testtextureshader.addArgument(testtexture);
+		addShader2d(testtextureshader);
+
+		Quad player = new Quad(animationcenter.getTranslation(), 5 * scale, 6 * scale);
+		player.setRenderHints(false, true, false);
+		testtextureshader.addObject(player);
+
 		textureshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
 		Shader t1 = new Shader(textureshader);
@@ -148,7 +166,6 @@ public class AnimationEditor extends StandardGame {
 		layertexts.add(lt1);
 		addShaderInterface(lt1);
 
-		animationcenter = new AnimationCenter(new Vector2f(66, 50));
 		defaultshader.addObject(animationcenter);
 
 		paths = new ArrayList<AnimationPath>();
@@ -171,8 +188,8 @@ public class AnimationEditor extends StandardGame {
 		addLayer = new InputEvent("addLayer", new Input(Input.KEYBOARD_EVENT, "R", KeyInput.KEY_PRESSED));
 		switchLayer = new InputEvent("switchLayer", new Input(Input.KEYBOARD_EVENT, "Tab", KeyInput.KEY_PRESSED));
 		print = new InputEvent("print", new Input(Input.KEYBOARD_EVENT, "Q", KeyInput.KEY_PRESSED));
-		togglemarkers = new InputEvent("rightMouseReleased",
-				new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
+		togglemarkers = new InputEvent("togglemarkers", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
+		mirror = new InputEvent("mirror", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 
 		inputs.addEvent(leftMousePressed);
 		inputs.addEvent(leftMouseDown);
@@ -184,6 +201,7 @@ public class AnimationEditor extends StandardGame {
 		inputs.addEvent(switchLayer);
 		inputs.addEvent(print);
 		inputs.addEvent(togglemarkers);
+		inputs.addEvent(mirror);
 
 		defaultshader.addObject(new Quad(133, 100, 1, 1));
 	}
@@ -255,7 +273,7 @@ public class AnimationEditor extends StandardGame {
 			for (int i = 0; i < paths.size(); i++) {
 				System.out.println("Path " + i);
 				AnimationPath ap = paths.get(i);
-				System.out.println("Translationpaths");
+				// System.out.println("Translationpaths");
 				for (int a = 0; a < ap.beziercurves.size(); a++) {
 					RenderedBezierCurve bc = ap.beziercurves.get(a);
 					Vector2f neg = VecMath.negate(animationcenter.getTranslation());
@@ -267,8 +285,9 @@ public class AnimationEditor extends StandardGame {
 					bc.bezier.getP1().scale(invscale);
 					bc.bezier.getP2().scale(invscale);
 					bc.bezier.getP3().scale(invscale);
-					System.out.println(bc.toString().replace("BezierCurve[", "new BezierCurve2(")
-							.replace("Vector2f[", "new Vector2f(").replace("]", ")"));
+					System.out.println(
+							pathnames[i] + ".addCurve(" + bc.toString().replace("BezierCurve[", "new BezierCurve2(")
+									.replace("Vector2f[", "new Vector2f(").replace("]", ")") + ");");
 					bc.bezier.getP0().scale(scale);
 					bc.bezier.getP1().scale(scale);
 					bc.bezier.getP2().scale(scale);
@@ -278,10 +297,12 @@ public class AnimationEditor extends StandardGame {
 					bc.bezier.getP2().translate(animationcenter.getTranslation());
 					bc.bezier.getP3().translate(animationcenter.getTranslation());
 				}
-				System.out.println("Rotationpaths");
+				// System.out.println("Rotationpaths");
 				for (int b = 0; b < ap.squadcurves.size(); b++) {
-					System.out.println(ap.squadcurves.get(b).toString().replace("SquadCurve[", "new SquadCurve2(")
-							.replace("Complexf[", "new Complexf(").replace("]", ")"));
+					System.out.println(rotationnames[i] + ".addCurve("
+							+ ap.squadcurves.get(b).toString().replace("SquadCurve[", "new SquadCurve2(")
+									.replace("Complexf[", "new Complexf(").replace("]", ")")
+							+ ");");
 				}
 			}
 			System.out.println("---------- End Output ----------");
@@ -289,6 +310,36 @@ public class AnimationEditor extends StandardGame {
 		if (togglemarkers.isActive()) {
 			showmarkers = !showmarkers;
 			markershader.setRendered(showmarkers);
+		}
+		if (mirror.isActive()) {
+			Vector2f center = animationcenter.getTranslation();
+			for (int i = 0; i < paths.size(); i++) {
+				AnimationPath ap = paths.get(i);
+				for (int a = 0; a < ap.beziercurves.size(); a++) {
+					RenderedBezierCurve bc = ap.beziercurves.get(a);
+					Vector2f a0 = new Vector2f((center.x - bc.bezier.getP0().x) * 2, 0);
+					Vector2f a1 = new Vector2f((center.x - bc.bezier.getP1().x) * 2, 0);
+					Vector2f a2 = new Vector2f((center.x - bc.bezier.getP2().x) * 2, 0);
+					Vector2f a3 = new Vector2f((center.x - bc.bezier.getP3().x) * 2, 0);
+					bc.bezier.getP0().translate(a0);
+					bc.bezier.getP1().translate(a1);
+					bc.bezier.getP2().translate(a2);
+					bc.bezier.getP3().translate(a3);
+					ap.markers.get(a * 4).translate(bc.bezier.getP0());
+					ap.markers.get(a * 4 + 1).translateTo(bc.bezier.getP1());
+					ap.markers.get(a * 4 + 3).translateTo(bc.bezier.getP2());
+					ap.markers.get(a * 4 + 2).translateTo(bc.bezier.getP3());
+					bc.delete();
+					bc = new RenderedBezierCurve(bc.bezier);
+					ap.beziercurves.set(a, bc);
+				}
+				for (int b = 0; b < ap.squadcurves.size(); b++) {
+					// ap.rotationreferences.get(b).translateTo(invertRotation(ap.markers.get(b*4).getTranslation(),
+					// ap.squadcurves.get(b).getR1()));
+				}
+				ap.updatePathMarker();
+			}
+			System.out.println("Mirrored");
 		}
 	}
 
@@ -342,9 +393,10 @@ public class AnimationEditor extends StandardGame {
 					System.out.println(layername + "; " + lastlayername);
 					if (!lastBezier || (lastlayername.length() > 0 && !lastlayername.equals(layername))) {
 						currentpath.closed = true;
-						currentpath.markers.get(currentpath.markers.size() - 1).delete();
-						currentpath.markers.set(currentpath.markers.size() - 1,
-								currentpath.markers.get(currentpath.markers.size() - 5));
+						ShapedObject2 lastmarker = currentpath.markers.get(currentpath.markers.size() - 2);
+						currentpath.markershader.removeObject(lastmarker);
+						lastmarker.delete();
+						currentpath.markers.set(currentpath.markers.size() - 2, currentpath.markers.get(0));
 						numBezierLayer++;
 						firstonPath = true;
 						System.out.println(numBezierLayer + "; " + layername);
@@ -445,7 +497,7 @@ public class AnimationEditor extends StandardGame {
 
 	private Vector2f invertRotation(Vector2f pathmarker, Complexf rotation) {
 		Vector2f result = new Vector2f(1, 0);
-		ComplexMath.transform(rotation, result);
+		result = ComplexMath.transform(rotation, result);
 		result.scale(10);
 		result.translate(pathmarker);
 		return result;

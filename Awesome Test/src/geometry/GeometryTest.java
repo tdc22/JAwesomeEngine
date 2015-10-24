@@ -9,7 +9,7 @@ import loader.FontLoader;
 import loader.ShaderLoader;
 import shader.Shader;
 import shape.Box;
-import shape.Capsule;
+import shape.Ellipsoid;
 import shape.Cylinder;
 import shape.IsoSphere;
 import shape.Sphere;
@@ -39,7 +39,7 @@ public class GeometryTest extends StandardGame {
 
 		defaultshader.addObject(new Box(-1, 0, 0, 1, 1, 1));
 		defaultshader.addObject(new Sphere(2, 0, 0, 1, 36, 36));
-		defaultshader.addObject(new Capsule(5, 0, 0, 1, 2, 36, 36));
+		defaultshader.addObject(new Ellipsoid(5, 0, 0, 1, 2, 1, 36, 36));
 		defaultshader.addObject(new Cylinder(8, 0, 0, 1, 2, 36));
 		defaultshader.addObject(new IsoSphere(11, 0, 0, 1, 0));
 		// addObject(new IsoSphere(14, 0, 0, 1, 1));

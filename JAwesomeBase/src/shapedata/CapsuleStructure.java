@@ -18,6 +18,11 @@ public interface CapsuleStructure extends ShapeStructure<Vector3f> {
 	 */
 	public float getHeight();
 
+	/**
+	 * Gets the half height of the capsule.
+	 * 
+	 * @return half height of the capsule
+	 */
 	public float getHalfHeight();
 
 	/**
