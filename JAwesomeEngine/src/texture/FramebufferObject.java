@@ -47,11 +47,11 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.opengl.GL32.GL_TEXTURE_2D_MULTISAMPLE;
 import static org.lwjgl.opengl.GL32.glTexImage2DMultisample;
+import game.Layer;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import game.Layer;
 import objects.Camera;
 import utils.DefaultValues;
 import utils.ViewFrustum;

@@ -3,23 +3,23 @@ package physics;
 import java.util.ArrayList;
 import java.util.List;
 
+import objects.ShapedObject2;
+import objects.ShapedObject3;
+import shapedata.BoxStructure;
+import shapedata.CylinderStructure;
+import shapedata.EllipsoidStructure;
+import shapedata2d.EllipseStructure;
+import shapedata2d.QuadStructure;
+import vector.Vector2f;
 import collisionshape.BoxShape;
-import collisionshape.EllipsoidShape;
 import collisionshape.ConvexShape;
 import collisionshape.CylinderShape;
+import collisionshape.EllipsoidShape;
 import collisionshape2d.ConvexShape2;
 import collisionshape2d.EllipseShape;
 import collisionshape2d.QuadShape;
 import convexhull.Quickhull;
 import convexhull.Quickhull2;
-import objects.ShapedObject2;
-import objects.ShapedObject3;
-import shapedata.BoxStructure;
-import shapedata.EllipsoidStructure;
-import shapedata.CylinderStructure;
-import shapedata2d.EllipseStructure;
-import shapedata2d.QuadStructure;
-import vector.Vector2f;
 
 public class PhysicsShapeCreator {
 	public static BoxShape create(BoxStructure box) {

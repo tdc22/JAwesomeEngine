@@ -13,15 +13,15 @@ import static org.lwjgl.opengl.GL11.GL_STACK_UNDERFLOW;
 import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL30.GL_INVALID_FRAMEBUFFER_OPERATION;
-
-import java.awt.Color;
-
 import gui.Font;
 import gui.Text;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
+
+import java.awt.Color;
+
 import objects.Camera3;
 import objects.ShapedObject3;
 import shader.Shader;

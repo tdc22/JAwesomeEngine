@@ -6,9 +6,9 @@ import java.util.List;
 import objects.GameObject;
 
 public abstract class ServerGame extends AbstractGame {
-	List<GameObject> objects;
+	List<GameObject<?, ?>> objects;
 
-	public void addObject(GameObject obj) {
+	public void addObject(GameObject<?, ?> obj) {
 		objects.add(obj);
 	}
 
@@ -19,13 +19,13 @@ public abstract class ServerGame extends AbstractGame {
 		}
 	}
 
-	public List<GameObject> getObjects() {
+	public List<GameObject<?, ?>> getObjects() {
 		return objects;
 	}
 
 	@Override
 	protected void initEngine() {
-		objects = new ArrayList<GameObject>();
+		objects = new ArrayList<GameObject<?, ?>>();
 		resetTimers();
 	}
 

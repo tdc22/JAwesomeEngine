@@ -169,11 +169,6 @@ public class ComplexMath {
 	public static Vector2 transform(Complex c, Vector2 v) {
 		return new Vector2d(v.getX() * c.getReal() + v.getY() * c.getImaginary(),
 				v.getX() * -c.getImaginary() + v.getY() * c.getReal());
-		// return new Vector2d(
-		// (1 - 2 * c.getImaginary() * c.getImaginary()) * v.getX()
-		// + (-2 * c.getImaginary() * c.getReal()) * v.getY(),
-		// (2 * c.getImaginary() * c.getReal()) * v.getX()
-		// + (1 - 2 * c.getImaginary() * c.getImaginary()) * v.getY());
 	}
 
 	public static Vector2f transform(Complexf c, Vector2f v) {

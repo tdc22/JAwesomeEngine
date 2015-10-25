@@ -242,19 +242,25 @@ public class QuatMath {
 	public static Vector3 transform(Quaternion q, Vector3 v) {
 		Vector3 u = new Vector3d(q.getQ1(), q.getQ2(), q.getQ3());
 		double s = q.getQ0();
-		return VecMath.addition(VecMath.scale(u, 2f * VecMath.dotproduct(u, v)), VecMath.addition(
-				VecMath.scale(v, s * s - VecMath.dotproduct(u, u)), VecMath.scale(VecMath.crossproduct(u, v), 2f * s)));
-		// Vector3 qv = new Vector3d(q.getQ1(), q.getQ2(), q.getQ3());
-		// Vector3 t = VecMath.scale(VecMath.crossproduct(qv, v), 2);
-		// return VecMath.addition(v, VecMath.addition(VecMath.scale(t,
-		// q.getQ0()), VecMath.crossproduct(qv, t)));
+		double dotUV = VecMath.dotproduct(u, v);
+		double dotUU = VecMath.dotproduct(u, u);
+		return new Vector3d(u.getX() * 2 * dotUV + v.getX() * (s * s - dotUU) + (u.getY() * v.getZ() - u.getZ() * v.getY()) * 2 * s,
+				u.getY() * 2 * dotUV + v.getY() * (s * s - dotUU) + (u.getZ() * v.getX() - u.getX() * v.getZ()) * 2 * s,
+				u.getZ() * 2 * dotUV + v.getZ() * (s * s - dotUU) + (u.getX() * v.getY() - u.getY() * v.getX()) * 2 * s);
+//		return VecMath.addition(VecMath.scale(u, 2f * VecMath.dotproduct(u, v)), VecMath.addition(
+//				VecMath.scale(v, s * s - VecMath.dotproduct(u, u)), VecMath.scale(VecMath.crossproduct(u, v), 2f * s)));
 	}
 
 	public static Vector3f transform(Quaternionf q, Vector3f v) {
 		Vector3f u = new Vector3f(q.getQ1f(), q.getQ2f(), q.getQ3f());
 		float s = q.getQ0f();
-		return VecMath.addition(VecMath.scale(u, 2f * VecMath.dotproduct(u, v)), VecMath.addition(
-				VecMath.scale(v, s * s - VecMath.dotproduct(u, u)), VecMath.scale(VecMath.crossproduct(u, v), 2f * s)));
+		float dotUV = VecMath.dotproduct(u, v);
+		float dotUU = VecMath.dotproduct(u, u);
+		return new Vector3f(u.x * 2 * dotUV + v.x * (s * s - dotUU) + (u.y * v.z - u.z * v.y) * 2 * s,
+				u.y * 2 * dotUV + v.y * (s * s - dotUU) + (u.z * v.x - u.x * v.z) * 2 * s,
+				u.z * 2 * dotUV + v.z * (s * s - dotUU) + (u.x * v.y - u.y * v.x) * 2 * s);
+//		return VecMath.addition(VecMath.scale(u, 2f * VecMath.dotproduct(u, v)), VecMath.addition(
+//				VecMath.scale(v, s * s - VecMath.dotproduct(u, u)), VecMath.scale(VecMath.crossproduct(u, v), 2f * s)));
 		// Vector3f qv = new Vector3f(q.getQ1f(), q.getQ2f(), q.getQ3f());
 		// Vector3f t = VecMath.scale(VecMath.crossproduct(qv, v), 2);
 		// return VecMath.addition(v, VecMath.addition(VecMath.scale(t,
