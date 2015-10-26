@@ -19,7 +19,7 @@ public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructur
 
 		@Override
 		public Vector3f supportPointLocal(Vector3f direction) {
-			if (direction.length() == 0)
+			if (direction.lengthSquared() == 0)
 				direction = new Vector3f(0, 1, 0);
 			direction.normalize();
 			Vector3f v = QuatMath.transform(
@@ -29,7 +29,7 @@ public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructur
 
 		@Override
 		public Vector3f supportPointLocalNegative(Vector3f direction) {
-			if (direction.length() == 0)
+			if (direction.lengthSquared() == 0)
 				direction = new Vector3f(0, -1, 0);
 			direction.normalize();
 			Vector3f v = QuatMath.transform(

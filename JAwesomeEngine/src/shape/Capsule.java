@@ -54,8 +54,8 @@ public class Capsule extends ShapedObject3 implements CapsuleStructure {
 
 		float angleStepv = 360 / (float) trisV;
 		float angleSteph = 360 / (float) trisH;
-		int halfTrisV = trisV/2;
-		for (int a = 0; a < halfTrisV; a++) {
+		int halfTrisV = (int) Math.round(trisV/2f);
+		for (int a = 0; a < halfTrisV+1; a++) {
 			for (int b = 0; b < trisH; b++) {
 				Vector3f pos = new Vector3f(
 						radius * (float) Math.sin(Math.toRadians(angleStepv * (a / (float) 2)))
@@ -79,6 +79,7 @@ public class Capsule extends ShapedObject3 implements CapsuleStructure {
 				addVertex(pos, Color.GRAY, new Vector2f(a, b), normal);
 			}
 		}
+		System.out.println(trisH + "; " + trisV + "; " + halfTrisV);
 		addVertex(VecMath.subtraction(getVertex(0), new Vector3f(0, (halfheight + radius) * 2, 0)), Color.GRAY,
 				new Vector2f(trisV, trisH), new Vector3f(0, -1, 0));
 
@@ -99,7 +100,7 @@ public class Capsule extends ShapedObject3 implements CapsuleStructure {
 		addTriangle(0, pos - 1, pos, pos + 1, pos - lh + 1, pos - lh + 2);
 		pos++;
 		pos -= lh;
-		for (int v = 1; v < lv - 2; v++) {
+		for (int v = 1; v < lv - 2 + 1; v++) {
 			addQuad(pos, pos - 1 + lh, pos + lh, pos + 2 * lh + 1, pos + lh + 1, pos + 2 + lh, pos + 1, pos - lh);
 			pos++;
 			for (int h = 1; h < lh - 2; h++) {

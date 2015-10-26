@@ -6,12 +6,14 @@ import java.util.List;
 import objects.ShapedObject2;
 import objects.ShapedObject3;
 import shapedata.BoxStructure;
+import shapedata.CapsuleStructure;
 import shapedata.CylinderStructure;
 import shapedata.EllipsoidStructure;
 import shapedata2d.EllipseStructure;
 import shapedata2d.QuadStructure;
 import vector.Vector2f;
 import collisionshape.BoxShape;
+import collisionshape.CapsuleShape;
 import collisionshape.ConvexShape;
 import collisionshape.CylinderShape;
 import collisionshape.EllipsoidShape;
@@ -32,6 +34,10 @@ public class PhysicsShapeCreator {
 
 	public static CylinderShape create(CylinderStructure cylinder) {
 		return new CylinderShape(cylinder.getTranslation(), cylinder.getRadius(), cylinder.getHalfHeight());
+	}
+	
+	public static CapsuleShape create(CapsuleStructure capsule) {
+		return new CapsuleShape(capsule.getTranslation(), capsule.getRadius(), capsule.getHalfHeight());
 	}
 
 	public static EllipseShape create(EllipseStructure ellipse) {
