@@ -6,7 +6,6 @@ import objects.CollisionShape3;
 import objects.SupportCalculator;
 import quaternion.Quaternionf;
 import shapedata.CapsuleStructure;
-import shapedata.EllipsoidStructure;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -21,25 +20,34 @@ public class CapsuleShape extends CollisionShape3 implements CapsuleStructure {
 
 		@Override
 		public Vector3f supportPointLocal(Vector3f direction) {
+			if (direction.lengthSquared() != 0)
+				direction.normalize();
 			Vector3f v = QuatMath.transform(
 					collisionshape.getInverseRotation(), direction);
-			Vector2f v2 = new Vector2f(v.x, v.z);
-			if (v2.lengthSquared() != 0)
-				v2.normalize();
-			return new Vector3f(v2.x * radius, v.y < 0 ? -halfheight
-					: halfheight, v2.y * radius);
-			// TODO
+			float vy = 0;
+			float capstart = (float) (halfheight / Math.sqrt(radius * radius + halfheight * halfheight));//VecMath.normalize(new Vector2f(radius, halfheight)).y;
+			if(Math.abs(direction.y) > capstart) {
+				float len = (float) new Vector2f(direction.x / capstart, direction.z / capstart).length();
+				vy = (float) (Math.sqrt(radius * radius - len * len));
+			}
+			vy += halfheight;
+			return new Vector3f(v.x * radius, (v.y < 0 ? -vy : vy), v.z * radius);
 		}
 
 		@Override
 		public Vector3f supportPointLocalNegative(Vector3f direction) {
-			if (direction.lengthSquared() == 0)
-				direction = new Vector3f(0, -1, 0);
-			direction.normalize();
+			if (direction.lengthSquared() != 0)
+				direction.normalize();
 			Vector3f v = QuatMath.transform(
 					collisionshape.getInverseRotation(), direction);
-			return new Vector3f(-v.x * radiusX, -v.y * radiusY, -v.z * radiusZ);
-			// TODO
+			float vy = 0;
+			float capstart = (float) (halfheight / Math.sqrt(radius * radius + halfheight * halfheight));//VecMath.normalize(new Vector2f(radius, halfheight)).y;
+			if(Math.abs(direction.y) > capstart) {
+				float len = (float) new Vector2f(direction.x / capstart, direction.z / capstart).length();
+				vy = (float) (Math.sqrt(radius * radius - len * len));
+			}
+			vy += halfheight;
+			return new Vector3f(-v.x * radius, (v.y < 0 ? vy : -vy), -v.z * radius);
 		}
 
 		@Override

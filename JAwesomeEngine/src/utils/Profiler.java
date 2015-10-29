@@ -1,5 +1,9 @@
 package utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import game.StandardGame;
 import gui.Font;
 import gui.Text;
@@ -7,11 +11,6 @@ import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import loader.ShaderLoader;
 import objects.ShapedObject2;
 import objects.Updateable;
@@ -79,7 +78,7 @@ public class Profiler implements Updateable {
 		Quad background = new Quad(305, 533, sizeX / 2f, sizeY / 2f);
 		backgroundshader = new Shader(colorShaderID, c, new Vector4f(1f, 1f, 1f, 0.5f));
 		backgroundshader.addObject(background);
-		game.addShader2d(backgroundshader);
+		game.addShaderInterface(backgroundshader);
 
 		gameProfileText0 = new Text("", 10, 480, f);
 		gameProfileText1 = new Text("", 10, 495, f);
@@ -99,14 +98,14 @@ public class Profiler implements Updateable {
 		colorShader6 = new Shader(colorShaderID, c, new Vector4f(1f, 1f, 1f, 1f));
 		colorShader7 = new Shader(colorShaderID, c, new Vector4f(0.5f, 0.5f, 0.5f, 1f));
 
-		game.addShader2d(colorShader0);
-		game.addShader2d(colorShader1);
-		game.addShader2d(colorShader2);
-		game.addShader2d(colorShader3);
-		game.addShader2d(colorShader4);
-		game.addShader2d(colorShader5);
-		game.addShader2d(colorShader6);
-		game.addShader2d(colorShader7);
+		game.addShaderInterface(colorShader0);
+		game.addShaderInterface(colorShader1);
+		game.addShaderInterface(colorShader2);
+		game.addShaderInterface(colorShader3);
+		game.addShaderInterface(colorShader4);
+		game.addShaderInterface(colorShader5);
+		game.addShaderInterface(colorShader6);
+		game.addShaderInterface(colorShader7);
 
 		colorShader0.addObject(gameProfileText0);
 		colorShader1.addObject(gameProfileText1);

@@ -16,13 +16,13 @@ public abstract class Constraint2 extends Constraint<Vector2f, Vector1f, Complex
 	}
 	
 	public void solve(float delta) {
-		float[] J = new float[] {
-				bodyA.getLinearVelocity().x, bodyA.getLinearVelocity().y, bodyA.getAngularVelocity().x,
-				bodyB.getLinearVelocity().x, bodyB.getLinearVelocity().y, bodyB.getAngularVelocity().x
-		};
-		float[][] Mneg1 = new float[][] {
-			
-		};
+//		float[] J = new float[] {
+//				bodyA.getLinearVelocity().x, bodyA.getLinearVelocity().y, bodyA.getAngularVelocity().x,
+//				bodyB.getLinearVelocity().x, bodyB.getLinearVelocity().y, bodyB.getAngularVelocity().x
+//		};
+//		float[][] Mneg1 = new float[][] {
+//			
+//		};
 		
 		
 		/*float[] v = new float[] {bodyA.getLinearVelocity().x, bodyA.getLinearVelocity().y, bodyA.getAngularVelocity().x,

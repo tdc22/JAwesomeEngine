@@ -24,7 +24,7 @@ public interface EllipsoidStructure extends ShapeStructure<Vector3f> {
 	 * @return radius along y-axis
 	 */
 	public float getRadiusY();
-	
+
 	/**
 	 * Gets the radius of the ellipsoid along the z-axis.
 	 * 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import math.QuatMath;
+import math.VecMath;
 import objects.CollisionShape;
 import objects.ShapedObject3;
 import quaternion.Quaternionf;
@@ -30,7 +31,7 @@ public class SupportObject extends ShapedObject3 {
 
 		List<Vector3f> result = new ArrayList<Vector3f>();
 		for (Vector3f v : v1) {
-			Vector3f res = rb.supportPoint(QuatMath.transform(rb.getRotation(), v));
+			Vector3f res = rb.supportPoint(QuatMath.transform(rb.getRotation(), VecMath.normalize(v)));
 			if (!result.contains(res))
 				result.add(res);
 		}

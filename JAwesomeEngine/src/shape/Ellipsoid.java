@@ -21,17 +21,17 @@ public class Ellipsoid extends ShapedObject3 implements EllipsoidStructure {
 		super(pos);
 		init(radiusX, radiusY, radiusZ, trisH, trisV);
 	}
-	
+
 	@Override
 	public float getRadiusX() {
 		return radiusX;
 	}
-	
+
 	@Override
 	public float getRadiusY() {
 		return radiusY;
 	}
-	
+
 	@Override
 	public float getRadiusZ() {
 		return radiusZ;

@@ -21,17 +21,17 @@ public class Capsule extends ShapedObject3 implements CapsuleStructure {
 		super(pos);
 		init(radius, halfheight, trisH, trisV);
 	}
-	
+
 	@Override
 	public float getRadius() {
 		return radius;
 	}
-	
+
 	@Override
 	public float getHalfHeight() {
 		return halfheight;
 	}
-	
+
 	@Override
 	public float getHeight() {
 		return 2 * halfheight;
@@ -54,8 +54,8 @@ public class Capsule extends ShapedObject3 implements CapsuleStructure {
 
 		float angleStepv = 360 / (float) trisV;
 		float angleSteph = 360 / (float) trisH;
-		int halfTrisV = (int) Math.round(trisV/2f);
-		for (int a = 0; a < halfTrisV+1; a++) {
+		int halfTrisV = (int) Math.round(trisV / 2f);
+		for (int a = 0; a < halfTrisV + 1; a++) {
 			for (int b = 0; b < trisH; b++) {
 				Vector3f pos = new Vector3f(
 						radius * (float) Math.sin(Math.toRadians(angleStepv * (a / (float) 2)))
@@ -130,7 +130,7 @@ public class Capsule extends ShapedObject3 implements CapsuleStructure {
 		}
 		addTriangle(pos - lh + 1, pos - lh, pos, pos - 1, num, num);
 		pos++;
-		
+
 		this.prerender();
 	}
 }

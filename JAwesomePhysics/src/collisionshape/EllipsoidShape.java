@@ -9,10 +9,10 @@ import shapedata.EllipsoidStructure;
 import vector.Vector3f;
 
 public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructure {
-	protected class CapsuleSupport implements SupportCalculator<Vector3f> {
+	protected class EllipsoidSupport implements SupportCalculator<Vector3f> {
 		private CollisionShape<Vector3f, Quaternionf, Quaternionf> collisionshape;
 
-		public CapsuleSupport(
+		public EllipsoidSupport(
 				CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 			collisionshape = cs;
 		}
@@ -66,7 +66,7 @@ public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructur
 	@Override
 	public SupportCalculator<Vector3f> createSupportCalculator(
 			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
-		return new CapsuleSupport(cs);
+		return new EllipsoidSupport(cs);
 	}
 
 	@Override

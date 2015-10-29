@@ -38,7 +38,7 @@ public class EllipsoidData extends DataObject3 implements EllipsoidStructure {
 	public float getRadiusX() {
 		return radiusX;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -46,7 +46,7 @@ public class EllipsoidData extends DataObject3 implements EllipsoidStructure {
 	public float getRadiusY() {
 		return radiusX;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

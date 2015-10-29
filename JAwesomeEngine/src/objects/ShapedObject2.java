@@ -46,7 +46,7 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 	}
 
 	public void computeNormals() {
-		int indicesnumber = indices.size();
+		// int indicesnumber = indices.size();
 		int vertexnumber = vertices.size();
 		for (int n = 0; n < vertexnumber; n++) {
 			if (n < normals.size())
@@ -54,25 +54,25 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 			else
 				normals.add(new Vector2f(0, 0));
 		}
-		int ci = 0;
-		for (int i = 0; i < indicesnumber / 3; i++) {
-			// TODO
-			// int index1 = indices.get(ci);
-			// int index2 = indices.get(ci + 1);
-			// int index3 = indices.get(ci + 2);
-			// Vector2f normal1 = getNormal(index1);
-			// Vector2f normal2 = getNormal(index2);
-			// Vector2f normal3 = getNormal(index3);
-			// Vector2f newnormal = VecMath.computeNormal(getVertex(index1),
-			// getVertex(index2), getVertex(index3));
-			// setNormal(index1, VecMath.normalize(VecMath.addition(normal1,
-			// newnormal)));
-			// setNormal(index2, VecMath.normalize(VecMath.addition(normal2,
-			// newnormal)));
-			// setNormal(index3, VecMath.normalize(VecMath.addition(normal3,
-			// newnormal)));
-			ci += 3;
-		}
+		// int ci = 0;
+		// for (int i = 0; i < indicesnumber / 3; i++) {
+		// // TODO
+		// // int index1 = indices.get(ci);
+		// // int index2 = indices.get(ci + 1);
+		// // int index3 = indices.get(ci + 2);
+		// // Vector2f normal1 = getNormal(index1);
+		// // Vector2f normal2 = getNormal(index2);
+		// // Vector2f normal3 = getNormal(index3);
+		// // Vector2f newnormal = VecMath.computeNormal(getVertex(index1),
+		// // getVertex(index2), getVertex(index3));
+		// // setNormal(index1, VecMath.normalize(VecMath.addition(normal1,
+		// // newnormal)));
+		// // setNormal(index2, VecMath.normalize(VecMath.addition(normal2,
+		// // newnormal)));
+		// // setNormal(index3, VecMath.normalize(VecMath.addition(normal3,
+		// // newnormal)));
+		// ci += 3;
+		// }
 	}
 
 	public void updateBuffer() {

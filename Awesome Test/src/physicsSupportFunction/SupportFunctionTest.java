@@ -85,10 +85,9 @@ public class SupportFunctionTest extends StandardGame {
 		rb4 = new RigidBody3(PhysicsShapeCreator.create(c1));
 		space.addRigidBody(c1, rb4);
 		defaultshader.addObject(c1);
-		
-		ca1 = new Capsule(-10, 0, 0, 1, 1.5f, 36, 36);
+
+		ca1 = new Capsule(-10, 0, 0, 2, 1f, 36, 36);
 		rb5 = new RigidBody3(PhysicsShapeCreator.create(ca1));
-		space.addRigidBody(ca1, rb5);
 		space.addRigidBody(ca1, rb5);
 		defaultshader.addObject(ca1);
 

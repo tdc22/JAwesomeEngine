@@ -22,10 +22,10 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-import game.Layer;
 
 import java.nio.FloatBuffer;
 
+import game.Layer;
 import objects.Camera3;
 import objects.ViewProjection;
 import utils.DefaultValues;

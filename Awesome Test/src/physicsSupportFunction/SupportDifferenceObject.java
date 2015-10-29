@@ -7,7 +7,6 @@ import java.util.List;
 import math.VecMath;
 import matrix.Matrix4f;
 import objects.CollisionShape;
-import objects.ShapedObject;
 import objects.ShapedObject3;
 import objects.SupportMap;
 import utils.GLConstants;
@@ -15,7 +14,7 @@ import vector.Vector2f;
 import vector.Vector3f;
 
 public class SupportDifferenceObject extends ShapedObject3 {
-	ShapedObject so1, so2;
+	ShapedObject3 so1, so2;
 	CollisionShape<Vector3f, ?, ?> rb1, rb2;
 
 	public SupportDifferenceObject(ShapedObject3 s1, CollisionShape<Vector3f, ?, ?> r1, ShapedObject3 s2,
@@ -90,11 +89,11 @@ public class SupportDifferenceObject extends ShapedObject3 {
 					// tmp.put(res, 1);
 					// }
 
-					mat.rotate(36, vz);
+					mat.rotate(36f, vz);
 				}
-				mat.rotate(36, vy);
+				mat.rotate(36f, vy);
 			}
-			mat.rotate(36, vx);
+			mat.rotate(36f, vx);
 		}
 
 		// for (Map.Entry<Vector3f, Integer> entry : tmp.entrySet()) {

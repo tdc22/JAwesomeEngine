@@ -9,8 +9,8 @@ import loader.ShaderLoader;
 import loader.TextureLoader;
 import shader.Shader;
 import shape.Box;
-import shape.Ellipsoid;
 import shape.Cylinder;
+import shape.Ellipsoid;
 import shape.Sphere;
 import texture.Texture;
 
