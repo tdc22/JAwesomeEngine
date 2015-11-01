@@ -9,9 +9,9 @@ uniform mat4 model;
 
 uniform sampler2D u_texture;
 
-out vec2 tex_coord;
+out vec2 passTexCoord;
 
 void main(void) {
 	gl_Position = projection * view * model * in_Position;
-	tex_coord = in_TextureCoord;
+	passTexCoord = in_TextureCoord;
 }

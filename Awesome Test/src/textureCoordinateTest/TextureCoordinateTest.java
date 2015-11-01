@@ -40,7 +40,7 @@ public class TextureCoordinateTest extends StandardGame {
 		s.setRenderHints(false, true, false);
 		textureshader.addObject(s);
 
-		Ellipsoid c = new Ellipsoid(5, 0, 0, 1, 2, 36, 36);
+		Ellipsoid c = new Ellipsoid(5, 0, 0, 1, 2, 1, 36, 36);
 		c.setRenderHints(false, true, false);
 		textureshader.addObject(c);
 

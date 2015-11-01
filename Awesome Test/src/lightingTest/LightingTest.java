@@ -11,7 +11,7 @@ import input.KeyInput;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import shader.Shader;
 import utils.Debugger;
 import vector.Vector3f;
@@ -50,7 +50,7 @@ public class LightingTest extends StandardGame {
 		shader.addArgument(10f);
 		addShader(shader);
 
-		ShapedObject bunny = ModelLoader.load("res/models/bunny.mobj");
+		ShapedObject3 bunny = ModelLoader.load("res/models/bunny.mobj");
 		bunny.setRenderHints(false, false, true);
 		shader.addObject(bunny);
 

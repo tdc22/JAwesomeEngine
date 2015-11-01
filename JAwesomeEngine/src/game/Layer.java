@@ -174,4 +174,16 @@ public class Layer implements ViewProjection {
 		buf.flip();
 		return buf;
 	}
+
+	public FramebufferObject getFramebufferMultisample() {
+		return framebufferMultisample;
+	}
+
+	public FramebufferObject getFramebuffer() {
+		return framebuffer;
+	}
+
+	public FramebufferObject getFramebufferPostProcessor() {
+		return framebufferPostProcessing;
+	}
 }

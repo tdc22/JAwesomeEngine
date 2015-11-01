@@ -17,6 +17,7 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glReadPixels;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11.glViewport;
@@ -48,8 +49,13 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.opengl.GL32.GL_TEXTURE_2D_MULTISAMPLE;
 import static org.lwjgl.opengl.GL32.glTexImage2DMultisample;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
 
 import game.Layer;
 import objects.Camera;
@@ -255,21 +261,14 @@ public class FramebufferObject {
 		// Colorbuffer
 		if (renderColor) {
 			if (renderColorToTexture) {
-				boolean newColorBuffer = colorbuffer == null;
-				if (newColorBuffer) {
-					colorTexture = new Texture();
-					colorTexture.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
-				} else {
-					colorTexture = colorbuffer;
-				}
-				int textureType = colorTexture.getTextureType();
-				if (newColorBuffer) {
+				if (colorbuffer == null) {
 					colorTexture = new Texture();
 					colorTexture.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
 					colorTexture.bind();
 					if (multisampled) {
 						glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA, width, height, true);
 					} else {
+						int textureType = colorTexture.getTextureType();
 						glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 						glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 						glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -277,9 +276,11 @@ public class FramebufferObject {
 						glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
 								(java.nio.ByteBuffer) null);
 					}
+				} else {
+					colorTexture = colorbuffer;
 				}
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureType, colorTexture.getTextureID(),
-						0);
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, colorTexture.getTextureType(),
+						colorTexture.getTextureID(), 0);
 			} else {
 				colorRBID = glGenRenderbuffers();
 				glBindRenderbuffer(GL_RENDERBUFFER, colorRBID);
@@ -391,5 +392,28 @@ public class FramebufferObject {
 		begin();
 		render.render();
 		end();
+	}
+
+	public BufferedImage getColorTextureImage() {
+		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+		bind();
+		// glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+		unbind();
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		int[] px = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				int i = (x + (width * y)) * 4;
+				int r = buffer.get(i) & 0xff;
+				int g = buffer.get(i + 1) & 0xff;
+				int b = buffer.get(i + 2) & 0xff;
+				int a = buffer.get(i + 3) & 0xff;
+				int argb = (a << 24) | (r << 16) | (g << 8) | b;
+				int off = (x + width * (height - y - 1));
+				px[off] = argb;
+			}
+		}
+		return image;
 	}
 }

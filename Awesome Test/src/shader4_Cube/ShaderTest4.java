@@ -8,17 +8,13 @@ import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
-import objects.Camera3;
-import objects.ViewProjection;
 import shader.Shader;
 import shape.Box;
 import shape.Sphere;
 import texture.CubeEnvironmentMap;
 import texture.CubeMap;
-import texture.FramebufferObject;
 import texture.Texture;
 import utils.Debugger;
-import vector.Vector3f;
 import vector.Vector4f;
 
 public class ShaderTest4 extends StandardGame {
@@ -26,7 +22,6 @@ public class ShaderTest4 extends StandardGame {
 	CubeEnvironmentMap cubemapper;
 	Sphere camball;
 	Debugger debugger;
-	FramebufferObject rtt;
 
 	@Override
 	public void init() {
@@ -57,21 +52,12 @@ public class ShaderTest4 extends StandardGame {
 		Box a = new Box(-2, 0, 2, 0.5f, 0.5f, 0.5f);
 		colorshader.addObject(a);
 
-		Sphere s = new Sphere(0, 0, 0, 0.5f, 32, 32);
-		s.setRenderHints(false, true, false);
-		cubemapper = new CubeEnvironmentMap(this, s.getTranslation());
-		cubemapper.updateTexture();
-
-		rtt = new FramebufferObject((ViewProjection) this, 1024, 1024, 0, new Camera3(new Vector3f(0, 0, 12), 0, 0));
-		rtt.updateTexture();
-
 		// Shader Test 2
-		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
-
+		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/stone.png"));
 		Shader textureshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
 		textureshader.addArgumentName("u_texture");
-		textureshader.addArgument(new Texture(rtt.getColorTextureID()));
+		textureshader.addArgument(texture);
 		addShader(textureshader);
 
 		Box b = new Box(2, 0, 2, 0.5f, 0.5f, 0.5f);
@@ -79,8 +65,8 @@ public class ShaderTest4 extends StandardGame {
 		textureshader.addObject(b);
 
 		// Shader Test 3
-		diffuse = new Texture(TextureLoader.loadTexture("res/textures/diffuse.jpg"));
-		bumpmap = new Texture(TextureLoader.loadTexture("res/textures/normal.jpg"));
+		diffuse = new Texture(TextureLoader.loadTexture("res/textures/stone.png"));
+		bumpmap = new Texture(TextureLoader.loadTexture("res/textures/stone_normal.png"));
 
 		Shader bumpmapshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/bumpmapshader.vert", "res/shaders/bumpmapshader.frag"));
@@ -89,10 +75,15 @@ public class ShaderTest4 extends StandardGame {
 		addShader(bumpmapshader);
 
 		Box c = new Box(0, -2, 2, 0.5f, 0.5f, 0.5f);
-		c.setRenderHints(false, true, false);
+		c.setRenderHints(false, true, true);
 		bumpmapshader.addObject(c);
 
 		// Shader Test 4
+		Sphere s = new Sphere(0, 0, 0, 0.5f, 32, 32);
+		s.setRenderHints(false, true, true);
+		cubemapper = new CubeEnvironmentMap(layer3d, s.getTranslation());
+		cubemapper.updateTexture();
+
 		Shader cubemapshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/cubemapshader.vert", "res/shaders/cubemapshader.frag"));
 		cubemapshader.addArgumentNames("u_cubeMap");
@@ -124,7 +115,6 @@ public class ShaderTest4 extends StandardGame {
 	@Override
 	public void update(int delta) {
 		cubemapper.updateTexture();
-		rtt.updateTexture();
 		debugger.update(fps, 0, 0);
 		cam.update(delta);
 		camball.translateTo(cam.getTranslation());

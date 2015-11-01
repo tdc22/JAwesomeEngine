@@ -38,7 +38,7 @@ public class ShaderTest3 extends StandardGame {
 		colorshader.addObject(a);
 
 		// Shader Test 2
-		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
+		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/stone.png"));
 
 		Shader textureshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
@@ -51,8 +51,8 @@ public class ShaderTest3 extends StandardGame {
 		textureshader.addObject(b);
 
 		// Shader Test 3
-		diffuse = new Texture(TextureLoader.loadTexture("res/textures/diffuse.jpg"));
-		bumpmap = new Texture(TextureLoader.loadTexture("res/textures/normal.jpg"));
+		diffuse = new Texture(TextureLoader.loadTexture("res/textures/stone.png"));
+		bumpmap = new Texture(TextureLoader.loadTexture("res/textures/stone_normal.png"));
 
 		Shader bumpmapshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/bumpmapshader.vert", "res/shaders/bumpmapshader.frag"));

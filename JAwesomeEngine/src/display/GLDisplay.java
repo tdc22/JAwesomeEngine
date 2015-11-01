@@ -82,10 +82,11 @@ public class GLDisplay extends Display {
 	@Override
 	public void close() {
 		glfwDestroyWindow(windowid);
-		glfwTerminate();
+		System.out.println("Terminated!");
 		if (sizeCallback != null)
 			sizeCallback.release();
 		posCallback.release();
+		glfwTerminate();
 		errorCallback.release();
 	}
 
@@ -147,8 +148,6 @@ public class GLDisplay extends Display {
 		if (!displaymode.isFullscreen()) {
 			// ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 			glfwSetWindowPos(windowid, displaymode.getPositionX(), displaymode.getPositionY());
-			// windowid, (GLFWvidmode.width(vidmode) - width) / 2,
-			// (GLFWvidmode.height(vidmode) - height) / 2);
 		}
 
 		glfwMakeContextCurrent(windowid);
@@ -172,8 +171,6 @@ public class GLDisplay extends Display {
 				public void invoke(long arg0, int w, int h) {
 					width = w;
 					height = h;
-					// glViewport(0, 0, width, height);
-					// Put into rendering code....
 				}
 			});
 		}

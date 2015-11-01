@@ -33,7 +33,7 @@ public class ShaderTest2 extends StandardGame {
 		colorshader.addObject(a);
 
 		// Shader Test 2
-		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
+		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/stone.png"));
 
 		Shader textureshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));

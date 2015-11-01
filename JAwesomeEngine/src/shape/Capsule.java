@@ -79,7 +79,6 @@ public class Capsule extends ShapedObject3 implements CapsuleStructure {
 				addVertex(pos, Color.GRAY, new Vector2f(a, b), normal);
 			}
 		}
-		System.out.println(trisH + "; " + trisV + "; " + halfTrisV);
 		addVertex(VecMath.subtraction(getVertex(0), new Vector3f(0, (halfheight + radius) * 2, 0)), Color.GRAY,
 				new Vector2f(trisV, trisH), new Vector3f(0, -1, 0));
 

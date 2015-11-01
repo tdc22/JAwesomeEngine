@@ -31,6 +31,7 @@ import resolution.SimpleLinearImpulseResolution;
 import shader.Shader;
 import shape.Box;
 import shape.Cylinder;
+import shape.Sphere;
 import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector3f;
@@ -44,6 +45,7 @@ public class Tutorial extends StandardGame {
 	float mousesensitivity = 0.2f;
 	Shader edgeshader;
 	boolean onground = false;
+	Sphere sky;
 
 	final float PLAYER_RADIUS = 0.7f;
 	final float PLAYER_HEIGHT = 1.7f;
@@ -65,7 +67,6 @@ public class Tutorial extends StandardGame {
 	final float LEVEL_SIZE_Z = 100f;
 	List<Vector3f> colors;
 
-	// TODO: REMOVE!!!
 	Debugger debugger;
 	PhysicsDebug physicsdebug;
 
@@ -153,21 +154,10 @@ public class Tutorial extends StandardGame {
 		groundchecker.setRestitution(0);
 		space.addRigidBody(groundchecker);
 
-		// spacerbody = new RigidBody3(new CylinderShape(PLAYER_START_POSITION,
-		// PLAYER_RADIUS + TINY_SPACE, PLAYER_HEIGHT / 2f));
-		// spacerbody.setMass(1f);
-		// spacerbody.setLinearFactor(new Vector3f(1, 0, 1));
-		// spacerbody.setAngularFactor(new Vector3f(0, 0, 0));
-		// spacerbody.setRestitution(0);
-		// TODO: ignore collision between playerbody, groundchecker and
-		// spacerbody, remove TINY_SPACE
-		// space.addRigidBody(spacerbody);
-
 		Box ground = new Box(0, 0, 0, STARTBOX_SIZE_X, 1, STARTBOX_SIZE_Z);
 		ground.setRenderHints(false, false, true);
 		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
 		space.addRigidBody(ground, rb);
-		// addObject(ground);
 
 		Box goalBox = new Box(LEVEL_SIZE_X - 5, MAX_Y + BLOCK_SIZE_MAX, LEVEL_SIZE_Z - 5, 0.2f, 0.2f, 0.2f);
 		goalBox.setRenderHints(false, false, true);
@@ -205,13 +195,23 @@ public class Tutorial extends StandardGame {
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshaderInterface = new Shader(new Shader(playershader));
+		defaultshaderInterface.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 		addShaderInterface(defaultshaderInterface);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space);
+
+		sky = new Sphere(0, 0, 0, 10, 36, 36);
+		sky.setRenderHints(false, false, true);
+		sky.invertAllTriangles();
+		Shader skyshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/skyshader.vert", "res/shaders/skyshader.frag"));
+		skyshader.addArgumentName("u_color");
+		skyshader.addArgument(new Vector4f(0.55f, 0.55f, 1f, 1f));
+		addShader(skyshader);
+		skyshader.addObject(sky);
 
 		generateLevel();
 	}
@@ -220,13 +220,6 @@ public class Tutorial extends StandardGame {
 	public void render() {
 		debugger.begin();
 		render3dLayer();
-		// setShadersActive(false);
-		// if (!debugger.isWireframeRendered()) {
-		// edgeshader.bind();
-		// renderScene();
-		// edgeshader.unbind();
-		// }
-		// setShadersActive(true);
 		physicsdebug.render3d();
 	}
 
@@ -282,7 +275,6 @@ public class Tutorial extends StandardGame {
 			reset();
 		groundchecker.setTranslation(VecMath.subtraction(playerbody.getTranslation(),
 				new Vector3f(0, PLAYER_HEIGHT / 2f + GROUNDCHECKER_HEIGHT / 2f + TINY_SPACE, 0)));
-		// spacerbody.setTranslation(playerbody.getTranslation());
 
 		goal.rotate(0.05f * delta, 0.05f * delta, 0.05f * delta);
 
@@ -291,6 +283,7 @@ public class Tutorial extends StandardGame {
 		physicsdebug.update();
 
 		onground = space.hasCollision(groundchecker);
+		sky.translateTo(playerbody.getTranslation());
 
 		if (space.hasCollision(playerbody, goal))
 			System.out.println("Goal!");

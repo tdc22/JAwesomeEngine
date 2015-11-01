@@ -91,7 +91,7 @@ public class Ellipsoid extends ShapedObject3 implements EllipsoidStructure {
 			addQuad(pos, pos - 1 + lh, pos + lh, pos + 2 * lh + 1, pos + lh + 1, pos + 2 + lh, pos + 1, pos - lh);
 			pos++;
 			for (int h = 1; h < lh - 2; h++) {
-				addQuad(pos, pos - 1, pos + lh, pos + 2 * lh + 1, pos + lh + 1, pos + 2 + lh, pos + 1, pos - lh);
+				addQuad(pos, pos - 1, pos + lh, pos + 2 * lh + 1, pos + lh + 1, pos + lh + 2, pos + 1, pos - lh);
 				pos++;
 			}
 			addQuad(pos, pos - 1, pos + lh, pos + 2 * lh + 1, pos + lh + 1, pos + 2, pos + 1, pos - lh);

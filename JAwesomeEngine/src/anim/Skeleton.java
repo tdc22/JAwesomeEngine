@@ -67,5 +67,13 @@ public abstract class Skeleton<L extends Vector, A extends Rotation> implements 
 		bodyparts.add(bodypart);
 	}
 
+	public void setAnimationTimer(float timer) {
+		animationTimer = timer;
+	}
+
+	public float getAnimationTimer() {
+		return animationTimer;
+	}
+
 	protected abstract void updateAnimation(float animationTimer);
 }

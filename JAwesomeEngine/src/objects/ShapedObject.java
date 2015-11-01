@@ -259,12 +259,12 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	public void invertAllTriangles() {
 		List<Integer> newIndices = new ArrayList<Integer>();
 		for (int i = 0; i < indices.size(); i += 6) {
-			newIndices.add(indices.get(i + 5));
 			newIndices.add(indices.get(i + 4));
-			newIndices.add(indices.get(i + 3));
+			newIndices.add(indices.get(i + 5));
 			newIndices.add(indices.get(i + 2));
-			newIndices.add(indices.get(i + 1));
+			newIndices.add(indices.get(i + 3));
 			newIndices.add(indices.get(i));
+			newIndices.add(indices.get(i + 1));
 		}
 		indices.clear();
 		indices = newIndices;

@@ -35,7 +35,7 @@ public class MassBoxesTest extends StandardGame {
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
-		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
+		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/stone.png"));
 
 		Shader textureshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));

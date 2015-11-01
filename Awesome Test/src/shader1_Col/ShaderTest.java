@@ -33,9 +33,7 @@ public class ShaderTest extends StandardGame {
 
 	@Override
 	public void render() {
-		shader.bind();
 		render3dLayer();
-		shader.unbind();
 	}
 
 	@Override

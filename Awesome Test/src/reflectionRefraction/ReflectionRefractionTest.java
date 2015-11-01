@@ -1,10 +1,19 @@
 package reflectionRefraction;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
@@ -21,6 +30,7 @@ public class ReflectionRefractionTest extends StandardGame {
 	Debugger debugger;
 	CubeEnvironmentMap cubemapper0, cubemapper1, cubemapper2, cubemapper3;
 	Sphere camball;
+	InputEvent screenshotEvent;
 
 	@Override
 	public void init() {
@@ -44,7 +54,7 @@ public class ReflectionRefractionTest extends StandardGame {
 		// Shader Test 1
 		Shader colorshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
-		colorshader.addArgumentName("color");
+		colorshader.addArgumentName("u_color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 		addShader(colorshader);
 
@@ -52,12 +62,13 @@ public class ReflectionRefractionTest extends StandardGame {
 		colorshader.addObject(a);
 
 		// Shader Test 2
-		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
+		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/stone.png"));
 
 		Shader textureshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
-		textureshader.addArgumentName("texture");
+		textureshader.addArgumentName("u_texture");
 		textureshader.addArgument(texture);
+		addShader(textureshader);
 
 		Box b = new Box(0, -1, 0, 3f, 0.1f, 3f);
 		b.setRenderHints(false, true, false);
@@ -67,55 +78,62 @@ public class ReflectionRefractionTest extends StandardGame {
 		Sphere s1 = new Sphere(-2, 0, 1, 0.5f, 32, 32);
 		s1.setRenderHints(false, true, true);
 
-		cubemapper0 = new CubeEnvironmentMap(this, s1.getTranslation());
+		cubemapper0 = new CubeEnvironmentMap(layer3d, s1.getTranslation());
 
 		Shader cubemapreflectionshader = new Shader(ShaderLoader
 				.loadShaderFromFile("res/shaders/cubemapreflectrefract.vert", "res/shaders/cubemapreflection.frag"));
-		cubemapreflectionshader.addArgumentNames("cubeMap");
+		cubemapreflectionshader.addArgumentNames("u_cubeMap");
 		cubemapreflectionshader.addArguments(new CubeMap(cubemapper0.getTextureID()));
 		cubemapreflectionshader.addObject(s1);
+		addShader(cubemapreflectionshader);
 
 		// Reflection Box
 		Box b1 = new Box(-2, 0, -1, 0.5f, 0.5f, 0.5f);
 		b1.setRenderHints(false, true, true);
 
-		cubemapper1 = new CubeEnvironmentMap(this, b1.getTranslation());
+		cubemapper1 = new CubeEnvironmentMap(layer3d, b1.getTranslation());
 
 		Shader cubemapreflectionshader2 = new Shader(cubemapreflectionshader.getShaderProgram());
-		cubemapreflectionshader2.addArgumentNames("cubeMap");
+		cubemapreflectionshader2.addArgumentNames("u_cubeMap");
 		cubemapreflectionshader2.addArguments(new CubeMap(cubemapper1.getTextureID()));
 		cubemapreflectionshader2.addObject(b1);
+		addShader(cubemapreflectionshader2);
 
 		// Refraction Sphere
 		Sphere s2 = new Sphere(2, 0, 1, 0.5f, 32, 32);
 		s2.setRenderHints(false, true, true);
 
-		cubemapper2 = new CubeEnvironmentMap(this, s2.getTranslation());
+		cubemapper2 = new CubeEnvironmentMap(layer3d, s2.getTranslation());
 
 		Shader cubemaprefractionshader = new Shader(ShaderLoader
 				.loadShaderFromFile("res/shaders/cubemapreflectrefract.vert", "res/shaders/cubemaprefraction.frag"));
-		cubemaprefractionshader.addArgumentNames("cubeMap");
+		cubemaprefractionshader.addArgumentNames("u_cubeMap");
 		cubemaprefractionshader.addArguments(new CubeMap(cubemapper2.getTextureID()));
 		cubemaprefractionshader.addArgumentNames("refractionIndex");
 		cubemaprefractionshader.addArguments(0.5f);
 		cubemaprefractionshader.addObject(s2);
+		addShader(cubemaprefractionshader);
 
 		// Refraction Box
 		Box b2 = new Box(2, 0, -1, 0.5f, 0.5f, 0.5f);
 		b2.setRenderHints(false, true, true);
 
-		cubemapper3 = new CubeEnvironmentMap(this, b2.getTranslation());
+		cubemapper3 = new CubeEnvironmentMap(layer3d, b2.getTranslation());
 
 		Shader cubemaprefractionshader2 = new Shader(cubemaprefractionshader.getShaderProgram());
-		cubemaprefractionshader2.addArgumentNames("cubeMap");
+		cubemaprefractionshader2.addArgumentNames("u_cubeMap");
 		cubemaprefractionshader2.addArguments(new CubeMap(cubemapper3.getTextureID()));
-		cubemaprefractionshader.addArgumentNames("refractionIndex");
-		cubemaprefractionshader.addArguments(0.5f);
+		cubemaprefractionshader2.addArgumentNames("refractionIndex");
+		cubemaprefractionshader2.addArguments(0.5f);
 		cubemaprefractionshader2.addObject(b2);
+		addShader(cubemaprefractionshader2);
 
 		// Camball
 		camball = new Sphere(0, 0, 0, 0.2f, 32, 32);
 		colorshader.addObject(camball);
+
+		screenshotEvent = new InputEvent("screenshot", new Input(Input.KEYBOARD_EVENT, "2", KeyInput.KEY_PRESSED));
+		inputs.addEvent(screenshotEvent);
 	}
 
 	@Override
@@ -144,5 +162,16 @@ public class ReflectionRefractionTest extends StandardGame {
 		cubemapper1.updateTexture();
 		cubemapper2.updateTexture();
 		cubemapper3.updateTexture();
+
+		if (screenshotEvent.isActive()) {
+			BufferedImage bi = layer3d.getFramebuffer().getColorTextureImage();
+			File outputfile = new File(Math.random() * 1000000 + "saved.png");
+			try {
+				ImageIO.write(bi, "png", outputfile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("Screenshot saved!");
+		}
 	}
 }
