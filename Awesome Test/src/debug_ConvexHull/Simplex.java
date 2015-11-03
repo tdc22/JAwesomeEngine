@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.util.List;
 
 import debug_ConvexHull.ConvexHullDebugger.Triangle;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import utils.GLConstants;
 
-public class Simplex extends ShapedObject {
+public class Simplex extends ShapedObject3 {
 	public Simplex(List<Triangle> triangles, Triangle next) {
 		setRenderMode(GLConstants.TRIANGLES);
 

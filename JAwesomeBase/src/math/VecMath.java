@@ -126,6 +126,20 @@ public class VecMath {
 	public static float crossproduct(Vector2f v1, Vector2f v2) {
 		return v1.getXf() * v2.getYf() - v1.getYf() * v2.getXf();
 	}
+	
+	/**
+	 * @see math.VecMath#crossproduct(Vector2, Vector2)
+	 */
+	public static double crossproduct(double v1x, double v1y, double v2x, double v2y) {
+		return v1x * v2y - v1y * v2x;
+	}
+	
+	/**
+	 * @see math.VecMath#crossproduct(Vector2, Vector2)
+	 */
+	public static float crossproduct(float v1x, float v1y, float v2x, float v2y) {
+		return v1x * v2y - v1y * v2x;
+	}
 
 	/**
 	 * @see math.VecMath#crossproduct(Vector2, Vector2)
@@ -141,6 +155,20 @@ public class VecMath {
 	public static Vector3f crossproduct(Vector3f v1, Vector3f v2) {
 		return new Vector3f(v1.getYf() * v2.getZf() - v1.getZf() * v2.getYf(),
 				v1.getZf() * v2.getXf() - v1.getXf() * v2.getZf(), v1.getXf() * v2.getYf() - v1.getYf() * v2.getXf());
+	}
+	
+	/**
+	 * @see math.VecMath#crossproduct(Vector2, Vector2)
+	 */
+	public static Vector3d crossproduct(double v1x, double v1y, double v1z, double v2x, double v2y, double v2z) {
+		return new Vector3d(v1y * v2z - v1z * v2y, v1z * v2x - v1x * v2z, v1x * v2y - v1y * v2x);
+	}
+	
+	/**
+	 * @see math.VecMath#crossproduct(Vector2, Vector2)
+	 */
+	public static Vector3f crossproduct(float v1x, float v1y, float v1z, float v2x, float v2y, float v2z) {
+		return new Vector3f(v1y * v2z - v1z * v2y, v1z * v2x - v1x * v2z, v1x * v2y - v1y * v2x);
 	}
 
 	/**
@@ -162,6 +190,20 @@ public class VecMath {
 	public static float dotproduct(Vector1f v1, Vector1f v2) {
 		return v1.getXf() * v2.getXf();
 	}
+	
+	/**
+	 * @see math.VecMath#dotproduct(Vector1, Vector1)
+	 */
+	public static double dotproduct(double v1x, double v2x) {
+		return v1x * v2x;
+	}
+
+	/**
+	 * @see math.VecMath#dotproduct(Vector1, Vector1)
+	 */
+	public static float dotproduct(float v1x, float v2x) {
+		return v1x * v2x;
+	}
 
 	/**
 	 * @see math.VecMath#dotproduct(Vector1, Vector1)
@@ -175,6 +217,20 @@ public class VecMath {
 	 */
 	public static float dotproduct(Vector2f v1, Vector2f v2) {
 		return v1.getXf() * v2.getXf() + v1.getYf() * v2.getYf();
+	}
+	
+	/**
+	 * @see math.VecMath#dotproduct(Vector1, Vector1)
+	 */
+	public static double dotproduct(double v1x, double v1y, double v2x, double v2y) {
+		return v1x * v2x + v1y * v2y;
+	}
+
+	/**
+	 * @see math.VecMath#dotproduct(Vector1, Vector1)
+	 */
+	public static float dotproduct(float v1x, float v1y, float v2x, float v2y) {
+		return v1x * v2x + v1y * v2y;
 	}
 
 	/**
@@ -190,6 +246,20 @@ public class VecMath {
 	public static float dotproduct(Vector3f v1, Vector3f v2) {
 		return v1.getXf() * v2.getXf() + v1.getYf() * v2.getYf() + v1.getZf() * v2.getZf();
 	}
+	
+	/**
+	 * @see math.VecMath#dotproduct(Vector1, Vector1)
+	 */
+	public static double dotproduct(double v1x, double v1y, double v1z, double v2x, double v2y, double v2z) {
+		return v1x * v2x + v1y * v2y + v1z * v2z;
+	}
+
+	/**
+	 * @see math.VecMath#dotproduct(Vector1, Vector1)
+	 */
+	public static float dotproduct(float v1x, float v1y, float v1z, float v2x, float v2y, float v2z) {
+		return v1x * v2x + v1y * v2y + v1z * v2z;
+	}
 
 	/**
 	 * @see math.VecMath#dotproduct(Vector1, Vector1)
@@ -203,6 +273,20 @@ public class VecMath {
 	 */
 	public static float dotproduct(Vector4f v1, Vector4f v2) {
 		return v1.getXf() * v2.getXf() + v1.getYf() * v2.getYf() + v1.getZf() * v2.getZf() + v1.getWf() * v2.getWf();
+	}
+	
+	/**
+	 * @see math.VecMath#dotproduct(Vector1, Vector1)
+	 */
+	public static double dotproduct(double v1x, double v1y, double v1z, double v1w, double v2x, double v2y, double v2z, double v2w) {
+		return v1x * v2x + v1y * v2y + v1z * v2z + v1w * v2w;
+	}
+
+	/**
+	 * @see math.VecMath#dotproduct(Vector1, Vector1)
+	 */
+	public static float dotproduct(float v1x, float v1y, float v1z, float v1w, float v2x, float v2y, float v2z, float v2w) {
+		return v1x * v2x + v1y * v2y + v1z * v2z + v1w * v2w;
 	}
 
 	/**

@@ -8,7 +8,8 @@ import vector.Vector2f;
 import vector.Vector3f;
 
 public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
-
+	private final int MAX_ITERATIONS = 50;
+	
 	public GJK2(ManifoldGenerator<Vector2f> manifoldgeneration) {
 		super(manifoldgeneration);
 	}
@@ -39,12 +40,12 @@ public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 			Vector2f C = simplex.get(0);
 			Vector2f AB = VecMath.subtraction(B, A);
 			Vector2f AC = VecMath.subtraction(C, A);
-			Vector3f ABC = VecMath.crossproduct(new Vector3f(AB), new Vector3f(
-					AC));
+			Vector3f ABC = VecMath.crossproduct(AB.x, AB.y, 0, AC.x, AC.y, 0);
 			Vector2f AO = VecMath.negate(A);
 
-			if (VecMath.dotproduct(VecMath.crossproduct(ABC, new Vector3f(AC)),
-					new Vector3f(AO)) > 0) {
+//			if (VecMath.dotproduct(VecMath.crossproduct(ABC, new Vector3f(AC)),
+//					new Vector3f(AO)) > 0) {
+			if (VecMath.dotproduct(-ABC.z * AC.y, ABC.z * AC.x, AO.x, AO.y) > 0) {
 				if (VecMath.dotproduct(AC, AO) > 0) {
 					// Region 1
 					simplex.remove(1);
@@ -63,9 +64,10 @@ public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 					}
 				}
 			} else {
-				if (VecMath.dotproduct(
-						VecMath.crossproduct(new Vector3f(AB), ABC),
-						new Vector3f(AO)) > 0) {
+				if (VecMath.dotproduct(AB.y * ABC.z, -AB.x * ABC.z, AO.x, AO.y) > 0) {
+//				if (VecMath.dotproduct(
+//						VecMath.crossproduct(new Vector3f(AB), ABC),
+//						new Vector3f(AO)) > 0) {
 					// *
 					if (VecMath.dotproduct(AB, AO) > 0) {
 						// Region 4
@@ -104,7 +106,7 @@ public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 		// D = -S
 		direction = VecMath.negate(direction);
 		// Loop:
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < MAX_ITERATIONS; i++) {
 			// A = Support(D)
 			Vector2f a = support(Sa, Sb, direction);
 			// if AtD < 0 No Intersection

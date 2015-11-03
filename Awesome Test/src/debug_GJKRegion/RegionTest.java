@@ -20,6 +20,7 @@ import input.KeyInput;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
+import shader.Shader;
 import utils.Debugger;
 import vector.Vector2f;
 import vector.Vector3f;
@@ -35,6 +36,8 @@ public class RegionTest extends StandardGame {
 	Debugger debugger;
 	boolean runthreads = true;
 	boolean adding = false;
+
+	Shader defaultshader;
 
 	final Vector2f zero = new Vector2f();
 	final Vector3f up = new Vector3f();
@@ -206,7 +209,16 @@ public class RegionTest extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
-		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+
+		defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshaderInterface = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShaderInterface(defaultshaderInterface);
+
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		display.bindMouse();
 		cam.setFlyCam(true);
 
@@ -217,6 +229,8 @@ public class RegionTest extends StandardGame {
 		pointbatches = new ArrayList<Points>();
 		simplex = new Simplex(simplices);
 		generated = new HashMap<Vector3f, Integer>();
+
+		defaultshader.addObject(simplex);
 
 		pointshader = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
 
@@ -285,29 +299,28 @@ public class RegionTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugger.update3d();
 		debugger.begin();
 		render3dLayer();
-		simplex.render();
-		for (Points p : pointbatches)
-			p.render();
 	}
 
 	@Override
 	public void render2d() {
 		render2dLayer();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
 		if (rebuildsimplex) {
+			defaultshader.removeObject(simplex);
 			simplex.delete();
 			simplex = new Simplex(simplices);
+			defaultshader.addObject(simplex);
 
-			for (Points p : pointbatches)
+			for (Points p : pointbatches) {
+				defaultshader.removeObject(p);
 				p.delete();
+			}
 			pointbatches.clear();
 			int simplexsize = simplices.size();
 			int numregions = 0;
@@ -322,8 +335,10 @@ public class RegionTest extends StandardGame {
 				numregions = 8;
 			}
 			for (int i = 0; i < numregions; i++) {
-				pointbatches.add(new Points(i, ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
-						"res/shaders/colorshader.frag")));
+				Points p = new Points(i, ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
+						"res/shaders/colorshader.frag"));
+				pointbatches.add(p);
+				defaultshader.addObject(p);
 			}
 
 			rebuildsimplex = false;
@@ -345,7 +360,7 @@ public class RegionTest extends StandardGame {
 				pointnum += p.getIndexCount();
 			System.out.println("Total point number: " + pointnum);
 		}
-		debugger.update();
+		debugger.update(fps, 0, 0);
 
 		if (display.isMouseBound())
 			cam.update(delta);
@@ -355,5 +370,11 @@ public class RegionTest extends StandardGame {
 			else
 				display.unbindMouse();
 		}
+	}
+
+	@Override
+	public void renderInterface() {
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -3,12 +3,12 @@ package debug_GJKRegion;
 import java.awt.Color;
 import java.util.List;
 
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class Simplex extends ShapedObject {
+public class Simplex extends ShapedObject3 {
 	public Simplex(List<Vector3f> simplices) {
 		int simplexsize = simplices.size();
 		if (simplexsize == 1) {

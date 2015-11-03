@@ -14,8 +14,10 @@ import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import loader.FontLoader;
+import loader.ShaderLoader;
 import math.VecMath;
-import objects.ShapedObject;
+import objects.ShapedObject3;
+import shader.Shader;
 import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector2f;
@@ -33,6 +35,8 @@ public class ConvexHullDebugger extends StandardGame {
 			normal = VecMath.normalize(VecMath.computeNormal(a, b, c));
 		}
 	}
+
+	Shader defaultshader;
 
 	Debugger debugger;
 
@@ -80,6 +84,7 @@ public class ConvexHullDebugger extends StandardGame {
 		}
 
 		simplex = new Simplex(faces, faces.get(0));
+		defaultshader.addObject(simplex);
 		// removePoints(faces, points);
 	}
 
@@ -294,8 +299,16 @@ public class ConvexHullDebugger extends StandardGame {
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings());
 
+		defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshaderInterface = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShaderInterface(defaultshaderInterface);
+
 		display.bindMouse();
-		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		cam.setFlyCam(true);
 		cam.translateTo(0, 1, 3);
 		cam.setFlySpeed(0.01f);
@@ -321,22 +334,19 @@ public class ConvexHullDebugger extends StandardGame {
 
 		hullInit();
 		pointcloud = new PointCloud(points);
+		defaultshader.addObject(pointcloud);
 	}
 
 	@Override
 	public void render() {
-		debugger.update3d();
 		debugger.begin();
 		render3dLayer();
-		simplex.render();
-		pointcloud.render();
 	}
 
 	@Override
 	public void render2d() {
 		render2dLayer();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
@@ -352,7 +362,7 @@ public class ConvexHullDebugger extends StandardGame {
 			pointcloud = new PointCloud(points);
 			System.out.println("NUM FACES : " + faces.size());
 		}
-		debugger.update();
+		debugger.update(fps, 0, 0);
 
 		if (display.isMouseBound())
 			cam.update(delta);
@@ -364,7 +374,7 @@ public class ConvexHullDebugger extends StandardGame {
 		}
 	}
 
-	private class PointCloud extends ShapedObject {
+	private class PointCloud extends ShapedObject3 {
 		public PointCloud(List<Vector3f> points) {
 			setRenderMode(GLConstants.POINTS);
 			for (int i = 0; i < points.size(); i++) {
@@ -373,5 +383,11 @@ public class ConvexHullDebugger extends StandardGame {
 			}
 			prerender();
 		}
+	}
+
+	@Override
+	public void renderInterface() {
+		// TODO Auto-generated method stub
+
 	}
 }

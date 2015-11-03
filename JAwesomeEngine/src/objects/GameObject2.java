@@ -74,7 +74,7 @@ public class GameObject2 extends GameObject<Vector2f, Complexf> implements Insta
 
 	@Override
 	public void scale(Vector2f scale) {
-		scale.scale(scale);
+		this.scale.scale(scale);
 		updateBuffer();
 	}
 

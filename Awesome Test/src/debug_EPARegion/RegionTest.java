@@ -14,8 +14,10 @@ import input.KeyInput;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
+import shader.Shader;
 import utils.Debugger;
 import vector.Vector3f;
+import vector.Vector4f;
 
 public class RegionTest extends StandardGame {
 	List<Vector3f> testTrue, testFalse;
@@ -30,7 +32,16 @@ public class RegionTest extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings());
-		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshaderInterface = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader2d(defaultshaderInterface);
+
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		display.bindMouse();
 		cam.setFlyCam(true);
 
@@ -38,12 +49,19 @@ public class RegionTest extends StandardGame {
 		inputs.addEvent(toggleMouseBind);
 
 		simplex = new Simplex();
+		defaultshader.addObject(simplex);
 		testTrue = new ArrayList<Vector3f>();
 		testFalse = new ArrayList<Vector3f>();
 
 		pointshader = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
-		truePoints = new Points(new Vector3f(0f, 1f, 0f), pointshader);
-		falsePoints = new Points(new Vector3f(1f, 0f, 0f), pointshader);
+		Shader a1 = new Shader(pointshader, "u_color", new Vector4f(0, 1, 0, 1f));
+		Shader a2 = new Shader(pointshader, "u_color", new Vector4f(1, 0, 0, 1f));
+		truePoints = new Points();
+		falsePoints = new Points();
+		a1.addObject(truePoints);
+		a2.addObject(falsePoints);
+		addShader(a1);
+		addShader(a2);
 
 		for (int i = 0; i < 1000000; i++) {
 			Vector3f point = new Vector3f(minbounds.x + Math.random() * (maxbounds.x - minbounds.x),
@@ -79,25 +97,20 @@ public class RegionTest extends StandardGame {
 
 	@Override
 	public void render() {
-		debugger.update3d();
 		debugger.begin();
 		render3dLayer();
-		simplex.render();
-		// truePoints.render();
-		falsePoints.render();
 	}
 
 	@Override
 	public void render2d() {
 		render2dLayer();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	@Override
 	public void update(int delta) {
 
-		debugger.update();
+		debugger.update(fps, 0, 0);
 
 		if (display.isMouseBound())
 			cam.update(delta);
@@ -107,5 +120,11 @@ public class RegionTest extends StandardGame {
 			else
 				display.unbindMouse();
 		}
+	}
+
+	@Override
+	public void renderInterface() {
+		// TODO Auto-generated method stub
+
 	}
 }

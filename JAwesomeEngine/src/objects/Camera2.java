@@ -16,6 +16,7 @@ public class Camera2 extends GameObject2 implements Camera {
 	public void updateBuffer() {
 		Matrix4f mat = new Matrix4f();
 		mat.setSubMatrix2(rotation.toMatrixf());
+		mat.scale(getScale());
 		mat.translate(getTranslation());
 		mat.invert();
 		mat.store(buf);

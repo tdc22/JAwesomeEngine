@@ -197,7 +197,7 @@ public class CollisionDetectionTest2d extends StandardGame {
 			defaultshader.addObject(mv);
 			manifolds.add(mv);
 			System.out.println(cm.getCollisionNormal() + "; " + cm.getObjects().getFirst().getTranslation() + "; "
-					+ cm.getObjects().getSecond());
+					+ cm.getObjects().getSecond().getTranslation());
 			Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>> o = cm.getObjects();
 			if (o.contains(rb1))
 				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));

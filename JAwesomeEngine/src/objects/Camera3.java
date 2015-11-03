@@ -71,6 +71,7 @@ public class Camera3 extends GameObject3 implements Camera {
 
 		Matrix4f mat = new Matrix4f();
 		mat.setSubMatrix(rotation.toMatrixf());
+		mat.scale(getScale());
 		mat.translate(getTranslation());
 		mat.invert();
 		mat.store(buf);

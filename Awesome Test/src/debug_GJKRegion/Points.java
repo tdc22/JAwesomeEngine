@@ -1,12 +1,10 @@
 package debug_GJKRegion;
 
-import objects.ShapedObject;
-import shader.Shader;
+import objects.ShapedObject3;
 import utils.GLConstants;
 import vector.Vector3f;
-import vector.Vector4f;
 
-public class Points extends ShapedObject {
+public class Points extends ShapedObject3 {
 	int region;
 
 	public Points(int reg, int shader) {
@@ -45,8 +43,6 @@ public class Points extends ShapedObject {
 			color.set(0, 0.5, 0.5);
 			break;
 		}
-
-		setShader(new Shader(shader, "color", new Vector4f(color.x, color.y, color.z, 1f)));
 	}
 
 	public void update() {

@@ -21,9 +21,10 @@ import objects.SupportMap;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
 import physics2dSupportFunction.SupportDifferenceObject;
-import quaternion.Quaternionf;
+import quaternion.Complexf;
 import shader.Shader;
 import shape2d.Circle;
+import shape2d.Ellipse;
 import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
@@ -87,15 +88,13 @@ public class EPA2dDebugger extends StandardGame {
 
 	public void epaStep() {
 		Edge e = findClosestEdge(edges);
-		if (isOriginInsideEdgeArea(e)) {
+		if(isOriginInsideEdgeArea(e)) {
 			Vector2f p = support(Sa, Sb, e.normal);
 			double d = VecMath.dotproduct(p, e.normal);
 			if (d - e.distance < TOLERANCE) {
 				normal = e.normal;
 				depth = (float) d;
-				// END
-				System.out.println("End. (" + iter + ") " + normal);
-				done = true;
+				System.out.println("END Iter: " + iter);
 				return;
 			} else {
 				edges.add(new Edge(e.a, p));
@@ -170,12 +169,12 @@ public class EPA2dDebugger extends StandardGame {
 		c.scale(10f);
 
 		// Test 5
-		Quad s1 = new Quad(120, 50, 20, 20);
+		Quad s1 = new Quad(450.25f, 79.0f, 25, 25);
 		s1.rotate(40);
 		rb1 = new RigidBody2(PhysicsShapeCreator.create(s1));
 
-		Quad s2 = new Quad(95.16675f, 47.023335f, 5, 6);
-		s2.setRotation(new Quaternionf(1.0, 0.0, 0.0, 0.0));
+		Ellipse s2 = new Ellipse(500, 50, 50, 25, 40);
+		s2.setRotation(new Complexf(1.0, 0.0));
 		rb2 = new RigidBody2(PhysicsShapeCreator.create(s2));
 
 		// Fix transformation (usually done in PhysicsSpace-class of Engine
@@ -193,12 +192,14 @@ public class EPA2dDebugger extends StandardGame {
 		support1.translate(200, 200);
 		support1.scale(10f);
 		defaultshader.addObject(support1);
+		
+		defaultshader.addObject(new Circle(0, 0, 10, 36));
 
 		// Compute simplex as starting point for EPA
 		GJK2 gjk = new GJK2(new EmptyManifoldGenerator2());
 		boolean b = gjk.isColliding(rb1, rb2);
 
-		System.out.println(gjk.getSimplex().size() + "; " + b + "; " + s2.getTranslation2() + "; " + s2.getRotation());
+		System.out.println(gjk.getSimplex().size() + "; " + b + "; " + s2.getTranslation() + "; " + s2.getRotation());
 
 		// init EPA
 		epaInit(gjk.getSimplex());
@@ -206,6 +207,8 @@ public class EPA2dDebugger extends StandardGame {
 		// Input to step EPA
 		InputEvent stepEPA = new InputEvent("Step EPA", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(stepEPA);
+		cam2d.scale(new Vector2f(4f, 4f));
+		cam2d.translateTo(-500, -500);
 	}
 
 	@Override
@@ -238,5 +241,10 @@ public class EPA2dDebugger extends StandardGame {
 			else
 				display.unbindMouse();
 		}
+	}
+
+	@Override
+	public void renderInterface() {
+
 	}
 }

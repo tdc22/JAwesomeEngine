@@ -1,11 +1,11 @@
 package debug_EPARegion;
 
 import math.VecMath;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import utils.GLConstants;
 import vector.Vector3f;
 
-public class Simplex extends ShapedObject {
+public class Simplex extends ShapedObject3 {
 	// Example values from epaDebugger
 	public Vector3f a = new Vector3f(-0.117474556, 1.4255171, 1.4336302);
 	public Vector3f b = new Vector3f(2.6647577, 1.6752844, -1.7089069);

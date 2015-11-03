@@ -12,6 +12,7 @@ import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import loader.FontLoader;
+import loader.ShaderLoader;
 import math.VecMath;
 import narrowphase.EmptyManifoldGenerator;
 import narrowphase.GJK;
@@ -21,6 +22,7 @@ import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import physicsSupportFunction.SupportDifferenceObject;
 import quaternion.Quaternionf;
+import shader.Shader;
 import shape.Box;
 import utils.Debugger;
 import vector.Vector3f;
@@ -37,6 +39,8 @@ public class EPADebugger extends StandardGame {
 			normal = VecMath.normalize(VecMath.computeNormal(a, b, c));
 		}
 	}
+
+	Shader defaultshader;
 
 	PhysicsSpace space;
 	Debugger debugger;
@@ -78,6 +82,7 @@ public class EPADebugger extends StandardGame {
 		// System.out.println(A + "; " + B + "; " + C + "; " + D);
 
 		simplex = new Simplex(faces, findClosestTriangle(faces));
+		defaultshader.addObject(simplex);
 	}
 
 	public void epaStep() {
@@ -199,8 +204,16 @@ public class EPADebugger extends StandardGame {
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
 
+		defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshaderInterface = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShaderInterface(defaultshaderInterface);
+
 		display.bindMouse();
-		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		cam.setFlyCam(true);
 		cam.translateTo(0, 1, 3);
 		cam.setFlySpeed(0.01f);
@@ -292,6 +305,7 @@ public class EPADebugger extends StandardGame {
 
 		// Visualize the support functions
 		support1 = new SupportDifferenceObject(s1, rb1, s2, rb2);
+		defaultshader.addObject(support1);
 
 		// Compute simplex as starting point for EPA
 		GJK gjk = new GJK(new EmptyManifoldGenerator());
@@ -318,18 +332,14 @@ public class EPADebugger extends StandardGame {
 
 	@Override
 	public void render() {
-		debugger.update3d();
 		debugger.begin();
 		render3dLayer();
-		simplex.render();
-		support1.render();
 	}
 
 	@Override
 	public void render2d() {
 		render2dLayer();
 		debugger.end();
-		debugger.render2d(fps, objects.size(), objects2d.size());
 	}
 
 	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb, Vector3f dir) {
@@ -344,7 +354,7 @@ public class EPADebugger extends StandardGame {
 			simplex.delete();
 			simplex = new Simplex(faces, findClosestTriangle(faces));
 		}
-		debugger.update();
+		debugger.update(fps, 0, 0);
 
 		if (display.isMouseBound())
 			cam.update(delta);
@@ -354,5 +364,11 @@ public class EPADebugger extends StandardGame {
 			else
 				display.unbindMouse();
 		}
+	}
+
+	@Override
+	public void renderInterface() {
+		// TODO Auto-generated method stub
+
 	}
 }

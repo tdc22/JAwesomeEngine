@@ -7,6 +7,7 @@ import objects.SupportMap;
 import vector.Vector3f;
 
 public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
+	private final int MAX_ITERATIONS = 80;
 
 	public GJK(ManifoldGenerator<Vector3f> manifoldgeneration) {
 		super(manifoldgeneration);
@@ -235,7 +236,7 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 		// Loop:
 		// System.out.println("startpoint: " + simplex.get(0) + "; " +
 		// direction);
-		for (int i = 0; i < 80; i++) {
+		for (int i = 0; i < MAX_ITERATIONS; i++) {
 			// A = Support(D)
 			Vector3f a = support(Sa, Sb, direction);
 			// System.out.println("New Point: " + a);
