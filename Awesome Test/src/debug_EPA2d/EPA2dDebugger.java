@@ -157,23 +157,20 @@ public class EPA2dDebugger extends StandardGame {
 
 		debugger = new Debugger(inputs, defaultshader3, defaultshader, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
 				cam);
-		cam.setFlyCam(true);
-		cam.translateTo(0, 1, 3);
-		cam.setFlySpeed(0.01f);
 
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
-		Circle c = new Circle(200, 200, 0.2f, 32);
+		Circle c = new Circle(0, 0, 0.2f, 32);
 		defaultshader.addObject(c);
 		c.scale(10f);
 
 		// Test 5
-		Quad s1 = new Quad(450.25f, 79.0f, 25, 25);
-		s1.rotate(40);
+		Quad s1 = new Quad(120, 50, 20, 20);
+		s1.setRotation(new Complexf(1.0, 0.0));
 		rb1 = new RigidBody2(PhysicsShapeCreator.create(s1));
 
-		Ellipse s2 = new Ellipse(500, 50, 50, 25, 40);
+		Ellipse s2 = new Ellipse(100.00641f, 65.40481f, 3, 3, 120);
 		s2.setRotation(new Complexf(1.0, 0.0));
 		rb2 = new RigidBody2(PhysicsShapeCreator.create(s2));
 
@@ -189,8 +186,6 @@ public class EPA2dDebugger extends StandardGame {
 
 		// Visualize the support functions
 		support1 = new SupportDifferenceObject(s1, rb1, s2, rb2);
-		support1.translate(200, 200);
-		support1.scale(10f);
 		defaultshader.addObject(support1);
 		
 		defaultshader.addObject(new Circle(0, 0, 10, 36));
@@ -207,7 +202,7 @@ public class EPA2dDebugger extends StandardGame {
 		// Input to step EPA
 		InputEvent stepEPA = new InputEvent("Step EPA", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(stepEPA);
-		cam2d.scale(new Vector2f(4f, 4f));
+		cam2d.scale(new Vector2f(1.5f, 1.5f));
 		cam2d.translateTo(-500, -500);
 	}
 

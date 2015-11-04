@@ -143,9 +143,7 @@ public class RigidBody2 extends
 
 	@Override
 	public void updateInverseRotation() {
-		Complexf c = new Complexf(getRotation());
-		c.invert();
-		invrotation = c;
+		invrotation = ComplexMath.invert(getRotation());
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class ComplexMath {
 
 	public static Complexd invert(Complex c) {
 		Complexd conj = conjugate(c);
-		double mag = Math.abs(conj.magnitudeSquared());
+		double mag = conj.magnitudeSquared();
 		if (mag != 0)
 			conj.scale(1 / mag);
 		return conj;
@@ -60,7 +60,7 @@ public class ComplexMath {
 
 	public static Complexf invert(Complexf c) {
 		Complexf conj = conjugate(c);
-		float mag = (float) Math.abs(conj.magnitudeSquared());
+		float mag = (float) conj.magnitudeSquared();
 		if (mag != 0)
 			conj.scale(1 / mag);
 		return conj;

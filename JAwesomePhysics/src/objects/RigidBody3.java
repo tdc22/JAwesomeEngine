@@ -136,9 +136,7 @@ public class RigidBody3 extends
 
 	@Override
 	public void updateInverseRotation() {
-		Quaternionf q = new Quaternionf(this.getRotation());
-		q.invert();
-		invrotation = q;
+		invrotation = QuatMath.invert(getRotation());
 	}
 
 	@Override
