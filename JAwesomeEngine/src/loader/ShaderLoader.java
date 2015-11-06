@@ -15,11 +15,7 @@ import static org.lwjgl.opengl.GL20.glGetShaderi;
 import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glShaderSource;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
-import static org.lwjgl.opengl.GL32.GL_GEOMETRY_INPUT_TYPE;
-import static org.lwjgl.opengl.GL32.GL_GEOMETRY_OUTPUT_TYPE;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
-import static org.lwjgl.opengl.GL32.GL_GEOMETRY_VERTICES_OUT;
-import static org.lwjgl.opengl.GL41.glProgramParameteri;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -80,9 +76,9 @@ public class ShaderLoader {
 		if (includeGeometryShader) {
 			glAttachShader(shaderProgram, geometryShader);
 
-			glProgramParameteri(shaderProgram, GL_GEOMETRY_INPUT_TYPE, inputtype);
-			glProgramParameteri(shaderProgram, GL_GEOMETRY_OUTPUT_TYPE, outputtype);
-			glProgramParameteri(shaderProgram, GL_GEOMETRY_VERTICES_OUT, verticesout);
+//			glProgramParameteri(shaderProgram, GL_GEOMETRY_INPUT_TYPE, inputtype);
+//			glProgramParameteri(shaderProgram, GL_GEOMETRY_OUTPUT_TYPE, outputtype);
+//			glProgramParameteri(shaderProgram, GL_GEOMETRY_VERTICES_OUT, verticesout);
 		}
 
 		glBindAttribLocation(shaderProgram, 0, "in_Position");
