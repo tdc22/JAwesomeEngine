@@ -168,7 +168,7 @@ public class GameCamera extends Camera3 implements Updateable {
 			if (right.isActive()) {
 				move = VecMath.addition(move, VecMath.crossproduct(direction, new Vector3f(0, 1, 0)));
 			}
-			if (move.length() != 0) {
+			if (move.lengthSquared() != 0) {
 				move = VecMath.normalize(move);
 				move = VecMath.scale(move, delta * speed);
 				translateTo(VecMath.addition(getTranslation(), move));

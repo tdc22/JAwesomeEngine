@@ -94,8 +94,7 @@ public abstract class SweepAndPrune<L extends Vector, ObjectType extends Collisi
 						counters.put(pair, counter);
 					}
 				}
-
-				if (!keyelement.begin && swapper.begin) {
+				else if (!keyelement.begin && swapper.begin) {
 					Pair<ObjectType, ObjectType> pair = new Pair<ObjectType, ObjectType>(
 							keyelement.object, swapper.object);
 					if (counters.containsKey(pair)) {

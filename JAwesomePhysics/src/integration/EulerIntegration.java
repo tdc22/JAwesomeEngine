@@ -38,17 +38,6 @@ public class EulerIntegration implements IntegrationSolver {
 		obj.setAngularVelocity((av.x + ii.getf(0, 0) * ta.x * delta)
 				* angularDampingValue);
 
-		// obj.setLinearVelocity(VecMath.scale(
-		// VecMath.addition(obj.getLinearVelocity(), VecMath.scale(
-		// VecMath.scale(obj.getForceAccumulator(), delta),
-		// obj.getInverseMass())), 1 / (1 + obj.getLinearDamping()
-		// * delta)));
-		// obj.setAngularVelocity(VecMath.scale(VecMath.addition(
-		// obj.getAngularVelocity(),
-		// VecMath.transformVector(obj.getInverseInertia(),
-		// VecMath.scale(obj.getTorqueAccumulator(), delta))),
-		// 1 / (1 + obj.getAngularDamping() * delta)));
-
 		obj.clearForces();
 
 		obj.translate(obj.getLinearVelocity().x * delta,
@@ -82,17 +71,6 @@ public class EulerIntegration implements IntegrationSolver {
 				* angularDampingValue, (av.y + transformedTorque.y * delta)
 				* angularDampingValue, (av.z + transformedTorque.z * delta)
 				* angularDampingValue);
-
-		// obj.setLinearVelocity(VecMath.scale(
-		// VecMath.addition(obj.getLinearVelocity(), VecMath.scale(
-		// VecMath.scale(obj.getForceAccumulator(), delta),
-		// obj.getInverseMass())), 1 / (1 + obj.getLinearDamping()
-		// * delta)));
-		// obj.setAngularVelocity(VecMath.scale(VecMath.addition(
-		// obj.getAngularVelocity(),
-		// QuatMath.transform(obj.getInverseInertia(),
-		// VecMath.scale(obj.getTorqueAccumulator(), delta))),
-		// 1 / (1 + obj.getAngularDamping() * delta)));
 
 		obj.clearForces();
 

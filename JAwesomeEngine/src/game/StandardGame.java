@@ -39,7 +39,6 @@ import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
 import loader.ShaderLoader;
-import matrix.Matrix4f;
 import objects.Camera2;
 import objects.GameCamera;
 import objects.Updateable;
@@ -67,21 +66,15 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 	protected boolean useFBO = true;
 
 	public void addShader(Shader s) {
-		s.addArgument("projection", layer3d.projectionMatrix);
-		s.addArgument("view", new Matrix4f());
-		layer3d.shader.add(s);
+		layer3d.addShader(s);
 	}
 
 	public void addShader2d(Shader s) {
-		s.addArgument("projection", layer2d.projectionMatrix);
-		s.addArgument("view", new Matrix4f());
-		layer2d.shader.add(s);
+		layer2d.addShader(s);
 	}
 
 	public void addShaderInterface(Shader s) {
-		s.addArgument("projection", layerInterface.projectionMatrix);
-		s.addArgument("view", new Matrix4f());
-		layerInterface.shader.add(s);
+		layerInterface.addShader(s);
 	}
 
 	public List<Shader> getShader() {

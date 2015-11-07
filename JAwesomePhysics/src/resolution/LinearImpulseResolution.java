@@ -50,26 +50,23 @@ public class LinearImpulseResolution implements CollisionResolution {
 				A.getLinearVelocity());
 
 		float rvDotNormal = VecMath.dotproduct(rv, normal);
-		Vector3f tangent = new Vector3f(rv.x - normal.x * rvDotNormal, rv.y
+		Vector3f frictionImpulse = new Vector3f(rv.x - normal.x * rvDotNormal, rv.y
 				- normal.y * rvDotNormal, rv.z - normal.z * rvDotNormal);
-		if (tangent.length() > 0)
-			tangent.normalize();
+		if (frictionImpulse.lengthSquared() > 0)
+			frictionImpulse.normalize();
 
-		float jt = (-VecMath.dotproduct(rv, tangent))
+		float jt = (-VecMath.dotproduct(rv, frictionImpulse))
 				/ ((A.getInverseMass() + B.getInverseMass()));
 
 		float mu = pythagoreanSolve(A.getStaticFriction(),
 				B.getStaticFriction());
 
-		Vector3f frictionImpulse = null;
 		if (Math.abs(jt) < j * mu) {
-			tangent.scale(jt);
-			frictionImpulse = tangent;
+			frictionImpulse.scale(jt);
 		} else {
 			float dynamicFriction = pythagoreanSolve(A.getDynamicFriction(),
 					B.getDynamicFriction());
-			tangent.scale(-j * dynamicFriction);
-			frictionImpulse = tangent;
+			frictionImpulse.scale(-j * dynamicFriction);
 		}
 
 		B.applyCentralImpulse(frictionImpulse);
@@ -107,27 +104,24 @@ public class LinearImpulseResolution implements CollisionResolution {
 				A.getLinearVelocity());
 
 		float rvDotNormal = VecMath.dotproduct(rv, normal);
-		Vector2f tangent = new Vector2f(rv.x - normal.x * rvDotNormal, rv.y
+		Vector2f frictionImpulse = new Vector2f(rv.x - normal.x * rvDotNormal, rv.y
 				- normal.y * rvDotNormal);
 
-		if (tangent.length() > 0)
-			tangent.normalize();
+		if (frictionImpulse.lengthSquared() > 0)
+			frictionImpulse.normalize();
 
-		float jt = (-VecMath.dotproduct(rv, tangent))
+		float jt = (-VecMath.dotproduct(rv, frictionImpulse))
 				/ ((A.getInverseMass() + B.getInverseMass()));
 
 		float mu = pythagoreanSolve(A.getStaticFriction(),
 				B.getStaticFriction());
 
-		Vector2f frictionImpulse = null;
 		if (Math.abs(jt) < j * mu) {
-			tangent.scale(jt);
-			frictionImpulse = tangent;
+			frictionImpulse.scale(jt);
 		} else {
 			float dynamicFriction = pythagoreanSolve(A.getDynamicFriction(),
 					B.getDynamicFriction());
-			tangent.scale(-j * dynamicFriction);
-			frictionImpulse = tangent;
+			frictionImpulse.scale(-j * dynamicFriction);
 		}
 
 		B.applyCentralImpulse(frictionImpulse);

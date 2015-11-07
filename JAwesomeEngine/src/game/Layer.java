@@ -83,6 +83,13 @@ public class Layer implements ViewProjection {
 		return active;
 	}
 
+	public void addShader(Shader s) {
+		s.addArgument("projection", projectionMatrix);
+		s.addArgument("view", new Matrix4f());
+		s.addArgument("model", new Matrix4f());
+		shader.add(s);
+	}
+
 	public void applyPostProcessing(Shader target, int width, int height) {
 		boolean p = true;
 		int tex0 = framebuffer.getColorTextureID();
@@ -103,7 +110,7 @@ public class Layer implements ViewProjection {
 		}
 		glBindTexture(GL_TEXTURE_2D, p ? tex0 : tex1);
 		glViewport(0, 0, width, height);
-		target.render();
+		target.renderNoMatrix();
 	}
 
 	@Override

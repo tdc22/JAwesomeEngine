@@ -117,7 +117,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		else
 			tangentA = new Vector3f(0, normal.z, -normal.y);
 
-		if (tangentA.length() > 0)
+		if (tangentA.lengthSquared() > 0)
 			tangentA.normalize();
 		tangentB = VecMath.crossproduct(normal, tangentA);
 

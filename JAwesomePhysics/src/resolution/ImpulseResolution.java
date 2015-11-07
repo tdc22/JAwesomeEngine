@@ -4,6 +4,7 @@ import manifold.CollisionManifold;
 import math.VecMath;
 import objects.RigidBody2;
 import objects.RigidBody3;
+import quaternion.Quaternionf;
 import vector.Vector1f;
 import vector.Vector2f;
 import vector.Vector3f;
@@ -40,24 +41,22 @@ public class ImpulseResolution implements CollisionResolution {
 			return;
 
 		float e = Math.min(A.getRestitution(), B.getRestitution());
-		float iiA = A.getInverseInertia().toMatrixf().getf(0, 0); // TODO:
-																	// compute
-																	// that
-																	// matrix
-																	// value
-																	// manually
+		Quaternionf ii = A.getInverseInertia();
+		float iiA = 1 - 2 * ii.getQ2f() * ii.getQ2f() - 2 * ii.getQ3f() * ii.getQ3f(); // Quaternion to Matrix(0, 0)
+		
 		// ca = (contactA x normal) x contactA * A(0, 0)
 		Vector3f cxnA = VecMath.crossproduct(contactA, normal);
 		Vector3f ca = new Vector3f((cxnA.y * contactA.z - cxnA.z * contactA.y)
 				* iiA, (cxnA.z * contactA.x - cxnA.x * contactA.y) * iiA,
 				(cxnA.x * contactA.y - cxnA.y * contactA.x) * iiA);
 
-		float iiB = B.getInverseInertia().toMatrixf().getf(0, 0); // TODO: same
+		ii = B.getInverseInertia();
+		float iiB = 1 - 2 * ii.getQ2f() * ii.getQ2f() - 2 * ii.getQ3f() * ii.getQ3f(); // Quaternion to Matrix(0, 0)
 		// cb = (contactB x normal) x contactB * B(0, 0)
 		Vector3f cxnB = VecMath.crossproduct(contactB, normal);
 		Vector3f cb = new Vector3f((cxnB.y * contactB.z - cxnB.z * contactB.y)
 				* iiB, (cxnB.z * contactB.x - cxnB.x * contactB.y) * iiB,
-				(cxnA.x * contactB.y - cxnB.y * contactB.x) * iiB);
+				(cxnB.x * contactB.y - cxnB.y * contactB.x) * iiB);
 
 		// j = (-(1 + e) * velAlongNormal / (A.inverseMass + B.inverseMass + (ca
 		// + cb) dot normal)
@@ -78,26 +77,23 @@ public class ImpulseResolution implements CollisionResolution {
 
 		// tangent = rv - normal * (rv dot normal)
 		float rvDotNormal = VecMath.dotproduct(rv, normal);
-		Vector3f tangent = new Vector3f(rv.x - normal.x * rvDotNormal, rv.y
+		Vector3f frictionImpulse = new Vector3f(rv.x - normal.x * rvDotNormal, rv.y
 				- normal.y * rvDotNormal, rv.z - normal.z * rvDotNormal);
-		if (tangent.length() > 0)
-			tangent.normalize();
+		if (frictionImpulse.lengthSquared() > 0)
+			frictionImpulse.normalize();
 
-		float jt = (-VecMath.dotproduct(rv, tangent))
+		float jt = (-VecMath.dotproduct(rv, frictionImpulse))
 				/ (A.getInverseMass() + B.getInverseMass());
 
 		float mu = pythagoreanSolve(A.getStaticFriction(),
 				B.getStaticFriction());
 
-		Vector3f frictionImpulse = null;
 		if (Math.abs(jt) < j * mu) {
-			tangent.scale(jt);
-			frictionImpulse = tangent;
+			frictionImpulse.scale(jt);
 		} else {
 			float dynamicFriction = pythagoreanSolve(A.getDynamicFriction(),
 					B.getDynamicFriction());
-			tangent.scale(-j * dynamicFriction);
-			frictionImpulse = tangent;
+			frictionImpulse.scale(-j * dynamicFriction);
 		}
 
 		B.applyImpulse(frictionImpulse, contactB);
@@ -152,26 +148,23 @@ public class ImpulseResolution implements CollisionResolution {
 
 		// tangent = rv - normal * (rv dot normal)
 		float rvDotNormal = VecMath.dotproduct(rv, normal);
-		Vector2f tangent = new Vector2f(rv.x - normal.x * rvDotNormal, rv.y
+		Vector2f frictionImpulse = new Vector2f(rv.x - normal.x * rvDotNormal, rv.y
 				- normal.y * rvDotNormal);
-		if (tangent.length() > 0)
-			tangent.normalize();
+		if (frictionImpulse.lengthSquared() > 0)
+			frictionImpulse.normalize();
 
-		float jt = (-VecMath.dotproduct(rv, tangent))
+		float jt = (-VecMath.dotproduct(rv, frictionImpulse))
 				/ (A.getInverseMass() + B.getInverseMass());
 
 		float mu = pythagoreanSolve(A.getStaticFriction(),
 				B.getStaticFriction());
 
-		Vector2f frictionImpulse = null;
 		if (Math.abs(jt) < j * mu) {
-			tangent.scale(jt);
-			frictionImpulse = tangent;
+			frictionImpulse.scale(jt);
 		} else {
 			float dynamicFriction = pythagoreanSolve(A.getDynamicFriction(),
 					B.getDynamicFriction());
-			tangent.scale(-j * dynamicFriction);
-			frictionImpulse = tangent;
+			frictionImpulse.scale(-j * dynamicFriction);
 		}
 
 		B.applyImpulse(frictionImpulse, contactB);

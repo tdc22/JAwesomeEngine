@@ -314,12 +314,7 @@ public class Shader implements ViewProjection {
 		return uniformpositions;
 	}
 
-	public void setArgument(int id, Object argument) {
-		uniformarguments.set(id, argument);
-	}
-
-	public void setArgument(String argumentname, Object argument) {
-		int argumentID = getArgumentID(argumentname);
+	public void setArgument(int argumentID, Object argument) {
 		int argumentType = uniformtypes.get(argumentID);
 		if (argumentType == 8) {
 			FloatBuffer buf = BufferUtils.createFloatBuffer(16);
@@ -341,9 +336,16 @@ public class Shader implements ViewProjection {
 		}
 	}
 
-	public void setArgumentDirect(String argumentname, Object argument) {
-		int argumentID = getArgumentID(argumentname);
+	public void setArgument(String argumentname, Object argument) {
+		setArgument(getArgumentID(argumentname), argument);
+	}
+
+	public void setArgumentDirect(int argumentID, Object argument) {
 		uniformarguments.set(argumentID, argument);
+	}
+
+	public void setArgumentDirect(String argumentname, Object argument) {
+		setArgumentDirect(getArgumentID(argumentname), argument);
 	}
 
 	public void unbind() {
@@ -402,12 +404,21 @@ public class Shader implements ViewProjection {
 
 	@Override
 	public void render() {
-		// TODO: Optimize! And improve!
 		if (rendered) {
 			bind();
-			int modelLocation = glGetUniformLocation(shaderProgram, "model");
+			int modelLocation = uniformpositions.get(getArgumentID("model"));
 			for (RenderableObject obj : objects) {
 				glUniformMatrix4fv(modelLocation, false, obj.getMatrixBuffer());
+				obj.render();
+			}
+			unbind();
+		}
+	}
+
+	public void renderNoMatrix() {
+		if (rendered) {
+			bind();
+			for (RenderableObject obj : objects) {
 				obj.render();
 			}
 			unbind();
