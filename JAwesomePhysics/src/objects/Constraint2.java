@@ -1,11 +1,11 @@
 package objects;
 
-import constraints.GaussSeidel;
-import constraints.LinearEquationSolver;
 import matrix.Matrix1f;
 import quaternion.Complexf;
 import vector.Vector1f;
 import vector.Vector2f;
+import constraints.GaussSeidel;
+import constraints.LinearEquationSolver;
 
 public abstract class Constraint2 extends Constraint<Vector2f, Vector1f, Complexf, Matrix1f> {
 	LinearEquationSolver solver;

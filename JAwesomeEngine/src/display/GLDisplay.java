@@ -63,15 +63,8 @@ public class GLDisplay extends Display {
 	@Override
 	public void bindMouse() {
 		glfwSetInputMode(windowid, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		resetMouse();
 		mousebound = true;
-
-		// HACK (drop 2 inputs to avoid wrong mouse values)
-		this.swap();
-		this.pollInputs();
-		resetMouse();
-		this.swap();
-		this.pollInputs();
-		resetMouse();
 	}
 
 	@Override

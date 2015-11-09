@@ -7,8 +7,8 @@ import objects.ShapedObject2;
 import utils.GLConstants;
 import vector.Vector2f;
 
-public class ResultTetrahedron extends ShapedObject2 {
-	public ResultTetrahedron(List<Vector2f> simplex) {
+public class ResultTetrahedron2 extends ShapedObject2 {
+	public ResultTetrahedron2(List<Vector2f> simplex) {
 		setRenderMode(GLConstants.TRIANGLES);
 
 		for (int v = simplex.size() - 1; v > -1; v--) {

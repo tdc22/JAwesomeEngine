@@ -29,13 +29,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.lwjgl.BufferUtils;
-
 import matrix.Matrix2f;
 import matrix.Matrix3f;
 import matrix.Matrix4f;
 import objects.RenderableObject;
 import objects.ViewProjection;
+
+import org.lwjgl.BufferUtils;
+
 import texture.Texture;
 import vector.Vector2f;
 import vector.Vector3f;

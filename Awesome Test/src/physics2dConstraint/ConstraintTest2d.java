@@ -1,17 +1,12 @@
 package physics2dConstraint;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import broadphase.SAP2;
-import constraints.DistanceConstraint2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import integration.VerletIntegration;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import loader.FontLoader;
 import loader.ShaderLoader;
 import manifold.MultiPointManifoldManager2;
@@ -30,6 +25,12 @@ import shape2d.Circle;
 import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
+import broadphase.SAP2;
+import constraints.DistanceConstraint2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ConstraintTest2d extends StandardGame {
 	PhysicsSpace2 space;

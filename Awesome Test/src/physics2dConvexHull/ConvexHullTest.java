@@ -1,20 +1,21 @@
 package physics2dConvexHull;
 
+import game.StandardGame;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import convexhull.Quickhull2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
-import game.StandardGame;
 import loader.ShaderLoader;
 import objects.ShapedObject2;
 import shader.Shader;
 import utils.GLConstants;
 import vector.Vector2f;
+import convexhull.Quickhull2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ConvexHullTest extends StandardGame {
 

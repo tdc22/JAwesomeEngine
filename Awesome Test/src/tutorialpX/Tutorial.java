@@ -1,20 +1,15 @@
 package tutorialpX;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import broadphase.SAP;
-import collisionshape.CylinderShape;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import loader.FontLoader;
 import loader.ShaderLoader;
 import manifold.MultiPointManifoldManager;
@@ -36,6 +31,12 @@ import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector3f;
 import vector.Vector4f;
+import broadphase.SAP;
+import collisionshape.CylinderShape;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class Tutorial extends StandardGame {
 	InputEvent forward, backward, left, right, jump;

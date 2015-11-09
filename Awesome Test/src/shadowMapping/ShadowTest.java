@@ -1,9 +1,5 @@
 package shadowMapping;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ModelLoader;
@@ -19,6 +15,10 @@ import texture.FramebufferObject;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector3f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ShadowTest extends StandardGame {
 	Debugger debugger;

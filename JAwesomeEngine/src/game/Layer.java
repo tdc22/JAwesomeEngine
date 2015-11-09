@@ -8,10 +8,11 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.BufferUtils;
-
 import matrix.Matrix4f;
 import objects.ViewProjection;
+
+import org.lwjgl.BufferUtils;
+
 import shader.PostProcessingShader;
 import shader.Shader;
 import texture.FramebufferObject;
@@ -103,7 +104,7 @@ public class Layer implements ViewProjection {
 				current.clear();
 				((Texture) pp.getShader().getArgument("u_texture")).setTextureID(p ? tex0 : tex1);
 				((Texture) pp.getShader().getArgument("u_depthTexture")).setTextureID(p ? tex0depth : tex1depth);
-				pp.getShader().render();
+				pp.getShader().renderNoMatrix();
 				current.unbind();
 				p = !p;
 			}

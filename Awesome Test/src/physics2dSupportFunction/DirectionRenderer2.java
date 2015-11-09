@@ -8,8 +8,8 @@ import objects.ShapedObject2;
 import utils.GLConstants;
 import vector.Vector2f;
 
-public class DirectionRenderer extends ShapedObject2 {
-	public DirectionRenderer() {
+public class DirectionRenderer2 extends ShapedObject2 {
+	public DirectionRenderer2() {
 		rendermode = GLConstants.LINES;
 		setDirections(new ArrayList<Vector2f>());
 	}

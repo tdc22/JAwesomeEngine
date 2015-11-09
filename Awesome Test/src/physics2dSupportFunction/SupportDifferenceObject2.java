@@ -4,20 +4,20 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import math.ComplexMath;
 import math.VecMath;
-import matrix.Matrix4f;
 import objects.CollisionShape;
 import objects.ShapedObject2;
 import objects.SupportMap;
+import quaternion.Complexf;
 import utils.GLConstants;
 import vector.Vector2f;
-import vector.Vector3f;
 
-public class SupportDifferenceObject extends ShapedObject2 {
+public class SupportDifferenceObject2 extends ShapedObject2 {
 	ShapedObject2 so1, so2;
 	CollisionShape<Vector2f, ?, ?> rb1, rb2;
 
-	public SupportDifferenceObject(ShapedObject2 s1, CollisionShape<Vector2f, ?, ?> r1, ShapedObject2 s2,
+	public SupportDifferenceObject2(ShapedObject2 s1, CollisionShape<Vector2f, ?, ?> r1, ShapedObject2 s2,
 			CollisionShape<Vector2f, ?, ?> r2) {
 		rendermode = GLConstants.POINTS;
 		so1 = s1;
@@ -67,22 +67,16 @@ public class SupportDifferenceObject extends ShapedObject2 {
 		// }
 
 		Vector2f vx1 = new Vector2f(1, 0);
-		Vector3f vx = new Vector3f(1, 0, 0);
-		Vector3f vy = new Vector3f(0, 1, 0);
-		Matrix4f mat = new Matrix4f();
-		for (int x = 0; x < 10; x++) {
-			for (int y = 0; y < 10; y++) {
-				Vector2f dir = VecMath.transformVector(mat, vx1);
-				directions.add(dir);
-				Vector2f res = support(rb1, rb2, dir);
-				// System.out.println(VecMath.transformVector(mat,
-				// vx).toString());
-				if (!result.contains(res))
-					result.add(res);
-
-				mat.rotate(36, vy);
-			}
-			mat.rotate(36, vx);
+		Complexf mat = new Complexf();
+		for (int x = 0; x < 360; x++) {
+			Vector2f dir = ComplexMath.transform(mat, vx1);
+			directions.add(dir);
+			Vector2f res = support(rb1, rb2, dir);
+			// System.out.println(VecMath.transformVector(mat,
+			// vx).toString());
+			if (!result.contains(res))
+				result.add(res);
+			mat.rotate(1);
 		}
 		// Vector2f res = support(rb1, rb2, new Vector2f(1, 1, 1));
 

@@ -1,16 +1,13 @@
 package debug_EPA2d;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
@@ -20,7 +17,8 @@ import objects.RigidBody2;
 import objects.SupportMap;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
-import physics2dSupportFunction.SupportDifferenceObject;
+import physics2dSupportFunction.SupportDifferenceObject2;
+import physics2dSupportFunction.SupportObject2;
 import quaternion.Complexf;
 import shader.Shader;
 import shape2d.Circle;
@@ -28,6 +26,10 @@ import shape2d.Ellipse;
 import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class EPA2dDebugger extends StandardGame {
 	public class Edge {
@@ -50,7 +52,7 @@ public class EPA2dDebugger extends StandardGame {
 	Simplex simplex;
 	int iter = 0;
 
-	SupportDifferenceObject support1;
+	SupportDifferenceObject2 support1;
 	Shader defaultshader;
 
 	InputEvent toggleMouseBind;
@@ -161,16 +163,14 @@ public class EPA2dDebugger extends StandardGame {
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
-		Circle c = new Circle(0, 0, 0.2f, 32);
-		defaultshader.addObject(c);
-		c.scale(10f);
+		defaultshader.addObject(new Circle(0, 0, 0.5f, 36));
 
 		// Test 5
-		Quad s1 = new Quad(120, 50, 20, 20);
+		Quad s1 = new Quad(0, 0, 20, 20);
 		s1.setRotation(new Complexf(1.0, 0.0));
 		rb1 = new RigidBody2(PhysicsShapeCreator.create(s1));
 
-		Ellipse s2 = new Ellipse(100.00641f, 65.40481f, 3, 3, 120);
+		Ellipse s2 = new Ellipse(0, 10, 3, 3, 120);
 		s2.setRotation(new Complexf(1.0, 0.0));
 		rb2 = new RigidBody2(PhysicsShapeCreator.create(s2));
 
@@ -185,10 +185,10 @@ public class EPA2dDebugger extends StandardGame {
 		rb2.updateInverseRotation();
 
 		// Visualize the support functions
-		support1 = new SupportDifferenceObject(s1, rb1, s2, rb2);
+		support1 = new SupportDifferenceObject2(s1, rb1, s2, rb2);
 		defaultshader.addObject(support1);
-		
-		defaultshader.addObject(new Circle(0, 0, 10, 36));
+		defaultshader.addObject(new SupportObject2(s1, rb1));
+		defaultshader.addObject(new SupportObject2(s2, rb2));
 
 		// Compute simplex as starting point for EPA
 		GJK2 gjk = new GJK2(new EmptyManifoldGenerator2());
@@ -202,8 +202,8 @@ public class EPA2dDebugger extends StandardGame {
 		// Input to step EPA
 		InputEvent stepEPA = new InputEvent("Step EPA", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(stepEPA);
-		cam2d.scale(new Vector2f(1.5f, 1.5f));
-		cam2d.translateTo(-500, -500);
+		cam2d.scale(new Vector2f(0.2f, 0.2f));
+		cam2d.translateTo(-50, -50);
 	}
 
 	@Override

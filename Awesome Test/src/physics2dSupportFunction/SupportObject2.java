@@ -9,11 +9,11 @@ import objects.ShapedObject2;
 import utils.GLConstants;
 import vector.Vector2f;
 
-public class SupportObject extends ShapedObject2 {
+public class SupportObject2 extends ShapedObject2 {
 	ShapedObject2 so;
 	CollisionShape<Vector2f, ?, ?> rb;
 
-	public SupportObject(ShapedObject2 s, CollisionShape<Vector2f, ?, ?> r) {
+	public SupportObject2(ShapedObject2 s, CollisionShape<Vector2f, ?, ?> r) {
 		rendermode = GLConstants.POINTS;
 		so = s;
 		rb = r;

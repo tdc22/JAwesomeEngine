@@ -1,9 +1,5 @@
 package particleSimple2d;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import loader.FontLoader;
@@ -16,6 +12,10 @@ import utils.Debugger;
 import vector.Vector1f;
 import vector.Vector2f;
 import vector.Vector3f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class Particle2d extends StandardGame {
 	Debugger debugger;

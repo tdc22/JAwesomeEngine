@@ -1,10 +1,5 @@
 package physicsSupportFunction;
 
-import broadphase.SAP;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
@@ -28,6 +23,11 @@ import shape.Cylinder;
 import shape.Sphere;
 import utils.Debugger;
 import vector.Vector3f;
+import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class SupportFunctionTest extends StandardGame {
 	PhysicsSpace space;

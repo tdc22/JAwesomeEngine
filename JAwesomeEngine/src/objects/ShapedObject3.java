@@ -77,18 +77,21 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 	}
 
 	public void updateBuffer() {
-		float[][] mat = rotation.toMatrixf().getArrayf();
-		buf.put(mat[0][0] * scale.x);
-		buf.put(mat[0][1] * scale.x);
-		buf.put(mat[0][2] * scale.x);
+		float q0 = rotation.getQ0f();
+		float q1 = rotation.getQ1f();
+		float q2 = rotation.getQ2f();
+		float q3 = rotation.getQ3f();
+		buf.put((1 - 2 * q2 * q2 - 2 * q3 * q3) * scale.x);
+		buf.put((2 * q1 * q2 + 2 * q3 * q0) * scale.x);
+		buf.put((2 * q1 * q3 - 2 * q2 * q0) * scale.x);
 		buf.put(0);
-		buf.put(mat[1][0] * scale.y);
-		buf.put(mat[1][1] * scale.y);
-		buf.put(mat[1][2] * scale.y);
+		buf.put((2 * q1 * q2 - 2 * q3 * q0) * scale.y);
+		buf.put((1 - 2 * q1 * q1 - 2 * q3 * q3) * scale.y);
+		buf.put((2 * q2 * q3 + 2 * q1 * q0) * scale.y);
 		buf.put(0);
-		buf.put(mat[2][0] * scale.z);
-		buf.put(mat[2][1] * scale.z);
-		buf.put(mat[2][2] * scale.z);
+		buf.put((2 * q1 * q3 + 2 * q2 * q0) * scale.z);
+		buf.put((2 * q2 * q3 - 2 * q1 * q0) * scale.z);
+		buf.put((1 - 2 * q1 * q1 - 2 * q2 * q2) * scale.z);
 		buf.put(0);
 		buf.put(translation.getXf());
 		buf.put(translation.getYf());

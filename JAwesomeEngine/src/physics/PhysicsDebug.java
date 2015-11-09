@@ -1,21 +1,23 @@
 package physics;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import manifold.CollisionManifold;
 import math.VecMath;
 import objects.AABB;
 import objects.RigidBody;
 import objects.ShapedObject3;
+
+import org.lwjgl.opengl.GL11;
+
 import quaternion.Quaternionf;
 import space.Space3;
 import utils.Pair;

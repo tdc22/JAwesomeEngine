@@ -23,9 +23,10 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import matrix.Matrix4f;
+
 import org.lwjgl.BufferUtils;
 
-import matrix.Matrix4f;
 import vector.Vector2f;
 import vector.Vector3f;
 

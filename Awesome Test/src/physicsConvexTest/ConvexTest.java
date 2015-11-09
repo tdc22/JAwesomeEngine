@@ -1,15 +1,11 @@
 package physicsConvexTest;
 
-import java.awt.Color;
-
-import broadphase.SAP;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import integration.VerletIntegration;
+
+import java.awt.Color;
+
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
@@ -30,6 +26,11 @@ import shape.Box;
 import shape.Sphere;
 import utils.Debugger;
 import vector.Vector3f;
+import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ConvexTest extends StandardGame {
 	PhysicsSpace space;

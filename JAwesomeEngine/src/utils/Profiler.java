@@ -1,9 +1,5 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import game.StandardGame;
 import gui.Font;
 import gui.Text;
@@ -11,6 +7,11 @@ import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import loader.ShaderLoader;
 import objects.ShapedObject2;
 import objects.Updateable;
@@ -33,7 +34,7 @@ public class Profiler implements Updateable {
 	InputEvent toggleScale, toggleGameProfile, togglePhysicsProfile;
 	Text gameProfileText0, gameProfileText1, gameProfileText2, gameProfileText3, physicsProfileText0,
 			physicsProfileText1, physicsProfileText2, physicsProfileText3, scaleMin, scaleMid, scaleMax;
-	Shader backgroundshader, colorShader0, colorShader1, colorShader2, colorShader3, colorShader4, colorShader5,
+	Shader backgroundshader, scaleshader, colorShader0, colorShader1, colorShader2, colorShader3, colorShader4, colorShader5,
 			colorShader6, colorShader7;
 	ProfileLine gameProfileLine0, gameProfileLine1, gameProfileLine2, gameProfileLine3, physicsProfileLine0,
 			physicsProfileLine1, physicsProfileLine2, physicsProfileLine3;
@@ -116,9 +117,16 @@ public class Profiler implements Updateable {
 		colorShader6.addObject(physicsProfileText2);
 		colorShader7.addObject(physicsProfileText3);
 
-		scaleMin = new Text("0", 610, 580, f);
-		scaleMid = new Text("0", 610, 525, f);
-		scaleMax = new Text("0", 610, 470, f);
+		scaleMin = new Text("0", 610, 595, f);
+		scaleMid = new Text("0", 610, 535, f);
+		scaleMax = new Text("0", 610, 475, f);
+		
+		scaleshader = new Shader(colorShaderID, c, new Vector4f(1f, 1f, 1f, 1f));
+		scaleshader.addObject(scaleMin);
+		scaleshader.addObject(scaleMid);
+		scaleshader.addObject(scaleMax);
+		scaleshader.setRendered(false);
+		game.addShaderInterface(scaleshader);
 
 		gameProfileLine0 = new ProfileLine();
 		gameProfileLine1 = new ProfileLine();
@@ -169,42 +177,10 @@ public class Profiler implements Updateable {
 		inputs.addEvent(togglePhysicsProfile);
 	}
 
-	// public void render2d() {
-	// if (showScale) {
-	// background.render();
-	// scaleMin.render();
-	// scaleMid.render();
-	// scaleMax.render();
-	// }
-	// if (gameprofiler != null && showGameProfile) {
-	// gameProfileText0.render();
-	// gameProfileText1.render();
-	// gameProfileText2.render();
-	// gameProfileText3.render();
-	// if (showScale) {
-	// gameProfileLine0.render();
-	// gameProfileLine1.render();
-	// gameProfileLine2.render();
-	// gameProfileLine3.render();
-	// }
-	// }
-	// if (physicsprofiler != null && showPhysicsProfile) {
-	// physicsProfileText0.render();
-	// physicsProfileText1.render();
-	// physicsProfileText2.render();
-	// physicsProfileText3.render();
-	// if (showScale) {
-	// physicsProfileLine0.render();
-	// physicsProfileLine1.render();
-	// physicsProfileLine2.render();
-	// physicsProfileLine3.render();
-	// }
-	// }
-	// }
-
 	public void setShowScale(boolean s) {
 		showScale = s;
 		backgroundshader.setRendered(s);
+		scaleshader.setRendered(s);
 		if (gameprofiler != null && showGameProfile) {
 			colorShader0.setRendered(s);
 			colorShader1.setRendered(s);
@@ -270,11 +246,13 @@ public class Profiler implements Updateable {
 			gameProfileLine1.addValue(profilevalues[2]);
 			gameProfileLine2.addValue(profilevalues[3]);
 			gameProfileLine3.addValue(profilevalues[4]);
-
-			gameProfileText0.setText("Update: " + values.get(0).get(values.get(0).size() - 1));
-			gameProfileText1.setText("Render 3d: " + values.get(1).get(values.get(1).size() - 1));
-			gameProfileText2.setText("Render 2d: " + values.get(2).get(values.get(2).size() - 1));
-			gameProfileText3.setText("Display: " + values.get(3).get(values.get(3).size() - 1));
+			
+			int valuesize = values.get(0).size();
+			
+			gameProfileText0.setText("Update: " + values.get(0).get(valuesize - 1));
+			gameProfileText1.setText("Render 3d: " + values.get(1).get(valuesize - 1));
+			gameProfileText2.setText("Render 2d: " + values.get(2).get(valuesize - 1));
+			gameProfileText3.setText("Display: " + values.get(3).get(valuesize - 1));
 		}
 		if (physicsprofiler != null) {
 			long[] profilevalues = physicsprofiler.getValues();
@@ -287,11 +265,13 @@ public class Profiler implements Updateable {
 			physicsProfileLine1.addValue(profilevalues[2]);
 			physicsProfileLine2.addValue(profilevalues[3]);
 			physicsProfileLine3.addValue(profilevalues[4]);
+			
+			int valuesize = values.get(4).size();
 
-			physicsProfileText0.setText("Broadphase: " + values.get(4).get(values.get(4).size() - 1));
-			physicsProfileText1.setText("Narrowphase: " + values.get(5).get(values.get(5).size() - 1));
-			physicsProfileText2.setText("Resolution: " + values.get(6).get(values.get(6).size() - 1));
-			physicsProfileText3.setText("Integration: " + values.get(7).get(values.get(7).size() - 1));
+			physicsProfileText0.setText("Broadphase: " + values.get(4).get(valuesize - 1));
+			physicsProfileText1.setText("Narrowphase: " + values.get(5).get(valuesize - 1));
+			physicsProfileText2.setText("Resolution: " + values.get(6).get(valuesize - 1));
+			physicsProfileText3.setText("Integration: " + values.get(7).get(valuesize - 1));
 		}
 
 		if (times.size() > numvalues) {

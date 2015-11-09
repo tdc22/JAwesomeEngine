@@ -1,9 +1,5 @@
 package postProcessingBlur;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
@@ -16,6 +12,10 @@ import shader.Shader;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector2f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class BlurTest extends StandardGame {
 	Debugger debugger;

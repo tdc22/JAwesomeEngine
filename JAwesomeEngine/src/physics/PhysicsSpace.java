@@ -1,10 +1,10 @@
 package physics;
 
+import integration.IntegrationSolver;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import broadphase.Broadphase;
-import integration.IntegrationSolver;
 import manifold.ManifoldManager;
 import narrowphase.Narrowphase;
 import objects.CollisionShape;
@@ -16,6 +16,7 @@ import quaternion.Quaternionf;
 import resolution.CollisionResolution;
 import space.Space3;
 import vector.Vector3f;
+import broadphase.Broadphase;
 
 public class PhysicsSpace extends Space3 {
 	List<GameObject<Vector3f, Quaternionf>> addedobjects;

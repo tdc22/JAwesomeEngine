@@ -1,14 +1,14 @@
 package shader1_Col;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import loader.ShaderLoader;
 import shader.Shader;
 import shape.Box;
 import vector.Vector4f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ShaderTest extends StandardGame {
 	Shader shader;

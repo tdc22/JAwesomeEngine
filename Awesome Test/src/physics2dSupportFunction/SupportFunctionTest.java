@@ -1,10 +1,5 @@
 package physics2dSupportFunction;
 
-import broadphase.SAP2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import integration.EulerIntegration;
 import loader.FontLoader;
@@ -25,14 +20,19 @@ import shape2d.Circle;
 import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
+import broadphase.SAP2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class SupportFunctionTest extends StandardGame {
 	PhysicsSpace2 space;
 	Quad q1, q2;
 	Circle c1;
-	SupportObject so1, so11, so2, so3;
-	SupportDifferenceObject support1, support2, support11, support21;
-	DirectionRenderer dirrenderer;
+	SupportObject2 so1, so11, so2, so3;
+	SupportDifferenceObject2 support1, support2, support11, support21;
+	DirectionRenderer2 dirrenderer;
 	RigidBody2 rb2, rb3;
 	Debugger debugger;
 
@@ -86,23 +86,23 @@ public class SupportFunctionTest extends StandardGame {
 		space.addRigidBody(c1, rb3);
 		// addObject(s1);
 
-		dirrenderer = new DirectionRenderer();
+		dirrenderer = new DirectionRenderer2();
 		defaultshader.addObject(dirrenderer);
 
-		so1 = new SupportObject(q, rb1.getCollisionShapes().get(0));
-		so11 = new SupportObject(c, rb1.getCollisionShapes().get(1));
-		so2 = new SupportObject(q2, rb2);
-		so3 = new SupportObject(c1, rb3);
+		so1 = new SupportObject2(q, rb1.getCollisionShapes().get(0));
+		so11 = new SupportObject2(c, rb1.getCollisionShapes().get(1));
+		so2 = new SupportObject2(q2, rb2);
+		so3 = new SupportObject2(c1, rb3);
 
 		defaultshader2.addObject(so1);
 		defaultshader2.addObject(so11);
 		defaultshader2.addObject(so2);
 		defaultshader2.addObject(so3);
 
-		support1 = new SupportDifferenceObject(q, rb1.getCollisionShapes().get(0), q2, rb2);
-		support2 = new SupportDifferenceObject(q, rb1.getCollisionShapes().get(0), c1, rb3);
-		support11 = new SupportDifferenceObject(c, rb1.getCollisionShapes().get(1), q2, rb2);
-		support21 = new SupportDifferenceObject(c, rb1.getCollisionShapes().get(1), c1, rb3);
+		support1 = new SupportDifferenceObject2(q, rb1.getCollisionShapes().get(0), q2, rb2);
+		support2 = new SupportDifferenceObject2(q, rb1.getCollisionShapes().get(0), c1, rb3);
+		support11 = new SupportDifferenceObject2(c, rb1.getCollisionShapes().get(1), q2, rb2);
+		support21 = new SupportDifferenceObject2(c, rb1.getCollisionShapes().get(1), c1, rb3);
 
 		defaultshader2.addObject(support1);
 		defaultshader2.addObject(support2);

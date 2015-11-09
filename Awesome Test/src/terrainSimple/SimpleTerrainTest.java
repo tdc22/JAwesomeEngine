@@ -1,24 +1,25 @@
 package terrainSimple;
 
+import game.StandardGame;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
-import game.StandardGame;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import shader.Shader;
 import terrain.Terrain;
 import utils.Debugger;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class SimpleTerrainTest extends StandardGame {
 	Debugger debugger;
