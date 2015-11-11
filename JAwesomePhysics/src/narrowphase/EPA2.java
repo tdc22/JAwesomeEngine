@@ -27,7 +27,7 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 		}
 	}
 
-	private final float TOLERANCE = 0.05f;
+	private final float TOLERANCE = 0.001f;
 	private final float EPSILON = 0;//0.1f;
 	private final int MAX_ITERATIONS = 50;
 

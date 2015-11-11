@@ -39,8 +39,11 @@ public class EPA2dDebugger extends StandardGame {
 		public Edge(Vector2f a, Vector2f b) {
 			this.a = a;
 			this.b = b;
-			Vector2f e = VecMath.subtraction(b, a);
-			normal = edgeDirection(e, a);
+			
+			normal = new Vector2f(a.y - b.y, b.x - a.x);
+			if (VecMath.dotproduct(normal, a) < 0)
+				normal.negate();
+			
 			if (normal.lengthSquared() > 0)
 				normal.normalize();
 		}
@@ -67,7 +70,7 @@ public class EPA2dDebugger extends StandardGame {
 
 	SupportMap<Vector2f> Sa;
 	SupportMap<Vector2f> Sb;
-	private final float TOLERANCE = 0.05f;
+	private final float TOLERANCE = 0.01f;
 	private final float EPSILON = 0.00f;
 
 	public void epaInit(List<Vector2f> gjksimplex) {
@@ -96,7 +99,7 @@ public class EPA2dDebugger extends StandardGame {
 			if (d - e.distance < TOLERANCE) {
 				normal = e.normal;
 				depth = (float) d;
-				System.out.println("END Iter: " + iter);
+				System.out.println("END Iter: " + iter + "; " + normal + "; " + depth);
 				return;
 			} else {
 				edges.add(new Edge(e.a, p));
@@ -106,14 +109,6 @@ public class EPA2dDebugger extends StandardGame {
 		edges.remove(e);
 
 		iter++;
-	}
-
-	private Vector2f edgeDirection(Vector2f edge, Vector2f origin) {
-		Vector2f a = new Vector2f(-edge.y, edge.x);
-		if (VecMath.dotproduct(a, origin) > 0)
-			return a;
-		a.negate();
-		return a;
 	}
 
 	private boolean isOriginInsideEdgeArea(Edge e) {
@@ -163,14 +158,14 @@ public class EPA2dDebugger extends StandardGame {
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
-		defaultshader.addObject(new Circle(0, 0, 0.5f, 36));
+		defaultshader.addObject(new Circle(0, 0, 1f, 36));
 
 		// Test 5
-		Quad s1 = new Quad(0, 0, 20, 20);
+		Quad s1 = new Quad(120, 50, 20, 20);
 		s1.setRotation(new Complexf(1.0, 0.0));
 		rb1 = new RigidBody2(PhysicsShapeCreator.create(s1));
 
-		Ellipse s2 = new Ellipse(0, 10, 3, 3, 120);
+		Ellipse s2 = new Ellipse(97.00985f, 64.54515f, 3, 3, 120);
 		s2.setRotation(new Complexf(1.0, 0.0));
 		rb2 = new RigidBody2(PhysicsShapeCreator.create(s2));
 

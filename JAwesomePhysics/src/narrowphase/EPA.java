@@ -210,11 +210,12 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 
 	// (b - a) x normal * a <= EPSILON
 	private boolean checkPlane(Vector3f a, Vector3f b, Vector3f normal) {
-		Vector3f cross = VecMath
-				.crossproduct(VecMath.subtraction(b, a), normal);
 		// System.out.println((cross.x * -a.x + cross.y * -a.y + cross.z
 		// * -a.z));
-		return ((cross.x * -a.x + cross.y * -a.y + cross.z * -a.z) <= EPSILON);
+		Vector3f ab = VecMath.subtraction(b, a);
+		return (((ab.y * normal.z - ab.z * normal.y) * -a.x +
+				(ab.z * normal.x - ab.x * normal.z) * -a.y +
+				(ab.x * normal.y - ab.y * normal.x)* -a.z) <= EPSILON);
 	}
 
 	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,

@@ -89,22 +89,30 @@ public class VecMath {
 	 * @return normal of the plane
 	 */
 	public static Vector3d computeNormal(Vector3 p1, Vector3 p2, Vector3 p3) {
-		Vector3d dif1 = subtraction(p2, p1);
-		Vector3d dif2 = subtraction(p3, p1);
+		double dif1x = p2.getX() - p1.getX();
+		double dif1y = p2.getY() - p1.getY();
+		double dif1z = p2.getZ() - p1.getZ();
+		double dif2x = p3.getX() - p1.getX();
+		double dif2y = p3.getY() - p1.getY();
+		double dif2z = p3.getZ() - p1.getZ();
 
-		return new Vector3d(dif1.y * dif2.z - dif1.z * dif2.y, dif1.z * dif2.x - dif1.x * dif2.z,
-				dif1.x * dif2.y - dif1.y * dif2.x);
+		return new Vector3d(dif1y * dif2z - dif1z * dif2y, dif1z * dif2x - dif1x * dif2z,
+				dif1x * dif2y - dif1y * dif2x);
 	}
 
 	/**
 	 * @see math.VecMath#computeNormal(Vector3, Vector3, Vector3)
 	 */
 	public static Vector3f computeNormal(Vector3f p1, Vector3f p2, Vector3f p3) {
-		Vector3f dif1 = subtraction(p2, p1);
-		Vector3f dif2 = subtraction(p3, p1);
+		float dif1x = p2.x - p1.x;
+		float dif1y = p2.y - p1.y;
+		float dif1z = p2.z - p1.z;
+		float dif2x = p3.x - p1.x;
+		float dif2y = p3.y - p1.y;
+		float dif2z = p3.z - p1.z;
 
-		return new Vector3f(dif1.y * dif2.z - dif1.z * dif2.y, dif1.z * dif2.x - dif1.x * dif2.z,
-				dif1.x * dif2.y - dif1.y * dif2.x);
+		return new Vector3f(dif1y * dif2z - dif1z * dif2y, dif1z * dif2x - dif1x * dif2z,
+				dif1x * dif2y - dif1y * dif2x);
 	}
 
 	/**
