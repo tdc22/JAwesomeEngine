@@ -19,13 +19,14 @@ public class GameObject2 extends GameObject<Vector2f, Complexf> implements Insta
 	}
 
 	public void updateBuffer() {
-		float[][] mat = rotation.toMatrixf().getArrayf();
-		buf.put(mat[0][0] * scale.x);
-		buf.put(mat[0][1] * scale.x);
+		float real = getRotation().getRealf();
+		float imaginary = getRotation().getImaginaryf();
+		buf.put(real * scale.x);
+		buf.put(-imaginary * scale.x);
 		buf.put(0);
 		buf.put(0);
-		buf.put(mat[1][0] * scale.y);
-		buf.put(mat[1][1] * scale.y);
+		buf.put(imaginary * scale.y);
+		buf.put(real * scale.y);
 		buf.put(0);
 		buf.put(0);
 		buf.put(0);

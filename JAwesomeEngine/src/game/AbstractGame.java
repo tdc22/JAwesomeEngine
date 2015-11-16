@@ -3,7 +3,7 @@ package game;
 import objects.Updateable;
 
 public abstract class AbstractGame implements Updateable {
-	protected long lastFrame, lastFPS;
+	protected long frameTime, lastFrame, lastFPS;
 	protected int fps, cfps;
 
 	protected boolean running = true;
@@ -29,8 +29,8 @@ public abstract class AbstractGame implements Updateable {
 	 * @return milliseconds passed since last frame
 	 */
 	protected int getDelta() {
-		long time = getTime();
-		int delta = (int) (time - lastFrame);
+		frameTime = getTime();
+		int delta = (int) (frameTime - lastFrame);
 		lastFrame += delta;
 
 		return delta;
@@ -66,9 +66,8 @@ public abstract class AbstractGame implements Updateable {
 	 * Calculate the FPS
 	 */
 	protected void updateFPS() {
-		if (getTime() - lastFPS > 1000) {
+		if (frameTime - lastFPS > 1000) {
 			fps = cfps;
-			// Display.setTitle("FPS: " + fps);
 			cfps = 0;
 			lastFPS += 1000;
 		}

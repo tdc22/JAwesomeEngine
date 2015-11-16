@@ -248,8 +248,6 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		layerInterface = new Layer();
 
 		profiler = new NullGameProfiler();
-
-		resetTimers();
 	}
 
 	protected void initOpenGL() {
