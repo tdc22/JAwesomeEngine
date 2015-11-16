@@ -92,7 +92,7 @@ public class InputTest extends StandardGame {
 		if (inputs.isEventActive("X Released"))
 			System.out.println("X Button Released");
 		if (inputs.isEventActive("Stick Active"))
-			System.out.println("Stick Active: " + inputs.getGamepadStickValue(0, 0, "x") + "; "
-					+ inputs.getGamepadStickValue(0, 0, "y"));
+			System.out.println("Stick Active: " + inputs.getGamepadStickValue(0, 0) + "; "
+					+ inputs.getGamepadStickValue(0, 1));
 	}
 }

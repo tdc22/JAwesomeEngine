@@ -66,11 +66,10 @@ public class GLFWInputReader extends InputReader {
 	}
 
 	@Override
-	public float getGamepadStickValue(int gamepad, int sticknum, String axis) {
+	public float getGamepadStickValue(int gamepad, int analogInputID) {
 		if (getGamepadCount() == 0)
 			return 0;
-		int offset = axis.toLowerCase().equals("x") ? 0 : 1;
-		return gamepadaxes.get(gamepad).get(sticknum + offset);
+		return gamepadaxes.get(gamepad).get(analogInputID);
 	}
 
 	@Override

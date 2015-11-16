@@ -5,13 +5,7 @@ public abstract class InputReader {
 
 	public abstract int getGamepadCount();
 
-	public float getGamepadStickValue(int gamepad, int sticknum) {
-		float vx = getGamepadStickValue(gamepad, sticknum, "x");
-		float vy = getGamepadStickValue(gamepad, sticknum, "y");
-		return (float) Math.sqrt(vx * vx + vy * vy);
-	}
-
-	public abstract float getGamepadStickValue(int gamepad, int sticknum, String axis);
+	public abstract float getGamepadStickValue(int gamepad, int analogInputID);
 
 	public float getMouseX() {
 		return mousex;

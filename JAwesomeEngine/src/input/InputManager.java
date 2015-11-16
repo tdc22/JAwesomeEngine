@@ -20,12 +20,8 @@ public class InputManager {
 		return inputreader.getGamepadCount();
 	}
 
-	public float getGamepadStickValue(int gamepad, int sticknum) {
-		return inputreader.getGamepadStickValue(gamepad, sticknum);
-	}
-
-	public float getGamepadStickValue(int gamepad, int sticknum, String axis) {
-		return inputreader.getGamepadStickValue(gamepad, sticknum, axis);
+	public float getGamepadStickValue(int gamepad, int analogInputID) {
+		return inputreader.getGamepadStickValue(gamepad, analogInputID);
 	}
 
 	public LinkedHashMap<String, InputEvent> getInputEvents() {
