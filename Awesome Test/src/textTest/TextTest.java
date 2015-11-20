@@ -1,16 +1,16 @@
 package textTest;
 
+import collisionshape2d.QuadShape;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import gui.Text;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import shader.Shader;
-import collisionshape2d.QuadShape;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class TextTest extends StandardGame {
 	QuadShape rotquad;

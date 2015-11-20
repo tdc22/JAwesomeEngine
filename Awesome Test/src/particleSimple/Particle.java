@@ -1,5 +1,9 @@
 package particleSimple;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import loader.FontLoader;
@@ -10,10 +14,6 @@ import shader.Shader;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector3f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class Particle extends StandardGame {
 	Debugger debugger;

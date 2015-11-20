@@ -29,6 +29,10 @@ public abstract class Skeleton<L extends Vector, A extends Rotation> implements 
 		animationTimer = 0;
 	}
 
+	public Animation<L, A> getAnimation() {
+		return animation;
+	}
+
 	@Override
 	public void update(int delta) {
 		animationTimer += delta * animation.getSpeed();

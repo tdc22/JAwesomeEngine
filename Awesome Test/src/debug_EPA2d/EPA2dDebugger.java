@@ -1,13 +1,16 @@
 package debug_EPA2d;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
@@ -26,10 +29,6 @@ import shape2d.Ellipse;
 import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class EPA2dDebugger extends StandardGame {
 	public class Edge {
@@ -39,11 +38,11 @@ public class EPA2dDebugger extends StandardGame {
 		public Edge(Vector2f a, Vector2f b) {
 			this.a = a;
 			this.b = b;
-			
+
 			normal = new Vector2f(a.y - b.y, b.x - a.x);
 			if (VecMath.dotproduct(normal, a) < 0)
 				normal.negate();
-			
+
 			if (normal.lengthSquared() > 0)
 				normal.normalize();
 		}
@@ -93,7 +92,7 @@ public class EPA2dDebugger extends StandardGame {
 
 	public void epaStep() {
 		Edge e = findClosestEdge(edges);
-		if(isOriginInsideEdgeArea(e)) {
+		if (isOriginInsideEdgeArea(e)) {
 			Vector2f p = support(Sa, Sb, e.normal);
 			double d = VecMath.dotproduct(p, e.normal);
 			if (d - e.distance < TOLERANCE) {

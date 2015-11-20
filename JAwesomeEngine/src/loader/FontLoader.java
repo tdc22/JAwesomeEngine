@@ -1,8 +1,5 @@
 package loader;
 
-import gui.Font;
-import gui.FontCharacter;
-
 import java.awt.Color;
 import java.awt.FontFormatException;
 import java.awt.Point;
@@ -19,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
+import gui.Font;
+import gui.FontCharacter;
 import vector.Vector2f;
 
 public class FontLoader {

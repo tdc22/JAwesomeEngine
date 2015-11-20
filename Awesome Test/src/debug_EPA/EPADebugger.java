@@ -1,13 +1,16 @@
 package debug_EPA;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
@@ -23,10 +26,6 @@ import shader.Shader;
 import shape.Box;
 import utils.Debugger;
 import vector.Vector3f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class EPADebugger extends StandardGame {
 	public class Triangle {
@@ -329,12 +328,10 @@ public class EPADebugger extends StandardGame {
 	// (b - a) x normal * a <= EPSILON
 	private boolean checkPlane(Vector3f a, Vector3f b, Vector3f normal) {
 		Vector3f ab = VecMath.subtraction(b, a);
-		System.out.println((((ab.y * normal.z - ab.z * normal.y) * -a.x +
-				(ab.z * normal.x - ab.x * normal.z) * -a.y +
-				(ab.x * normal.y - ab.y * normal.x)* -a.z)));
-		return (((ab.y * normal.z - ab.z * normal.y) * -a.x +
-				(ab.z * normal.x - ab.x * normal.z) * -a.y +
-				(ab.x * normal.y - ab.y * normal.x)* -a.z) <= EPSILON);
+		System.out.println((((ab.y * normal.z - ab.z * normal.y) * -a.x + (ab.z * normal.x - ab.x * normal.z) * -a.y
+				+ (ab.x * normal.y - ab.y * normal.x) * -a.z)));
+		return (((ab.y * normal.z - ab.z * normal.y) * -a.x + (ab.z * normal.x - ab.x * normal.z) * -a.y
+				+ (ab.x * normal.y - ab.y * normal.x) * -a.z) <= EPSILON);
 	}
 
 	@Override

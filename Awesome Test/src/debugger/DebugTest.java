@@ -1,5 +1,9 @@
 package debugger;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import loader.FontLoader;
@@ -7,10 +11,6 @@ import loader.ModelLoader;
 import loader.ShaderLoader;
 import shader.Shader;
 import utils.Debugger;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class DebugTest extends StandardGame {
 	Debugger debugger;

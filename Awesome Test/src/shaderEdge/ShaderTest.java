@@ -1,5 +1,9 @@
 package shaderEdge;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -7,10 +11,6 @@ import shader.Shader;
 import shape.Box;
 import utils.Debugger;
 import utils.GLConstants;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ShaderTest extends StandardGame {
 	Debugger debugger;

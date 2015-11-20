@@ -1,15 +1,19 @@
 package physicsCollisionDetection;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.EulerIntegration;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import loader.FontLoader;
 import loader.InputLoader;
 import loader.ShaderLoader;
@@ -31,11 +35,6 @@ import utils.Debugger;
 import utils.Pair;
 import vector.Vector3f;
 import vector.Vector4f;
-import broadphase.SAP;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class CollisionDetectionTest extends StandardGame {
 	PhysicsSpace space;

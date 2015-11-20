@@ -1,23 +1,22 @@
 package HCS_HW;
 
-import game.StandardGame;
-import gui.Font;
-import gui.Text;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import gui.Font;
+import gui.Text;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import shader.Shader;
 import shape2d.Circle;
 import shape2d.Quad;
 import vector.Vector4f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class Scatterplot extends StandardGame {
 	Quad rotquad;

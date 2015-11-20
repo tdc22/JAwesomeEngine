@@ -1,8 +1,10 @@
-package animationEditor;
+package tool_animationEditor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import curves.BezierCurve2;
+import curves.SquadCurve2;
 import math.VecMath;
 import objects.ShapedObject2;
 import quaternion.Complexf;
@@ -11,8 +13,6 @@ import shape2d.Circle;
 import shape2d.Quad;
 import utils.GLConstants;
 import vector.Vector2f;
-import curves.BezierCurve2;
-import curves.SquadCurve2;
 
 public class AnimationPath {
 	List<ShapedObject2> markers;

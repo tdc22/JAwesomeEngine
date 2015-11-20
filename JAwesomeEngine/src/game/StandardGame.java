@@ -25,14 +25,19 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glHint;
 import static org.lwjgl.opengl.GL11.glShadeModel;
+
+import java.util.List;
+
+import display.Display;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import input.GLFWInputReader;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
-
-import java.util.List;
-
 import loader.ShaderLoader;
 import objects.Camera2;
 import objects.GameCamera;
@@ -44,11 +49,6 @@ import utils.DefaultShader;
 import utils.GameProfiler;
 import utils.NullGameProfiler;
 import utils.ProjectionHelper;
-import display.Display;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public abstract class StandardGame extends AbstractGame implements Updateable {
 	public VideoSettings settings;

@@ -1,5 +1,9 @@
 package massBoxesInstancing;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -11,10 +15,6 @@ import shape.Box;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector3f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class MassBoxesInstancingTest extends StandardGame {
 	Debugger debugger;

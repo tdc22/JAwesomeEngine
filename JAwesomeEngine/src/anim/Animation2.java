@@ -12,6 +12,10 @@ public class Animation2 extends Animation<Vector2f, Complexf> {
 		super(animationspeed);
 	}
 
+	public Animation2(boolean loops) {
+		super(loops);
+	}
+
 	public Animation2(float animationspeed, boolean loops) {
 		super(animationspeed, loops);
 	}

@@ -1,4 +1,4 @@
-package animationEditor;
+package tool_animationEditor;
 
 public class Start {
 	public static void main(String[] args) {

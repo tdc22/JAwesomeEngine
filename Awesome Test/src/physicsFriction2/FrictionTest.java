@@ -1,5 +1,10 @@
 package physicsFriction2;
 
+import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import integration.VerletIntegration;
@@ -20,11 +25,6 @@ import shape.Box;
 import shape.Sphere;
 import utils.Debugger;
 import vector.Vector3f;
-import broadphase.SAP;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class FrictionTest extends StandardGame {
 	PhysicsSpace space;

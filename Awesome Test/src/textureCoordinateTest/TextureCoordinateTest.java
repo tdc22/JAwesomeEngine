@@ -1,5 +1,9 @@
 package textureCoordinateTest;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.ShaderLoader;
 import loader.TextureLoader;
@@ -9,10 +13,6 @@ import shape.Cylinder;
 import shape.Ellipsoid;
 import shape.Sphere;
 import texture.Texture;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class TextureCoordinateTest extends StandardGame {
 

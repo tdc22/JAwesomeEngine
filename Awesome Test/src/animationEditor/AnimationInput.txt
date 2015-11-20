@@ -1,8 +1,0 @@
-new BezierCurve2(new Vector2f(1.9120827, -3.833333), new Vector2f(1.8566666, -3.8055553), new Vector2f(1.9120827, -3.8055553), new Vector2f(1.8566666, -3.7777777))
-new BezierCurve2(new Vector2f(1.8566666, -3.7777777), new Vector2f(2.0229163, -3.75), new Vector2f(1.9397914, -3.7777777), new Vector2f(1.9120827, -3.833333))
-new SquadCurve2(new Complexf(0.99989444, -0.014527698), new Complexf(0.99989444, -0.014527698), new Complexf(1.0, 0.0), new Complexf(1.0, 0.0))
-new SquadCurve2(new Complexf(1.0, 0.0), new Complexf(1.0, 0.0), new Complexf(0.99989444, -0.014527698), new Complexf(0.99989444, -0.014527698))
-new BezierCurve2(new Vector2f(-0.5539583, 0.69444466), new Vector2f(-0.5539583, 0.69444466), new Vector2f(-0.52625024, 0.7222227), new Vector2f(-0.5539583, 0.69444466))
-new BezierCurve2(new Vector2f(-0.5539583, 0.69444466), new Vector2f(-0.52625024, 0.7222227), new Vector2f(-0.49854153, 0.69444466), new Vector2f(-0.5539583, 0.69444466))
-new SquadCurve2(new Complexf(0.9998611, 0.016664118), new Complexf(0.9998611, 0.016664118), new Complexf(0.9998557, -0.01698914), new Complexf(0.9998557, -0.01698914))
-new SquadCurve2(new Complexf(0.9998557, -0.01698914), new Complexf(0.9998557, -0.01698914), new Complexf(0.9998611, 0.016664118), new Complexf(0.9998611, 0.016664118))

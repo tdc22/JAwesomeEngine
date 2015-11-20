@@ -1,13 +1,16 @@
 package debug_EPARegion;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
@@ -15,10 +18,6 @@ import shader.Shader;
 import utils.Debugger;
 import vector.Vector3f;
 import vector.Vector4f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class RegionTest extends StandardGame {
 	List<Vector3f> testTrue, testFalse;

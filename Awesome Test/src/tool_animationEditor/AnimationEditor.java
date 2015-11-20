@@ -1,12 +1,4 @@
-package animationEditor;
-
-import game.StandardGame;
-import gui.Font;
-import gui.Text;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
-import input.MouseInput;
+package tool_animationEditor;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -17,6 +9,18 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import curves.BezierCurve2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import gui.Font;
+import gui.Text;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
+import input.MouseInput;
 import loader.FileLoader;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -33,11 +37,6 @@ import utils.GLConstants;
 import utils.ProjectionHelper;
 import vector.Vector2f;
 import vector.Vector4f;
-import curves.BezierCurve2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class AnimationEditor extends StandardGame {
 	InputEvent leftMousePressed, leftMouseDown, leftMouseReleased, rightMouseReleased, closePath, deleteMarker,
@@ -372,9 +371,8 @@ public class AnimationEditor extends StandardGame {
 		String input = null;
 		try {
 			input = FileLoader.readFile(
-					"/home/oliver/Projects/Git/JAwesomeEngine/Awesome Test/src/animationEditor/AnimationInput.txt");
+					"/home/oliver/git/JAwesomeEngine/Awesome Test/src/tool_animationEditor/AnimationInput.txt");
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("INPUT: " + input);
@@ -389,6 +387,7 @@ public class AnimationEditor extends StandardGame {
 			boolean firstonPath = true;
 			for (int i = 0; i < lines.length; i++) {
 				String s = lines[i];
+				System.out.println(s);
 				if (s.contains("BezierCurve")) {
 					layername = s.split("new BezierCurve")[0].replace(" ", "").replace("	", "");
 					System.out.println(layername + "; " + lastlayername);
