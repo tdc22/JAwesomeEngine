@@ -10,4 +10,6 @@ public abstract class ManifoldManager<L extends Vector> {
 	public abstract void clear();
 
 	public abstract List<CollisionManifold<L>> getManifolds();
+	
+	public abstract List<CollisionManifold<L>> getManifoldsNoGhosts();
 }

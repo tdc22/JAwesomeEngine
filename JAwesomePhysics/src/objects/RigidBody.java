@@ -182,4 +182,8 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 	public void setStaticFriction(float staticfriction) {
 		this.staticfriction = staticfriction;
 	}
+	
+	public boolean isGhost() {
+		return false;
+	}
 }

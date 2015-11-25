@@ -10,7 +10,11 @@ import objects.RigidBody3;
 import positionalcorrection.PositionalCorrection;
 import quaternion.Quaternionf;
 import resolution.CollisionResolution;
+import vector.Vector2f;
 import vector.Vector3f;
+
+import java.util.List;
+
 import broadphase.Broadphase;
 
 public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> {
@@ -29,7 +33,7 @@ public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> 
 
 	@Override
 	protected void correct() {
-		for (CollisionManifold<Vector3f> manifold : getCollisionManifolds())
+		for (CollisionManifold<Vector3f> manifold : getCollisionManifoldsNoGhosts())
 			positionalcorrection.correct(manifold);
 	}
 
@@ -42,7 +46,7 @@ public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> 
 
 	@Override
 	protected void resolve() {
-		for (CollisionManifold<Vector3f> manifold : getCollisionManifolds())
+		for (CollisionManifold<Vector3f> manifold : getCollisionManifoldsNoGhosts())
 			collisionresolution.resolve(manifold);
 	}
 

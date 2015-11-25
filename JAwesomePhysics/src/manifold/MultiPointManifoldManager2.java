@@ -10,15 +10,18 @@ import vector.Vector3f;
 
 public class MultiPointManifoldManager2 extends ManifoldManager<Vector2f> {
 	List<CollisionManifold<Vector2f>> collisionmanifolds;
+	List<CollisionManifold<Vector2f>> collisionmanifoldsnoghosts;
 	float offsetscale = 0.04f;
 
 	public MultiPointManifoldManager2() {
 		collisionmanifolds = new ArrayList<CollisionManifold<Vector2f>>();
+		collisionmanifoldsnoghosts = new ArrayList<CollisionManifold<Vector2f>>();
 	}
 
 	public MultiPointManifoldManager2(float offsetscale) {
 		this.offsetscale = offsetscale;
 		collisionmanifolds = new ArrayList<CollisionManifold<Vector2f>>();
+		collisionmanifoldsnoghosts = new ArrayList<CollisionManifold<Vector2f>>();
 	}
 
 	@Override
@@ -54,18 +57,25 @@ public class MultiPointManifoldManager2 extends ManifoldManager<Vector2f> {
 		Vector2f localContactB = computeCenter(
 				Sb.supportPointLocal(negNormalMOffset),
 				Sb.supportPointLocal(negNormalPOffset));
-		collisionmanifolds
-				.add(new CollisionManifold<Vector2f>(
-						cm.getObjects().getFirst(),
-						cm.getObjects().getSecond(), cm.getPenetrationDepth(),
-						normal, contactA, contactB, relativeContactA,
-						relativeContactB, localContactA, localContactB, cm
-								.getContactTangentA(), cm.getContactTangentB()));
+		
+		CollisionManifold<Vector2f> result = new CollisionManifold<Vector2f>(
+				cm.getObjects().getFirst(),
+				cm.getObjects().getSecond(), cm.getPenetrationDepth(),
+				normal, contactA, contactB, relativeContactA,
+				relativeContactB, localContactA, localContactB, cm
+						.getContactTangentA(), cm.getContactTangentB());
+		
+		collisionmanifolds.add(result);
+		
+		if(!cm.getObjects().getFirst().isGhost() && !cm.getObjects().getSecond().isGhost()) {
+			collisionmanifoldsnoghosts.add(result);
+		}
 	}
 
 	@Override
 	public void clear() {
 		collisionmanifolds.clear();
+		collisionmanifoldsnoghosts.clear();
 	}
 
 	private Vector2f computeCenter(Vector2f a, Vector2f b) {
@@ -75,5 +85,10 @@ public class MultiPointManifoldManager2 extends ManifoldManager<Vector2f> {
 	@Override
 	public List<CollisionManifold<Vector2f>> getManifolds() {
 		return collisionmanifolds;
+	}
+	
+	@Override
+	public List<CollisionManifold<Vector2f>> getManifoldsNoGhosts() {
+		return collisionmanifoldsnoghosts;
 	}
 }

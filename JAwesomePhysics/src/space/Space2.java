@@ -31,7 +31,7 @@ public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 
 	@Override
 	protected void correct() {
-		for (CollisionManifold<Vector2f> manifold : getCollisionManifolds())
+		for (CollisionManifold<Vector2f> manifold : getCollisionManifoldsNoGhosts())
 			positionalcorrection.correct2(manifold);
 	}
 
@@ -45,7 +45,7 @@ public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 
 	@Override
 	protected void resolve() {
-		for (CollisionManifold<Vector2f> manifold : getCollisionManifolds())
+		for (CollisionManifold<Vector2f> manifold : getCollisionManifoldsNoGhosts())
 			collisionresolution.resolve2(manifold);
 	}
 

@@ -15,6 +15,7 @@ import narrowphase.Narrowphase;
 import objects.CollisionShape;
 import objects.CompoundObject;
 import objects.Constraint;
+import objects.GhostObject;
 import objects.RigidBody;
 import objects.Updateable;
 import positionalcorrection.PositionalCorrection;
@@ -35,6 +36,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	final ManifoldManager<L> manifoldmanager;
 	protected List<RigidBody<L, A1, A2, A3>> objects;
 	protected List<CompoundObject<L, A2>> compoundObjects;
+	protected List<GhostObject<L, A1, A2, A3>> ghostobjects;
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> overlaps;
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> collisionfilter;
 	protected List<Constraint<L, A1, A2, A3>> constraints;
@@ -90,6 +92,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		this.manifoldmanager = manifoldmanager;
 		objects = new ArrayList<RigidBody<L, A1, A2, A3>>();
 		compoundObjects = new ArrayList<CompoundObject<L, A2>>();
+		ghostobjects = new ArrayList<GhostObject<L, A1, A2, A3>>();
 		overlaps = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
 		collisionfilter = new HashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
 		constraints = new ArrayList<Constraint<L, A1, A2, A3>>();
@@ -104,6 +107,11 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public void addRigidBody(RigidBody<L, A1, A2, A3> body) {
 		broadphase.add(body);
 		objects.add(body);
+	}
+	
+	public void addGhostObject(GhostObject<L, A1, A2, A3> ghostobject) {
+		broadphase.add(ghostobject);
+		ghostobjects.add(ghostobject);
 	}
 
 	private void applyGlobalForce() {
@@ -128,6 +136,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	public List<CollisionManifold<L>> getCollisionManifolds() {
 		return manifoldmanager.getManifolds();
+	}
+	
+	public List<CollisionManifold<L>> getCollisionManifoldsNoGhosts() {
+		return manifoldmanager.getManifoldsNoGhosts();
 	}
 
 	public CollisionResolution getCollsionResolution() {
@@ -207,6 +219,11 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		objects.remove(body);
 		broadphase.remove(body);
 	}
+	
+	public void removeGhostObject(GhostObject<L, A1, A2, A3> ghostobject) {
+		ghostobjects.remove(ghostobject);
+		broadphase.remove(ghostobject);
+	}
 
 	protected abstract void resolve();
 
@@ -259,6 +276,8 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 			o.updateInverseRotation();
 		for (CompoundObject<L, A2> co : compoundObjects)
 			co.updateTransformations();
+		for (GhostObject<?, ?, ?, ?> g : ghostobjects)
+			g.updateInverseRotation();
 
 		broadphase.update();
 		overlaps = broadphase.getOverlaps();
