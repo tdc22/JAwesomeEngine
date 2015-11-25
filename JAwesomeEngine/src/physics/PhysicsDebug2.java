@@ -15,6 +15,7 @@ import manifold.CollisionManifold;
 import math.VecMath;
 import matrix.Matrix1f;
 import objects.AABB;
+import objects.GhostObject;
 import objects.RigidBody;
 import objects.ShapedObject2;
 import quaternion.Complexf;
@@ -67,18 +68,26 @@ public class PhysicsDebug2 {
 		aabbObjects = new ArrayList<Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>>();
 		Color c = Color.YELLOW;
 		for (RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> rb : physics.getObjects()) {
-			AABB<Vector2f> aabb = rb.getAABB();
-			ShapedObject2 aabbobj = new ShapedObject2();
-			aabbobj.setRenderMode(GL11.GL_LINE_LOOP);
-			aabbobj.addVertex(aabb.getMin(), c);
-			aabbobj.addVertex(new Vector2f(aabb.getMin().x, aabb.getMax().y), c);
-			aabbobj.addVertex(aabb.getMax(), c);
-			aabbobj.addVertex(new Vector2f(aabb.getMax().x, aabb.getMin().y), c);
-			aabbobj.addIndices(0, 1, 2, 3);
-			aabbobj.prerender();
-			shader.addObject(aabbobj);
-			aabbObjects.add(new Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>(rb, aabbobj));
+			addAABB(rb, c);
 		}
+		c = Color.GREEN;
+		for (GhostObject<Vector2f, Vector1f, Complexf, Matrix1f> rb : physics.getGhostObjects()) {
+			addAABB(rb, c);
+		}
+	}
+
+	private void addAABB(RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> rb, Color c) {
+		AABB<Vector2f> aabb = rb.getAABB();
+		ShapedObject2 aabbobj = new ShapedObject2();
+		aabbobj.setRenderMode(GL11.GL_LINE_LOOP);
+		aabbobj.addVertex(aabb.getMin(), c);
+		aabbobj.addVertex(new Vector2f(aabb.getMin().x, aabb.getMax().y), c);
+		aabbobj.addVertex(aabb.getMax(), c);
+		aabbobj.addVertex(new Vector2f(aabb.getMax().x, aabb.getMin().y), c);
+		aabbobj.addIndices(0, 1, 2, 3);
+		aabbobj.prerender();
+		shader.addObject(aabbobj);
+		aabbObjects.add(new Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>(rb, aabbobj));
 	}
 
 	private void initVelocityObjects() {

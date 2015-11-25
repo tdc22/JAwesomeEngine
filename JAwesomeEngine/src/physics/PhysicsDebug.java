@@ -14,6 +14,7 @@ import input.KeyInput;
 import manifold.CollisionManifold;
 import math.VecMath;
 import objects.AABB;
+import objects.GhostObject;
 import objects.RigidBody;
 import objects.ShapedObject3;
 import quaternion.Quaternionf;
@@ -48,24 +49,31 @@ public class PhysicsDebug {
 		aabbObjects = new ArrayList<Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>>();
 		Color c = Color.YELLOW;
 		for (RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> rb : physics.getObjects()) {
-			AABB<Vector3f> aabb = rb.getAABB();
-			ShapedObject3 aabbobj = new ShapedObject3();
-			Vector3f min = aabb.getMin();
-			Vector3f max = aabb.getMax();
-			aabbobj.setRenderMode(GL11.GL_LINES);
-			aabbobj.addVertex(min, c);
-			aabbobj.addVertex(new Vector3f(max.x, min.y, min.z), c);
-			aabbobj.addVertex(new Vector3f(min.x, max.y, min.z), c);
-			aabbobj.addVertex(new Vector3f(min.x, min.y, max.z), c);
-			aabbobj.addVertex(new Vector3f(max.x, max.y, min.z), c);
-			aabbobj.addVertex(new Vector3f(max.x, min.y, max.z), c);
-			aabbobj.addVertex(new Vector3f(min.x, max.y, max.z), c);
-			aabbobj.addVertex(max, c);
-			aabbobj.addIndices(0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 2, 4, 2, 6, 3, 6, 3, 5, 4, 7, 5, 7, 6, 7);
-			aabbobj.prerender();
-			aabbObjects
-					.add(new Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(aabbobj, rb));
+			addAABB(rb, c);
 		}
+		c = Color.GREEN;
+		for (GhostObject<Vector3f, Vector3f, Quaternionf, Quaternionf> rb : physics.getGhostObjects()) {
+			addAABB(rb, c);
+		}
+	}
+
+	private void addAABB(RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> rb, Color c) {
+		AABB<Vector3f> aabb = rb.getAABB();
+		ShapedObject3 aabbobj = new ShapedObject3();
+		Vector3f min = aabb.getMin();
+		Vector3f max = aabb.getMax();
+		aabbobj.setRenderMode(GL11.GL_LINES);
+		aabbobj.addVertex(min, c);
+		aabbobj.addVertex(new Vector3f(max.x, min.y, min.z), c);
+		aabbobj.addVertex(new Vector3f(min.x, max.y, min.z), c);
+		aabbobj.addVertex(new Vector3f(min.x, min.y, max.z), c);
+		aabbobj.addVertex(new Vector3f(max.x, max.y, min.z), c);
+		aabbobj.addVertex(new Vector3f(max.x, min.y, max.z), c);
+		aabbobj.addVertex(new Vector3f(min.x, max.y, max.z), c);
+		aabbobj.addVertex(max, c);
+		aabbobj.addIndices(0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 2, 4, 2, 6, 3, 6, 3, 5, 4, 7, 5, 7, 6, 7);
+		aabbobj.prerender();
+		aabbObjects.add(new Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(aabbobj, rb));
 	}
 
 	public boolean isAABBsShown() {

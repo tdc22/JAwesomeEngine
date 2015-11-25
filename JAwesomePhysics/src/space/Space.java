@@ -165,6 +165,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public List<CompoundObject<L, A2>> getCompoundObjects() {
 		return compoundObjects;
 	}
+	
+	public List<GhostObject<L, A1, A2, A3>> getGhostObjects() {
+		return ghostobjects;
+	}
 
 	public Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> getOverlaps() {
 		return overlaps;
@@ -290,7 +294,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps) {
 			if ((overlap.getFirst().getMass() != 0
 					|| overlap.getSecond().getMass() != 0
-					|| !cullStaticOverlaps) && !isCollisionFiltered(overlap)) {
+					|| !cullStaticOverlaps) && !isCollisionFiltered(overlap) && !(overlap.getFirst().isGhost() && overlap.getSecond().isGhost())) {
 				if (!overlap.getFirst().isCompound()) {
 					if (!overlap.getSecond().isCompound()) {
 						if (narrowphase.isColliding(overlap.getFirst(),
