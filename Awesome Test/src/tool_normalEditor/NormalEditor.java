@@ -15,6 +15,7 @@ import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
+import input.KeyInput;
 import input.MouseInput;
 import loader.ShaderLoader;
 import loader.TextureLoader;
@@ -38,8 +39,9 @@ public class NormalEditor extends StandardGame {
 	Shader normalmapshader;
 	Vector2f offset = new Vector2f(400, 300);
 	Vector2f size = new Vector2f(200, 200);
+	BufferedImage normalMapImage;
 
-	InputEvent leftMousePressed, leftMouseReleased;
+	InputEvent leftMousePressed, leftMouseReleased, inputExport;
 
 	@Override
 	public void init() {
@@ -51,7 +53,7 @@ public class NormalEditor extends StandardGame {
 
 		BufferedImage diffTex = null;
 		try {
-			diffTex = ImageIO.read(new File("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/dumb2_head1.png"));
+			diffTex = ImageIO.read(new File("C:\\Users\\Oliver\\Projects\\Git\\2dPlatformer\\2dPlatformer\\res\\textures\\dumb2_head1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -99,8 +101,10 @@ public class NormalEditor extends StandardGame {
 				new Input(Input.MOUSE_EVENT, "0", MouseInput.MOUSE_BUTTON_PRESSED));
 		leftMouseReleased = new InputEvent("leftMouseReleased",
 				new Input(Input.MOUSE_EVENT, "0", MouseInput.MOUSE_BUTTON_RELEASED));
+		inputExport = new InputEvent("inputExport", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(leftMousePressed);
 		inputs.addEvent(leftMouseReleased);
+		inputs.addEvent(inputExport);
 	}
 
 	@Override
@@ -143,13 +147,16 @@ public class NormalEditor extends StandardGame {
 			lastMarker.normal = result;
 			updateNormalMap();
 		}
+		if (inputExport.isActive()) {
+			export();
+		}
 	}
 	
 	public void updateNormalMap() {
 		if(normalMap != null) {
 			normalMap.delete();
 		}
-		BufferedImage tmp = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		normalMapImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		List<Pair<Float, NormalMarker>> markerdistances = new ArrayList<Pair<Float, NormalMarker>>();
 		for(int x = 0; x < width; x++) {
 			for(int y = 0; y < height; y++) {
@@ -173,35 +180,38 @@ public class NormalEditor extends StandardGame {
 					float rv = 0;
 					float gv = 0;
 					float bv = 0;
-					System.out.println("-------------------");
 					for(Pair<Float, NormalMarker> marker : markerdistances) {
-//						if(marker.getFirst() == 0) {
-//							rv = marker.getSecond().normal.x;
-//							gv = marker.getSecond().normal.y;
-//							bv = marker.getSecond().normal.z;
-//							break;
-//						}
-//						else {
-//							
-//						}
-						System.out.println(alldistances + "; " + marker.getFirst());
-						float w = marker.getFirst() / alldistances;
+						float w = (float)(Math.pow(marker.getFirst(), -2) / Math.pow(alldistances, -2));
 						System.out.println(w);
 						rv += w * marker.getSecond().normal.x;
 						gv += w * marker.getSecond().normal.y;
 						bv += w * marker.getSecond().normal.z;
 					}
 					Vector3f color = new Vector3f(rv, gv, bv);
-					if(color.length() > 1)
-						color.normalize();
-					r = (int) (color.x * 128 + 128);
-					g = (int) (color.y * 128 + 128);
-					b = (int) (color.z * 128 + 128);
+					color.normalize();
+					r = (int) (color.x * 127 + 127);
+					g = (int) (color.y * 127 + 127);
+					b = (int) (color.z * 127 + 127);
 				}
-				tmp.setRGB(x, y, (128 << 24) | (r << 16) | (g << 8) | b);
+				normalMapImage.setRGB(x, y, (127 << 24) | (r << 16) | (g << 8) | b);
 			}
 		}
-		normalMap = new Texture(TextureLoader.loadTexture(tmp, true));
+		normalMap = new Texture(TextureLoader.loadTexture(normalMapImage, true));
 		normalmapshader.setArgument("u_texture", normalMap);
+		for(int x = 0; x < width; x++) {
+			for(int y = 0; y < height; y++) {
+				normalMapImage.setRGB(x, y, (255 << 24) | normalMapImage.getRGB(x, y));
+			}
+		}
+	}
+	
+	public void export() {
+		File outputfile = new File("C:\\Users\\Oliver\\Pictures\\normalmap.png");
+	    try {
+			ImageIO.write(normalMapImage, "png", outputfile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	    System.out.println("File saved!");
 	}
 }
