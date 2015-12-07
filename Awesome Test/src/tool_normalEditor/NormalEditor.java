@@ -45,7 +45,8 @@ public class NormalEditor extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Normalmap Editor", true, false), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Normalmap Editor", true, false), new PixelFormat(),
+				new VideoSettings());
 
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
@@ -53,14 +54,13 @@ public class NormalEditor extends StandardGame {
 
 		BufferedImage diffTex = null;
 		try {
-			diffTex = ImageIO.read(new File("C:\\Users\\Oliver\\Projects\\Git\\2dPlatformer\\2dPlatformer\\res\\textures\\dumb2_head1.png"));
+			diffTex = ImageIO.read(new File("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/dumb2_head1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		width = diffTex.getWidth();
 		height = diffTex.getHeight();
-		Texture diffuseTexture = new Texture(
-				TextureLoader.loadTexture(diffTex, false));
+		Texture diffuseTexture = new Texture(TextureLoader.loadTexture(diffTex, true));
 		Shader testtextureshader = new Shader(new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag")));
 		testtextureshader.addArgumentName("u_texture");
@@ -80,7 +80,7 @@ public class NormalEditor extends StandardGame {
 		normalCircle = new Circle(0, 0, 50, 36);
 		colorshader.addObject(normalCircle);
 		normalCircle.setRendered(false);
-		
+
 		markers = new ArrayList<NormalMarker>();
 
 		normalmapshader = new Shader(new Shader(
@@ -92,7 +92,7 @@ public class NormalEditor extends StandardGame {
 		normalmapdisplay.setRenderHints(false, true, false);
 		normalmapshader.addObject(normalmapdisplay);
 		updateNormalMap();
-		
+
 		markershader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader2d(markershader);
@@ -138,11 +138,11 @@ public class NormalEditor extends StandardGame {
 			float x = inputs.getMouseX();
 			float y = inputs.getMouseY();
 			Vector2f dir = new Vector2f(x - lastMarker.getTranslation().x, y - lastMarker.getTranslation().y);
-			if(dir.length() > normalCircle.getRadius()) {
+			if (dir.length() > normalCircle.getRadius()) {
 				dir = VecMath.setScale(dir, normalCircle.getRadius());
 			}
-			dir.scale(1/(float)normalCircle.getRadius());
-			Vector3f result = new Vector3f(dir.x, dir.y, Math.cos(dir.length() * Math.PI/2f));
+			dir.scale(1 / (float) normalCircle.getRadius());
+			Vector3f result = new Vector3f(dir.x, dir.y, Math.cos(dir.length() * Math.PI / 2f));
 			result.normalize();
 			lastMarker.normal = result;
 			updateNormalMap();
@@ -151,37 +151,37 @@ public class NormalEditor extends StandardGame {
 			export();
 		}
 	}
-	
+
 	public void updateNormalMap() {
-		if(normalMap != null) {
+		if (normalMap != null) {
 			normalMap.delete();
 		}
 		normalMapImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		List<Pair<Float, NormalMarker>> markerdistances = new ArrayList<Pair<Float, NormalMarker>>();
-		for(int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				int r = 0;
 				int g = 0;
 				int b = 0;
-				
+
 				markerdistances.clear();
-				for(NormalMarker marker : markers) {
-					float mx = (((marker.getTranslation().x - offset.x + size.x)/(2*size.x)) * width);
-					float my = (((marker.getTranslation().y - offset.y + size.y)/(2*size.y)) * height);
+				for (NormalMarker marker : markers) {
+					float mx = (((marker.getTranslation().x - offset.x + size.x) / (2 * size.x)) * width);
+					float my = (((marker.getTranslation().y - offset.y + size.y) / (2 * size.y)) * height);
 					float currdist = (float) new Vector2f(mx - x, my - y).length();
 					markerdistances.add(new Pair<Float, NormalMarker>(currdist, marker));
 				}
-				
-				if(markerdistances.size() > 0) {
+
+				if (markerdistances.size() > 0) {
 					float alldistances = 0;
-					for(Pair<Float, NormalMarker> dist : markerdistances) {
+					for (Pair<Float, NormalMarker> dist : markerdistances) {
 						alldistances += dist.getFirst();
 					}
 					float rv = 0;
 					float gv = 0;
 					float bv = 0;
-					for(Pair<Float, NormalMarker> marker : markerdistances) {
-						float w = (float)(Math.pow(marker.getFirst(), -2) / Math.pow(alldistances, -2));
+					for (Pair<Float, NormalMarker> marker : markerdistances) {
+						float w = (float) (Math.pow(marker.getFirst(), -2) / Math.pow(alldistances, -2));
 						System.out.println(w);
 						rv += w * marker.getSecond().normal.x;
 						gv += w * marker.getSecond().normal.y;
@@ -198,20 +198,20 @@ public class NormalEditor extends StandardGame {
 		}
 		normalMap = new Texture(TextureLoader.loadTexture(normalMapImage, true));
 		normalmapshader.setArgument("u_texture", normalMap);
-		for(int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				normalMapImage.setRGB(x, y, (255 << 24) | normalMapImage.getRGB(x, y));
 			}
 		}
 	}
-	
+
 	public void export() {
-		File outputfile = new File("C:\\Users\\Oliver\\Pictures\\normalmap.png");
-	    try {
+		File outputfile = new File("/home/oliver/Pictures/normalmap.png");
+		try {
 			ImageIO.write(normalMapImage, "png", outputfile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	    System.out.println("File saved!");
+		System.out.println("File saved!");
 	}
 }

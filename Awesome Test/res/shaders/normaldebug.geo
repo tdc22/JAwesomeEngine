@@ -14,9 +14,7 @@ layout(line_strip, max_vertices = 6) out;
  
 void main()
 {
-	mat4 mvp = projection * view * model;
-	
-    for(int i = 0; i < 6; i += 2)
+	for(int i = 0; i < 6; i += 2)
     {
         gl_Position = gl_in[i].gl_Position;
         EmitVertex();
