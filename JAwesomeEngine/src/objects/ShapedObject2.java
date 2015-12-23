@@ -31,18 +31,7 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 		vertices = new ArrayList<Vector2f>();
 		normals = new ArrayList<Vector2f>();
 
-		rendermode = GLConstants.TRIANGLES;
-	}
-
-	public void addQuad(int index1, int index2, int index3, int index4) {
-		addTriangle(index1, index2, index3);
-		addTriangle(index1, index3, index4);
-	}
-
-	public void addTriangle(int index1, int index2, int index3) {
-		addIndex(index1);
-		addIndex(index2);
-		addIndex(index3);
+		rendermode = GLConstants.TRIANGLE_ADJACENCY;
 	}
 
 	public void computeNormals() {

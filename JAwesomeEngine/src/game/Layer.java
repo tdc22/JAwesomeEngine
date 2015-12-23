@@ -20,7 +20,6 @@ import texture.Texture;
 public class Layer implements ViewProjection {
 	List<Shader> shader;
 	List<PostProcessingShader> postProcessing;
-	int postProcessingIterations = 20;
 	protected FloatBuffer projectionMatrix, viewMatrix;
 	FramebufferObject framebufferMultisample, framebuffer, framebufferPostProcessing;
 	boolean active = true;

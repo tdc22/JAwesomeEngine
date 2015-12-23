@@ -210,7 +210,7 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 			layer2d.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples());
 			layerInterface.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples());
 
-			screen = new Quad(0, 0, 1, -1);
+			screen = new Quad(0, 0, 1, -1, false);
 			screen.setRenderHints(false, true, false);
 
 			screenShader = new Shader(

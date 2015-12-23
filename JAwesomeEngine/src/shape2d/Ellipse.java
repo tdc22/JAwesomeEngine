@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import objects.ShapedObject2;
 import shapedata2d.EllipseStructure;
+import utils.GLConstants;
 import vector.Vector2f;
 
 public class Ellipse extends ShapedObject2 implements EllipseStructure {
@@ -12,12 +13,22 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 
 	public Ellipse(float x, float y, float radius, float halfheight, int slices) {
 		super(x, y);
-		init(radius, halfheight, slices);
+		init(radius, halfheight, slices, true);
 	}
 
 	public Ellipse(Vector2f pos, float radius, float halfheight, int slices) {
 		super(pos);
-		init(radius, halfheight, slices);
+		init(radius, halfheight, slices, true);
+	}
+
+	public Ellipse(float x, float y, float radius, float halfheight, int slices, boolean adjacency) {
+		super(x, y);
+		init(radius, halfheight, slices, adjacency);
+	}
+
+	public Ellipse(Vector2f pos, float radius, float halfheight, int slices, boolean adjacency) {
+		super(pos);
+		init(radius, halfheight, slices, adjacency);
 	}
 
 	@Override
@@ -35,7 +46,7 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 		return radius;
 	}
 
-	private void init(float radius, float halfheight, int slices) {
+	private void init(float radius, float halfheight, int slices, boolean adjacency) {
 		shapetype = SHAPE_ELLIPSE;
 		this.radius = radius;
 		this.halfheight = halfheight;
@@ -51,10 +62,22 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 			t.y = 1 - (t.y + 1) * 0.5f;
 			addVertex(v, color, t);
 		}
-		for (int s = 0; s < slices - 1; s++) {
-			addTriangle(0, s + 1, s + 2);
+
+		if (adjacency) {
+			setRenderMode(GLConstants.TRIANGLE_ADJACENCY);
+			for (int s = 1; s < slices - 2; s++) {
+				addTriangle(0, s, s + 1, s + 1, s + 2, s + 3);
+			}
+			addTriangle(0, slices - 2, slices - 1, slices - 1, slices, 1);
+			addTriangle(0, slices - 1, slices, slices, 1, 2);
+			addTriangle(0, slices, 1, 1, 2, 3);
+		} else {
+			setRenderMode(GLConstants.TRIANGLES);
+			for (int s = 0; s < slices - 1; s++) {
+				addTriangle(0, s + 1, s + 2);
+			}
+			addTriangle(0, slices, 1);
 		}
-		addTriangle(0, slices, 1);
 
 		this.prerender();
 	}

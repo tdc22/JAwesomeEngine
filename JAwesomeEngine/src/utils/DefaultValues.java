@@ -61,4 +61,6 @@ public class DefaultValues {
 	public static final boolean DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE = true;
 	// Texture values
 	public static final int DEFAULT_TEXTURE_TYPE = GL_TEXTURE_2D;
+	// PostProcessingShader values
+	public static final int DEFAULT_POST_PROCESSING_ITERATIONS = 20;
 }

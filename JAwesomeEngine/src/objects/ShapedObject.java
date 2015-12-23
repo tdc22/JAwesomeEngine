@@ -436,4 +436,30 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	public void setTextureCoordinates(List<Vector2f> texcoords) {
 		texturecoords = texcoords;
 	}
+
+	public void addQuad(int index1, int index2, int index3, int index4) {
+		addTriangle(index1, index2, index3);
+		addTriangle(index1, index3, index4);
+	}
+
+	public void addTriangle(int index1, int index2, int index3) {
+		addIndex(index1);
+		addIndex(index2);
+		addIndex(index3);
+	}
+
+	public void addQuad(int index1, int adjacency1, int index2, int adjacency2, int index3, int adjacency3, int index4,
+			int adjacency4) {
+		addTriangle(index1, adjacency1, index2, adjacency2, index3, index4);
+		addTriangle(index1, index2, index3, adjacency3, index4, adjacency4);
+	}
+
+	public void addTriangle(int index1, int adjacency1, int index2, int adjacency2, int index3, int adjacency3) {
+		addIndex(index1);
+		addIndex(adjacency1);
+		addIndex(index2);
+		addIndex(adjacency2);
+		addIndex(index3);
+		addIndex(adjacency3);
+	}
 }
