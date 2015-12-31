@@ -69,7 +69,7 @@ public class FramebufferObject {
 	int width, height;
 	IntBuffer imageData;
 	FloatBuffer viewTemp, projectionTemp;
-	boolean multisampled, useCam, useFrustum, renderColor, renderDepth, renderColorToTexture, renderDepthToTexture;
+	boolean useCam, useFrustum, renderColor, renderDepth, renderColorToTexture, renderDepthToTexture;
 	Camera cam;
 	ViewFrustum frustum;
 
@@ -177,9 +177,13 @@ public class FramebufferObject {
 		copyTo(target.getFramebufferID(), target.getWidth(), target.getHeight());
 	}
 
-	public void copyTo(int framebufferID, int w, int h) {
+	public void copyTo(int targetFramebufferID) {
+		copyTo(targetFramebufferID, getWidth(), getHeight());
+	}
+
+	public void copyTo(int targetFramebufferID, int w, int h) {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBufferID);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferID);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetFramebufferID);
 		glBlitFramebuffer(0, 0, width, height, 0, 0, w, h, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
 				(w == width && h == height) ? GL_NEAREST : GL_LINEAR);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
@@ -234,7 +238,7 @@ public class FramebufferObject {
 		return width;
 	}
 
-	private void init(Layer render, int width, int height, int samples, Camera camera, Texture colorbuffer,
+	protected void init(Layer render, int width, int height, int samples, Camera camera, Texture colorbuffer,
 			ViewFrustum frustum, boolean renderColor, boolean renderDepth, boolean renderColorToTexture,
 			boolean renderDepthToTexture) {
 		this.render = render;
@@ -251,8 +255,7 @@ public class FramebufferObject {
 		if (useFrustum = (frustum != null))
 			this.frustum = frustum;
 
-		multisampled = samples > 0;
-		if (multisampled)
+		if (samples > 0)
 			glEnable(GL_MULTISAMPLE);
 
 		frameBufferID = glGenFramebuffers();
@@ -261,89 +264,22 @@ public class FramebufferObject {
 		// Colorbuffer
 		if (renderColor) {
 			if (renderColorToTexture) {
-				if (colorbuffer == null) {
-					colorTexture = new Texture();
-					colorTexture.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
-					colorTexture.bind();
-					if (multisampled) {
-						glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA, width, height, true);
-					} else {
-						int textureType = colorTexture.getTextureType();
-						glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-						glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-						glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-						glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-						glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-								(java.nio.ByteBuffer) null);
-					}
-				} else {
-					colorTexture = colorbuffer;
-				}
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, colorTexture.getTextureType(),
-						colorTexture.getTextureID(), 0);
+				colorTexture = attachColorTexture(colorbuffer, samples);
 			} else {
-				colorRBID = glGenRenderbuffers();
-				glBindRenderbuffer(GL_RENDERBUFFER, colorRBID);
-				if (multisampled) {
-					glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_RGBA, width, height);
-				} else {
-					glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width, height);
-				}
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRBID);
+				colorRBID = attachColorRenderbuffer(samples);
 			}
 		}
 
 		// Depthbuffer
 		if (renderDepth) {
 			if (renderDepthToTexture) {
-				depthTexture = new Texture();
-				depthTexture.setTextureType(multisampled ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
-				depthTexture.bind();
-				int textureType = depthTexture.getTextureType();
-				if (multisampled) {
-					glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_COMPONENT, width, height,
-							true);
-				} else {
-					glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-					glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-					glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-					glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT,
-							GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
-				}
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureType, depthTexture.getTextureID(),
-						0);
+				depthTexture = attachDepthTexture(samples);
 			} else {
-				depthRBID = glGenRenderbuffers();
-				glBindRenderbuffer(GL_RENDERBUFFER, depthRBID);
-				if (multisampled) {
-					glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT, width, height);
-				} else {
-					glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-				}
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRBID);
+				depthRBID = attachDepthRenderbuffer(samples);
 			}
 		}
 
-		int framebuffercheck = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		switch (framebuffercheck) {
-		case GL_FRAMEBUFFER_COMPLETE:
-			break;
-		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-			throw new RuntimeException(
-					"FrameBuffer: " + frameBufferID + ", has caused a GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT exception");
-		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-			throw new RuntimeException("FrameBuffer: " + frameBufferID
-					+ ", has caused a GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT exception");
-		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-			throw new RuntimeException(
-					"FrameBuffer: " + frameBufferID + ", has caused a GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER exception");
-		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-			throw new RuntimeException(
-					"FrameBuffer: " + frameBufferID + ", has caused a GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER exception");
-		default:
-			throw new RuntimeException("Unexpected reply from glCheckFramebufferStatus: " + framebuffercheck);
-		}
+		checkFramebufferStatus();
 
 		if (renderColor) {
 			if (renderColorToTexture) {
@@ -364,6 +300,97 @@ public class FramebufferObject {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	protected Texture attachColorTexture(Texture texturebuffer, int textureSamples) {
+		Texture texture = new Texture();
+		boolean multisampledTexture = textureSamples > 0;
+		if (texturebuffer == null) {
+			texture.setTextureType(multisampledTexture ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
+			texture.bind();
+			if (multisampledTexture) {
+				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, textureSamples, GL_RGBA, width, height, true);
+			} else {
+				int textureType = texture.getTextureType();
+				glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+						(java.nio.ByteBuffer) null);
+			}
+		} else {
+			texture = texturebuffer;
+		}
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture.getTextureType(), texture.getTextureID(),
+				0);
+		return texture;
+	}
+
+	protected int attachColorRenderbuffer(int textureSamples) {
+		int textureRenderbufferID = glGenRenderbuffers();
+		glBindRenderbuffer(GL_RENDERBUFFER, textureRenderbufferID);
+		if (textureSamples > 0) {
+			glRenderbufferStorageMultisample(GL_RENDERBUFFER, textureSamples, GL_RGBA, width, height);
+		} else {
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width, height);
+		}
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, textureRenderbufferID);
+		return textureRenderbufferID;
+	}
+
+	protected Texture attachDepthTexture(int textureSamples) {
+		depthTexture = new Texture();
+		boolean multisampledDepthTexture = textureSamples > 0;
+		depthTexture.setTextureType(multisampledDepthTexture ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
+		depthTexture.bind();
+		int textureType = depthTexture.getTextureType();
+		if (multisampledDepthTexture) {
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, textureSamples, GL_DEPTH_COMPONENT, width, height, true);
+		} else {
+			glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE,
+					(java.nio.ByteBuffer) null);
+		}
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureType, depthTexture.getTextureID(), 0);
+		return depthTexture;
+	}
+
+	protected int attachDepthRenderbuffer(int textureSamples) {
+		int depthRenderbufferID = glGenRenderbuffers();
+		glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbufferID);
+		if (textureSamples > 0) {
+			glRenderbufferStorageMultisample(GL_RENDERBUFFER, textureSamples, GL_DEPTH_COMPONENT, width, height);
+		} else {
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+		}
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbufferID);
+		return depthRenderbufferID;
+	}
+
+	protected void checkFramebufferStatus() {
+		int framebuffercheck = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		switch (framebuffercheck) {
+		case GL_FRAMEBUFFER_COMPLETE:
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+			throw new RuntimeException(
+					"FrameBuffer: " + frameBufferID + ", has caused a GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT exception");
+		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+			throw new RuntimeException("FrameBuffer: " + frameBufferID
+					+ ", has caused a GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT exception");
+		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+			throw new RuntimeException(
+					"FrameBuffer: " + frameBufferID + ", has caused a GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER exception");
+		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+			throw new RuntimeException(
+					"FrameBuffer: " + frameBufferID + ", has caused a GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER exception");
+		default:
+			throw new RuntimeException("Unexpected reply from glCheckFramebufferStatus: " + framebuffercheck);
+		}
+	}
+
 	public boolean isColorRendered() {
 		return renderColor;
 	}
@@ -378,10 +405,6 @@ public class FramebufferObject {
 
 	public boolean isDepthRenderedToTexture() {
 		return renderDepthToTexture;
-	}
-
-	public boolean isMultisampled() {
-		return multisampled;
 	}
 
 	public void unbind() {

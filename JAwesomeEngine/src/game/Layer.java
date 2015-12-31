@@ -15,13 +15,15 @@ import objects.ViewProjection;
 import shader.PostProcessingShader;
 import shader.Shader;
 import texture.FramebufferObject;
+import texture.FramebufferObjectMultisample;
 import texture.Texture;
 
 public class Layer implements ViewProjection {
 	List<Shader> shader;
 	List<PostProcessingShader> postProcessing;
 	protected FloatBuffer projectionMatrix, viewMatrix;
-	FramebufferObject framebufferMultisample, framebuffer, framebufferPostProcessing;
+	FramebufferObjectMultisample framebufferMultisample;
+	FramebufferObject framebufferPostProcessing;
 	boolean active = true;
 
 	public Layer() {
@@ -30,8 +32,7 @@ public class Layer implements ViewProjection {
 	}
 
 	public void initLayer(int resX, int resY, int samples) {
-		framebufferMultisample = new FramebufferObject(this, resX, resY, samples);
-		framebuffer = new FramebufferObject(this, resX, resY, 0);
+		framebufferMultisample = new FramebufferObjectMultisample(this, resX, resY, samples);
 		framebufferPostProcessing = new FramebufferObject(this, resX, resY, 0);
 	}
 
@@ -44,8 +45,6 @@ public class Layer implements ViewProjection {
 		}
 		if (framebufferMultisample != null)
 			framebufferMultisample.delete();
-		if (framebuffer != null)
-			framebuffer.delete();
 		if (framebufferPostProcessing != null)
 			framebufferPostProcessing.delete();
 	}
@@ -62,8 +61,6 @@ public class Layer implements ViewProjection {
 
 	public void end() {
 		framebufferMultisample.end();
-		framebuffer.clear();
-		framebufferMultisample.copyTo(framebuffer);
 	}
 
 	public List<Shader> getShader() {
@@ -91,13 +88,13 @@ public class Layer implements ViewProjection {
 
 	public void applyPostProcessing(Shader target, int width, int height) {
 		boolean p = true;
-		int tex0 = framebuffer.getColorTextureID();
+		int tex0 = framebufferMultisample.getUnsampledColorTextureID();
 		int tex1 = framebufferPostProcessing.getColorTextureID();
-		int tex0depth = framebuffer.getDepthTextureID();
+		int tex0depth = framebufferMultisample.getUnsampledDepthTextureID();
 		int tex1depth = framebufferPostProcessing.getDepthTextureID();
 		for (PostProcessingShader pp : postProcessing) {
 			for (int i = 0; i < pp.getIterations(); i++) {
-				FramebufferObject current = p ? framebufferPostProcessing : framebuffer;
+				FramebufferObject current = p ? framebufferPostProcessing : framebufferMultisample;
 				current.bind();
 				current.clear();
 				((Texture) pp.getShader().getArgument("u_texture")).setTextureID(p ? tex0 : tex1);
@@ -181,12 +178,8 @@ public class Layer implements ViewProjection {
 		return buf;
 	}
 
-	public FramebufferObject getFramebufferMultisample() {
-		return framebufferMultisample;
-	}
-
 	public FramebufferObject getFramebuffer() {
-		return framebuffer;
+		return framebufferMultisample;
 	}
 
 	public FramebufferObject getFramebufferPostProcessor() {
