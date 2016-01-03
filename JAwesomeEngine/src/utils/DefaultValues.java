@@ -62,5 +62,5 @@ public class DefaultValues {
 	// Texture values
 	public static final int DEFAULT_TEXTURE_TYPE = GL_TEXTURE_2D;
 	// PostProcessingShader values
-	public static final int DEFAULT_POST_PROCESSING_ITERATIONS = 20;
+	public static final int DEFAULT_POST_PROCESSING_ITERATIONS = 1;
 }

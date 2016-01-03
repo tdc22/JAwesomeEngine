@@ -59,23 +59,28 @@ public class FramebufferObjectMultisample extends FramebufferObject {
 		super(render, width, height, samples, cam, colorbuffer, frustum);
 	}
 
-	public int getUnsampledFramebufferID() {
+	@Override
+	public int getFramebufferID() {
 		return unsampledFramebufferID;
 	}
 
-	public Texture getUnsampledColorTexture() {
+	@Override
+	public Texture getColorTexture() {
 		return unsampledColorTexture;
 	}
 
-	public Texture getUnsampledDepthTexture() {
+	@Override
+	public Texture getDepthTexture() {
 		return unsampledDepthTexture;
 	}
 
-	public int getUnsampledColorTextureID() {
+	@Override
+	public int getColorTextureID() {
 		return unsampledColorTexture.getTextureID();
 	}
 
-	public int getUnsampledDepthTextureID() {
+	@Override
+	public int getDepthTextureID() {
 		return unsampledDepthTexture.getTextureID();
 	}
 

@@ -16,7 +16,6 @@ import shader.PostProcessingShader;
 import shader.Shader;
 import texture.FramebufferObject;
 import texture.FramebufferObjectMultisample;
-import texture.Texture;
 
 public class Layer implements ViewProjection {
 	List<Shader> shader;
@@ -87,24 +86,17 @@ public class Layer implements ViewProjection {
 	}
 
 	public void applyPostProcessing(Shader target, int width, int height) {
-		boolean p = true;
-		int tex0 = framebufferMultisample.getUnsampledColorTextureID();
+		int iterations = 0;
+		int tex0 = framebufferMultisample.getColorTextureID();
 		int tex1 = framebufferPostProcessing.getColorTextureID();
-		int tex0depth = framebufferMultisample.getUnsampledDepthTextureID();
-		int tex1depth = framebufferPostProcessing.getDepthTextureID();
 		for (PostProcessingShader pp : postProcessing) {
-			for (int i = 0; i < pp.getIterations(); i++) {
-				FramebufferObject current = p ? framebufferPostProcessing : framebufferMultisample;
-				current.bind();
-				current.clear();
-				((Texture) pp.getShader().getArgument("u_texture")).setTextureID(p ? tex0 : tex1);
-				((Texture) pp.getShader().getArgument("u_depthTexture")).setTextureID(p ? tex0depth : tex1depth);
-				pp.getShader().renderNoMatrix();
-				current.unbind();
-				p = !p;
-			}
+			if(iterations % 2 == 0)
+				pp.apply(framebufferMultisample, framebufferPostProcessing);
+			else
+				pp.apply(framebufferPostProcessing, framebufferMultisample);
+			iterations += pp.getIterations();
 		}
-		glBindTexture(GL_TEXTURE_2D, p ? tex0 : tex1);
+		glBindTexture(GL_TEXTURE_2D, (iterations % 2 == 0) ? tex0 : tex1);
 		glViewport(0, 0, width, height);
 		target.renderNoMatrix();
 	}
