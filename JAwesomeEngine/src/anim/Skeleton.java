@@ -11,6 +11,7 @@ import vector.Vector;
 public abstract class Skeleton<L extends Vector, A extends Rotation> implements Updateable {
 	List<BaseObject<L, A>> bodyparts;
 	BaseObject<L, A> attachedTo;
+	Animation<L, A> dynamicStoreAnimation;
 	Animation<L, A> animation;
 	float animationTimer = 0;
 	L nullvec;
@@ -24,10 +25,12 @@ public abstract class Skeleton<L extends Vector, A extends Rotation> implements 
 		setAnimation(animation);
 	}
 
-	public void setAnimation(Animation<L, A> animation) {
-		this.animation = animation;
+	public void setAnimation(Animation<L, A> animationparam) {
+		this.animation = animationparam;
 		animationTimer = 0;
 	}
+
+	public abstract void setDynamicAnimation(Animation<L, A> animationparam);
 
 	public Animation<L, A> getAnimation() {
 		return animation;
@@ -38,6 +41,10 @@ public abstract class Skeleton<L extends Vector, A extends Rotation> implements 
 		animationTimer += delta * animation.getSpeed();
 		if (animationTimer > 1) {
 			if (animation.loops) {
+				if (dynamicStoreAnimation != null) {
+					animation = dynamicStoreAnimation;
+					dynamicStoreAnimation = null;
+				}
 				animationTimer %= 1;
 			} else {
 				animationTimer = 1;

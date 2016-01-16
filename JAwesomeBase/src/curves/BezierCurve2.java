@@ -21,4 +21,9 @@ public class BezierCurve2 extends BezierCurve<Vector2f> {
 		return p;
 	}
 
+	@Override
+	public void setStartPoint(Vector2f startpoint) {
+		p0 = startpoint;
+	}
+
 }

@@ -5,13 +5,18 @@ import quaternion.Complexf;
 
 public class SquadCurve2 extends SquadCurve<Complexf> {
 
-	public SquadCurve2(Complexf p0, Complexf p1, Complexf p2, Complexf p3) {
-		super(p0, p1, p2, p3);
+	public SquadCurve2(Complexf r0, Complexf r1, Complexf r2, Complexf r3) {
+		super(r0, r1, r2, r3);
 	}
 
 	@Override
 	public Complexf getRotation(float t) {
 		return ComplexMath.lerp(r1, r2, t);
+	}
+
+	@Override
+	public void setStartRotation(Complexf startrotation) {
+		r0 = startrotation;
 	}
 
 }

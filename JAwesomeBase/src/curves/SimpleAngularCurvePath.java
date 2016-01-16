@@ -14,10 +14,28 @@ public class SimpleAngularCurvePath<A extends Rotation> {
 		curves = new ArrayList<AngularCurve<A>>();
 	}
 
+	public SimpleAngularCurvePath(SimpleAngularCurvePath<A> simpleangularcurvepath) {
+		curves = new ArrayList<AngularCurve<A>>(simpleangularcurvepath.getCurves());
+		numCurves = simpleangularcurvepath.getCurveCount();
+		oneOverNum = simpleangularcurvepath.getOneOverCurveCount();
+	}
+
 	public void addCurve(AngularCurve<A> curve) {
 		curves.add(curve);
 		numCurves++;
 		oneOverNum = 1 / (float) numCurves;
+	}
+
+	public List<AngularCurve<A>> getCurves() {
+		return curves;
+	}
+
+	public int getCurveCount() {
+		return numCurves;
+	}
+
+	public float getOneOverCurveCount() {
+		return oneOverNum;
 	}
 
 	public A getRotation(float t) {

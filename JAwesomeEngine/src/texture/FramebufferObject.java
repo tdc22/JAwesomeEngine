@@ -213,11 +213,11 @@ public class FramebufferObject {
 	public int getColorTextureID() {
 		return colorTexture.getTextureID();
 	}
-	
+
 	public Texture getColorTexture() {
 		return colorTexture;
 	}
-	
+
 	public Texture getDepthTexture() {
 		return depthTexture;
 	}

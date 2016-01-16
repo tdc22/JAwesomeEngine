@@ -19,4 +19,8 @@ public class Animation3 extends Animation<Vector3f, Quaternionf> {
 	public Animation3(float animationspeed, boolean loops) {
 		super(animationspeed, loops);
 	}
+
+	public Animation3(Animation3 animation) {
+		super(animation);
+	}
 }

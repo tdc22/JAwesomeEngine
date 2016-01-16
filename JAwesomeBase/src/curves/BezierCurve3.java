@@ -22,4 +22,9 @@ public class BezierCurve3 extends BezierCurve<Vector3f> {
 		return p;
 	}
 
+	@Override
+	public void setStartPoint(Vector3f startpoint) {
+		p0 = startpoint;
+	}
+
 }

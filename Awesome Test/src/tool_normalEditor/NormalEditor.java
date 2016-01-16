@@ -54,7 +54,8 @@ public class NormalEditor extends StandardGame {
 
 		BufferedImage diffTex = null;
 		try {
-			diffTex = ImageIO.read(new File("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/dumb2_head1.png"));
+			diffTex = ImageIO
+					.read(new File("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/dumb2_hand1_1.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -182,7 +183,7 @@ public class NormalEditor extends StandardGame {
 					float bv = 0;
 					for (Pair<Float, NormalMarker> marker : markerdistances) {
 						float w = (float) (Math.pow(marker.getFirst(), -2) / Math.pow(alldistances, -2));
-						System.out.println(w);
+						// System.out.println(w);
 						rv += w * marker.getSecond().normal.x;
 						gv += w * marker.getSecond().normal.y;
 						bv += w * marker.getSecond().normal.z;

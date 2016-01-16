@@ -90,7 +90,7 @@ public class Layer implements ViewProjection {
 		int tex0 = framebufferMultisample.getColorTextureID();
 		int tex1 = framebufferPostProcessing.getColorTextureID();
 		for (PostProcessingShader pp : postProcessing) {
-			if(iterations % 2 == 0)
+			if (iterations % 2 == 0)
 				pp.apply(framebufferMultisample, framebufferPostProcessing);
 			else
 				pp.apply(framebufferPostProcessing, framebufferMultisample);

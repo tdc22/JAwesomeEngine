@@ -25,7 +25,7 @@ public class PostProcessingShader {
 	public int getIterations() {
 		return iterations;
 	}
-	
+
 	public void apply(FramebufferObject from, FramebufferObject to) {
 		boolean p = true;
 		int tex0 = from.getColorTextureID();

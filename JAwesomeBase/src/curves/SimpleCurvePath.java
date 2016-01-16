@@ -14,10 +14,28 @@ public class SimpleCurvePath<L extends Vector> {
 		curves = new ArrayList<Curve<L>>();
 	}
 
+	public SimpleCurvePath(SimpleCurvePath<L> simplecurvepath) {
+		curves = new ArrayList<Curve<L>>(simplecurvepath.getCurves());
+		numCurves = simplecurvepath.getCurveCount();
+		oneOverNum = simplecurvepath.getOneOverCurveCount();
+	}
+
 	public void addCurve(Curve<L> curve) {
 		curves.add(curve);
 		numCurves++;
 		oneOverNum = 1 / (float) numCurves;
+	}
+
+	public List<Curve<L>> getCurves() {
+		return curves;
+	}
+
+	public int getCurveCount() {
+		return numCurves;
+	}
+
+	public float getOneOverCurveCount() {
+		return oneOverNum;
 	}
 
 	public L getPoint(float t) {

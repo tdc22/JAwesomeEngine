@@ -30,6 +30,12 @@ public class Animation<L extends Vector, A extends Rotation> {
 		init(animationspeed, loops);
 	}
 
+	public Animation(Animation<L, A> animation) {
+		init(animation.getSpeed(), animation.isLooping());
+		animationTranslationPaths.addAll(animation.getAnimationTranslationPaths());
+		animationRotationPaths.addAll(animation.getAnimationRotationPaths());
+	}
+
 	private void init(float animationspeed, boolean loops) {
 		this.speed = animationspeed;
 		this.loops = loops;
@@ -72,5 +78,13 @@ public class Animation<L extends Vector, A extends Rotation> {
 
 	public SimpleAngularCurvePath<A> getAnimationRotationPath(int id) {
 		return animationRotationPaths.get(id);
+	}
+
+	public List<SimpleCurvePath<L>> getAnimationTranslationPaths() {
+		return animationTranslationPaths;
+	}
+
+	public List<SimpleAngularCurvePath<A>> getAnimationRotationPaths() {
+		return animationRotationPaths;
 	}
 }
