@@ -4,8 +4,6 @@ import curves.BezierCurve2;
 import curves.SimpleAngularCurvePath;
 import curves.SimpleCurvePath;
 import curves.SquadCurve2;
-import math.ComplexMath;
-import math.VecMath;
 import objects.BaseObject;
 import objects.BaseObject2;
 import quaternion.Complexf;
@@ -30,50 +28,45 @@ public class Skeleton2 extends Skeleton<Vector2f, Complexf> {
 
 	@Override
 	protected void updateAnimation(float animationTimer) {
+		Animation<Vector2f, Complexf> currentAnimation = (dynamicAnimationTransition != null)
+				? dynamicAnimationTransition : animation;
 		for (int i = 0; i < bodyparts.size(); i++) {
 			BaseObject<Vector2f, Complexf> part = bodyparts.get(i);
-			Vector2f trans = animation.getAnimationTranslationPath(i).getPoint(animationTimer);
+			Vector2f trans = currentAnimation.getAnimationTranslationPath(i).getPoint(animationTimer);
 			if (mirroredX)
 				trans.x = -trans.x;
 			if (mirroredY)
 				trans.y = -trans.y;
 			part.translate(trans);
-			Complexf rot = animation.getAnimationRotationPath(i).getRotation(animationTimer);
+			Complexf rot = currentAnimation.getAnimationRotationPath(i).getRotation(animationTimer);
 			if (invertRotation)
 				rot.invert();
 			part.rotate(rot);
 		}
 	}
 
-	// TODO: Reset first point of animation after first path is done.
 	// TODO: Optimize!
-	public void setDynamicAnimation(Animation<Vector2f, Complexf> animationparam) {
-		this.dynamicStoreAnimation = animationparam;
-		System.out.println("-----------");
+	public void setDynamicAnimation(Animation<Vector2f, Complexf> animationparam, float dynamicAnimationSpeed) {
+		dynamicAnimationTransition = new DynamicAnimationTransition<Vector2f, Complexf>(animationparam,
+				dynamicAnimationSpeed);
 		for (int i = 0; i < bodyparts.size(); i++) {
-			animation = new Animation<Vector2f, Complexf>(animationparam);
-			BaseObject<Vector2f, Complexf> bodypart = bodyparts.get(i);
-			Vector2f trans = VecMath.subtraction(bodypart.getTranslation(), attachedTo.getTranslation());
-			if (mirroredX)
-				trans.x = -trans.x;
-			if (mirroredY)
-				trans.y = -trans.y;
+			Vector2f trans = animation.getAnimationTranslationPath(i).getPoint(animationTimer);
 			SimpleCurvePath<Vector2f> translationpath = new SimpleCurvePath<Vector2f>(
-					animation.getAnimationTranslationPath(i));
+					dynamicAnimationTransition.getAnimationTranslationPath(i));
 			SimpleAngularCurvePath<Complexf> rotationpath = new SimpleAngularCurvePath<Complexf>(
-					animation.getAnimationRotationPath(i));
+					dynamicAnimationTransition.getAnimationRotationPath(i));
 			BezierCurve2 oldcurve = (BezierCurve2) translationpath.getCurves().get(0);
 			SquadCurve2 oldrotcurve = (SquadCurve2) rotationpath.getCurves().get(0);
 			translationpath.getCurves().set(0,
-					new BezierCurve2(new Vector2f(), new Vector2f(), new Vector2f(), new Vector2f()));
+					new BezierCurve2(trans, oldcurve.getP1(), oldcurve.getP2(), oldcurve.getP3()));
+			// TODO: fix, when squadcurves are properly fixed.
+			Complexf newSquadrotation = animation.getAnimationRotationPath(i).getRotation(animationTimer);
 			rotationpath.getCurves().set(0,
-					new SquadCurve2(ComplexMath.substraction(bodypart.getRotation(), attachedTo.getRotation()),
-							oldrotcurve.getR1(), oldrotcurve.getR2(), oldrotcurve.getR3()));
-			animation.getAnimationTranslationPaths().set(i, translationpath);
-			animation.getAnimationRotationPaths().set(i, rotationpath);
-			System.out.println(i);
-			System.out.println(translationpath.getCurves());
+					new SquadCurve2(newSquadrotation, newSquadrotation, oldrotcurve.getR2(), oldrotcurve.getR3()));
+			dynamicAnimationTransition.getAnimationTranslationPaths().set(i, translationpath);
+			dynamicAnimationTransition.getAnimationRotationPaths().set(i, rotationpath);
 		}
+		animation = animationparam;
 		animationTimer = 0;
 	}
 

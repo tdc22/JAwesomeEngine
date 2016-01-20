@@ -30,7 +30,7 @@ public class Skeleton3 extends Skeleton<Vector3f, Quaternionf> {
 		}
 	}
 
-	public void setDynamicAnimation(Animation<Vector3f, Quaternionf> animationparam) {
+	public void setDynamicAnimation(Animation<Vector3f, Quaternionf> animationparam, float dynamicAnimationSpeed) {
 		this.animation = new Animation<Vector3f, Quaternionf>(animationparam);
 		for (int i = 0; i < bodyparts.size(); i++) {
 			BaseObject<Vector3f, Quaternionf> bodypart = bodyparts.get(i);

@@ -37,13 +37,13 @@ public abstract class SweepAndPrune<L extends Vector, ObjectType extends Collisi
 		}
 	}
 
-	List<ObjectType> objects;
+	final List<ObjectType> objects;
 
-	List<Pair<ObjectType, ObjectType>> overlaps;
+	final List<Pair<ObjectType, ObjectType>> overlaps;
 
-	Map<Pair<ObjectType, ObjectType>, Counter> counters;
+	final Map<Pair<ObjectType, ObjectType>, Counter> counters;
 
-	List<BroadphaseListener<L, ObjectType>> listeners;
+	final List<BroadphaseListener<L, ObjectType>> listeners;
 
 	public SweepAndPrune() {
 		objects = new ArrayList<ObjectType>();
@@ -84,8 +84,8 @@ public abstract class SweepAndPrune<L extends Vector, ObjectType extends Collisi
 				SweepPoint swapper = axis.get(i);
 
 				if (keyelement.begin && !swapper.begin) {
-					Pair<ObjectType, ObjectType> pair = new Pair<ObjectType, ObjectType>(
-							keyelement.object, swapper.object);
+					Pair<ObjectType, ObjectType> pair = new Pair<ObjectType, ObjectType>(keyelement.object,
+							swapper.object);
 					if (counters.containsKey(pair)) {
 						counters.get(pair).overlaps++;
 					} else {
@@ -93,10 +93,9 @@ public abstract class SweepAndPrune<L extends Vector, ObjectType extends Collisi
 						counter.overlaps = 1;
 						counters.put(pair, counter);
 					}
-				}
-				else if (!keyelement.begin && swapper.begin) {
-					Pair<ObjectType, ObjectType> pair = new Pair<ObjectType, ObjectType>(
-							keyelement.object, swapper.object);
+				} else if (!keyelement.begin && swapper.begin) {
+					Pair<ObjectType, ObjectType> pair = new Pair<ObjectType, ObjectType>(keyelement.object,
+							swapper.object);
 					if (counters.containsKey(pair)) {
 						counters.get(pair).overlaps--;
 					}

@@ -8,8 +8,8 @@ import objects.SupportMap;
 import vector.Vector3f;
 
 public class MultiPointManifoldManager extends ManifoldManager<Vector3f> {
-	List<CollisionManifold<Vector3f>> collisionmanifolds;
-	List<CollisionManifold<Vector3f>> collisionmanifoldsnoghosts;
+	final List<CollisionManifold<Vector3f>> collisionmanifolds;
+	final List<CollisionManifold<Vector3f>> collisionmanifoldsnoghosts;
 	float offsetscale = 0.001f;
 
 	public MultiPointManifoldManager() {
@@ -42,44 +42,30 @@ public class MultiPointManifoldManager extends ManifoldManager<Vector3f> {
 		SupportMap<Vector3f> Sa = cm.getObjects().getFirst();
 		SupportMap<Vector3f> Sb = cm.getObjects().getSecond();
 
-		Vector3f contactA = computeCenter(Sa.supportPoint(normalMOffsetA),
-				Sa.supportPoint(normalPOffsetA),
-				Sa.supportPoint(normalMOffsetB),
-				Sa.supportPoint(normalPOffsetB));
-		Vector3f contactB = computeCenter(Sb.supportPoint(negNormalMOffsetA),
-				Sb.supportPoint(negNormalPOffsetA), negNormalMOffsetB,
-				Sb.supportPoint(negNormalPOffsetB));
-		Vector3f relativeContactA = computeCenter(
-				Sa.supportPointRelative(normalMOffsetA),
-				Sa.supportPointRelative(normalPOffsetA),
-				Sa.supportPointRelative(normalMOffsetB),
+		Vector3f contactA = computeCenter(Sa.supportPoint(normalMOffsetA), Sa.supportPoint(normalPOffsetA),
+				Sa.supportPoint(normalMOffsetB), Sa.supportPoint(normalPOffsetB));
+		Vector3f contactB = computeCenter(Sb.supportPoint(negNormalMOffsetA), Sb.supportPoint(negNormalPOffsetA),
+				negNormalMOffsetB, Sb.supportPoint(negNormalPOffsetB));
+		Vector3f relativeContactA = computeCenter(Sa.supportPointRelative(normalMOffsetA),
+				Sa.supportPointRelative(normalPOffsetA), Sa.supportPointRelative(normalMOffsetB),
 				Sa.supportPointRelative(normalPOffsetB));
-		Vector3f relativeContactB = computeCenter(
-				Sb.supportPointRelative(negNormalMOffsetA),
-				Sb.supportPointRelative(negNormalPOffsetA),
-				Sb.supportPointRelative(negNormalMOffsetB),
+		Vector3f relativeContactB = computeCenter(Sb.supportPointRelative(negNormalMOffsetA),
+				Sb.supportPointRelative(negNormalPOffsetA), Sb.supportPointRelative(negNormalMOffsetB),
 				Sb.supportPointRelative(negNormalPOffsetB));
-		Vector3f localContactA = computeCenter(
-				Sa.supportPointLocal(normalMOffsetA),
-				Sa.supportPointLocal(normalPOffsetA),
-				Sa.supportPointLocal(normalMOffsetB),
+		Vector3f localContactA = computeCenter(Sa.supportPointLocal(normalMOffsetA),
+				Sa.supportPointLocal(normalPOffsetA), Sa.supportPointLocal(normalMOffsetB),
 				Sa.supportPointLocal(normalPOffsetB));
-		Vector3f localContactB = computeCenter(
-				Sb.supportPointLocal(negNormalMOffsetA),
-				Sb.supportPointLocal(negNormalPOffsetA),
-				Sb.supportPointLocal(negNormalMOffsetB),
+		Vector3f localContactB = computeCenter(Sb.supportPointLocal(negNormalMOffsetA),
+				Sb.supportPointLocal(negNormalPOffsetA), Sb.supportPointLocal(negNormalMOffsetB),
 				Sb.supportPointLocal(negNormalPOffsetB));
-		
-		CollisionManifold<Vector3f> result = new CollisionManifold<Vector3f>(
-				cm.getObjects().getFirst(),
-				cm.getObjects().getSecond(), cm.getPenetrationDepth(),
-				normal, contactA, contactB, relativeContactA,
-				relativeContactB, localContactA, localContactB, cm
-						.getContactTangentA(), cm.getContactTangentB());
-		
+
+		CollisionManifold<Vector3f> result = new CollisionManifold<Vector3f>(cm.getObjects().getFirst(),
+				cm.getObjects().getSecond(), cm.getPenetrationDepth(), normal, contactA, contactB, relativeContactA,
+				relativeContactB, localContactA, localContactB, cm.getContactTangentA(), cm.getContactTangentB());
+
 		collisionmanifolds.add(result);
-		
-		if(!cm.getObjects().getFirst().isGhost() && !cm.getObjects().getSecond().isGhost()) {
+
+		if (!cm.getObjects().getFirst().isGhost() && !cm.getObjects().getSecond().isGhost()) {
 			collisionmanifoldsnoghosts.add(result);
 		}
 	}
@@ -90,10 +76,8 @@ public class MultiPointManifoldManager extends ManifoldManager<Vector3f> {
 		collisionmanifoldsnoghosts.clear();
 	}
 
-	private Vector3f computeCenter(Vector3f a, Vector3f b, Vector3f c,
-			Vector3f d) {
-		return VecMath.scale(VecMath.addition(
-				VecMath.addition(VecMath.addition(a, b), c), d), 0.25f);
+	private Vector3f computeCenter(Vector3f a, Vector3f b, Vector3f c, Vector3f d) {
+		return VecMath.scale(VecMath.addition(VecMath.addition(VecMath.addition(a, b), c), d), 0.25f);
 	}
 
 	@Override

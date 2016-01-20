@@ -17,38 +17,43 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 		public Edge(Vector2f a, Vector2f b) {
 			this.a = a;
 			this.b = b;
-			
+
 			normal = new Vector2f(a.y - b.y, b.x - a.x);
 			if (VecMath.dotproduct(normal, a) < 0)
 				normal.negate();
-			
+
 			if (normal.lengthSquared() > 0)
 				normal.normalize();
 		}
 	}
 
+	private final List<Edge> edges;
 	private final float TOLERANCE = 0.001f;
-	private final float EPSILON = 0;//0.1f;
+	private final float EPSILON = 0;// 0.1f;
 	private final int MAX_ITERATIONS = 50;
 
+	public EPA2() {
+		edges = new ArrayList<Edge>();
+	}
+
 	@Override
-	public ContactManifold<Vector2f> computeCollision(SupportMap<Vector2f> Sa,
-			SupportMap<Vector2f> Sb, List<Vector2f> simplex) {
-		List<Edge> edges = new ArrayList<Edge>();
-		
+	public ContactManifold<Vector2f> computeCollision(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,
+			List<Vector2f> simplex) {
+		edges.clear();
+
 		Vector2f A = simplex.get(0);
 		Vector2f B = simplex.get(1);
 		Vector2f C = simplex.get(2);
-		
+
 		edges.add(new Edge(A, B));
 		edges.add(new Edge(B, C));
 		edges.add(new Edge(C, A));
-		
+
 		Vector2f normal = new Vector2f();
 		float depth = 0;
 		for (int i = 0; i < MAX_ITERATIONS; i++) {
 			Edge e = findClosestEdge(edges);
-			if(isOriginInsideEdgeArea(e)) {
+			if (isOriginInsideEdgeArea(e)) {
 				Vector2f p = support(Sa, Sb, e.normal);
 				double d = VecMath.dotproduct(p, e.normal);
 				if (d - e.distance < TOLERANCE) {
@@ -66,23 +71,20 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 		if (normal.lengthSquared() == 0)
 			return null;
 
-		Vector3f tmp = VecMath.crossproduct(new Vector3f(normal), new Vector3f(
-				0, 0, 1));
+		Vector3f tmp = VecMath.crossproduct(new Vector3f(normal), new Vector3f(0, 0, 1));
 		Vector2f tangentA = new Vector2f(tmp.x, tmp.y);
 		Vector2f tangentB = VecMath.negate(tangentA);
 
 		Vector2f negnormal = VecMath.negate(normal);
-		return new ContactManifold<Vector2f>(depth, normal,
-				Sa.supportPoint(normal), Sb.supportPoint(negnormal),
-				Sa.supportPointRelative(normal),
-				Sb.supportPointRelative(normal), Sa.supportPointLocal(normal),
+		return new ContactManifold<Vector2f>(depth, normal, Sa.supportPoint(normal), Sb.supportPoint(negnormal),
+				Sa.supportPointRelative(normal), Sb.supportPointRelative(normal), Sa.supportPointLocal(normal),
 				Sb.supportPointLocal(negnormal), tangentA, tangentB);
 	}
-	
+
 	private boolean isOriginInsideEdgeArea(Edge e) {
 		return (checkEdge(e.a, e.normal) && checkEdge(e.b, e.normal));
 	}
-	
+
 	private boolean checkEdge(Vector2f a, Vector2f normal) {
 		return (-a.x * normal.x + -a.y * normal.y <= EPSILON);
 	}
@@ -104,9 +106,7 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 		return closest;
 	}
 
-	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,
-			Vector2f dir) {
-		return VecMath.subtraction(Sa.supportPoint(dir),
-				Sb.supportPointNegative(dir));
+	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb, Vector2f dir) {
+		return VecMath.subtraction(Sa.supportPoint(dir), Sb.supportPointNegative(dir));
 	}
 }

@@ -1,7 +1,5 @@
 package narrowphase;
 
-import java.util.ArrayList;
-
 import math.VecMath;
 import objects.SupportMap;
 import vector.Vector3f;
@@ -10,7 +8,7 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 	private final int MAX_ITERATIONS = 80;
 
 	public GJK(ManifoldGenerator<Vector3f> manifoldgeneration) {
-		super(manifoldgeneration);
+		super(manifoldgeneration, 4);
 	}
 
 	private boolean doSimplex() {
@@ -215,18 +213,16 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 	private Vector3f edgeDirection(Vector3f edge, Vector3f origin) {
 		// return VecMath.crossproduct(VecMath.crossproduct(edge, origin),
 		// edge);
-		return new Vector3f((edge.z * origin.x - edge.x * origin.z) * edge.z
-				- (edge.x * origin.y - edge.y * origin.x) * edge.y, (edge.x
-				* origin.y - edge.y * origin.x)
-				* edge.x - (edge.y * origin.z - edge.z * origin.y) * edge.z,
-				(edge.y * origin.z - edge.z * origin.y) * edge.y
-						- (edge.z * origin.x - edge.x * origin.z) * edge.x);
+		return new Vector3f(
+				(edge.z * origin.x - edge.x * origin.z) * edge.z - (edge.x * origin.y - edge.y * origin.x) * edge.y,
+				(edge.x * origin.y - edge.y * origin.x) * edge.x - (edge.y * origin.z - edge.z * origin.y) * edge.z,
+				(edge.y * origin.z - edge.z * origin.y) * edge.y - (edge.z * origin.x - edge.x * origin.z) * edge.x);
 	}
 
 	@Override
 	public boolean isColliding(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb) {
 		// System.out.println("---------- New Loop: ----------");
-		simplex = new ArrayList<Vector3f>();
+		simplex.clear();
 		// S = Support(?)
 		direction = support(Sa, Sb, new Vector3f(1, 1, 1));
 		// [] = S
@@ -254,13 +250,11 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 		return false;
 	}
 
-	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
-			Vector3f dir) {
+	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb, Vector3f dir) {
 		// System.out.println("sup: " +
 		// VecMath.substraction(Sa.supportPoint(dir),
 		// Sb.supportPoint(VecMath.negate(dir))) + ": " + Sa.supportPoint(dir) +
 		// "; " + Sb.supportPoint(VecMath.negate(dir)) + "; " + dir);
-		return VecMath.subtraction(Sa.supportPoint(dir),
-				Sb.supportPointNegative(dir));
+		return VecMath.subtraction(Sa.supportPoint(dir), Sb.supportPointNegative(dir));
 	}
 }

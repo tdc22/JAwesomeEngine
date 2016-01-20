@@ -12,8 +12,7 @@ import objects.RigidBody;
 import utils.Pair;
 import vector.Vector3f;
 
-public class DynamicAABBTree implements
-		Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> {
+public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> {
 
 	// main source:
 	// http://allenchou.net/2014/02/game-physics-broadphase-dynamic-aabb-tree/
@@ -30,8 +29,7 @@ public class DynamicAABBTree implements
 		}
 
 		public Node getSibling() {
-			return this == parent.leftChild ? parent.rightChild
-					: parent.leftChild;
+			return this == parent.leftChild ? parent.rightChild : parent.leftChild;
 		}
 
 		public boolean isLeaf() {
@@ -56,10 +54,8 @@ public class DynamicAABBTree implements
 		public void updateAABB(float margin) {
 			if (isLeaf()) {
 				Vector3f marginVector = new Vector3f(margin, margin, margin);
-				aabb.setMin(VecMath.subtraction(object.getGlobalMinAABB(),
-						marginVector));
-				aabb.setMax(VecMath.addition(object.getGlobalMaxAABB(),
-						marginVector));
+				aabb.setMin(VecMath.subtraction(object.getGlobalMinAABB(), marginVector));
+				aabb.setMax(VecMath.addition(object.getGlobalMaxAABB(), marginVector));
 			} else
 				aabb = leftChild.aabb.union(rightChild.aabb);
 		}
@@ -105,10 +101,9 @@ public class DynamicAABBTree implements
 	private void computePairsHelper(Node node0, Node node1) {
 		if (node0.isLeaf()) {
 			if (node1.isLeaf()) {
-				if (node0.object.getGlobalAABB().intersects(
-						node1.object.getGlobalAABB())) {
-					overlaps.add(new Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>(
-							node0.object, node1.object));
+				if (node0.object.getGlobalAABB().intersects(node1.object.getGlobalAABB())) {
+					overlaps.add(new Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>(node0.object,
+							node1.object));
 				}
 			} else {
 				crossChildren(node1);
@@ -140,8 +135,7 @@ public class DynamicAABBTree implements
 
 	@Override
 	public Set<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>> getOverlaps() {
-		return new LinkedHashSet<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>>(
-				overlaps);
+		return new LinkedHashSet<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>>(overlaps);
 	}
 
 	private Node insertNode(Node node, Node parent) {
@@ -155,10 +149,8 @@ public class DynamicAABBTree implements
 		} else {
 			final AABB<Vector3f> aabb0 = parent.leftChild.aabb;
 			final AABB<Vector3f> aabb1 = parent.rightChild.aabb;
-			final float volumeDiff0 = aabb0.union(node.aabb).volume()
-					- aabb0.volume();
-			final float volumeDiff1 = aabb1.union(node.aabb).volume()
-					- aabb1.volume();
+			final float volumeDiff0 = aabb0.union(node.aabb).volume() - aabb0.volume();
+			final float volumeDiff1 = aabb1.union(node.aabb).volume() - aabb1.volume();
 
 			if (volumeDiff0 < volumeDiff1)
 				insertNode(node, parent.leftChild);
@@ -204,8 +196,7 @@ public class DynamicAABBTree implements
 	}
 
 	private void toString(Node n) {
-		System.out.println(n.aabb + "; " + n.isLeaf() + "; " + n.leftChild
-				+ "; " + n.rightChild);
+		System.out.println(n.aabb + "; " + n.isLeaf() + "; " + n.leftChild + "; " + n.rightChild);
 		if (!n.isLeaf()) {
 			toString(n.leftChild);
 			toString(n.rightChild);
@@ -240,8 +231,7 @@ public class DynamicAABBTree implements
 				for (Node node : invalidNodes) {
 					Node parent = node.parent;
 					Node sibling = node.getSibling();
-					sibling.parent = (parent.parent != null) ? parent.parent
-							: null;
+					sibling.parent = (parent.parent != null) ? parent.parent : null;
 					if (parent.parent != null) {
 						if (parent == parent.parent.leftChild)
 							parent.parent.leftChild = sibling;
@@ -282,15 +272,13 @@ public class DynamicAABBTree implements
 	}
 
 	@Override
-	public void addListener(
-			BroadphaseListener<Vector3f, RigidBody<Vector3f, ?, ?, ?>> listener) {
+	public void addListener(BroadphaseListener<Vector3f, RigidBody<Vector3f, ?, ?, ?>> listener) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void removeListener(
-			BroadphaseListener<Vector3f, RigidBody<Vector3f, ?, ?, ?>> listener) {
+	public void removeListener(BroadphaseListener<Vector3f, RigidBody<Vector3f, ?, ?, ?>> listener) {
 		// TODO Auto-generated method stub
 
 	}

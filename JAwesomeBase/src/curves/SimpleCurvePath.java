@@ -48,4 +48,12 @@ public class SimpleCurvePath<L extends Vector> {
 		}
 		return curves.get(num).getPoint(t);
 	}
+
+	public int getCurveNum(float t) {
+		int num = (int) (numCurves * t);
+		if (num == numCurves) {
+			num--;
+		}
+		return num;
+	}
 }

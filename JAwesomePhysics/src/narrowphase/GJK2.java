@@ -1,7 +1,5 @@
 package narrowphase;
 
-import java.util.ArrayList;
-
 import math.VecMath;
 import objects.SupportMap;
 import vector.Vector2f;
@@ -9,9 +7,9 @@ import vector.Vector3f;
 
 public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 	private final int MAX_ITERATIONS = 50;
-	
+
 	public GJK2(ManifoldGenerator<Vector2f> manifoldgeneration) {
-		super(manifoldgeneration);
+		super(manifoldgeneration, 3);
 	}
 
 	private boolean doSimplex() {
@@ -43,8 +41,9 @@ public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 			Vector3f ABC = VecMath.crossproduct(AB.x, AB.y, 0, AC.x, AC.y, 0);
 			Vector2f AO = VecMath.negate(A);
 
-//			if (VecMath.dotproduct(VecMath.crossproduct(ABC, new Vector3f(AC)),
-//					new Vector3f(AO)) > 0) {
+			// if (VecMath.dotproduct(VecMath.crossproduct(ABC, new
+			// Vector3f(AC)),
+			// new Vector3f(AO)) > 0) {
 			if (VecMath.dotproduct(-ABC.z * AC.y, ABC.z * AC.x, AO.x, AO.y) > 0) {
 				if (VecMath.dotproduct(AC, AO) > 0) {
 					// Region 1
@@ -65,9 +64,9 @@ public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 				}
 			} else {
 				if (VecMath.dotproduct(AB.y * ABC.z, -AB.x * ABC.z, AO.x, AO.y) > 0) {
-//				if (VecMath.dotproduct(
-//						VecMath.crossproduct(new Vector3f(AB), ABC),
-//						new Vector3f(AO)) > 0) {
+					// if (VecMath.dotproduct(
+					// VecMath.crossproduct(new Vector3f(AB), ABC),
+					// new Vector3f(AO)) > 0) {
 					// *
 					if (VecMath.dotproduct(AB, AO) > 0) {
 						// Region 4
@@ -98,7 +97,7 @@ public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 
 	@Override
 	public boolean isColliding(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb) {
-		simplex = new ArrayList<Vector2f>();
+		simplex.clear();
 		// S = Support(?)
 		direction = support(Sa, Sb, new Vector2f(1, 1));
 		// [] = S
@@ -121,9 +120,7 @@ public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 		return false;
 	}
 
-	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,
-			Vector2f dir) {
-		return VecMath.subtraction(Sa.supportPoint(dir),
-				Sb.supportPointNegative(dir));
+	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb, Vector2f dir) {
+		return VecMath.subtraction(Sa.supportPoint(dir), Sb.supportPointNegative(dir));
 	}
 }

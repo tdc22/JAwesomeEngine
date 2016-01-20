@@ -6,8 +6,8 @@ import java.util.List;
 import vector.Vector;
 
 public class SimpleManifoldManager<L extends Vector> extends ManifoldManager<L> {
-	List<CollisionManifold<L>> collisionmanifolds;
-	List<CollisionManifold<L>> collisionmanifoldsnoghosts;
+	final List<CollisionManifold<L>> collisionmanifolds;
+	final List<CollisionManifold<L>> collisionmanifoldsnoghosts;
 
 	public SimpleManifoldManager() {
 		collisionmanifolds = new ArrayList<CollisionManifold<L>>();
@@ -17,7 +17,7 @@ public class SimpleManifoldManager<L extends Vector> extends ManifoldManager<L> 
 	@Override
 	public void add(CollisionManifold<L> cm) {
 		collisionmanifolds.add(cm);
-		if(!cm.getObjects().getFirst().isGhost() && !cm.getObjects().getSecond().isGhost()) {
+		if (!cm.getObjects().getFirst().isGhost() && !cm.getObjects().getSecond().isGhost()) {
 			collisionmanifoldsnoghosts.add(cm);
 		}
 	}

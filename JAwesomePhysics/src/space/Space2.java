@@ -1,5 +1,6 @@
 package space;
 
+import broadphase.Broadphase;
 import integration.IntegrationSolver;
 import manifold.CollisionManifold;
 import manifold.ManifoldManager;
@@ -13,18 +14,13 @@ import quaternion.Complexf;
 import resolution.CollisionResolution;
 import vector.Vector1f;
 import vector.Vector2f;
-import broadphase.Broadphase;
 
 public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 
-	public Space2(IntegrationSolver integrationsolver,
-			Broadphase<Vector2f, RigidBody<Vector2f, ?, ?, ?>> broadphase,
-			Narrowphase<Vector2f> narrowphase,
-			CollisionResolution collisionresolution,
-			PositionalCorrection positionalcorrection,
-			ManifoldManager<Vector2f> manifoldmanager) {
-		super(integrationsolver, broadphase, narrowphase, collisionresolution,
-				positionalcorrection, manifoldmanager);
+	public Space2(IntegrationSolver integrationsolver, Broadphase<Vector2f, RigidBody<Vector2f, ?, ?, ?>> broadphase,
+			Narrowphase<Vector2f> narrowphase, CollisionResolution collisionresolution,
+			PositionalCorrection positionalcorrection, ManifoldManager<Vector2f> manifoldmanager) {
+		super(integrationsolver, broadphase, narrowphase, collisionresolution, positionalcorrection, manifoldmanager);
 		globalForce = new Vector2f();
 		globalGravitation = new Vector2f();
 	}
@@ -38,8 +34,7 @@ public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 	@Override
 	protected void integrate(float delta) {
 		for (RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> o : objects) {
-			integrationsolver.integrate2((RigidBody2) o, delta,
-					globalGravitation);
+			integrationsolver.integrate2((RigidBody2) o, delta, globalGravitation);
 		}
 	}
 

@@ -48,4 +48,12 @@ public class SimpleAngularCurvePath<A extends Rotation> {
 		}
 		return curves.get(num).getRotation(t);
 	}
+
+	public int getCurveNum(float t) {
+		int num = (int) (numCurves * t);
+		if (num == numCurves) {
+			num--;
+		}
+		return num;
+	}
 }

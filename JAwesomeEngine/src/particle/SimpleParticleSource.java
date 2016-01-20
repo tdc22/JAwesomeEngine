@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 import math.QuatMath;
 import math.VecMath;
 import objects.Camera3;
-import objects.ShapedObject;
 import objects.ShapedObject3;
 import vector.Vector2f;
 import vector.Vector3f;
@@ -216,7 +215,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 		return particles.getMatrixBuffer();
 	}
 
-	public ShapedObject getObject() {
+	public ShapedObject3 getObject() {
 		return particles;
 	}
 }
