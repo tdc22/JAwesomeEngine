@@ -8,76 +8,69 @@ import quaternion.Complexf;
 import vector.Vector1f;
 import vector.Vector2f;
 
-public class GhostObject2 extends GhostObject<Vector2f, Vector1f, Complexf, Matrix1f>  implements InstancedBaseObject2 {
+public class GhostObject2 extends GhostObject<Vector2f, Vector1f, Complexf, Matrix1f> implements InstancedBaseObject2 {
 
 	public GhostObject2() {
 		super(new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
-		aabb = new AABB2(new Vector2f(), new Vector2f());
-		invrotation = new Complexf();
-		init();
 	}
 
 	public GhostObject2(CollisionShape2 cs) {
 		super(cs, new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
-		init();
 	}
-	
-	private void init() {
-		invMass = 1;
+
+	public GhostObject2(CollisionShape2 cs, Vector2f rotationcenter, Vector2f translation, Complexf rotation,
+			Vector2f scale) {
+		super(cs, rotationcenter, translation, rotation, scale);
 	}
 
 	@Override
 	public Vector2f supportPoint(Vector2f direction) {
-		return VecMath.addition(supportPointRelative(direction),
-				getTranslation());
+		return VecMath.addition(supportPointRelative(direction), getTranslation());
 	}
 
 	@Override
 	public Vector2f supportPointNegative(Vector2f direction) {
-		return VecMath.addition(supportPointRelativeNegative(direction),
-				getTranslation());
+		return VecMath.addition(supportPointRelativeNegative(direction), getTranslation());
 	}
 
 	@Override
 	public Vector2f supportPointRelative(Vector2f direction) {
-		return ComplexMath.transform(this.getRotation(),
-				supportcalculator.supportPointLocal(direction));
+		return ComplexMath.transform(this.getRotation(), supportcalculator.supportPointLocal(direction));
 	}
 
 	@Override
 	public Vector2f supportPointRelativeNegative(Vector2f direction) {
-		return ComplexMath.transform(this.getRotation(),
-				supportcalculator.supportPointLocalNegative(direction));
+		return ComplexMath.transform(this.getRotation(), supportcalculator.supportPointLocalNegative(direction));
 	}
 
 	@Override
 	public void applyCentralForce(Vector2f force) {
-		
+
 	}
 
 	@Override
 	public void applyCentralImpulse(Vector2f impulse) {
-		
+
 	}
 
 	@Override
 	public void applyForce(Vector2f force, Vector2f rel_pos) {
-		
+
 	}
 
 	@Override
 	public void applyImpulse(Vector2f impulse, Vector2f rel_pos) {
-		
+
 	}
 
 	@Override
 	public void applyTorque(Vector1f torque) {
-		
+
 	}
 
 	@Override
 	public void applyTorqueImpulse(Vector1f torque) {
-		
+
 	}
 
 	@Override
@@ -154,7 +147,7 @@ public class GhostObject2 extends GhostObject<Vector2f, Vector1f, Complexf, Matr
 	public Matrix4f getMatrix() {
 		return null;
 	}
-	
+
 	@Override
 	public void translate(float x, float y) {
 		translation.translate(x, y);

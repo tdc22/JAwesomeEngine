@@ -6,35 +6,40 @@ import matrix.Matrix4f;
 import quaternion.Quaternionf;
 import vector.Vector3f;
 
-public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Quaternionf>  implements InstancedBaseObject3 {
+public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Quaternionf>
+		implements InstancedBaseObject3 {
 
-	public GhostObject3(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs, Vector3f rotationcenter,
-			Vector3f translation, Quaternionf rotation, Vector3f scale) {
+	public GhostObject3() {
+		super(new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1));
+	}
+
+	public GhostObject3(CollisionShape3 cs) {
+		super(cs, new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1));
+	}
+
+	public GhostObject3(CollisionShape3 cs, Vector3f rotationcenter, Vector3f translation, Quaternionf rotation,
+			Vector3f scale) {
 		super(cs, rotationcenter, translation, rotation, scale);
 	}
 
 	@Override
 	public Vector3f supportPoint(Vector3f direction) {
-		return VecMath.addition(supportPointRelative(direction),
-				getTranslation());
+		return VecMath.addition(supportPointRelative(direction), getTranslation());
 	}
 
 	@Override
 	public Vector3f supportPointNegative(Vector3f direction) {
-		return VecMath.addition(supportPointRelativeNegative(direction),
-				getTranslation());
+		return VecMath.addition(supportPointRelativeNegative(direction), getTranslation());
 	}
 
 	@Override
 	public Vector3f supportPointRelative(Vector3f direction) {
-		return QuatMath.transform(this.getRotation(),
-				supportcalculator.supportPointLocal(direction));
+		return QuatMath.transform(this.getRotation(), supportcalculator.supportPointLocal(direction));
 	}
 
 	@Override
 	public Vector3f supportPointRelativeNegative(Vector3f direction) {
-		return QuatMath.transform(this.getRotation(),
-				supportcalculator.supportPointLocalNegative(direction));
+		return QuatMath.transform(this.getRotation(), supportcalculator.supportPointLocalNegative(direction));
 	}
 
 	@Override
@@ -75,37 +80,37 @@ public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Q
 	@Override
 	public void applyCentralForce(Vector3f force) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void applyCentralImpulse(Vector3f impulse) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void applyForce(Vector3f force, Vector3f rel_pos) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void applyImpulse(Vector3f impulse, Vector3f rel_pos) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void applyTorque(Vector3f torque) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void applyTorqueImpulse(Vector3f torque) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -182,7 +187,6 @@ public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Q
 
 	@Override
 	public Matrix4f getMatrix() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

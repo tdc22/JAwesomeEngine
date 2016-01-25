@@ -40,7 +40,7 @@ import vector.Vector4f;
 
 public class AnimationEditor extends StandardGame {
 	InputEvent leftMousePressed, leftMouseDown, leftMouseReleased, rightMouseReleased, closePath, deleteMarker,
-			addLayer, switchLayer, print, togglemarkers, mirror;
+			addLayer, switchLayer, print, togglemarkers, mirror, swapPointOrder;
 
 	Matrix4f clickprojectionmatrix;
 	Shader defaultshader, markershader, textureshader, colorshader;
@@ -190,6 +190,7 @@ public class AnimationEditor extends StandardGame {
 		print = new InputEvent("print", new Input(Input.KEYBOARD_EVENT, "Q", KeyInput.KEY_PRESSED));
 		togglemarkers = new InputEvent("togglemarkers", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		mirror = new InputEvent("mirror", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		swapPointOrder = new InputEvent("swapPointOrder", new Input(Input.KEYBOARD_EVENT, "O", KeyInput.KEY_PRESSED));
 
 		inputs.addEvent(leftMousePressed);
 		inputs.addEvent(leftMouseDown);
@@ -202,6 +203,7 @@ public class AnimationEditor extends StandardGame {
 		inputs.addEvent(print);
 		inputs.addEvent(togglemarkers);
 		inputs.addEvent(mirror);
+		inputs.addEvent(swapPointOrder);
 
 		defaultshader.addObject(new Quad(133, 100, 1, 1));
 	}
@@ -313,8 +315,7 @@ public class AnimationEditor extends StandardGame {
 		}
 		if (mirror.isActive()) {
 			Vector2f center = animationcenter.getTranslation();
-			for (int i = 0; i < paths.size(); i++) {
-				AnimationPath ap = paths.get(i);
+			for (AnimationPath ap : paths) {
 				for (int a = 0; a < ap.beziercurves.size(); a++) {
 					RenderedBezierCurve bc = ap.beziercurves.get(a);
 					Vector2f a0 = new Vector2f((center.x - bc.bezier.getP0().x) * 2, 0);
@@ -340,6 +341,71 @@ public class AnimationEditor extends StandardGame {
 				ap.updatePathMarker();
 			}
 			System.out.println("Mirrored");
+		}
+		if (swapPointOrder.isActive()) {
+			/*
+			 * for (int i = 0; i < paths.size(); i++) { AnimationPath ap =
+			 * paths.get(i); int halfCurveNum = (int) (ap.beziercurves.size() /
+			 * 2f); AnimationPath newpath = new AnimationPath(ap); for(int j =
+			 * 0; j < ap.beziercurves.size(); j++) { int oldCurveIndex =
+			 * (j+halfCurveNum) % ap.beziercurves.size(); BezierCurve2 swapCurve
+			 * = ap.beziercurves.get(oldCurveIndex).bezier;
+			 * newpath.addBezierCurve(new RenderedBezierCurve(new
+			 * BezierCurve2(swapCurve.getP0(), swapCurve.getP1(),
+			 * swapCurve.getP2(), swapCurve.getP3())));
+			 * newpath.markers.add(ap.markers.get(oldCurveIndex));
+			 * newpath.markers.add(ap.markers.get(oldCurveIndex + 1));
+			 * newpath.markers.add(ap.markers.get(oldCurveIndex + 2));
+			 * newpath.markers.add(ap.markers.get(oldCurveIndex + 3));
+			 * newpath.rotationreferences.add(ap.rotationreferences.get(
+			 * oldCurveIndex)); } newpath.closed = ap.closed;
+			 * newpath.updateSquad(); newpath.updatePathMarker();
+			 * ap.textureshader.removeObject(ap.pathmarker);
+			 * ap.pathmarker.delete(); paths.set(i, newpath);
+			 * newpath.updateSquad(); } System.out.println("Swapped");
+			 */
+
+			System.out.println("---------- Start Output SWAPPED ----------");
+			float invscale = 1 / scale;
+			for (int i = 0; i < paths.size(); i++) {
+				System.out.println("Path " + i);
+				AnimationPath ap = paths.get(i);
+				// System.out.println("Translationpaths");
+				int halfCurveNum = (int) (ap.beziercurves.size() / 2f);
+				for (int a = 0; a < ap.beziercurves.size(); a++) {
+					int j = (a + halfCurveNum) % ap.beziercurves.size();
+					RenderedBezierCurve bc = ap.beziercurves.get(j);
+					Vector2f neg = VecMath.negate(animationcenter.getTranslation());
+					bc.bezier.getP0().translate(neg);
+					bc.bezier.getP1().translate(neg);
+					bc.bezier.getP2().translate(neg);
+					bc.bezier.getP3().translate(neg);
+					bc.bezier.getP0().scale(invscale);
+					bc.bezier.getP1().scale(invscale);
+					bc.bezier.getP2().scale(invscale);
+					bc.bezier.getP3().scale(invscale);
+					System.out.println(
+							pathnames[i] + ".addCurve(" + bc.toString().replace("BezierCurve[", "new BezierCurve2(")
+									.replace("Vector2f[", "new Vector2f(").replace("]", ")") + ");");
+					bc.bezier.getP0().scale(scale);
+					bc.bezier.getP1().scale(scale);
+					bc.bezier.getP2().scale(scale);
+					bc.bezier.getP3().scale(scale);
+					bc.bezier.getP0().translate(animationcenter.getTranslation());
+					bc.bezier.getP1().translate(animationcenter.getTranslation());
+					bc.bezier.getP2().translate(animationcenter.getTranslation());
+					bc.bezier.getP3().translate(animationcenter.getTranslation());
+				}
+				// System.out.println("Rotationpaths");
+				for (int b = 0; b < ap.squadcurves.size(); b++) {
+					int j = (b + halfCurveNum) % ap.beziercurves.size();
+					System.out.println(rotationnames[i] + ".addCurve("
+							+ ap.squadcurves.get(j).toString().replace("SquadCurve[", "new SquadCurve2(")
+									.replace("Complexf[", "new Complexf(").replace("]", ")")
+							+ ");");
+				}
+			}
+			System.out.println("---------- End Output SWAPPED ----------");
 		}
 	}
 

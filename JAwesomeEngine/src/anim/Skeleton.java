@@ -36,6 +36,10 @@ public abstract class Skeleton<L extends Vector, A extends Rotation> implements 
 		return animation;
 	}
 
+	public Animation<L, A> getDynamicAnimation() {
+		return dynamicAnimationTransition;
+	}
+
 	@Override
 	public void update(int delta) {
 		if (dynamicAnimationTransition != null) {

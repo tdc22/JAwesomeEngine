@@ -21,7 +21,8 @@ public class AnimationPath {
 	List<SquadCurve2> squadcurves;
 	Quad pathmarker;
 
-	Shader markershader, defaultshader;
+	Shader markershader, defaultshader, textureshader;
+	Vector2f markersize;
 
 	int numCurves = 0;
 	float oneOverNum = 0;
@@ -37,8 +38,18 @@ public class AnimationPath {
 	Vector2f clickpos;
 
 	public AnimationPath(Shader defaultshader, Shader markershader, Shader textureshader, Vector2f markersize) {
+		init(defaultshader, markershader, textureshader, markersize);
+	}
+
+	public AnimationPath(AnimationPath ap) {
+		init(ap.defaultshader, ap.markershader, ap.textureshader, ap.markersize);
+	}
+
+	private void init(Shader defaultshader, Shader markershader, Shader textureshader, Vector2f markersize) {
 		this.defaultshader = defaultshader;
 		this.markershader = markershader;
+		this.textureshader = textureshader;
+		this.markersize = markersize;
 		markers = new ArrayList<ShapedObject2>();
 		rotationreferences = new ArrayList<ShapedObject2>();
 		beziercurves = new ArrayList<RenderedBezierCurve>();
