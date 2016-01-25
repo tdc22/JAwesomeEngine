@@ -1,9 +1,5 @@
 package inputTest;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.GamepadInput;
 import input.Input;
@@ -11,6 +7,10 @@ import input.InputEvent;
 import input.KeyInput;
 import input.MouseInput;
 import shape.Box;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class InputTest extends StandardGame {
 	Box box;

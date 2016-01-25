@@ -1,18 +1,14 @@
 package physicsCompound;
 
-import java.awt.Color;
-
-import broadphase.SAP;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
+
+import java.awt.Color;
+
 import loader.FontLoader;
 import loader.ShaderLoader;
 import manifold.SimpleManifoldManager;
@@ -32,6 +28,11 @@ import shape.Box;
 import shape.Sphere;
 import utils.Debugger;
 import vector.Vector3f;
+import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class CompoundTest extends StandardGame {
 	PhysicsSpace space;

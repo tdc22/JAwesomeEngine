@@ -1,10 +1,10 @@
 package displayFullscreen;
 
+import game.StandardGame;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
-import game.StandardGame;
 
 public class DisplayTest extends StandardGame {
 

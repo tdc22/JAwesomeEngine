@@ -1,6 +1,5 @@
 package space;
 
-import broadphase.Broadphase;
 import integration.IntegrationSolver;
 import manifold.CollisionManifold;
 import manifold.ManifoldManager;
@@ -12,6 +11,7 @@ import positionalcorrection.PositionalCorrection;
 import quaternion.Quaternionf;
 import resolution.CollisionResolution;
 import vector.Vector3f;
+import broadphase.Broadphase;
 
 public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> {
 

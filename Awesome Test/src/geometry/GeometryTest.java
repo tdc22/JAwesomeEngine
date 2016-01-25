@@ -1,9 +1,5 @@
 package geometry;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -15,6 +11,10 @@ import shape.Ellipsoid;
 import shape.IsoSphere;
 import shape.Sphere;
 import utils.Debugger;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class GeometryTest extends StandardGame {
 	Debugger debugger;

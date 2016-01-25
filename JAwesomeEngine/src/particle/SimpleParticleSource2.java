@@ -4,9 +4,10 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import objects.ShapedObject2;
+
 import org.lwjgl.opengl.GL11;
 
-import objects.ShapedObject2;
 import vector.Vector1f;
 import vector.Vector2f;
 import vector.Vector3f;

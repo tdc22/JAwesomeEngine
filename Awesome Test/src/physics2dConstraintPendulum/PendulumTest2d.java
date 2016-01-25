@@ -1,10 +1,5 @@
 package physics2dConstraintPendulum;
 
-import broadphase.SAP2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import integration.VerletIntegration;
@@ -26,6 +21,11 @@ import shape2d.Circle;
 import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
+import broadphase.SAP2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class PendulumTest2d extends StandardGame {
 	PhysicsSpace2 space;

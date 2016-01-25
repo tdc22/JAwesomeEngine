@@ -2,9 +2,9 @@ package utils;
 
 import java.nio.FloatBuffer;
 
-import org.lwjgl.BufferUtils;
-
 import matrix.Matrix4f;
+
+import org.lwjgl.BufferUtils;
 
 public class ViewFrustum {
 	float halfHeight, halfWidth, zNear, zFar;

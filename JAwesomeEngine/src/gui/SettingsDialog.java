@@ -1,5 +1,7 @@
 package gui;
 
+import game.StandardGame;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -16,7 +18,6 @@ import javax.swing.UIManager;
 import display.Display;
 import display.DisplayMode;
 import display.PixelFormat;
-import game.StandardGame;
 
 public class SettingsDialog {
 	JFrame frame;

@@ -7,7 +7,6 @@ import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
 import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
 import static org.lwjgl.opengl.GL30.glDeleteRenderbuffers;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
-
 import game.Layer;
 import objects.Camera;
 import utils.ViewFrustum;

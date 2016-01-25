@@ -1,14 +1,13 @@
 package space;
 
+import integration.IntegrationSolver;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import broadphase.Broadphase;
-import broadphase.BroadphaseListener;
-import integration.IntegrationSolver;
 import manifold.CollisionManifold;
 import manifold.ContactManifold;
 import manifold.ManifoldManager;
@@ -24,6 +23,8 @@ import quaternion.Rotation;
 import resolution.CollisionResolution;
 import utils.Pair;
 import vector.Vector;
+import broadphase.Broadphase;
+import broadphase.BroadphaseListener;
 
 public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rotation, A3 extends Rotation>
 		implements Updateable {

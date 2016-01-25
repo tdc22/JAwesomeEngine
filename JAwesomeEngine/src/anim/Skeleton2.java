@@ -1,13 +1,13 @@
 package anim;
 
-import curves.BezierCurve2;
-import curves.SimpleAngularCurvePath;
-import curves.SimpleCurvePath;
-import curves.SquadCurve2;
 import objects.BaseObject;
 import objects.BaseObject2;
 import quaternion.Complexf;
 import vector.Vector2f;
+import curves.BezierCurve2;
+import curves.SimpleAngularCurvePath;
+import curves.SimpleCurvePath;
+import curves.SquadCurve2;
 
 public class Skeleton2 extends Skeleton<Vector2f, Complexf> {
 	boolean mirroredX = false;

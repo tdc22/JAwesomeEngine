@@ -1,19 +1,16 @@
 package reflectionRefraction;
 
+import game.StandardGame;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
-import game.StandardGame;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
@@ -25,6 +22,10 @@ import texture.CubeMap;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector4f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ReflectionRefractionTest extends StandardGame {
 	Debugger debugger;

@@ -36,7 +36,7 @@ public abstract class Skeleton<L extends Vector, A extends Rotation> implements 
 		return animation;
 	}
 
-	public Animation<L, A> getDynamicAnimation() {
+	public DynamicAnimationTransition<L, A> getDynamicAnimation() {
 		return dynamicAnimationTransition;
 	}
 

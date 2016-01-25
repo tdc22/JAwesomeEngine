@@ -1,18 +1,13 @@
 package physicsConvexHull;
 
+import game.StandardGame;
+import gui.Font;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import collisionshape.ConvexShape;
-import convexhull.Quickhull;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
-import game.StandardGame;
-import gui.Font;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import objects.ShapedObject3;
@@ -21,6 +16,12 @@ import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
+import collisionshape.ConvexShape;
+import convexhull.Quickhull;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ConvexHullTest extends StandardGame {
 	Shader defaultshader;

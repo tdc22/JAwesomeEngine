@@ -1,16 +1,13 @@
 package debug_EPA;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
@@ -26,6 +23,10 @@ import shader.Shader;
 import shape.Box;
 import utils.Debugger;
 import vector.Vector3f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class EPADebugger extends StandardGame {
 	public class Triangle {

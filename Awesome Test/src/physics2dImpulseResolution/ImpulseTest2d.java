@@ -1,10 +1,5 @@
 package physics2dImpulseResolution;
 
-import broadphase.SAP2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import integration.EulerIntegration;
 import loader.ShaderLoader;
@@ -19,6 +14,11 @@ import resolution.LinearImpulseResolution;
 import shader.Shader;
 import shape2d.Quad;
 import vector.Vector2f;
+import broadphase.SAP2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ImpulseTest2d extends StandardGame {
 	PhysicsSpace2 space;

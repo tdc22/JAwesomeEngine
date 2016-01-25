@@ -1,5 +1,10 @@
 package loader;
 
+import input.GamepadInput;
+import input.Input;
+import input.InputEvent;
+import input.InputManager;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,11 +14,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import input.GamepadInput;
-import input.Input;
-import input.InputEvent;
-import input.InputManager;
 
 public class InputLoader {
 	protected static String getCleanString(String line) {

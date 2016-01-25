@@ -8,10 +8,11 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.BufferUtils;
-
 import matrix.Matrix4f;
 import objects.ViewProjection;
+
+import org.lwjgl.BufferUtils;
+
 import shader.PostProcessingShader;
 import shader.Shader;
 import texture.FramebufferObject;

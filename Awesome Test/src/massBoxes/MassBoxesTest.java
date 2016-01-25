@@ -1,9 +1,5 @@
 package massBoxes;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -12,6 +8,10 @@ import shader.Shader;
 import shape.Box;
 import texture.Texture;
 import utils.Debugger;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class MassBoxesTest extends StandardGame {
 	Debugger debugger;

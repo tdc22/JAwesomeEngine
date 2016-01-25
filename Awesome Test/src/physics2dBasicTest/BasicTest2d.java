@@ -1,10 +1,5 @@
 package physics2dBasicTest;
 
-import broadphase.SAP2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import integration.VerletIntegration;
@@ -30,6 +25,11 @@ import utils.GameProfiler;
 import utils.Profiler;
 import utils.SimpleGameProfiler;
 import vector.Vector2f;
+import broadphase.SAP2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class BasicTest2d extends StandardGame {
 	PhysicsSpace2 space;

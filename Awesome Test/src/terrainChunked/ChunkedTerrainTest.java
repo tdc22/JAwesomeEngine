@@ -1,20 +1,21 @@
 package terrainChunked;
 
+import game.StandardGame;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
-import game.StandardGame;
 import loader.FontLoader;
 import terrain.ChunkedTerrain;
 import utils.Debugger;
 import vector.Vector3f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ChunkedTerrainTest extends StandardGame {
 	ChunkedTerrain terrain;

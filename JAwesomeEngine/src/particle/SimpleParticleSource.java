@@ -6,12 +6,13 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import org.lwjgl.opengl.GL11;
-
 import math.QuatMath;
 import math.VecMath;
 import objects.Camera3;
 import objects.ShapedObject3;
+
+import org.lwjgl.opengl.GL11;
+
 import vector.Vector2f;
 import vector.Vector3f;
 

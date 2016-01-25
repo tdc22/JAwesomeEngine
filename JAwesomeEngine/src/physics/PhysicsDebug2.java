@@ -1,16 +1,15 @@
 package physics;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import manifold.CollisionManifold;
 import math.VecMath;
 import matrix.Matrix1f;
@@ -18,6 +17,9 @@ import objects.AABB;
 import objects.GhostObject;
 import objects.RigidBody;
 import objects.ShapedObject2;
+
+import org.lwjgl.opengl.GL11;
+
 import quaternion.Complexf;
 import shader.Shader;
 import space.Space2;

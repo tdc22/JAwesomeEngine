@@ -1,15 +1,15 @@
 package pyramidVoxel;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import objects.SimpleBoxVoxelObject;
 import shader.Shader;
 import utils.Debugger;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class PyramidVoxelTest extends StandardGame {
 	Debugger debugger;

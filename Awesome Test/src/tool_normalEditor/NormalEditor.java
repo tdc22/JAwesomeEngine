@@ -1,5 +1,11 @@
 package tool_normalEditor;
 
+import game.StandardGame;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
+import input.MouseInput;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -8,15 +14,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
-import game.StandardGame;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
-import input.MouseInput;
 import loader.ShaderLoader;
 import loader.TextureLoader;
 import math.VecMath;
@@ -28,6 +25,10 @@ import utils.Pair;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class NormalEditor extends StandardGame {
 	Shader markershader;
