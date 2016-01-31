@@ -24,10 +24,10 @@ public class EulerIntegration implements IntegrationSolver {
 			Vector2f fa = obj.getForceAccumulator();
 			float linearDampingValue = 1 / (1 + obj.getLinearDamping() * delta);
 			obj.setLinearVelocity((lv.x + delta
-					* (fa.x * obj.getInverseMass() + gravitation.x))
+					* (fa.x * obj.getInverseMass() + gravitation.x * obj.getLinearFactor().x))
 					* linearDampingValue,
 					(lv.y + delta
-							* (fa.y * obj.getInverseMass() + gravitation.y))
+							* (fa.y * obj.getInverseMass() + gravitation.y * obj.getLinearFactor().y))
 							* linearDampingValue);
 		}
 
@@ -52,13 +52,13 @@ public class EulerIntegration implements IntegrationSolver {
 			Vector3f fa = obj.getForceAccumulator();
 			float linearDampingValue = 1 / (1 + obj.getLinearDamping() * delta);
 			obj.setLinearVelocity((lv.x + delta
-					* (fa.x * obj.getInverseMass() + gravitation.x))
+					* (fa.x * obj.getInverseMass() + gravitation.x * obj.getLinearFactor().x))
 					* linearDampingValue,
 					(lv.y + delta
-							* (fa.y * obj.getInverseMass() + gravitation.y))
+							* (fa.y * obj.getInverseMass() + gravitation.y * obj.getLinearFactor().y))
 							* linearDampingValue,
 					(lv.z + delta
-							* (fa.z * obj.getInverseMass() + gravitation.z))
+							* (fa.z * obj.getInverseMass() + gravitation.z * obj.getLinearFactor().z))
 							* linearDampingValue);
 		}
 
