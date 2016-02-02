@@ -188,6 +188,20 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 				return true;
 		return false;
 	}
+	
+	public boolean hasCollisionNoGhosts(RigidBody<L, ?, ?, ?> object) {
+		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
+			if (manifold.getObjects().contains(object))
+				return true;
+		return false;
+	}
+	
+	public boolean hasCollisionNoGhosts(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
+		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
+			if (manifold.getObjects().contains(objectA) && manifold.getObjects().contains(objectB))
+				return true;
+		return false;
+	}
 
 	public boolean hasOverlap(RigidBody<L, ?, ?, ?> object) {
 		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps)
