@@ -34,7 +34,7 @@ public class DynamicAnimationTransition<L extends Vector, A extends Rotation> ex
 	public float getDynamicTransitionSpeed() {
 		return dynamicTransitionSpeed;
 	}
-	
+
 	public void setDynamicTransitionSpeed(float speed) {
 		dynamicTransitionSpeed = speed;
 	}

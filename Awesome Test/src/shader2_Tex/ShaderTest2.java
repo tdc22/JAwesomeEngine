@@ -1,5 +1,9 @@
 package shader2_Tex;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.ShaderLoader;
 import loader.TextureLoader;
@@ -7,10 +11,6 @@ import shader.Shader;
 import shape.Box;
 import texture.Texture;
 import vector.Vector4f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ShaderTest2 extends StandardGame {
 

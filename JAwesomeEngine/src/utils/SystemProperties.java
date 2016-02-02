@@ -1,6 +1,5 @@
 package utils;
 
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 public class SystemProperties {

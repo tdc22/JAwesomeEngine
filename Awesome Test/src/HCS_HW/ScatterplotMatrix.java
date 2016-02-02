@@ -1,13 +1,16 @@
 package HCS_HW;
 
-import game.StandardGame;
-import gui.Font;
-import gui.Text;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import gui.Font;
+import gui.Text;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import objects.ShapedObject2;
@@ -17,10 +20,6 @@ import shape2d.Quad;
 import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector4f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ScatterplotMatrix extends StandardGame {
 	final int NUM_MARKEN = 10;

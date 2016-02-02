@@ -1,13 +1,5 @@
 package tool_animationEditor;
 
-import game.StandardGame;
-import gui.Font;
-import gui.Text;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
-import input.MouseInput;
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +9,18 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import curves.BezierCurve2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import gui.Font;
+import gui.Text;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
+import input.MouseInput;
 import loader.FileLoader;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -33,11 +37,6 @@ import utils.GLConstants;
 import utils.ProjectionHelper;
 import vector.Vector2f;
 import vector.Vector4f;
-import curves.BezierCurve2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class AnimationEditor extends StandardGame {
 	InputEvent leftMousePressed, leftMouseDown, leftMouseReleased, rightMouseReleased, closePath, deleteMarker,

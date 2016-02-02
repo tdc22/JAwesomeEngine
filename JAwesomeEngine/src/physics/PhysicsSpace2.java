@@ -1,10 +1,10 @@
 package physics;
 
-import integration.IntegrationSolver;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import broadphase.Broadphase;
+import integration.IntegrationSolver;
 import manifold.ManifoldManager;
 import matrix.Matrix1f;
 import narrowphase.Narrowphase;
@@ -18,7 +18,6 @@ import resolution.CollisionResolution;
 import space.Space2;
 import vector.Vector1f;
 import vector.Vector2f;
-import broadphase.Broadphase;
 
 public class PhysicsSpace2 extends Space2 {
 	List<GameObject<Vector2f, Complexf>> addedobjects;

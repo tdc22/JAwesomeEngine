@@ -3,11 +3,11 @@ package debug_EPA;
 import java.awt.Color;
 import java.util.List;
 
+import debug_EPA.EPADebugger.Triangle;
 import math.VecMath;
 import objects.ShapedObject3;
 import utils.GLConstants;
 import vector.Vector3f;
-import debug_EPA.EPADebugger.Triangle;
 
 public class Simplex extends ShapedObject3 {
 	public Simplex(List<Triangle> triangles, Triangle closest) {

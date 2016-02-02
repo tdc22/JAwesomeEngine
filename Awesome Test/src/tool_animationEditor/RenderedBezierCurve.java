@@ -1,8 +1,8 @@
 package tool_animationEditor;
 
+import curves.BezierCurve2;
 import objects.ShapedObject2;
 import utils.GLConstants;
-import curves.BezierCurve2;
 
 public class RenderedBezierCurve extends ShapedObject2 {
 	public BezierCurve2 bezier;

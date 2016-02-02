@@ -1,5 +1,9 @@
 package transRot;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
@@ -9,10 +13,6 @@ import loader.ShaderLoader;
 import math.FastMath;
 import objects.ShapedObject3;
 import shader.Shader;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class TransRot extends StandardGame {
 	ShapedObject3 rabbit1, rabbit2;

@@ -1,12 +1,16 @@
 package physics2dCollisionDetection;
 
-import game.StandardGame;
-import integration.EulerIntegration;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import broadphase.SAP2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import integration.EulerIntegration;
 import loader.InputLoader;
 import loader.ShaderLoader;
 import manifold.CollisionManifold;
@@ -29,11 +33,6 @@ import shape2d.Quad;
 import utils.Pair;
 import vector.Vector2f;
 import vector.Vector4f;
-import broadphase.SAP2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class CollisionDetectionTest2d extends StandardGame {
 	PhysicsSpace2 space;

@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
-import net.java.games.input.Keyboard;
-import net.java.games.input.Mouse;
-
 public class JInputReader extends InputReader {
 	List<Mouse> mousecontrollers;
 	List<Keyboard> keyboardcontrollers;

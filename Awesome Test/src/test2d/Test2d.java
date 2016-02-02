@@ -1,5 +1,9 @@
 package test2d;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import gui.Text;
@@ -13,10 +17,6 @@ import shape2d.Ellipse;
 import shape2d.Quad;
 import texture.Texture;
 import vector.Vector4f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class Test2d extends StandardGame {
 	Quad rotquad;

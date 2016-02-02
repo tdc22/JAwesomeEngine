@@ -1,6 +1,5 @@
 package display;
 
-import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
 import static org.lwjgl.glfw.GLFW.GLFW_ACCUM_ALPHA_BITS;
 import static org.lwjgl.glfw.GLFW.GLFW_ACCUM_BLUE_BITS;
 import static org.lwjgl.glfw.GLFW.GLFW_ACCUM_GREEN_BITS;
@@ -50,8 +49,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWWindowPosCallback;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLContext;
 
 public class GLDisplay extends Display {
 	private long windowid;
@@ -103,7 +102,7 @@ public class GLDisplay extends Display {
 
 	@Override
 	public void open(DisplayMode displaymode, PixelFormat pixelformat) {
-		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
+		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 
 		if (glfwInit() != GL11.GL_TRUE)
 			throw new IllegalStateException("Unable to initialize GLFW");
@@ -152,8 +151,6 @@ public class GLDisplay extends Display {
 
 		glfwShowWindow(windowid);
 
-		GLContext.createFromCurrent();
-
 		glfwSetWindowPosCallback(windowid, posCallback = new GLFWWindowPosCallback() {
 			@Override
 			public void invoke(long arg0, int x, int y) {
@@ -171,6 +168,8 @@ public class GLDisplay extends Display {
 				}
 			});
 		}
+
+		GL.createCapabilities();
 	}
 
 	@Override

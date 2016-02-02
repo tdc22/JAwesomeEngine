@@ -1,14 +1,17 @@
 package debug_GJK;
 
-import game.StandardGame;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
@@ -24,10 +27,6 @@ import shape.Sphere;
 import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector3f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class GJKDebugger extends StandardGame {
 	private class Line extends ShapedObject3 {

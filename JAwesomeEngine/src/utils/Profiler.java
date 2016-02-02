@@ -1,5 +1,9 @@
 package utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import game.StandardGame;
 import gui.Font;
 import gui.Text;
@@ -7,11 +11,6 @@ import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import loader.ShaderLoader;
 import objects.ShapedObject2;
 import objects.Updateable;

@@ -1,5 +1,9 @@
 package lightingTest;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
@@ -11,10 +15,6 @@ import objects.ShapedObject3;
 import shader.Shader;
 import utils.Debugger;
 import vector.Vector3f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class LightingTest extends StandardGame {
 	Debugger debugger;

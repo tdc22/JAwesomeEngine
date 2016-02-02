@@ -1,5 +1,9 @@
 package shader4_Cube;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -12,10 +16,6 @@ import texture.CubeMap;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector4f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ShaderTest4 extends StandardGame {
 	Texture texture, diffuse, bumpmap;
