@@ -237,7 +237,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	public void resolveConstraints(float delta) {
 		for (Constraint<L, A1, A2, A3> c : constraints)
-			c.solve(delta);
+			c.initStep(delta);
+		for (int i = 0; i < constraintResolutionIterations; i++)
+			for (Constraint<L, A1, A2, A3> c : constraints)
+				c.solve(delta);
 	}
 
 	public void setCullStaticOverlaps(boolean cull) {
@@ -254,6 +257,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	public void setResolutionIterations(int count) {
 		resolutionIterations = count;
+	}
+	
+	public void setConstraintResolutionIterations(int count) {
+		constraintResolutionIterations = count;
 	}
 
 	public void setProfiler(PhysicsProfiler profiler) {
@@ -368,6 +375,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		for (int i = 0; i < resolutionIterations; i++)
 			resolve();
 		applyGlobalForce();
+		resolveConstraints(delta); // TODO: check position
 		// for (int i = 0; i < constraintResolutionIterations; i++)
 		// resolveConstraints(delta);
 

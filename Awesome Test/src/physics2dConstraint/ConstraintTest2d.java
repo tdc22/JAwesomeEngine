@@ -88,7 +88,7 @@ public class ConstraintTest2d extends StandardGame {
 		space.addRigidBody(rightCircle, rbR);
 		defaultshader2.addObject(rightCircle);
 
-		Constraint2 constraint = new DistanceConstraint2(rbL, rbR, new Vector2f(), new Vector2f());
+		Constraint2 constraint = new DistanceConstraint2(rbL, rbR, new Vector2f(0, 20), new Vector2f(0, 20), 50);
 		space.addConstraint(constraint);
 	}
 
@@ -118,8 +118,6 @@ public class ConstraintTest2d extends StandardGame {
 
 		debugger.update(fps, 0, 0);
 		space.update(delta);
-		if (inputs.isKeyDown("Q"))
-			space.resolveConstraints(delta);
 		physicsdebug.update();
 		cam.update(delta);
 	}

@@ -11,7 +11,7 @@ public abstract class Constraint<L extends Vector, A1 extends Vector, A2 extends
 		this.bodyB = bodyB;
 	}
 	
-	public abstract void solve(float delta);
+	public abstract void initStep(float delta);
 	
-	protected abstract float[][] calculateJacobian();
+	public abstract void solve(float delta);
 }
