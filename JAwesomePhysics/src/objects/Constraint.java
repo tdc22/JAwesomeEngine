@@ -14,4 +14,6 @@ public abstract class Constraint<L extends Vector, A1 extends Vector, A2 extends
 	public abstract void initStep(float delta);
 	
 	public abstract void solve(float delta);
+	
+	public abstract boolean solvePosition(float delta);
 }

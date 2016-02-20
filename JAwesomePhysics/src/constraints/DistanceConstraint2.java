@@ -18,7 +18,10 @@ public class DistanceConstraint2 extends Constraint2 {
 	// source: https://github.com/erincatto/Box2D/blob/master/Box2D/Box2D/Dynamics/Joints/b2WeldJoint.cpp
 	// doesn't work, TRY THIS: http://www.bulletphysics.com/ftp/pub/test/physics/papers/IterativeDynamics.pdf <<<<<<<<<<<<<<<<<<<<<<<<<<<
 	Vector2f rA, rB, u;
-	float mass, gamma, bias, impulse, frequencyHz, dampingRatio, linearSlop, length;
+	float mass, gamma, bias, impulse, frequencyHz, dampingRatio, length;
+	
+	final float maxLinearCorrection = 0.2f;
+	final float linearSlop = 0.005f;
 	
 	public DistanceConstraint2(RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> bodyA, RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> bodyB, Vector2f anchorA, Vector2f anchorB, float length) {
 		super(bodyA, bodyB);
@@ -27,29 +30,26 @@ public class DistanceConstraint2 extends Constraint2 {
 		this.length = length;
 		
 		frequencyHz = 1f;
-		dampingRatio = 1;
-		linearSlop = 0.1f;
+		dampingRatio = 0f;
 	}
 	
 	@Override
 	public void initStep(float delta) {
 		Vector2f cA = bodyA.getTranslation();
-		float aA = (float) bodyA.getRotation().angle();
 		Vector2f vA = bodyA.getLinearVelocity();
 		float wA = bodyA.getAngularVelocity().x;
 
 		Vector2f cB = bodyB.getTranslation();
-		float aB = (float) bodyB.getRotation().angle();
 		Vector2f vB = bodyB.getLinearVelocity();
 		float wB = bodyB.getAngularVelocity().x;
 
 		Complexf qA = bodyA.getRotation();
 		Complexf qB = bodyB.getRotation();
 
-		System.out.println(qA + "; " + qB);
-		rA = ComplexMath.transform(qA, VecMath.subtraction(anchorA, bodyA.getTranslation()));
-		rB = ComplexMath.transform(qB, VecMath.subtraction(anchorB, bodyB.getTranslation()));
+		rA = ComplexMath.transform(qA, anchorA);
+		rB = ComplexMath.transform(qB, anchorB);
 		u = new Vector2f(cB.x + rB.x - cA.x - rA.x, cB.y + rB.y - cA.y - rA.y);//cB + rB - cA - rA;
+		System.out.println(u + "; " + cA + "; " + vA + "; " + wA + "; " + cB + "; " + vB + "; " + wB);
 
 		// Handle singularity.
 		float dist = (float) u.length();
@@ -98,6 +98,7 @@ public class DistanceConstraint2 extends Constraint2 {
 		}
 
 		impulse = 0;
+		System.out.println(u + "; " + vA + "; " + wA + "; " + vB + "; " + wB);
 
 		bodyA.setLinearVelocity(vA);
 		bodyA.setAngularVelocity(new Vector1f(wA));
@@ -134,5 +135,51 @@ public class DistanceConstraint2 extends Constraint2 {
 		bodyA.setAngularVelocity(new Vector1f(wA));
 		bodyB.setLinearVelocity(vB);
 		bodyB.setAngularVelocity(new Vector1f(wB));
+	}
+
+	@Override
+	public boolean solvePosition(float delta) {
+		if(frequencyHz > 0) {
+			return false;
+		}
+		
+		Vector2f cA = bodyA.getTranslation();
+		float aA = (float) bodyA.getRotation().angle();
+		Vector2f cB = bodyB.getTranslation();
+		float aB = (float) bodyB.getRotation().angle();
+		
+		Complexf qA = bodyA.getRotation();
+		Complexf qB = bodyB.getRotation();
+		
+		Vector2f rA = ComplexMath.transform(qA, anchorA);
+		Vector2f rB = ComplexMath.transform(qB, anchorB);
+		u = new Vector2f(cB.x + rB.x - cA.x - rA.x, cB.y + rB.y - cA.y - rA.y);//cB + rB - cA - rA;
+
+		float dist = (float) u.length();
+		if(dist > 0 && dist != 1)
+			u.normalize();
+		float C = dist - length;
+		C = Math.min(Math.max(C, -maxLinearCorrection), maxLinearCorrection);
+
+		float impulse = -mass * C;
+		Vector2f P = VecMath.scale(u, impulse);
+
+		cA.x -= bodyA.getInverseMass() * P.x;
+		cA.y -= bodyA.getInverseMass() * P.y;
+		aA -= bodyA.getInverseInertia().getf(0, 0) * VecMath.crossproduct(rA, P);
+		cB.x += bodyB.getInverseMass() * P.x;
+		cB.y += bodyB.getInverseMass() * P.y;
+		aB += bodyB.getInverseInertia().getf(0, 0) * VecMath.crossproduct(rB, P);
+
+		bodyA.setTranslation(cA);
+		Complexf rotA = new Complexf();
+		rotA.rotate(aA);
+		bodyA.setRotation(rotA);
+		bodyB.setTranslation(cB);
+		Complexf rotB = new Complexf();
+		rotB.rotate(aB);
+		bodyB.setRotation(rotB);
+
+		return Math.abs(C) < linearSlop;
 	}
 }

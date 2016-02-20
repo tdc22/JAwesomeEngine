@@ -43,7 +43,8 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected L globalForce;
 	protected L globalGravitation;
 	protected int resolutionIterations = 25;
-	protected int constraintResolutionIterations = 25;
+	protected int constraintResolutionIterations = 1;
+	protected int constraintPositionResolutionIterations = 1;
 	protected boolean cullStaticOverlaps = true;
 	protected PhysicsProfiler profiler;
 
@@ -236,11 +237,13 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected abstract void resolve();
 
 	public void resolveConstraints(float delta) {
-		for (Constraint<L, A1, A2, A3> c : constraints)
+		/*for (Constraint<L, A1, A2, A3> c : constraints)
 			c.initStep(delta);
 		for (int i = 0; i < constraintResolutionIterations; i++)
 			for (Constraint<L, A1, A2, A3> c : constraints)
-				c.solve(delta);
+				c.solve(delta);*/
+		// source: http://www.cs.cmu.edu/~baraff/papers/sig96.pdf
+		// http://www.bulletphysics.com/ftp/pub/test/physics/papers/IterativeDynamics.pdf
 	}
 
 	public void setCullStaticOverlaps(boolean cull) {
@@ -261,6 +264,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	
 	public void setConstraintResolutionIterations(int count) {
 		constraintResolutionIterations = count;
+	}
+	
+	public void setConstraintPositionResolutionIterations(int count) {
+		constraintPositionResolutionIterations = count;
 	}
 
 	public void setProfiler(PhysicsProfiler profiler) {
@@ -383,6 +390,12 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 		integrate(delta);
 		correct();
+		
+		for(int i = 0; i < constraintPositionResolutionIterations; i++) {
+			for (Constraint<L, A1, A2, A3> c : constraints) {
+				c.solvePosition(delta);
+			}
+		}
 
 		for (CompoundObject<L, A2> co : compoundObjects)
 			co.updateTransformations();
