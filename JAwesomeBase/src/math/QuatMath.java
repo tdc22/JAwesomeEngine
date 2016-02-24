@@ -165,7 +165,7 @@ public class QuatMath {
 			result.scale(Math.sin(angle * t));
 			result.set(result.getQ0() + temp.getQ0(), result.getQ1() + temp.getQ1(), result.getQ2() + temp.getQ2(),
 					result.getQ3() + temp.getQ3());
-			result.scale(Math.sin(angle));
+			result.scale(1 / Math.sin(angle));
 			return result;
 		}
 
@@ -183,12 +183,12 @@ public class QuatMath {
 		}
 
 		if (dot < thresholdValue) {
-			double angle = Math.acos(dot);
+			float angle = (float) Math.acos(dot);
 			Quaternionf temp = scale(q1, (float) Math.sin(angle * (1 - t)));
 			result.scale(Math.sin(angle * t));
 			result.set(result.getQ0f() + temp.getQ0f(), result.getQ1f() + temp.getQ1f(),
 					result.getQ2f() + temp.getQ2f(), result.getQ3f() + temp.getQ3f());
-			result.scale(Math.sin(angle));
+			result.scale(1 / Math.sin(angle));
 			return result;
 		}
 
@@ -200,6 +200,7 @@ public class QuatMath {
 
 		if (dot > -thresholdValue && dot < thresholdValue) {
 			double angle = Math.acos(dot);
+			// TODO: check for sina == 0
 			double sina = Math.sin(angle);
 			double sinat = Math.sin(angle * t);
 			double sinaomt = Math.sin(angle * (1 - t));

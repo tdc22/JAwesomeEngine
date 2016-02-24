@@ -118,8 +118,41 @@ public class ComplexMath {
 		return result;
 	}
 
+	public static Complexd slerp(Complex c1, Complex c2, double t) {
+		Complexd result = new Complexd(c2);
+		double dot = dotproduct(c1, c2);
+
+		if (dot < thresholdValue) {
+			double angle = Math.acos(dot);
+			Complex temp = scale(c2, Math.sin(angle * (1 - t)));
+			result.scale(Math.sin(angle * t));
+			result.set(result.getReal() + temp.getReal(), result.getImaginary() + temp.getImaginary());
+			result.scale(1 / Math.sin(angle));
+			return result;
+		}
+
+		return lerp(c1, result, t);
+	}
+
+	public static Complexf slerp(Complexf c1, Complexf c2, float t) {
+		Complexf result = new Complexf(c2);
+		float dot = dotproduct(c1, c2);
+
+		if (dot < thresholdValue) {
+			float angle = (float) Math.acos(dot);
+			Complexf temp = scale(c2, (float) Math.sin(angle * (1 - t)));
+			result.scale((float) Math.sin(angle * t));
+			result.set(result.getRealf() + temp.getRealf(), result.getImaginaryf() + temp.getImaginaryf());
+			result.scale(1 / Math.sin(angle));
+			return result;
+		}
+
+		return lerp(c1, result, t);
+	}
+
 	// public static Complexd slerp(Complex q1, Complex q2, double t) {
 	// DIFFERENT FROM QUATERNIONS
+	// - keine Dotproduct-Abfrage
 	// }
 	//
 	// public static Complexf slerp(Complexf q1, Complexf q2, float t) {
