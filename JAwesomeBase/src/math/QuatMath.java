@@ -217,6 +217,7 @@ public class QuatMath {
 
 		if (dot > -thresholdValue && dot < thresholdValue) {
 			float angle = (float) Math.acos(dot);
+			// TODO: check for sina == 0
 			float sina = (float) Math.sin(angle);
 			float sinat = (float) Math.sin(angle * t);
 			float sinaomt = (float) Math.sin(angle * (1 - t));
