@@ -1,6 +1,8 @@
 package vector;
 
 import matrix.Matrix3;
+import quaternion.Complex;
+import quaternion.Quaternion;
 
 /**
  * Superclass for 3-dimensional vectors.
@@ -163,6 +165,14 @@ public abstract class Vector3 extends Vector {
 	 * @see Vector1#transform(matrix.Matrix1)
 	 */
 	public abstract void transform(Matrix3 transform);
+	
+	/**
+	 * Transforms the vector by a quaternion.
+	 * 
+	 * @param transform
+	 *            quaternion to transform by
+	 */
+	public abstract void transform(Quaternion transform);
 
 	/**
 	 * @see Vector1#translate(double)

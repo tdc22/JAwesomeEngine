@@ -25,48 +25,38 @@ public class RigidBody2 extends
 
 	@Override
 	public void applyCentralForce(Vector2f force) {
-		forceaccumulator = VecMath.addition(forceaccumulator,
-				VecMath.multiplication(force, linearfactor));
+		forceaccumulator.x += force.x * linearfactor.x;
+		forceaccumulator.y += force.y * linearfactor.y;
 	}
 
 	@Override
 	public void applyCentralImpulse(Vector2f impulse) {
-		linearvelocity = VecMath.addition(linearvelocity, VecMath.scale(
-				VecMath.multiplication(impulse, linearfactor), invMass));
+		linearvelocity.x += impulse.x * linearfactor.x * invMass;
+		linearvelocity.y += impulse.y * linearfactor.y * invMass;
 	}
 
 	@Override
 	public void applyForce(Vector2f force, Vector2f rel_pos) {
 		applyCentralForce(force);
-		applyTorque(new Vector1f(VecMath.crossproduct(new Vector3f(rel_pos),
-				new Vector3f(VecMath.multiplication(force, linearfactor)))
-				.getZf()));
+		applyTorque(new Vector1f(rel_pos.x * force.y * linearfactor.y - rel_pos.y * force.x * linearfactor.x));
 	}
 
 	@Override
 	public void applyImpulse(Vector2f impulse, Vector2f rel_pos) {
 		if (invMass != 0) {
 			applyCentralImpulse(impulse);
-			applyTorqueImpulse(new Vector1f(VecMath
-					.crossproduct(
-							new Vector3f(rel_pos),
-							new Vector3f(VecMath.multiplication(impulse,
-									linearfactor))).getZf()));
+			applyTorqueImpulse(new Vector1f(rel_pos.x * impulse.y * linearfactor.y - rel_pos.y * impulse.x * linearfactor.x));
 		}
 	}
 
 	@Override
 	public void applyTorque(Vector1f torque) {
-		torqueaccumulator = VecMath.addition(torqueaccumulator,
-				VecMath.multiplication(torque, angularfactor));
+		torqueaccumulator.x += torque.x * angularfactor.x;
 	}
 
 	@Override
 	public void applyTorqueImpulse(Vector1f torque) {
-		angularvelocity = VecMath.addition(
-				angularvelocity,
-				VecMath.transformVector(invinertia,
-						VecMath.multiplication(torque, angularfactor)));
+		angularvelocity.x += invinertia.getf(0, 0) * torque.x * angularfactor.x;
 	}
 
 	@Override
@@ -119,26 +109,32 @@ public class RigidBody2 extends
 
 	@Override
 	public Vector2f supportPoint(Vector2f direction) {
-		return VecMath.addition(supportPointRelative(direction),
-				getTranslation());
+		Vector2f support = supportPointRelative(direction);
+		support.x += getTranslation().x;
+		support.y += getTranslation().y;
+		return support;
 	}
 
 	@Override
 	public Vector2f supportPointNegative(Vector2f direction) {
-		return VecMath.addition(supportPointRelativeNegative(direction),
-				getTranslation());
+		Vector2f supportNeg = supportPointRelativeNegative(direction);
+		supportNeg.x += getTranslation().x;
+		supportNeg.y += getTranslation().y;
+		return supportNeg;
 	}
 
 	@Override
 	public Vector2f supportPointRelative(Vector2f direction) {
-		return ComplexMath.transform(this.getRotation(),
-				supportcalculator.supportPointLocal(direction));
+		Vector2f supportRel = supportcalculator.supportPointLocal(direction);
+		supportRel.transform(getRotation());
+		return supportRel;
 	}
 
 	@Override
 	public Vector2f supportPointRelativeNegative(Vector2f direction) {
-		return ComplexMath.transform(this.getRotation(),
-				supportcalculator.supportPointLocalNegative(direction));
+		Vector2f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
+		supportRelNeg.transform(getRotation());
+		return supportRelNeg;
 	}
 
 	@Override
@@ -188,8 +184,9 @@ public class RigidBody2 extends
 
 	@Override
 	public Matrix4f getMatrix() {
-		// TODO Auto-generated method stub
-		return null;
+		float[][] mat = rotation.toMatrixf().getArrayf();
+		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, 0, 0, mat[1][0] * scale.y, mat[1][1] * scale.y, 0,
+				0, 0, 0, 0, 0, translation.getXf(), translation.getYf(), 0, 1);
 	}
 
 	@Override

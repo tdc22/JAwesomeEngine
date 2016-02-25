@@ -2,7 +2,9 @@ package vector;
 
 import java.nio.FloatBuffer;
 
+import math.VecMath;
 import matrix.Matrix3;
+import quaternion.Quaternion;
 
 public class Vector3f extends Vector3 {
 	public float x, y, z;
@@ -237,9 +239,24 @@ public class Vector3f extends Vector3 {
 
 	@Override
 	public void transform(Matrix3 transform) {
-		x = transform.getf(0, 0) * x + transform.getf(0, 1) * y + transform.getf(0, 2) * z;
-		y = transform.getf(1, 0) * x + transform.getf(1, 1) * y + transform.getf(1, 2) * z;
-		z = transform.getf(2, 0) * x + transform.getf(2, 1) * y + transform.getf(2, 2) * z;
+		float xa = x;
+		float ya = y;
+		x = transform.getf(0, 0) * xa + transform.getf(0, 1) * ya + transform.getf(0, 2) * z;
+		y = transform.getf(1, 0) * xa + transform.getf(1, 1) * ya + transform.getf(1, 2) * z;
+		z = transform.getf(2, 0) * xa + transform.getf(2, 1) * ya + transform.getf(2, 2) * z;
+	}
+	
+	@Override
+	public void transform(Quaternion transform) {
+		Vector3f u = new Vector3f(transform.getQ1f(), transform.getQ2f(), transform.getQ3f());
+		float s = transform.getQ0f();
+		float dotUV = VecMath.dotproduct(u, this);
+		float dotUU = VecMath.dotproduct(u, u);
+		float xa = x;
+		float ya = y;
+		x = u.getXf() * 2 * dotUV + xa * (s * s - dotUU) + (u.getYf() * z - u.getZf() * ya) * 2 * s;
+		y = u.getYf() * 2 * dotUV + ya * (s * s - dotUU) + (u.getZf() * xa - u.getXf() * z) * 2 * s;
+		z = u.getZf() * 2 * dotUV + z * (s * s - dotUU) + (u.getXf() * ya - u.getYf() * xa) * 2 * s;
 	}
 
 	@Override

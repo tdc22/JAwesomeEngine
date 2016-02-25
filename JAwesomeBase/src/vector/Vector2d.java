@@ -3,6 +3,7 @@ package vector;
 import java.nio.FloatBuffer;
 
 import matrix.Matrix2;
+import quaternion.Complex;
 
 public class Vector2d extends Vector2 {
 	public double x, y;
@@ -187,8 +188,16 @@ public class Vector2d extends Vector2 {
 
 	@Override
 	public void transform(Matrix2 transform) {
-		x = transform.get(0, 0) * x + transform.get(0, 1) * y;
-		y = transform.get(1, 0) * x + transform.get(1, 1) * y;
+		double xa = x;
+		x = transform.get(0, 0) * xa + transform.get(0, 1) * y;
+		y = transform.get(1, 0) * xa + transform.get(1, 1) * y;
+	}
+	
+	@Override
+	public void transform(Complex transform) {
+		double xa = x;
+		x = xa * transform.getReal() + y * transform.getImaginary();
+		y = xa * -transform.getImaginary() + y * transform.getReal();
 	}
 
 	@Override

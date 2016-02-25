@@ -139,7 +139,8 @@ public abstract class CollisionShape2 extends
 
 	@Override
 	public Matrix4f getMatrix() {
-		// TODO Auto-generated method stub
-		return null;
+		float[][] mat = rotation.toMatrixf().getArrayf();
+		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, 0, 0, mat[1][0] * scale.y, mat[1][1] * scale.y, 0,
+				0, 0, 0, 0, 0, translation.getXf(), translation.getYf(), 0, 1);
 	}
 }

@@ -1,6 +1,7 @@
 package vector;
 
 import matrix.Matrix2;
+import quaternion.Complex;
 
 /**
  * Superclass for 2-dimensional vectors.
@@ -136,6 +137,14 @@ public abstract class Vector2 extends Vector {
 	 * @see Vector1#transform(matrix.Matrix1)
 	 */
 	public abstract void transform(Matrix2 transform);
+	
+	/**
+	 * Transforms the vector by a complex number.
+	 * 
+	 * @param transform
+	 *            complex number to transform by
+	 */
+	public abstract void transform(Complex transform);
 
 	/**
 	 * @see Vector1#translate(double)

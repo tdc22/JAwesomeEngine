@@ -163,9 +163,9 @@ public class QuatMath {
 			double angle = Math.acos(dot);
 			Quaternion temp = scale(q1, Math.sin(angle * (1 - t)));
 			result.scale(Math.sin(angle * t));
-			result.set(result.getQ0() + temp.getQ0(), result.getQ1() + temp.getQ1(), result.getQ2() + temp.getQ2(),
-					result.getQ3() + temp.getQ3());
-			result.scale(1 / Math.sin(angle));
+			double sina = Math.sin(angle);
+			result.set((result.getQ0() + temp.getQ0()) / sina, (result.getQ1() + temp.getQ1()) / sina,
+					(result.getQ2() + temp.getQ2()) / sina, (result.getQ3() + temp.getQ3()) / sina);
 			return result;
 		}
 
@@ -186,9 +186,9 @@ public class QuatMath {
 			float angle = (float) Math.acos(dot);
 			Quaternionf temp = scale(q1, (float) Math.sin(angle * (1 - t)));
 			result.scale(Math.sin(angle * t));
-			result.set(result.getQ0f() + temp.getQ0f(), result.getQ1f() + temp.getQ1f(),
-					result.getQ2f() + temp.getQ2f(), result.getQ3f() + temp.getQ3f());
-			result.scale(1 / Math.sin(angle));
+			float sina = (float) Math.sin(angle);
+			result.set((result.getQ0f() + temp.getQ0f()) / sina, (result.getQ1f() + temp.getQ1f()) / sina,
+					(result.getQ2f() + temp.getQ2f()) / sina, (result.getQ3f() + temp.getQ3f()) / sina);
 			return result;
 		}
 
@@ -251,10 +251,6 @@ public class QuatMath {
 				u.getY() * 2 * dotUV + v.getY() * (s * s - dotUU) + (u.getZ() * v.getX() - u.getX() * v.getZ()) * 2 * s,
 				u.getZ() * 2 * dotUV + v.getZ() * (s * s - dotUU)
 						+ (u.getX() * v.getY() - u.getY() * v.getX()) * 2 * s);
-		// return VecMath.addition(VecMath.scale(u, 2f * VecMath.dotproduct(u,
-		// v)), VecMath.addition(
-		// VecMath.scale(v, s * s - VecMath.dotproduct(u, u)),
-		// VecMath.scale(VecMath.crossproduct(u, v), 2f * s)));
 	}
 
 	public static Vector3f transform(Quaternionf q, Vector3f v) {
@@ -265,13 +261,5 @@ public class QuatMath {
 		return new Vector3f(u.x * 2 * dotUV + v.x * (s * s - dotUU) + (u.y * v.z - u.z * v.y) * 2 * s,
 				u.y * 2 * dotUV + v.y * (s * s - dotUU) + (u.z * v.x - u.x * v.z) * 2 * s,
 				u.z * 2 * dotUV + v.z * (s * s - dotUU) + (u.x * v.y - u.y * v.x) * 2 * s);
-		// return VecMath.addition(VecMath.scale(u, 2f * VecMath.dotproduct(u,
-		// v)), VecMath.addition(
-		// VecMath.scale(v, s * s - VecMath.dotproduct(u, u)),
-		// VecMath.scale(VecMath.crossproduct(u, v), 2f * s)));
-		// Vector3f qv = new Vector3f(q.getQ1f(), q.getQ2f(), q.getQ3f());
-		// Vector3f t = VecMath.scale(VecMath.crossproduct(qv, v), 2);
-		// return VecMath.addition(v, VecMath.addition(VecMath.scale(t,
-		// q.getQ0f()), VecMath.crossproduct(qv, t)));
 	}
 }

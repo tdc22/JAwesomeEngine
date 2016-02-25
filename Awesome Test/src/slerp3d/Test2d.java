@@ -1,4 +1,4 @@
-package slerp2d;
+package slerp3d;
 
 import display.DisplayMode;
 import display.GLDisplay;
@@ -6,14 +6,15 @@ import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
 import loader.ShaderLoader;
-import math.ComplexMath;
-import quaternion.Complexf;
+import math.QuatMath;
+import quaternion.Quaternionf;
 import shader.Shader;
-import shape2d.Quad;
+import shape.Box;
+import vector.Vector3f;
 
 public class Test2d extends StandardGame {
-	Quad q1, q2, q3, q4, q5, q6;
-	Complexf c1, c2, c3;
+	Box q1, q2, q3, q4, q5, q6;
+	Quaternionf c1, c2, c3;
 	float t1 = 0, t2 = 0;
 
 	@Override
@@ -22,24 +23,25 @@ public class Test2d extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
+		display.bindMouse();
 
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader);
+		addShader(defaultshader);
 
-		q1 = new Quad(200, 130, 30, 30);
-		q2 = new Quad(400, 130, 30, 30);
-		q3 = new Quad(600, 130, 30, 30);
-		q4 = new Quad(200, 330, 30, 30);
-		q5 = new Quad(400, 330, 30, 30);
-		q6 = new Quad(600, 330, 30, 30);
+		q1 = new Box(0, 0, 0, 1, 1, 1);
+		q2 = new Box(3, 0, 0, 1, 1, 1);
+		q3 = new Box(6, 0, 0, 1, 1, 1);
+		q4 = new Box(0, 3, 0, 1, 1, 1);
+		q5 = new Box(3, 3, 0, 1, 1, 1);
+		q6 = new Box(6, 3, 0, 1, 1, 1);
 
-		c1 = new Complexf();
-		c2 = new Complexf();
-		c3 = new Complexf();
+		c1 = new Quaternionf();
+		c2 = new Quaternionf();
+		c3 = new Quaternionf();
 
-		c2.rotate(90);
-		c3.rotate(180);
+		c2.rotate(90, new Vector3f(0, 1, 0));
+		c3.rotate(180, new Vector3f(0, 1, 0));
 
 		defaultshader.addObject(q1);
 		defaultshader.addObject(q2);
@@ -51,11 +53,11 @@ public class Test2d extends StandardGame {
 
 	@Override
 	public void render() {
+		render3dLayer();
 	}
 
 	@Override
 	public void render2d() {
-		render2dLayer();
 	}
 
 	@Override
@@ -70,16 +72,16 @@ public class Test2d extends StandardGame {
 		t1 += d;
 		if (t1 >= 1)
 			t1 -= 1;
-		q1.rotate(d * 90f);
-		q2.rotateTo(ComplexMath.lerp(c1, c2, t1));
-		q3.rotateTo(ComplexMath.slerp(c1, c2, t1));
+		q1.rotate(0, d * 90f, 0);
+		q2.rotateTo(QuatMath.lerp(c1, c2, t1));
+		q3.rotateTo(QuatMath.slerp(c1, c2, t1));
 
 		t2 += d;
 		if (t2 >= 1)
 			t2 -= 1;
-		q4.rotate(d * 180f);
-		q5.rotateTo(ComplexMath.lerp(c1, c3, t2));
-		q6.rotateTo(ComplexMath.slerp(c1, c3, t2));
+		q4.rotate(0, d * 180f, 0);
+		q5.rotateTo(QuatMath.lerp(c1, c3, t2));
+		q6.rotateTo(QuatMath.slerp(c1, c3, t2));
 
 		cam.update(delta);
 	}

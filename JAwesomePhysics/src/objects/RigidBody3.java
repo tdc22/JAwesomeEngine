@@ -4,6 +4,7 @@ import math.QuatMath;
 import math.VecMath;
 import matrix.Matrix4f;
 import quaternion.Quaternionf;
+import vector.Vector2f;
 import vector.Vector3f;
 
 public class RigidBody3 extends
@@ -22,14 +23,16 @@ public class RigidBody3 extends
 
 	@Override
 	public void applyCentralForce(Vector3f force) {
-		forceaccumulator = VecMath.addition(forceaccumulator,
-				VecMath.multiplication(force, linearfactor));
+		forceaccumulator.x += force.x * linearfactor.x;
+		forceaccumulator.y += force.y * linearfactor.y;
+		forceaccumulator.z += force.z * linearfactor.z;
 	}
 
 	@Override
 	public void applyCentralImpulse(Vector3f impulse) {
-		linearvelocity = VecMath.addition(linearvelocity, VecMath.scale(
-				VecMath.multiplication(impulse, linearfactor), invMass));
+		linearvelocity.x += impulse.x * linearfactor.x * invMass;
+		linearvelocity.y += impulse.y * linearfactor.y * invMass;
+		linearvelocity.z += impulse.z * linearfactor.z * invMass;
 	}
 
 	@Override
@@ -43,23 +46,28 @@ public class RigidBody3 extends
 	public void applyImpulse(Vector3f impulse, Vector3f rel_pos) {
 		if (invMass != 0) {
 			applyCentralImpulse(impulse);
-			applyTorqueImpulse(VecMath.crossproduct(rel_pos,
-					VecMath.multiplication(impulse, linearfactor)));
+			float ilX = impulse.x * linearfactor.x;
+			float ilY = impulse.y * linearfactor.y;
+			float ilZ = impulse.z * linearfactor.z;
+			applyTorqueImpulse(new Vector3f(rel_pos.y * ilZ - rel_pos.z * ilY,
+					rel_pos.z * ilX - rel_pos.x * ilZ, rel_pos.x * ilY - rel_pos.y * ilX));
 		}
 	}
 
 	@Override
 	public void applyTorque(Vector3f torque) {
-		torqueaccumulator = VecMath.addition(torqueaccumulator,
-				VecMath.multiplication(torque, angularfactor));
+		torqueaccumulator.x += torque.x * angularfactor.x;
+		torqueaccumulator.y += torque.y * angularfactor.y;
+		torqueaccumulator.z += torque.z * angularfactor.z;
 	}
 
 	@Override
 	public void applyTorqueImpulse(Vector3f torque) {
-		angularvelocity = VecMath.addition(
-				angularvelocity,
-				QuatMath.transform(invinertia,
-						VecMath.multiplication(torque, angularfactor)));
+		torque.scale(angularfactor);
+		torque.transform(invinertia);
+		angularvelocity.x += torque.x;
+		angularvelocity.y += torque.y;
+		angularvelocity.z += torque.z;
 	}
 
 	@Override
@@ -112,26 +120,34 @@ public class RigidBody3 extends
 
 	@Override
 	public Vector3f supportPoint(Vector3f direction) {
-		return VecMath.addition(supportPointRelative(direction),
-				getTranslation());
+		Vector3f support = supportPointRelative(direction);
+		support.x += getTranslation().x;
+		support.y += getTranslation().y;
+		support.z += getTranslation().z;
+		return support;
 	}
 
 	@Override
 	public Vector3f supportPointNegative(Vector3f direction) {
-		return VecMath.addition(supportPointRelativeNegative(direction),
-				getTranslation());
+		Vector3f supportNeg = supportPointRelativeNegative(direction);
+		supportNeg.x += getTranslation().x;
+		supportNeg.y += getTranslation().y;
+		supportNeg.z += getTranslation().z;
+		return supportNeg;
 	}
 
 	@Override
 	public Vector3f supportPointRelative(Vector3f direction) {
-		return QuatMath.transform(this.getRotation(),
-				supportcalculator.supportPointLocal(direction));
+		Vector3f supportRel = supportcalculator.supportPointLocal(direction);
+		supportRel.transform(getRotation());
+		return supportRel;
 	}
 
 	@Override
 	public Vector3f supportPointRelativeNegative(Vector3f direction) {
-		return QuatMath.transform(this.getRotation(),
-				supportcalculator.supportPointLocalNegative(direction));
+		Vector3f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
+		supportRelNeg.transform(getRotation());
+		return supportRelNeg;
 	}
 
 	@Override
@@ -181,8 +197,10 @@ public class RigidBody3 extends
 
 	@Override
 	public Matrix4f getMatrix() {
-		// TODO Auto-generated method stub
-		return null;
+		float[][] mat = rotation.toMatrixf().getArrayf();
+		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, mat[0][2] * scale.x, 0, mat[1][0] * scale.y,
+				mat[1][1] * scale.y, mat[1][2] * scale.y, 0, mat[2][0] * scale.z, mat[2][1] * scale.z,
+				mat[2][2] * scale.z, 0, translation.getXf(), translation.getYf(), translation.getZf(), 1);
 	}
 
 	@Override

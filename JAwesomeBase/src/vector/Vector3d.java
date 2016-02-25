@@ -2,7 +2,9 @@ package vector;
 
 import java.nio.FloatBuffer;
 
+import math.VecMath;
 import matrix.Matrix3;
+import quaternion.Quaternion;
 
 public class Vector3d extends Vector3 {
 	public double x, y, z;
@@ -237,9 +239,24 @@ public class Vector3d extends Vector3 {
 
 	@Override
 	public void transform(Matrix3 transform) {
-		x = transform.get(0, 0) * x + transform.get(0, 1) * y + transform.get(0, 2) * z;
-		y = transform.get(1, 0) * x + transform.get(1, 1) * y + transform.get(1, 2) * z;
-		z = transform.get(2, 0) * x + transform.get(2, 1) * y + transform.get(2, 2) * z;
+		double xa = x;
+		double ya = y;
+		x = transform.get(0, 0) * xa + transform.get(0, 1) * ya + transform.get(0, 2) * z;
+		y = transform.get(1, 0) * xa + transform.get(1, 1) * ya + transform.get(1, 2) * z;
+		z = transform.get(2, 0) * xa + transform.get(2, 1) * ya + transform.get(2, 2) * z;
+	}
+	
+	@Override
+	public void transform(Quaternion transform) {
+		Vector3 u = new Vector3d(transform.getQ1(), transform.getQ2(), transform.getQ3());
+		double s = transform.getQ0();
+		double dotUV = VecMath.dotproduct(u, this);
+		double dotUU = VecMath.dotproduct(u, u);
+		double xa = x;
+		double ya = y;
+		x = u.getX() * 2 * dotUV + xa * (s * s - dotUU) + (u.getY() * z - u.getZ() * ya) * 2 * s;
+		y = u.getY() * 2 * dotUV + ya * (s * s - dotUU) + (u.getZ() * xa - u.getX() * z) * 2 * s;
+		z = u.getZ() * 2 * dotUV + z * (s * s - dotUU) + (u.getX() * ya - u.getY() * xa) * 2 * s;
 	}
 
 	@Override

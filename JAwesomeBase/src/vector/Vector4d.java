@@ -289,10 +289,13 @@ public class Vector4d extends Vector4 {
 
 	@Override
 	public void transform(Matrix4 transform) {
-		x = transform.get(0, 0) * x + transform.get(0, 1) * y + transform.get(0, 2) * z + transform.get(0, 3) * w;
-		y = transform.get(1, 0) * x + transform.get(1, 1) * y + transform.get(1, 2) * z + transform.get(1, 3) * w;
-		z = transform.get(2, 0) * x + transform.get(2, 1) * y + transform.get(2, 2) * z + transform.get(2, 3) * w;
-		w = transform.get(3, 0) * x + transform.get(3, 1) * y + transform.get(3, 2) * z + transform.get(3, 3) * w;
+		double xa = x;
+		double ya = y;
+		double za = z;
+		x = transform.get(0, 0) * xa + transform.get(0, 1) * ya + transform.get(0, 2) * za + transform.get(0, 3) * w;
+		y = transform.get(1, 0) * xa + transform.get(1, 1) * ya + transform.get(1, 2) * za + transform.get(1, 3) * w;
+		z = transform.get(2, 0) * xa + transform.get(2, 1) * ya + transform.get(2, 2) * za + transform.get(2, 3) * w;
+		w = transform.get(3, 0) * xa + transform.get(3, 1) * ya + transform.get(3, 2) * za + transform.get(3, 3) * w;
 	}
 
 	@Override
