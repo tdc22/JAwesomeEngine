@@ -27,7 +27,6 @@ import positionalcorrection.ProjectionCorrection;
 import resolution.ImpulseResolution;
 import shader.Shader;
 import shape2d.Circle;
-import shape2d.Quad;
 import utils.Debugger;
 import vector.Vector2f;
 
@@ -112,20 +111,22 @@ public class ConstraintTest2d2 extends StandardGame {
 		if (inputs.isKeyDown("2"))
 			bodies.get(1).applyCentralImpulse(new Vector2f(0, -20));
 
-		delta = (int) ((1f/30f)*1000f);
+		delta = (int) ((1f / 30f) * 1000f);
 		debugger.update(fps, 0, 0);
 		space.update(delta);
 		physicsdebug.update();
 		cam.update(delta);
-		
+
 		RigidBody2 bodyA = bodies.get(0);
 		RigidBody2 bodyB = bodies.get(1);
-		System.out.println(bodyA.getTranslation().x + "; " + bodyA.getTranslation().y + "; " + bodyA.getRotation().angle() + "; " + bodyB.getTranslation().x + "; " + bodyB.getTranslation().y + "; " + bodyB.getRotation().angle());
+		System.out.println(bodyA.getTranslation().x + "; " + bodyA.getTranslation().y + "; "
+				+ bodyA.getRotation().angle() + "; " + bodyB.getTranslation().x + "; " + bodyB.getTranslation().y + "; "
+				+ bodyB.getRotation().angle());
 		steps++;
-		if(steps == 60)
+		if (steps == 60)
 			System.exit(0);
 	}
-	
+
 	public static void main(String[] args) {
 		ConstraintTest2d2 ct = new ConstraintTest2d2();
 		ct.start();
