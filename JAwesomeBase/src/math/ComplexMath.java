@@ -19,11 +19,13 @@ public class ComplexMath {
 	private static final float thresholdValue = 0.99f;
 
 	public static Complexd addition(Complex c1, Complex c2) {
-		return new Complexd(c1.getReal() + c2.getReal(), c1.getImaginary() + c2.getImaginary());
+		return new Complexd(c1.getReal() + c2.getReal(), c1.getImaginary()
+				+ c2.getImaginary());
 	}
 
 	public static Complexf addition(Complexf c1, Complexf c2) {
-		return new Complexf(c1.getRealf() + c2.getRealf(), c1.getImaginaryf() + c2.getImaginaryf());
+		return new Complexf(c1.getRealf() + c2.getRealf(), c1.getImaginaryf()
+				+ c2.getImaginaryf());
 	}
 
 	public static Complexd conjugate(Complex c) {
@@ -35,11 +37,13 @@ public class ComplexMath {
 	}
 
 	public static double dotproduct(Complex v1, Complex v2) {
-		return v1.getReal() * v2.getReal() + v1.getImaginary() * v2.getImaginary();
+		return v1.getReal() * v2.getReal() + v1.getImaginary()
+				* v2.getImaginary();
 	}
 
 	public static float dotproduct(Complexf v1, Complexf v2) {
-		return v1.getRealf() * v2.getRealf() + v1.getImaginaryf() * v2.getImaginaryf();
+		return v1.getRealf() * v2.getRealf() + v1.getImaginaryf()
+				* v2.getImaginaryf();
 	}
 
 	public static Complexd negate(Complex c) {
@@ -67,13 +71,15 @@ public class ComplexMath {
 	}
 
 	public static Complexd multiplication(Complex c1, Complex c2) {
-		return new Complexd(c1.getReal() * c2.getReal() - c1.getImaginary() * c2.getImaginary(),
-				c1.getReal() * c2.getImaginary() + c1.getImaginary() * c2.getReal());
+		return new Complexd(c1.getReal() * c2.getReal() - c1.getImaginary()
+				* c2.getImaginary(), c1.getReal() * c2.getImaginary()
+				+ c1.getImaginary() * c2.getReal());
 	}
 
 	public static Complexf multiplication(Complexf c1, Complexf c2) {
-		return new Complexf(c1.getRealf() * c2.getRealf() - c1.getImaginaryf() * c2.getImaginaryf(),
-				c1.getRealf() * c2.getImaginaryf() + c1.getImaginaryf() * c2.getRealf());
+		return new Complexf(c1.getRealf() * c2.getRealf() - c1.getImaginaryf()
+				* c2.getImaginaryf(), c1.getRealf() * c2.getImaginaryf()
+				+ c1.getImaginaryf() * c2.getRealf());
 	}
 
 	public static Complexd normalize(Complex c) {
@@ -95,11 +101,13 @@ public class ComplexMath {
 	}
 
 	public static Complexd substraction(Complex c1, Complex c2) {
-		return new Complexd(c1.getReal() - c2.getReal(), c1.getImaginary() - c2.getImaginary());
+		return new Complexd(c1.getReal() - c2.getReal(), c1.getImaginary()
+				- c2.getImaginary());
 	}
 
 	public static Complexf substraction(Complexf c1, Complexf c2) {
-		return new Complexf(c1.getRealf() - c2.getRealf(), c1.getImaginaryf() - c2.getImaginaryf());
+		return new Complexf(c1.getRealf() - c2.getRealf(), c1.getImaginaryf()
+				- c2.getImaginaryf());
 	}
 
 	public static Complexd lerp(Complex q1, Complex q2, double t) {
@@ -124,9 +132,10 @@ public class ComplexMath {
 
 		if (dot < thresholdValue) {
 			double angle = Math.acos(dot);
-			Complex temp = scale(c2, Math.sin(angle * (1 - t)));
+			Complex temp = scale(c1, Math.sin(angle * (1 - t)));
 			result.scale(Math.sin(angle * t));
-			result.set(result.getReal() + temp.getReal(), result.getImaginary() + temp.getImaginary());
+			result.set(result.getReal() + temp.getReal(), result.getImaginary()
+					+ temp.getImaginary());
 			result.scale(1 / Math.sin(angle));
 			return result;
 		}
@@ -140,9 +149,10 @@ public class ComplexMath {
 
 		if (dot < thresholdValue) {
 			float angle = (float) Math.acos(dot);
-			Complexf temp = scale(c2, (float) Math.sin(angle * (1 - t)));
+			Complexf temp = scale(c1, (float) Math.sin(angle * (1- t)));
 			result.scale((float) Math.sin(angle * t));
-			result.set(result.getRealf() + temp.getRealf(), result.getImaginaryf() + temp.getImaginaryf());
+			result.set(result.getRealf() + temp.getRealf(),
+					result.getImaginaryf() + temp.getImaginaryf());
 			result.scale(1 / Math.sin(angle));
 			return result;
 		}
@@ -167,8 +177,10 @@ public class ComplexMath {
 			double sina = Math.sin(angle);
 			double sinat = Math.sin(angle * t);
 			double sinaomt = Math.sin(angle * (1 - t));
-			return new Complexd((q1.getReal() * sinaomt + q2.getReal() * sinat) / sina,
-					(q1.getImaginary() * sinaomt + q2.getImaginary() * sinat) / sina);
+			return new Complexd((q1.getReal() * sinaomt + q2.getReal() * sinat)
+					/ sina, (q1.getImaginary() * sinaomt + q2.getImaginary()
+					* sinat)
+					/ sina);
 		}
 		return lerp(q1, q2, t);
 	}
@@ -181,32 +193,38 @@ public class ComplexMath {
 			float sina = (float) Math.sin(angle);
 			float sinat = (float) Math.sin(angle * t);
 			float sinaomt = (float) Math.sin(angle * (1 - t));
-			return new Complexf((q1.getReal() * sinaomt + q2.getReal() * sinat) / sina,
-					(q1.getImaginary() * sinaomt + q2.getImaginary() * sinat) / sina);
+			return new Complexf((q1.getReal() * sinaomt + q2.getReal() * sinat)
+					/ sina, (q1.getImaginary() * sinaomt + q2.getImaginary()
+					* sinat)
+					/ sina);
 		}
 		return lerp(q1, q2, t);
 	}
 
-	public static Complexd squad(Complex q1, Complex q2, Complex q3, Complex q4, double t) {
+	public static Complexd squad(Complex q1, Complex q2, Complex q3,
+			Complex q4, double t) {
 		Complex a = slerpNoInvert(q1, q2, t);
 		Complex b = slerpNoInvert(q3, q4, t);
 		return slerpNoInvert(a, b, 2 * t * (1 - t));
 	}
 
-	public static Complexf squad(Complexf q1, Complexf q2, Complexf q3, Complexf q4, float t) {
+	public static Complexf squad(Complexf q1, Complexf q2, Complexf q3,
+			Complexf q4, float t) {
 		Complexf a = slerpNoInvert(q1, q2, t);
 		Complexf b = slerpNoInvert(q3, q4, t);
 		return slerpNoInvert(a, b, 2 * t * (1 - t));
 	}
 
 	public static Vector2 transform(Complex c, Vector2 v) {
-		return new Vector2d(v.getX() * c.getReal() + v.getY() * c.getImaginary(),
-				v.getX() * -c.getImaginary() + v.getY() * c.getReal());
+		return new Vector2d(v.getX() * c.getReal() + v.getY()
+				* c.getImaginary(), v.getX() * -c.getImaginary() + v.getY()
+				* c.getReal());
 	}
 
 	public static Vector2f transform(Complexf c, Vector2f v) {
-		return new Vector2f(v.getXf() * c.getRealf() + v.getYf() * c.getImaginaryf(),
-				v.getXf() * -c.getImaginaryf() + v.getYf() * c.getRealf());
+		return new Vector2f(v.getXf() * c.getRealf() + v.getYf()
+				* c.getImaginaryf(), v.getXf() * -c.getImaginaryf() + v.getYf()
+				* c.getRealf());
 		// return new Vector2f(
 		// (1 - 2 * c.getImaginaryf() * c.getImaginaryf()) * v.getXf()
 		// + (-2 * c.getImaginaryf() * c.getRealf()) * v.getYf(),
