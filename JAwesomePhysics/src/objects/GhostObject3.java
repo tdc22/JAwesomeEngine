@@ -24,22 +24,34 @@ public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Q
 
 	@Override
 	public Vector3f supportPoint(Vector3f direction) {
-		return VecMath.addition(supportPointRelative(direction), getTranslation());
+		Vector3f support = supportPointRelative(direction);
+		support.x += getTranslation().x;
+		support.y += getTranslation().y;
+		support.z += getTranslation().z;
+		return support;
 	}
 
 	@Override
 	public Vector3f supportPointNegative(Vector3f direction) {
-		return VecMath.addition(supportPointRelativeNegative(direction), getTranslation());
+		Vector3f supportNeg = supportPointRelativeNegative(direction);
+		supportNeg.x += getTranslation().x;
+		supportNeg.y += getTranslation().y;
+		supportNeg.z += getTranslation().z;
+		return supportNeg;
 	}
 
 	@Override
 	public Vector3f supportPointRelative(Vector3f direction) {
-		return QuatMath.transform(this.getRotation(), supportcalculator.supportPointLocal(direction));
+		Vector3f supportRel = supportcalculator.supportPointLocal(direction);
+		supportRel.transform(getRotation());
+		return supportRel;
 	}
 
 	@Override
 	public Vector3f supportPointRelativeNegative(Vector3f direction) {
-		return QuatMath.transform(this.getRotation(), supportcalculator.supportPointLocalNegative(direction));
+		Vector3f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
+		supportRelNeg.transform(getRotation());
+		return supportRelNeg;
 	}
 
 	@Override

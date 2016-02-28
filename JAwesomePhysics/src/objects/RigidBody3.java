@@ -4,7 +4,6 @@ import math.QuatMath;
 import math.VecMath;
 import matrix.Matrix4f;
 import quaternion.Quaternionf;
-import vector.Vector2f;
 import vector.Vector3f;
 
 public class RigidBody3 extends

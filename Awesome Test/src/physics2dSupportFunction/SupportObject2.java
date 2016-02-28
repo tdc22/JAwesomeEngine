@@ -27,7 +27,7 @@ public class SupportObject2 extends ShapedObject2 {
 
 		List<Vector2f> result = new ArrayList<Vector2f>();
 		for (Vector2f v : v1) {
-			if (v.length() > 0) {
+			if (v.lengthSquared() > 0) {
 				Vector2f res = rb.supportPoint(new Vector2f(v.x, v.y));
 				if (!result.contains(res))
 					result.add(res);

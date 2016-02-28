@@ -7,7 +7,6 @@ import matrix.Matrix4f;
 import quaternion.Complexf;
 import vector.Vector1f;
 import vector.Vector2f;
-import vector.Vector3f;
 
 public class RigidBody2 extends
 		RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>  implements InstancedBaseObject2 {

@@ -262,7 +262,7 @@ public class Tutorial extends StandardGame {
 		if (right.isActive()) {
 			move = VecMath.addition(move, VecMath.crossproduct(cam.getDirection(), new Vector3f(0, 1, 0)));
 		}
-		if (move.length() > 0) {
+		if (move.lengthSquared() > 0) {
 			move.setY(0);
 			move.normalize();
 			move.scale(playerspeed);
