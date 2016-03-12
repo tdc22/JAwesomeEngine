@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import broadphase.SAP2;
-import constraints.DistanceConstraint2;
+import constraints.DistanceConstraint2Old;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
@@ -88,7 +88,7 @@ public class ConstraintTest2d extends StandardGame {
 		space.addRigidBody(rightCircle, rbR);
 		defaultshader2.addObject(rightCircle);
 
-		Constraint2 constraint = new DistanceConstraint2(rbL, rbR, new Vector2f(0, 0), new Vector2f(0, 0), 50);
+		Constraint2 constraint = new DistanceConstraint2Old(rbL, rbR, new Vector2f(0, 0), new Vector2f(0, 0), 50);
 		space.addConstraint(constraint);
 	}
 

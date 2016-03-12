@@ -11,9 +11,13 @@ public abstract class Constraint<L extends Vector, A1 extends Vector, A2 extends
 		this.bodyB = bodyB;
 	}
 	
-	public abstract void initStep(float delta);
+	public RigidBody<L, A1, A2, A3> getBodyA() {
+		return bodyA;
+	}
 	
-	public abstract void solve(float delta);
+	public RigidBody<L, A1, A2, A3> getBodyB() {
+		return bodyB;
+	}
 	
-	public abstract boolean solvePosition(float delta);
+	public abstract float[][] getJacobian();
 }
