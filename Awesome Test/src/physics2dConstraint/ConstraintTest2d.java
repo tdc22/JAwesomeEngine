@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import broadphase.SAP2;
+import constraints.DistanceConstraint2;
 import constraints.DistanceConstraint2Old;
 import display.DisplayMode;
 import display.GLDisplay;
@@ -72,7 +73,7 @@ public class ConstraintTest2d extends StandardGame {
 		bodies = new ArrayList<RigidBody2>();
 
 		// Distance constraint
-		Circle leftCircle = new Circle(370, 50, 20, 10);
+		Circle leftCircle = new Circle(370, 40, 20, 10);
 		RigidBody2 rbL = new RigidBody2(PhysicsShapeCreator.create(leftCircle));
 		rbL.setMass(1f);
 		rbL.setInertia(new Matrix1f(1));
@@ -80,7 +81,7 @@ public class ConstraintTest2d extends StandardGame {
 		space.addRigidBody(leftCircle, rbL);
 		defaultshader2.addObject(leftCircle);
 
-		Circle rightCircle = new Circle(430, 60, 20, 10);
+		Circle rightCircle = new Circle(430, 40, 20, 10);
 		RigidBody2 rbR = new RigidBody2(PhysicsShapeCreator.create(rightCircle));
 		rbR.setMass(1f);
 		rbR.setInertia(new Matrix1f(1));
@@ -88,7 +89,7 @@ public class ConstraintTest2d extends StandardGame {
 		space.addRigidBody(rightCircle, rbR);
 		defaultshader2.addObject(rightCircle);
 
-		Constraint2 constraint = new DistanceConstraint2Old(rbL, rbR, new Vector2f(0, 0), new Vector2f(0, 0), 50);
+		Constraint2 constraint = new DistanceConstraint2(rbL, rbR, new Vector2f(0, 0), new Vector2f(0, 0), 100);
 		space.addConstraint(constraint);
 	}
 

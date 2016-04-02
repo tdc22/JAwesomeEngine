@@ -6,6 +6,7 @@ import vector.Vector2f;
 
 public class ConstraintSolverErin2 {
 	//Source: http://www.bulletphysics.com/ftp/pub/test/physics/papers/IterativeDynamics.pdf
+	// http://shanpingmaophysicsengine.blogspot.de/2013/02/iterative-dynamics-with-temporal.html
 	public void solveForces() {
 		int n = 2; // Number of Bodies;
 		int s = 2; //1? Number of constraints
@@ -32,7 +33,7 @@ public class ConstraintSolverErin2 {
 	
 	public void solveVelocities(Constraint2 c) {
 		int n = 2; // Number of Bodies;
-		int s = 1; //1? Number of constraints
+		int s = 2; //1? Number of constraints
 		int sixN = 3*n; // 2 pos + 1 rot
 		
 		float[][] j = c.getJacobian();
@@ -46,30 +47,49 @@ public class ConstraintSolverErin2 {
 		
 		float[] C = new float[sixN];
 		
+		System.out.print("In: ");
+		for(int i = 0; i < 6; i++) {
+			System.out.print(V[i] + " ");
+		}
+		System.out.println();
+		for(int i = 0; i < 6; i++) {
+			System.out.print(jsp(j, i%3, i/3) + " ");
+		}
+		System.out.println();
+		
 		for(int i = 0; i < s; i++) {
+			float[] sum = new float[6];
 			int b1 = jmap(i, 1);
 			int b2 = jmap(i, 2);
 			
-			float[] sum = new float[3];
-			for(int su = 0; su < 6; su++) {
-				sum[su] = 0;
-			}
-			
+			sum[0] = 0;
+			sum[1] = 0;
+			sum[2] = 0;
 			if(b1 > 0) {
 				sum[0] += jsp(j, i, 0) * V[b1];
 				sum[1] += jsp(j, i+1, 0) * V[b1+1];
 				sum[2] += jsp(j, i+2, 0) * V[b1+2];
 			}
-			sum[3] += jsp(j, i, 1) * V[b2];
-			sum[4] += jsp(j, i+1, 1) * V[b2+1];
-			sum[5] += jsp(j, i+2, 1) * V[b2+2];
-			C[0] = sum[0];
-			C[1] = sum[1];
-			C[2] = sum[2];
-			C[3] = sum[3];
-			C[4] = sum[4];
-			C[5] = sum[5];
+			sum[0] += jsp(j, i, 1) * V[b2];
+			sum[1] += jsp(j, i+1, 1) * V[b2+1];
+			sum[2] += jsp(j, i+2, 1) * V[b2+2];
+			
+			/*sum[0] = -jsp(j, i, 0);
+			sum[1] = -jsp(j, i+1, 0);
+			sum[2] = jsp(j, i+2, 0);
+			sum[3] = -jsp(j, i, 1);
+			sum[4] = -jsp(j, i+1, 1);
+			sum[5] = jsp(j, i+2, 1);*/
+			C[i*3+0] = sum[0];
+			C[i*3+1] = sum[1];
+			C[i*3+2] = sum[2];
 		}
+		
+		System.out.print("Out: ");
+		for(int i = 0; i < 6; i++) {
+			System.out.print(C[i] + " ");
+		}
+		System.out.println();
 		
 		c.getBodyA().setLinearVelocity(new Vector2f(C[0], C[1]));
 		c.getBodyA().setAngularVelocity(new Vector1f(C[2]));
@@ -79,11 +99,11 @@ public class ConstraintSolverErin2 {
 	
 	private int jmap(int a, int b) {
 		// Position in F[]
-		return (a-1) * 3 + (b-1) * 2;
+		return a + (b-1) * 3;
 		//return (a-1) * 6 + (b-1) * 3;
 	}
 	
 	private float jsp(float[][] j, int a, int b) {
-		return j[a][b];
+		return j[b][a];
 	}
 }

@@ -15,6 +15,7 @@ import narrowphase.Narrowphase;
 import objects.CollisionShape;
 import objects.CompoundObject;
 import objects.Constraint;
+import objects.Constraint2;
 import objects.GhostObject;
 import objects.RigidBody;
 import objects.Updateable;
@@ -25,6 +26,7 @@ import utils.Pair;
 import vector.Vector;
 import broadphase.Broadphase;
 import broadphase.BroadphaseListener;
+import constraints.ConstraintSolverErin2;
 
 public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rotation, A3 extends Rotation>
 		implements Updateable {
@@ -34,6 +36,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	final CollisionResolution collisionresolution;
 	final PositionalCorrection positionalcorrection;
 	final ManifoldManager<L> manifoldmanager;
+	final ConstraintSolverErin2 constraintsolver = new ConstraintSolverErin2();
 	protected final List<RigidBody<L, A1, A2, A3>> objects;
 	protected final List<CompoundObject<L, A2>> compoundObjects;
 	protected final List<GhostObject<L, A1, A2, A3>> ghostobjects;
@@ -44,7 +47,6 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected L globalGravitation;
 	protected int resolutionIterations = 25;
 	protected int constraintResolutionIterations = 1;
-	protected int constraintPositionResolutionIterations = 1;
 	protected boolean cullStaticOverlaps = true;
 	protected PhysicsProfiler profiler;
 
@@ -265,10 +267,6 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public void setConstraintResolutionIterations(int count) {
 		constraintResolutionIterations = count;
 	}
-	
-	public void setConstraintPositionResolutionIterations(int count) {
-		constraintPositionResolutionIterations = count;
-	}
 
 	public void setProfiler(PhysicsProfiler profiler) {
 		this.profiler = profiler;
@@ -391,9 +389,9 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		integrate(delta);
 		correct();
 		
-		for(int i = 0; i < constraintPositionResolutionIterations; i++) {
+		for(int i = 0; i < constraintResolutionIterations; i++) {
 			for (Constraint<L, A1, A2, A3> c : constraints) {
-				c.solvePosition(delta);
+				constraintsolver.solveVelocities((Constraint2) c);
 			}
 		}
 
