@@ -23,7 +23,7 @@ import vector.Vector4f;
 public class Profiler implements Updateable {
 	GameProfiler gameprofiler;
 	PhysicsProfiler physicsprofiler;
-	int numvalues = 455;
+	final int numvalues = 455;
 	float maxvalue = 0;
 	List<Long> times;
 	HashMap<Integer, List<Long>> values;
@@ -241,17 +241,22 @@ public class Profiler implements Updateable {
 			for (int i = 0; i < 4; i++) {
 				values.get(i).add(profilevalues[i + 1]);
 			}
+			if (times.size() > numvalues) {
+				times.remove(0);
+				values.get(0).remove(0);
+				values.get(1).remove(0);
+				values.get(2).remove(0);
+				values.get(3).remove(0);
+			}
 			gameProfileLine0.addValue(profilevalues[1]);
 			gameProfileLine1.addValue(profilevalues[2]);
 			gameProfileLine2.addValue(profilevalues[3]);
 			gameProfileLine3.addValue(profilevalues[4]);
 
-			int valuesize = values.get(0).size();
-
-			gameProfileText0.setText("Update: " + values.get(0).get(valuesize - 1));
-			gameProfileText1.setText("Render 3d: " + values.get(1).get(valuesize - 1));
-			gameProfileText2.setText("Render 2d: " + values.get(2).get(valuesize - 1));
-			gameProfileText3.setText("Display: " + values.get(3).get(valuesize - 1));
+			gameProfileText0.setText("Update: " + profilevalues[1]);
+			gameProfileText1.setText("Render 3d: " + profilevalues[2]);
+			gameProfileText2.setText("Render 2d: " + profilevalues[3]);
+			gameProfileText3.setText("Display: " + profilevalues[4]);
 		}
 		if (physicsprofiler != null) {
 			long[] profilevalues = physicsprofiler.getValues();
@@ -260,53 +265,23 @@ public class Profiler implements Updateable {
 			for (int i = 0; i < 4; i++) {
 				values.get(i + 4).add(profilevalues[i + 1]);
 			}
+			if (times.size() > numvalues) {
+				if (gameprofiler == null)
+					times.remove(0);
+				values.get(4).remove(0);
+				values.get(5).remove(0);
+				values.get(6).remove(0);
+				values.get(7).remove(0);
+			}
 			physicsProfileLine0.addValue(profilevalues[1]);
 			physicsProfileLine1.addValue(profilevalues[2]);
 			physicsProfileLine2.addValue(profilevalues[3]);
 			physicsProfileLine3.addValue(profilevalues[4]);
 
-			int valuesize = values.get(4).size();
-
-			physicsProfileText0.setText("Broadphase: " + values.get(4).get(valuesize - 1));
-			physicsProfileText1.setText("Narrowphase: " + values.get(5).get(valuesize - 1));
-			physicsProfileText2.setText("Resolution: " + values.get(6).get(valuesize - 1));
-			physicsProfileText3.setText("Integration: " + values.get(7).get(valuesize - 1));
-		}
-
-		if (times.size() > numvalues) {
-			times.remove(numvalues);
-			if (gameprofiler != null) {
-				gameProfileLine0.removeLastValue();
-				gameProfileLine1.removeLastValue();
-				gameProfileLine2.removeLastValue();
-				gameProfileLine3.removeLastValue();
-				boolean rm1 = values.get(0).remove(0) == maxvalue;
-				boolean rm2 = values.get(1).remove(0) == maxvalue;
-				boolean rm3 = values.get(2).remove(0) == maxvalue;
-				boolean rm4 = values.get(3).remove(0) == maxvalue;
-				if (rm1 || rm2 || rm3 || rm4) {
-					maxvalue = findNextMax();
-					scaleMid.setText(maxvalue / 2000f + " ms");
-					scaleMax.setText(maxvalue / 1000f + " ms");
-					scaleProfileLines(maxvalue);
-				}
-			}
-			if (physicsprofiler != null) {
-				physicsProfileLine0.removeLastValue();
-				physicsProfileLine1.removeLastValue();
-				physicsProfileLine2.removeLastValue();
-				physicsProfileLine3.removeLastValue();
-				boolean rm1 = values.get(4).remove(0) == maxvalue;
-				boolean rm2 = values.get(5).remove(0) == maxvalue;
-				boolean rm3 = values.get(6).remove(0) == maxvalue;
-				boolean rm4 = values.get(7).remove(0) == maxvalue;
-				if (rm1 || rm2 || rm3 || rm4) {
-					maxvalue = findNextMax();
-					scaleMid.setText(maxvalue / 2000f + " ms");
-					scaleMax.setText(maxvalue / 1000f + " ms");
-					scaleProfileLines(maxvalue);
-				}
-			}
+			physicsProfileText0.setText("Broadphase: " + profilevalues[1]);
+			physicsProfileText1.setText("Narrowphase: " + profilevalues[2]);
+			physicsProfileText2.setText("Resolution: " + profilevalues[3]);
+			physicsProfileText3.setText("Integration: " + profilevalues[4]);
 		}
 
 		if (gameprofiler != null && showScale && showGameProfile) {
@@ -336,7 +311,7 @@ public class Profiler implements Updateable {
 	}
 
 	private void scaleProfileLines(float scale) {
-		scale = sizeY / scale;
+		scale = -sizeY / scale;
 		gameProfileLine0.scaleProfile(scale);
 		gameProfileLine1.scaleProfile(scale);
 		gameProfileLine2.scaleProfile(scale);
@@ -363,17 +338,26 @@ public class Profiler implements Updateable {
 			for (Vector2f v : getVertices()) {
 				v.translate(1, 0);
 			}
-			addIndex(getVertexCount());
-			addVertex(new Vector2f(0, -value));
+
+			if (getIndexCount() == numvalues) {
+				Vector2f vert = vertices.get(0);
+				if (vert.y >= maxvalue) {
+					maxvalue = findNextMax();
+					scaleMid.setText(maxvalue / 2000f + " ms");
+					scaleMax.setText(maxvalue / 1000f + " ms");
+					scaleProfileLines(maxvalue);
+				}
+				removeVertex(0);
+				vert.set(0, value);
+				addVertex(vert);
+			} else {
+				addIndex(getVertexCount());
+				addVertex(new Vector2f(0, value));
+			}
 		}
 
 		public void scaleProfile(float scale) {
 			scaleTo(1, scale);
-		}
-
-		public void removeLastValue() {
-			removeVertex(0);
-			removeIndex(getVertexCount());
 		}
 	}
 }

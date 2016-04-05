@@ -12,6 +12,8 @@ import vector.Vector2f;
 import vector.Vector3f;
 
 public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements InstancedBaseObject2 {
+	final Vector2f vec2 = new Vector2f();
+
 	public ShapedObject2() {
 		super(new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
 		init();
@@ -133,43 +135,43 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 	}
 
 	public void addVertex(Vector2f vertex) {
-		addVertex(vertex, Color.GRAY, new Vector2f(), new Vector2f());
+		addVertex(vertex, Color.GRAY, vec2, vec2);
 	}
 
 	public void addVertex(Vector2f vertex, Color c) {
-		addVertex(vertex, c, new Vector2f(), new Vector2f());
+		addVertex(vertex, c, vec2, vec2);
 	}
 
 	public void addVertex(Vector2f vertex, Color c, Vector2f texturecoord) {
-		addVertex(vertex, c, texturecoord, new Vector2f());
+		addVertex(vertex, c, texturecoord, vec2);
 	}
 
 	public void addVertex(Vector2f vertex, Vector3f c) {
-		addVertex(vertex, c, new Vector2f(), new Vector2f());
+		addVertex(vertex, c, vec2, vec2);
 	}
 
 	public void addVertex(Vector2f vertex, Vector3f c, Vector2f texturecoord) {
-		addVertex(vertex, c, texturecoord, new Vector2f());
+		addVertex(vertex, c, texturecoord, vec2);
 	}
 
 	public void setVertex(int id, Vector2f vertex) {
-		setVertex(id, vertex, Color.GRAY, new Vector2f(), new Vector2f());
+		setVertex(id, vertex, Color.GRAY, vec2, vec2);
 	}
 
 	public void setVertex(int id, Vector2f vertex, Color c) {
-		setVertex(id, vertex, c, new Vector2f(), new Vector2f());
+		setVertex(id, vertex, c, vec2, vec2);
 	}
 
 	public void setVertex(int id, Vector2f vertex, Color c, Vector2f texturecoord) {
-		setVertex(id, vertex, c, texturecoord, new Vector2f());
+		setVertex(id, vertex, c, texturecoord, vec2);
 	}
 
 	public void setVertex(int id, Vector2f vertex, Vector3f c) {
-		setVertex(id, vertex, c, new Vector2f(), new Vector2f());
+		setVertex(id, vertex, c, vec2, vec2);
 	}
 
 	public void setVertex(int id, Vector2f vertex, Vector3f c, Vector2f texturecoord) {
-		setVertex(id, vertex, c, texturecoord, new Vector2f());
+		setVertex(id, vertex, c, texturecoord, vec2);
 	}
 
 	@Override
