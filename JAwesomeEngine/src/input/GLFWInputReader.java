@@ -65,18 +65,49 @@ public class GLFWInputReader extends InputReader {
 		return gamepads.size();
 	}
 
+	public List<Integer> getGamepadIDs() {
+		return gamepads;
+	}
+
+	public FloatBuffer getGamepadAxesBuffer(int gamepad) {
+		return gamepadaxes.get(gamepad);
+	}
+
+	public ByteBuffer getGamepadButtonsBuffer(int gamepad) {
+		return gamepadbuttons.get(gamepad);
+	}
+
+	public int getGamepadAxesCount(int gamepad) {
+		return gamepadaxes.get(gamepad).capacity();
+	}
+
+	public int getGamepadButtonsCount(int gamepad) {
+		return gamepadbuttons.get(gamepad).capacity();
+	}
+
 	@Override
 	public float getGamepadStickValue(int gamepad, int analogInputID) {
-		if (getGamepadCount() == 0)
+		if (getGamepadCount() <= gamepad)
 			return 0;
-		return gamepadaxes.get(gamepad).get(analogInputID);
+
+		FloatBuffer buf = gamepadaxes.get(gamepad);
+		if (buf.capacity() <= analogInputID)
+			return 0;
+
+		return buf.get(analogInputID);
 	}
 
 	@Override
 	public boolean isGamepadButtonDown(int gamepad, String button) {
-		if (getGamepadCount() == 0)
+		if (getGamepadCount() <= gamepad)
 			return false;
-		return gamepadbuttons.get(gamepad).get(Integer.parseInt(button)) == 1;
+
+		ByteBuffer buf = gamepadbuttons.get(gamepad);
+		int buttonID = Integer.parseInt(button);
+		if (buf.capacity() <= buttonID)
+			return false;
+
+		return buf.get(buttonID) == 1;
 	}
 
 	@Override

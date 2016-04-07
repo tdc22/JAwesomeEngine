@@ -24,6 +24,14 @@ public class InputManager {
 		return inputreader.getGamepadStickValue(gamepad, analogInputID);
 	}
 
+	public int getGamepadAxesCount(int gamepad) {
+		return inputreader.getGamepadAxesCount(gamepad);
+	}
+
+	public int getGamepadButtonsCount(int gamepad) {
+		return inputreader.getGamepadButtonsCount(gamepad);
+	}
+
 	public LinkedHashMap<String, InputEvent> getInputEvents() {
 		return inputevents;
 	}

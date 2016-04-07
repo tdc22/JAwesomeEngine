@@ -5,6 +5,10 @@ public abstract class InputReader {
 
 	public abstract int getGamepadCount();
 
+	public abstract int getGamepadAxesCount(int gamepad);
+
+	public abstract int getGamepadButtonsCount(int gamepad);
+
 	public abstract float getGamepadStickValue(int gamepad, int analogInputID);
 
 	public float getMouseX() {
