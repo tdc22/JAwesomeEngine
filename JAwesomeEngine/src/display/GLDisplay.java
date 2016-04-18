@@ -80,10 +80,10 @@ public class GLDisplay extends Display {
 		glfwDestroyWindow(windowid);
 		System.out.println("Terminated!");
 		if (sizeCallback != null)
-			sizeCallback.release();
-		posCallback.release();
+			sizeCallback.free();
+		posCallback.free();
 		glfwTerminate();
-		errorCallback.release();
+		errorCallback.free();
 	}
 
 	public long getWindowID() {

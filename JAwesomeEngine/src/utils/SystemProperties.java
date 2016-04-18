@@ -12,7 +12,7 @@ public class SystemProperties {
 	}
 
 	public static String getLWJGLVersion() {
-		return Sys.getVersion();
+		return org.lwjgl.Version.getVersion();
 	}
 
 	public static String getOpenGLVersion() {
