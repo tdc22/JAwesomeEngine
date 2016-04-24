@@ -23,6 +23,7 @@ import math.VecMath;
 import shader.Shader;
 import shape2d.Circle;
 import shape2d.Quad;
+import sound.NullSoundEnvironment;
 import texture.Texture;
 import utils.Pair;
 import vector.Vector2f;
@@ -46,7 +47,7 @@ public class NormalEditor extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Normalmap Editor", true, false), new PixelFormat(),
-				new VideoSettings());
+				new VideoSettings(), new NullSoundEnvironment());
 
 		Shader defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));

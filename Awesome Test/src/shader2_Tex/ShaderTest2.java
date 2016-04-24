@@ -9,6 +9,7 @@ import loader.ShaderLoader;
 import loader.TextureLoader;
 import shader.Shader;
 import shape.Box;
+import sound.NullSoundEnvironment;
 import texture.Texture;
 import vector.Vector4f;
 
@@ -16,7 +17,8 @@ public class ShaderTest2 extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 5);

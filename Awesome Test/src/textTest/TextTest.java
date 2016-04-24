@@ -11,6 +11,7 @@ import gui.Text;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import shader.Shader;
+import sound.NullSoundEnvironment;
 
 public class TextTest extends StandardGame {
 	QuadShape rotquad;
@@ -19,7 +20,8 @@ public class TextTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 

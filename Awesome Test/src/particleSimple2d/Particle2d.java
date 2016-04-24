@@ -11,6 +11,7 @@ import loader.ShaderLoader;
 import loader.TextureLoader;
 import particle.SimpleParticleSource2;
 import shader.Shader;
+import sound.NullSoundEnvironment;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector1f;
@@ -24,7 +25,7 @@ public class Particle2d extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Particles", false), new PixelFormat(),
-				new VideoSettings());
+				new VideoSettings(), new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);

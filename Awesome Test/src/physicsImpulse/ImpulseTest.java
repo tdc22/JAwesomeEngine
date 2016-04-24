@@ -20,6 +20,7 @@ import quaternion.Quaternionf;
 import resolution.NullResolution;
 import shader.Shader;
 import shape.Box;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector3f;
 
@@ -33,7 +34,8 @@ public class ImpulseTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);

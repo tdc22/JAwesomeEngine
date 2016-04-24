@@ -20,6 +20,7 @@ import loader.TextureLoader;
 import shader.Shader;
 import shape.Box;
 import shape.Sphere;
+import sound.NullSoundEnvironment;
 import texture.CubeEnvironmentMap;
 import texture.CubeMap;
 import texture.Texture;
@@ -34,7 +35,8 @@ public class ReflectionRefractionTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.setFlySpeed(0.002f);

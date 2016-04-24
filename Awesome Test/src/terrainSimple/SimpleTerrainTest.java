@@ -17,6 +17,7 @@ import input.KeyInput;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import shader.Shader;
+import sound.NullSoundEnvironment;
 import terrain.Terrain;
 import utils.Debugger;
 
@@ -26,7 +27,8 @@ public class SimpleTerrainTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 3, 0);

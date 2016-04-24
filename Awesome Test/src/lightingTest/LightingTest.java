@@ -13,6 +13,7 @@ import loader.ModelLoader;
 import loader.ShaderLoader;
 import objects.ShapedObject3;
 import shader.Shader;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector3f;
 
@@ -22,7 +23,8 @@ public class LightingTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);

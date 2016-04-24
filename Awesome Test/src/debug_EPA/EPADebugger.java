@@ -24,6 +24,7 @@ import physicsSupportFunction.SupportDifferenceObject;
 import quaternion.Quaternionf;
 import shader.Shader;
 import shape.Box;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector3f;
 
@@ -204,7 +205,8 @@ public class EPADebugger extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 
 		defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));

@@ -15,6 +15,7 @@ import shape.Box;
 import shape.Cylinder;
 import shape.Sphere;
 import shape2d.Quad;
+import sound.NullSoundEnvironment;
 import texture.FramebufferObject;
 import texture.Texture;
 import utils.Debugger;
@@ -30,7 +31,8 @@ public class ShadowTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);

@@ -13,6 +13,7 @@ import game.StandardGame;
 import loader.ShaderLoader;
 import objects.ShapedObject2;
 import shader.Shader;
+import sound.NullSoundEnvironment;
 import utils.GLConstants;
 import vector.Vector2f;
 
@@ -20,7 +21,8 @@ public class ConvexHullTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings(),
+				new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);

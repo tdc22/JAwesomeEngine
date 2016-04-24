@@ -5,7 +5,6 @@ import java.util.List;
 
 import broadphase.SAP2;
 import constraints.DistanceConstraint2;
-import constraints.DistanceConstraint2Old;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
@@ -28,6 +27,7 @@ import positionalcorrection.ProjectionCorrection;
 import resolution.ImpulseResolution;
 import shader.Shader;
 import shape2d.Circle;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector2f;
 
@@ -41,7 +41,8 @@ public class ConstraintTest2d2 extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		// display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);

@@ -24,6 +24,7 @@ import quaternion.Quaternionf;
 import shader.Shader;
 import shape.Box;
 import shape.Sphere;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector3f;
@@ -290,7 +291,8 @@ public class GJKDebugger extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings(),
+				new NullSoundEnvironment());
 
 		defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));

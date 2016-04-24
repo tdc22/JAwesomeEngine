@@ -17,6 +17,7 @@ import objects.ShapedObject2;
 import shader.Shader;
 import shape2d.Circle;
 import shape2d.Quad;
+import sound.NullSoundEnvironment;
 import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector4f;
@@ -41,7 +42,7 @@ public class ScatterplotMatrix extends StandardGame {
 		int sizeX = 4 * GRIDSIZE + OFFSET_X;
 		int sizeY = 4 * GRIDSIZE + OFFSET_Y;
 		initDisplay(new GLDisplay(), new DisplayMode(sizeX, sizeY, "HCS Scatterplot Matrix", true),
-				new PixelFormat().withSamples(0), new VideoSettings(sizeX, sizeY));
+				new PixelFormat().withSamples(0), new VideoSettings(sizeX, sizeY), new NullSoundEnvironment());
 
 		List<PlotData> plotdata = new ArrayList<PlotData>();
 		plotdata.add(new PlotData("VW Golf", 220, 110, 5));

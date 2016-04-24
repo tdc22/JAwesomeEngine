@@ -32,6 +32,7 @@ import shader.Shader;
 import shape.Box;
 import shape.Cylinder;
 import shape.Sphere;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector3f;
@@ -112,7 +113,7 @@ public class Tutorial extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Tutorial", false), new PixelFormat(),
-				new VideoSettings());
+				new VideoSettings(), new NullSoundEnvironment());
 		display.bindMouse();
 		cam.rotateTo(225, 0);
 

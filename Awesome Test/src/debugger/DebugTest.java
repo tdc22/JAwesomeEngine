@@ -10,6 +10,7 @@ import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import shader.Shader;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 
 public class DebugTest extends StandardGame {
@@ -19,7 +20,8 @@ public class DebugTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);

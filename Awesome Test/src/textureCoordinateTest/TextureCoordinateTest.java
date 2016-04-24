@@ -12,13 +12,15 @@ import shape.Box;
 import shape.Cylinder;
 import shape.Ellipsoid;
 import shape.Sphere;
+import sound.NullSoundEnvironment;
 import texture.Texture;
 
 public class TextureCoordinateTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 5);

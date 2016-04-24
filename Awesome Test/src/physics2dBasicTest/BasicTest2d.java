@@ -23,6 +23,7 @@ import resolution.ImpulseResolution;
 import shader.Shader;
 import shape2d.Circle;
 import shape2d.Quad;
+import sound.NullSoundEnvironment;
 import space.PhysicsProfiler;
 import space.SimplePhysicsProfiler;
 import utils.Debugger;
@@ -41,7 +42,8 @@ public class BasicTest2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "TEST", false), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "TEST", false), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);

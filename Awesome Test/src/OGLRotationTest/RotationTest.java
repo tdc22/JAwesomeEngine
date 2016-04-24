@@ -6,6 +6,7 @@ import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 
 public class RotationTest extends StandardGame {
@@ -14,7 +15,8 @@ public class RotationTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		debugmanager = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 		this.setRender2d(true);
 		cam.setFlyCam(true);

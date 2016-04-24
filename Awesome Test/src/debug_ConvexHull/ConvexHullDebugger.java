@@ -18,6 +18,7 @@ import loader.ShaderLoader;
 import math.VecMath;
 import objects.ShapedObject3;
 import shader.Shader;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 import utils.GLConstants;
 import vector.Vector2f;
@@ -297,7 +298,8 @@ public class ConvexHullDebugger extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings(),
+				new NullSoundEnvironment());
 
 		defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));

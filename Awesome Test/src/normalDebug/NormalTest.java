@@ -11,13 +11,15 @@ import objects.ShapedObject3;
 import shader.Shader;
 import shape.Box;
 import shape.Sphere;
+import sound.NullSoundEnvironment;
 import utils.GLConstants;
 
 public class NormalTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0.5f, 5);

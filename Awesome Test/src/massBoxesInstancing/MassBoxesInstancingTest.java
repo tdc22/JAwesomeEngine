@@ -12,6 +12,7 @@ import matrix.Matrix4f;
 import objects.InstancedObject;
 import shader.Shader;
 import shape.Box;
+import sound.NullSoundEnvironment;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector3f;
@@ -22,7 +23,7 @@ public class MassBoxesInstancingTest extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "JAwesomeEngine", false), new PixelFormat(),
-				new VideoSettings());
+				new VideoSettings(), new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 0);

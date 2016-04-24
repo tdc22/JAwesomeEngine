@@ -14,6 +14,7 @@ import shape.Cylinder;
 import shape.Ellipsoid;
 import shape.IsoSphere;
 import shape.Sphere;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 
 public class GeometryTest extends StandardGame {
@@ -22,7 +23,8 @@ public class GeometryTest extends StandardGame {
 	@Override
 	public void init() {
 		useFBO = false;
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);

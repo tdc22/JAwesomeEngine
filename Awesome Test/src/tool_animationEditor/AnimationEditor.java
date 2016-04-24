@@ -32,6 +32,7 @@ import objects.ShapedObject2;
 import quaternion.Complexf;
 import shader.Shader;
 import shape2d.Quad;
+import sound.NullSoundEnvironment;
 import texture.Texture;
 import utils.GLConstants;
 import utils.ProjectionHelper;
@@ -76,7 +77,7 @@ public class AnimationEditor extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Animation Editor", true, false),
-				new PixelFormat().withSamples(0), new VideoSettings());
+				new PixelFormat().withSamples(0), new VideoSettings(), new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);

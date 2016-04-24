@@ -26,6 +26,7 @@ import shape.Box;
 import shape.Capsule;
 import shape.Cylinder;
 import shape.Sphere;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector3f;
 
@@ -44,7 +45,8 @@ public class SupportFunctionTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);

@@ -16,6 +16,7 @@ import loader.ShaderLoader;
 import shader.Shader;
 import shape2d.Circle;
 import shape2d.Quad;
+import sound.NullSoundEnvironment;
 import vector.Vector4f;
 
 public class Scatterplot extends StandardGame {
@@ -33,7 +34,7 @@ public class Scatterplot extends StandardGame {
 	@Override
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(sizeX, sizeY, "HCS Scatterplot", true),
-				new PixelFormat().withSamples(0), new VideoSettings(sizeX, sizeY));
+				new PixelFormat().withSamples(0), new VideoSettings(sizeX, sizeY), new NullSoundEnvironment());
 
 		List<PlotData> plotdata = new ArrayList<PlotData>();
 		plotdata.add(new PlotData("VW Golf", 220, 110, 5));
@@ -126,5 +127,10 @@ public class Scatterplot extends StandardGame {
 			ps = p;
 			gaenge = g;
 		}
+	}
+
+	@Override
+	public void renderInterface() {
+
 	}
 }

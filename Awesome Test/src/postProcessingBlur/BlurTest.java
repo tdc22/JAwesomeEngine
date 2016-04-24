@@ -13,6 +13,7 @@ import loader.ModelLoader;
 import loader.ShaderLoader;
 import shader.PostProcessingShader;
 import shader.Shader;
+import sound.NullSoundEnvironment;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector2f;
@@ -23,7 +24,8 @@ public class BlurTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);

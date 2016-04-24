@@ -9,6 +9,7 @@ import loader.FontLoader;
 import loader.ShaderLoader;
 import objects.SimpleBoxVoxelObject;
 import shader.Shader;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 
 public class PyramidVoxelTest extends StandardGame {
@@ -16,7 +17,8 @@ public class PyramidVoxelTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(-1, 1, -1);

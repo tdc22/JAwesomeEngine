@@ -22,6 +22,7 @@ import quaternion.Quaternionf;
 import resolution.LinearImpulseResolution;
 import shader.Shader;
 import shape.Box;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector3f;
 
@@ -34,7 +35,8 @@ public class FrictionTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 20);

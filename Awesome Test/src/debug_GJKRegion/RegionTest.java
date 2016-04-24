@@ -21,6 +21,7 @@ import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
 import shader.Shader;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector2f;
 import vector.Vector3f;
@@ -208,7 +209,8 @@ public class RegionTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 
 		defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));

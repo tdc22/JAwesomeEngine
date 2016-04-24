@@ -11,13 +11,15 @@ import input.InputEvent;
 import input.KeyInput;
 import input.MouseInput;
 import shape.Box;
+import sound.NullSoundEnvironment;
 
 public class InputTest extends StandardGame {
 	Box box;
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);

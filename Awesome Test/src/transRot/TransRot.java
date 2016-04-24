@@ -13,6 +13,7 @@ import loader.ShaderLoader;
 import math.FastMath;
 import objects.ShapedObject3;
 import shader.Shader;
+import sound.NullSoundEnvironment;
 
 public class TransRot extends StandardGame {
 	ShapedObject3 rabbit1, rabbit2;
@@ -21,7 +22,8 @@ public class TransRot extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 5, 40);

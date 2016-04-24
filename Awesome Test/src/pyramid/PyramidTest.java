@@ -9,6 +9,7 @@ import loader.FontLoader;
 import loader.ShaderLoader;
 import shader.Shader;
 import shape.Box;
+import sound.NullSoundEnvironment;
 import utils.Debugger;
 
 public class PyramidTest extends StandardGame {
@@ -16,7 +17,8 @@ public class PyramidTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(-1, 1, -1);

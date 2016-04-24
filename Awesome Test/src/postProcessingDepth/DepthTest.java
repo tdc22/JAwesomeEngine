@@ -14,6 +14,7 @@ import loader.ShaderLoader;
 import shader.PostProcessingShader;
 import shader.Shader;
 import shape.Box;
+import sound.NullSoundEnvironment;
 import texture.Texture;
 import utils.Debugger;
 
@@ -25,7 +26,8 @@ public class DepthTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);

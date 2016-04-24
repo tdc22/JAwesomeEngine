@@ -28,6 +28,7 @@ import resolution.ImpulseResolution;
 import shader.Shader;
 import shape.Box;
 import shape.Sphere;
+import sound.NullSoundEnvironment;
 import space.PhysicsProfiler;
 import space.SimplePhysicsProfiler;
 import utils.Debugger;
@@ -51,7 +52,8 @@ public class BasicTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "TEST", false), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "TEST", false), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
@@ -166,7 +168,8 @@ public class BasicTest extends StandardGame {
 
 		debugger.update(fps, defaultshader.getObjects().size(), 0);
 		space.update(delta);
-		System.out.println(rb.getTranslation() + "; " + rb.getLinearVelocity() + "; " + rb.getAngularVelocity() + "; " + rb.getForceAccumulator() + "; " + rb.getTorqueAccumulator());
+		System.out.println(rb.getTranslation() + "; " + rb.getLinearVelocity() + "; " + rb.getAngularVelocity() + "; "
+				+ rb.getForceAccumulator() + "; " + rb.getTorqueAccumulator());
 		physicsdebug.update();
 		profiler.update(delta);
 

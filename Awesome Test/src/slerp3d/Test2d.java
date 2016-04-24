@@ -10,6 +10,7 @@ import math.QuatMath;
 import quaternion.Quaternionf;
 import shader.Shader;
 import shape.Box;
+import sound.NullSoundEnvironment;
 import vector.Vector3f;
 
 public class Test2d extends StandardGame {
@@ -19,7 +20,8 @@ public class Test2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);

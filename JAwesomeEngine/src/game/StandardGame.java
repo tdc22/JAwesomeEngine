@@ -45,6 +45,7 @@ import objects.Updateable;
 import shader.PostProcessingShader;
 import shader.Shader;
 import shape2d.Quad;
+import sound.SoundEnvironment;
 import utils.DefaultShader;
 import utils.GameProfiler;
 import utils.NullGameProfiler;
@@ -58,6 +59,7 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 	public Display display;
 	public GameCamera cam;
 	public Camera2 cam2d;
+	public SoundEnvironment soundEnvironment;
 	protected GameProfiler profiler;
 
 	public InputManager inputs;
@@ -196,10 +198,11 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 	}
 
 	public void initDisplay(Display display, DisplayMode displaymode, PixelFormat pixelformat,
-			VideoSettings videosettings) {
+			VideoSettings videosettings, SoundEnvironment soundenvironment) {
 		this.display = display;
 		display.open(displaymode, pixelformat);
 		this.settings = videosettings;
+		this.soundEnvironment = soundenvironment;
 
 		// GLFW input fix
 		if (inputs.getInputReader() instanceof GLFWInputReader)
@@ -341,6 +344,8 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		System.out.println("EXIT LOOP");
 		destroyEngine();
 		System.out.println("Destroy Engine");
+		soundEnvironment.delete();
+		System.out.println("Destroy Audio");
 		display.close();
 		System.out.println("Destroy Display");
 		System.exit(0);

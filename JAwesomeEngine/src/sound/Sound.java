@@ -1,42 +1,28 @@
 package sound;
 
-import static org.lwjgl.openal.AL10.AL_BUFFER;
-import static org.lwjgl.openal.AL10.alGenSources;
-import static org.lwjgl.openal.AL10.alSourcePause;
-import static org.lwjgl.openal.AL10.alSourcePlay;
-import static org.lwjgl.openal.AL10.alSourceRewind;
-import static org.lwjgl.openal.AL10.alSourceStop;
-import static org.lwjgl.openal.AL10.alSourcei;
+import vector.Vector2f;
+import vector.Vector3f;
 
-public class Sound {
-	int sourcehandle, bufferhandle;
+public abstract class Sound {
+	public abstract void pause();
 
-	public Sound(int bufferhandle) {
-		sourcehandle = alGenSources();
-		alSourcei(sourcehandle, AL_BUFFER, bufferhandle);
-	}
+	public abstract void play();
 
-	public void pause() {
-		alSourcePause(sourcehandle);
-	}
+	public abstract void rewind();
 
-	public void play() {
-		alSourcePlay(sourcehandle);
-	}
+	public abstract void stop();
 
-	public void rewind() {
-		alSourceRewind(sourcehandle);
-	}
+	public abstract void setLooping(boolean loop);
 
-	public void stop() {
-		alSourceStop(sourcehandle);
-	}
+	public abstract void delete();
 
-	// private int getState() {
-	//
-	// }
-	//
-	// public void isPlaying() {
-	//
-	// }
+	public abstract void setSourcePositionRelative(boolean relative);
+
+	public abstract void setSourcePosition(Vector3f position);
+
+	public abstract void setSourcePosition(Vector2f position);
+
+	public abstract void setSourcePosition(float x, float y, float z);
+
+	public abstract void setSourcePosition(float x, float y);
 }

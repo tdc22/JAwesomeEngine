@@ -1,12 +1,14 @@
 package display;
 
 import game.StandardGame;
+import sound.NullSoundEnvironment;
 
 public class DisplayTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import loader.ShaderLoader;
 import objects.Camera3;
 import shader.Shader;
 import shape.Box;
+import sound.NullSoundEnvironment;
 import texture.FramebufferObject;
 import texture.Texture;
 import utils.Debugger;
@@ -22,7 +23,8 @@ public class RenderTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
