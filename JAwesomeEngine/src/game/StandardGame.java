@@ -282,10 +282,6 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	}
-	
-	public void setDepthTestEnabled(boolean enableDetphTest) {
-		this.depthTestEnabled = enableDetphTest;
-	}
 
 	@Override
 	public boolean isRunning() {
