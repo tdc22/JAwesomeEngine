@@ -66,6 +66,7 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 	protected InputEvent closeEvent;
 
 	protected boolean useFBO = true;
+	protected boolean depthTestEnabled = true;
 
 	public void addShader(Shader s) {
 		layer3d.addShader(s);
@@ -259,7 +260,12 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		glClearStencil(0);
 
 		glShadeModel(GL_SMOOTH);
-		glEnable(GL_DEPTH_TEST);
+		if(depthTestEnabled) {
+			glEnable(GL_DEPTH_TEST);
+		}
+		else {
+			glDisable(GL_DEPTH_TEST);
+		}
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
@@ -275,6 +281,10 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	}
+	
+	public void setDepthTestEnabled(boolean enableDetphTest) {
+		this.depthTestEnabled = enableDetphTest;
 	}
 
 	@Override
