@@ -260,12 +260,7 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		glClearStencil(0);
 
 		glShadeModel(GL_SMOOTH);
-		if(depthTestEnabled) {
-			glEnable(GL_DEPTH_TEST);
-		}
-		else {
-			glDisable(GL_DEPTH_TEST);
-		}
+		setDepthTestEnabled(depthTestEnabled);
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
@@ -281,6 +276,14 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	}
+
+	public void setDepthTestEnabled(boolean depthTestEnabled) {
+		if (depthTestEnabled) {
+			glEnable(GL_DEPTH_TEST);
+		} else {
+			glDisable(GL_DEPTH_TEST);
+		}
 	}
 
 	@Override
