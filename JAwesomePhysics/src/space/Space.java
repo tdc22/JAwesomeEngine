@@ -284,6 +284,14 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public void addCollisionFilter(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
 		collisionfilter.add(collisionPair);
 	}
+	
+	public void removeCollisionFilter(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
+		removeCollisionFilter(new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(objectA, objectB));
+	}
+
+	public void removeCollisionFilter(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
+		collisionfilter.remove(collisionPair);
+	}
 
 	public boolean isCollisionFiltered(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
 		return collisionfilter.contains(collisionPair);

@@ -48,4 +48,8 @@ public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 		addRigidBody(compoundobject);
 		compoundObjects.add(compoundobject);
 	}
+	
+	public void setGlobalGravitation(float x, float y) {
+		globalGravitation.set(x, y);
+	}
 }

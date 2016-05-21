@@ -45,4 +45,8 @@ public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> 
 		addRigidBody(compoundobject);
 		compoundObjects.add(compoundobject);
 	}
+	
+	public void setGlobalGravitation(float x, float y, float z) {
+		globalGravitation.set(x, y, z);
+	}
 }
