@@ -73,7 +73,7 @@ public class BasicTest extends StandardGame {
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
-		physicsdebug = new PhysicsDebug(inputs, font, space);
+		physicsdebug = new PhysicsDebug(inputs, font, space, defaultshader);
 		GameProfiler gp = new SimpleGameProfiler();
 		setProfiler(gp);
 		PhysicsProfiler pp = new SimplePhysicsProfiler();
@@ -116,8 +116,8 @@ public class BasicTest extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
-		render3dLayer();
 		physicsdebug.render3d();
+		render3dLayer();
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import objects.GhostObject;
 import objects.RigidBody;
 import objects.ShapedObject3;
 import quaternion.Quaternionf;
+import shader.Shader;
 import space.Space3;
 import utils.Pair;
 import vector.Vector3f;
@@ -25,6 +26,7 @@ import vector.Vector3f;
 public class PhysicsDebug {
 	Font font;
 	Space3 physics;
+	Shader defaultshader;
 	boolean showAABBs = false;
 	boolean showVelocities = false;
 	boolean showCollisionNormals = false;
@@ -32,14 +34,16 @@ public class PhysicsDebug {
 	private InputEvent toggleAABBs, toggleCollisionNormals, toggleVelocities, toggleCollisionTangents;
 	private List<Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>> aabbObjects;
 
-	public PhysicsDebug(InputManager inputs, Font f, Space3 physics) {
+	public PhysicsDebug(InputManager inputs, Font f, Space3 physics, Shader defaultshader) {
 		font = f;
 		this.physics = physics;
+		this.defaultshader = defaultshader;
 		setupEvents(inputs);
 	}
 
 	private void clearAABBObjects() {
 		for (Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> obj : aabbObjects) {
+			defaultshader.removeObject(obj.getFirst());
 			obj.getFirst().delete();
 		}
 		aabbObjects.clear();
@@ -73,6 +77,7 @@ public class PhysicsDebug {
 		aabbobj.addVertex(max, c);
 		aabbobj.addIndices(0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 2, 4, 2, 6, 3, 6, 3, 5, 4, 7, 5, 7, 6, 7);
 		aabbobj.prerender();
+		defaultshader.addArgument(aabbobj);
 		aabbObjects.add(new Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(aabbobj, rb));
 	}
 
@@ -100,7 +105,6 @@ public class PhysicsDebug {
 		if (showAABBs) {
 			for (Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> aabbobj : aabbObjects) {
 				aabbobj.getFirst().translateTo(aabbobj.getSecond().getTranslation());
-				aabbobj.getFirst().render();
 			}
 		}
 		if (showCollisionNormals) {
