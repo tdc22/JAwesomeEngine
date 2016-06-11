@@ -244,4 +244,11 @@ public class Complexd extends Complex {
 		this.real = this.real * real - this.imaginary * imaginary;
 		this.imaginary = tmp;
 	}
+
+	@Override
+	public void square() {
+		double realimaginary = real * imaginary;
+		real = real * real + imaginary * imaginary;
+		imaginary = realimaginary + realimaginary;
+	}
 }

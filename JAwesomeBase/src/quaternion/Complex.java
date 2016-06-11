@@ -32,6 +32,11 @@ public abstract class Complex implements Rotation {
 	 * @see Complex#getReal()
 	 */
 	public abstract float getRealf();
+	
+	/**
+	 * Squares the complex number.
+	 */
+	public abstract void square();
 
 	/**
 	 * Calculates the magnitude of the complex number.
