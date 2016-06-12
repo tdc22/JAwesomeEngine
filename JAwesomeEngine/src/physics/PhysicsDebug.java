@@ -77,7 +77,7 @@ public class PhysicsDebug {
 		aabbobj.addVertex(max, c);
 		aabbobj.addIndices(0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 2, 4, 2, 6, 3, 6, 3, 5, 4, 7, 5, 7, 6, 7);
 		aabbobj.prerender();
-		defaultshader.addArgument(aabbobj);
+		defaultshader.addObject(aabbobj);
 		aabbObjects.add(new Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(aabbobj, rb));
 	}
 
@@ -102,6 +102,7 @@ public class PhysicsDebug {
 	}
 
 	public void render3d() {
+		defaultshader.bind();
 		if (showAABBs) {
 			for (Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> aabbobj : aabbObjects) {
 				aabbobj.getFirst().translateTo(aabbobj.getSecond().getTranslation());
@@ -165,6 +166,7 @@ public class PhysicsDebug {
 				velocity.delete();
 			}
 		}
+		defaultshader.unbind();
 	}
 
 	public void setShowAABBs(boolean s) {
