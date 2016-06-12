@@ -40,7 +40,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected final List<RigidBody<L, A1, A2, A3>> objects;
 	protected final List<CompoundObject<L, A2>> compoundObjects;
 	protected final List<GhostObject<L, A1, A2, A3>> ghostobjects;
-	protected final Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> collisionfilter;
+	protected final Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> collisionfilters;
 	protected final List<Constraint<L, A1, A2, A3>> constraints;
 	protected Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> overlaps;
 	protected L globalForce;
@@ -90,7 +90,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		compoundObjects = new ArrayList<CompoundObject<L, A2>>();
 		ghostobjects = new ArrayList<GhostObject<L, A1, A2, A3>>();
 		overlaps = new LinkedHashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
-		collisionfilter = new HashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
+		collisionfilters = new HashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
 		constraints = new ArrayList<Constraint<L, A1, A2, A3>>();
 		profiler = new NullPhysicsProfiler();
 		broadphase.addListener(new CompoundListener());
@@ -168,6 +168,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	public Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> getOverlaps() {
 		return overlaps;
+	}
+	
+	public Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> getCollisionFilters() {
+		return collisionfilters;
 	}
 
 	public PositionalCorrection getPositionalCorrection() {
@@ -282,7 +286,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	}
 
 	public void addCollisionFilter(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
-		collisionfilter.add(collisionPair);
+		collisionfilters.add(collisionPair);
 	}
 	
 	public void removeCollisionFilter(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
@@ -290,11 +294,11 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	}
 
 	public void removeCollisionFilter(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
-		collisionfilter.remove(collisionPair);
+		collisionfilters.remove(collisionPair);
 	}
 
 	public boolean isCollisionFiltered(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
-		return collisionfilter.contains(collisionPair);
+		return collisionfilters.contains(collisionPair);
 	}
 
 	public void updateTimestep(float delta) {
