@@ -202,7 +202,7 @@ public class Tutorial extends StandardGame {
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
-		physicsdebug = new PhysicsDebug(inputs, font, space);
+		physicsdebug = new PhysicsDebug(inputs, font, space, defaultshader);
 
 		sky = new Sphere(0, 0, 0, 10, 36, 36);
 		sky.setRenderHints(false, false, true);

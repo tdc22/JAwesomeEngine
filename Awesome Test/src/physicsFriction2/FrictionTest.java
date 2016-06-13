@@ -56,7 +56,7 @@ public class FrictionTest extends StandardGame {
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
-		physicsdebug = new PhysicsDebug(inputs, font, space);
+		physicsdebug = new PhysicsDebug(inputs, font, space, defaultshader);
 
 		Box ground = new Box(0, -5, 0, 20, 1, 20);
 		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
