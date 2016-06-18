@@ -46,7 +46,6 @@ public class BasicTest extends StandardGame {
 	Profiler profiler;
 	InputEvent run, step;
 	Shader defaultshader;
-	RigidBody3 rb;
 
 	InputEvent toggleMouseBind;
 
@@ -81,7 +80,7 @@ public class BasicTest extends StandardGame {
 		profiler = new Profiler(this, inputs, font, gp, pp);
 
 		Box ground = new Box(0, -5, 0, 10, 1, 10);
-		rb = new RigidBody3(PhysicsShapeCreator.create(ground));
+		RigidBody3 rb = new RigidBody3(PhysicsShapeCreator.create(ground));
 
 		space.addRigidBody(ground, rb);
 		defaultshader.addObject(ground);
@@ -168,8 +167,6 @@ public class BasicTest extends StandardGame {
 
 		debugger.update(fps, defaultshader.getObjects().size(), 0);
 		space.update(delta);
-		System.out.println(rb.getTranslation() + "; " + rb.getLinearVelocity() + "; " + rb.getAngularVelocity() + "; "
-				+ rb.getForceAccumulator() + "; " + rb.getTorqueAccumulator());
 		physicsdebug.update();
 		profiler.update(delta);
 

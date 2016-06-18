@@ -62,11 +62,11 @@ public class RigidBody3 extends
 
 	@Override
 	public void applyTorqueImpulse(Vector3f torque) {
-		torque.scale(angularfactor);
-		torque.transform(invinertia);
-		angularvelocity.x += torque.x;
-		angularvelocity.y += torque.y;
-		angularvelocity.z += torque.z;
+		Vector3f transformed = QuatMath.transform(invinertia, torque);
+		transformed.scale(angularfactor);
+		angularvelocity.x += transformed.x;
+		angularvelocity.y += transformed.y;
+		angularvelocity.z += transformed.z;
 	}
 
 	@Override
