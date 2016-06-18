@@ -69,6 +69,8 @@ public class SimpleParticleSource2 extends ParticleSource2 {
 		particleList.put(insertpos, new Particle(position, velocity, lifetime));
 	}
 
+	private final Vector2f nullvec = new Vector2f(0, 0);
+
 	@Override
 	public void updateParticles(int delta) {
 		// TODO: parallel
@@ -99,7 +101,6 @@ public class SimpleParticleSource2 extends ParticleSource2 {
 				} else {
 					particleList.remove(i);
 					int i4 = i * 4;
-					Vector2f nullvec = new Vector2f();
 					particles.setVertex(i4 + 3, nullvec);
 					particles.setVertex(i4 + 2, nullvec);
 					particles.setVertex(i4 + 1, nullvec);

@@ -101,16 +101,15 @@ public class SimpleParticleSource extends ParticleSource3 {
 					p.position.x += p.velocity.x * delta;
 					p.position.y += p.velocity.y * delta;
 					p.position.z += p.velocity.z * delta;
-					// TODO: optimize
-					p.distance = (float) VecMath.subtraction(p.position, cam.getTranslation())
-							.length();/*
-										 * Math.abs(p.position.x -
-										 * cam.getTranslation().x) +
-										 * Math.abs(p.position.y -
-										 * cam.getTranslation().y) +
-										 * Math.abs(p.position.z -
-										 * cam.getTranslation().z);
-										 */
+					float xd = p.position.x - cam.getTranslation().x;
+					float yd = p.position.y - cam.getTranslation().y;
+					float zd = p.position.z - cam.getTranslation().z;
+					p.distance = (float) Math.sqrt(xd * xd + yd * yd + zd * zd);
+					/*
+					 * Math.abs(p.position.x - cam.getTranslation().x) +
+					 * Math.abs(p.position.y - cam.getTranslation().y) +
+					 * Math.abs(p.position.z - cam.getTranslation().z);
+					 */
 					int i4 = i * 4;
 					float uy = up.y * p.size;
 					float ax = urA.x * p.size;
@@ -157,27 +156,6 @@ public class SimpleParticleSource extends ParticleSource3 {
 		}
 		// TODO: depth-sorting by insertion sort
 		// TODO: insert at right position to speed up sorting for new particles
-		/*
-		 * for (int i = 0; i < distanceList.size(); i++) { Particle p =
-		 * distanceList.get(i); int i6 = i * 6; int index0 =
-		 * particles.getIndex(i6); int index1 = particles.getIndex(i6+1); int
-		 * index2 = particles.getIndex(i6+2); int index3 =
-		 * particles.getIndex(i6+3); int index4 = particles.getIndex(i6+4); int
-		 * index5 = particles.getIndex(i6+5); int j = i; while(j > 0 &&
-		 * distanceList.get(j-1).distance > p.distance) { distanceList.set(j,
-		 * distanceList.get(j-1)); int j6 = j * 6; particles.setIndex(j6,
-		 * particles.getIndex(j6-6)); particles.setIndex(j6+1,
-		 * particles.getIndex(j6-5)); particles.setIndex(j6+2,
-		 * particles.getIndex(j6-4)); particles.setIndex(j6+3,
-		 * particles.getIndex(j6-3)); particles.setIndex(j6+4,
-		 * particles.getIndex(j6-2)); particles.setIndex(j6+5,
-		 * particles.getIndex(j6-1)); j--; } distanceList.set(j, p); int j6 = j
-		 * * 6; particles.setIndex(j6, index0); particles.setIndex(j6+1,
-		 * index1); particles.setIndex(j6+2, index2); particles.setIndex(j6+3,
-		 * index3); particles.setIndex(j6+4, index4); particles.setIndex(j6+5,
-		 * index5); } /*System.out.println("--------------------------------");
-		 * for(Particle p : distanceList) System.out.println(p.distance);
-		 */
 		particles.prerender();
 	}
 

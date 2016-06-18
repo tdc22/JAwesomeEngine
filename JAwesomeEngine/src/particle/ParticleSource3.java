@@ -1,7 +1,7 @@
 package particle;
 
 import math.VecMath;
-import matrix.Matrix4f;
+import quaternion.Quaternionf;
 import vector.Vector3f;
 
 public abstract class ParticleSource3 extends ParticleSource<Vector3f, Vector3f> {
@@ -18,21 +18,20 @@ public abstract class ParticleSource3 extends ParticleSource<Vector3f, Vector3f>
 		diffAngle = VecMath.subtraction(maxAngle, minAngle);
 	}
 
+	private Quaternionf helper = new Quaternionf();
+
 	public void update(int delta) {
 		lastparticle += delta;
 		for (; lastparticle > 0; lastparticle -= spawnRate) {
 			float angleX = minAngle.x + (float) Math.random() * diffAngle.x;
 			float angleY = minAngle.y + (float) Math.random() * diffAngle.y;
 			float angleZ = minAngle.z + (float) Math.random() * diffAngle.z;
-			Matrix4f mat = new Matrix4f();
-			// TODO: Optimize by creating Matrix3 directly and trying to remove
-			// velocity.normalize! (careful!)
-			mat.rotate(angleZ, new Vector3f(0.0f, 0.0f, 1.0f));
-			mat.rotate(angleY, new Vector3f(0.0f, 1.0f, 0.0f));
-			mat.rotate(angleX, new Vector3f(1.0f, 0.0f, 0.0f));
+			helper.setIdentity();
+			helper.rotate(angleZ, new Vector3f(0.0f, 0.0f, 1.0f));
+			helper.rotate(angleY, new Vector3f(0.0f, 1.0f, 0.0f));
+			helper.rotate(angleX, new Vector3f(1.0f, 0.0f, 0.0f));
 			Vector3f velocity = new Vector3f(0, 1, 0);
-			velocity.transform(mat.getSubMatrix());
-			velocity.normalize();
+			velocity.transform(helper);
 			velocity.scale(minVelocity + (float) Math.random() * diffVelocity);
 			addParticle(
 					new Vector3f(center.x + Math.random() * spawnAreaHalfSize.x,

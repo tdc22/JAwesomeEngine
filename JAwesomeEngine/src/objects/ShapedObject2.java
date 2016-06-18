@@ -11,25 +11,21 @@ import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements
-		InstancedBaseObject2 {
+public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements InstancedBaseObject2 {
 	final Vector2f vec2 = new Vector2f();
 
 	public ShapedObject2() {
-		super(new Vector2f(), new Vector2f(), new Complexf(),
-				new Vector2f(1, 1));
+		super(new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
 		init();
 	}
 
 	public ShapedObject2(float x, float y) {
-		super(new Vector2f(), new Vector2f(x, y), new Complexf(), new Vector2f(
-				1, 1));
+		super(new Vector2f(), new Vector2f(x, y), new Complexf(), new Vector2f(1, 1));
 		init();
 	}
 
 	public ShapedObject2(Vector2f pos) {
-		super(new Vector2f(), new Vector2f(pos), new Complexf(), new Vector2f(
-				1, 1));
+		super(new Vector2f(), new Vector2f(pos), new Complexf(), new Vector2f(1, 1));
 		init();
 	}
 
@@ -134,9 +130,8 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements
 	@Override
 	public Matrix4f getMatrix() {
 		float[][] mat = rotation.toMatrixf().getArrayf();
-		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, 0, 0,
-				mat[1][0] * scale.y, mat[1][1] * scale.y, 0, 0, 0, 0, 0, 0,
-				translation.getXf(), translation.getYf(), 0, 1);
+		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, 0, 0, mat[1][0] * scale.y, mat[1][1] * scale.y, 0,
+				0, 0, 0, 0, 0, translation.getXf(), translation.getYf(), 0, 1);
 	}
 
 	public void addVertex(Vector2f vertex) {
@@ -167,8 +162,7 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements
 		setVertex(id, vertex, c, vec2, vec2);
 	}
 
-	public void setVertex(int id, Vector2f vertex, Color c,
-			Vector2f texturecoord) {
+	public void setVertex(int id, Vector2f vertex, Color c, Vector2f texturecoord) {
 		setVertex(id, vertex, c, texturecoord, vec2);
 	}
 
@@ -176,21 +170,18 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements
 		setVertex(id, vertex, c, vec2, vec2);
 	}
 
-	public void setVertex(int id, Vector2f vertex, Vector3f c,
-			Vector2f texturecoord) {
+	public void setVertex(int id, Vector2f vertex, Vector3f c, Vector2f texturecoord) {
 		setVertex(id, vertex, c, texturecoord, vec2);
 	}
 
 	@Override
-	protected void fillBuffers(int allVertices, IntBuffer indexData,
-			FloatBuffer vertexData, FloatBuffer colorData,
+	protected void fillBuffers(int allVertices, IntBuffer indexData, FloatBuffer vertexData, FloatBuffer colorData,
 			FloatBuffer textureData, FloatBuffer normalData) {
 		for (int v = 0; v < allVertices; v++) {
 			Vector2f vertex = vertices.get(v);
 			vertexData.put(new float[] { vertex.x, vertex.y, 0, 1 });
 			Vector3f vertcolor = colors.get(v);
-			colorData
-					.put(new float[] { vertcolor.x, vertcolor.y, vertcolor.z });
+			colorData.put(new float[] { vertcolor.x, vertcolor.y, vertcolor.z });
 			Vector2f tex = texturecoords.get(v);
 			textureData.put(new float[] { tex.x, tex.y });
 			Vector2f normal = normals.get(v);
