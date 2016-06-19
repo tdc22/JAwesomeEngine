@@ -84,6 +84,8 @@ public class SimpleParticleSource extends ParticleSource3 {
 		// distanceList.add(particle);
 	}
 
+	private final Vector3f nullvec = new Vector3f();
+
 	@Override
 	public void updateParticles(int delta) {
 		// TODO: parallel
@@ -116,18 +118,10 @@ public class SimpleParticleSource extends ParticleSource3 {
 					float ay = urA.y * p.size;
 					float bx = urB.x * p.size;
 					float by = urB.y * p.size;
-					particles.getVertex(i4).x = p.position.x - ax;
-					particles.getVertex(i4).y = p.position.y - uy;
-					particles.getVertex(i4).z = p.position.z - ay;
-					particles.getVertex(i4 + 1).x = p.position.x + bx;
-					particles.getVertex(i4 + 1).y = p.position.y - uy;
-					particles.getVertex(i4 + 1).z = p.position.z + by;
-					particles.getVertex(i4 + 2).x = p.position.x + ax;
-					particles.getVertex(i4 + 2).y = p.position.y + uy;
-					particles.getVertex(i4 + 2).z = p.position.z + ay;
-					particles.getVertex(i4 + 3).x = p.position.x - bx;
-					particles.getVertex(i4 + 3).y = p.position.y + uy;
-					particles.getVertex(i4 + 3).z = p.position.z - by;
+					particles.getVertex(i4).set(p.position.x - ax, p.position.y - uy, p.position.z - ay);
+					particles.getVertex(i4 + 1).set(p.position.x + bx, p.position.y - uy, p.position.z + by);
+					particles.getVertex(i4 + 2).set(p.position.x + ax, p.position.y + uy, p.position.z + ay);
+					particles.getVertex(i4 + 3).set(p.position.x - bx, p.position.y + uy, p.position.z - by);
 					float particleAlpha = p.lifetime / (float) maxLifeTime;
 					particles.getColor(i4).x = particleAlpha;
 					particles.getColor(i4 + 1).x = particleAlpha;
@@ -137,7 +131,6 @@ public class SimpleParticleSource extends ParticleSource3 {
 					particleList.remove(i);
 					// distanceList.remove(p);
 					int i4 = i * 4;
-					Vector3f nullvec = new Vector3f();
 					particles.setVertex(i4 + 3, nullvec);
 					particles.setVertex(i4 + 2, nullvec);
 					particles.setVertex(i4 + 1, nullvec);
