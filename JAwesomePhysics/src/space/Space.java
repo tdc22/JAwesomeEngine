@@ -209,6 +209,34 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 				return true;
 		return false;
 	}
+	
+	public CollisionManifold<L> getFirstCollisionManifold(RigidBody<L, ?, ?, ?> object) {
+		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
+			if (manifold.getObjects().contains(object))
+				return manifold;
+		return null;
+	}
+
+	public CollisionManifold<L> getFirstCollisionManifold(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
+		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
+			if (manifold.getObjects().contains(objectA) && manifold.getObjects().contains(objectB))
+				return manifold;
+		return null;
+	}
+	
+	public CollisionManifold<L> getFirstCollisionManifoldNoGhosts(RigidBody<L, ?, ?, ?> object) {
+		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
+			if (manifold.getObjects().contains(object))
+				return manifold;
+		return null;
+	}
+	
+	public CollisionManifold<L> getFirstCollisionManifoldNoGhosts(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
+		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
+			if (manifold.getObjects().contains(objectA) && manifold.getObjects().contains(objectB))
+				return manifold;
+		return null;
+	}
 
 	public boolean hasOverlap(RigidBody<L, ?, ?, ?> object) {
 		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps)
