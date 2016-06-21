@@ -18,10 +18,10 @@ import vector.Vector3f;
 public class SimpleParticleSource extends ParticleSource3 {
 	ShapedObject3 particles;
 	HashMap<Integer, Particle> particleList;
-	LinkedList<Integer> freevertices, freeindices;
+	LinkedList<Integer> freeindices;
 	int maxParticles;
 	Camera3 cam;
-	// List<Particle> distanceList;
+	boolean useDepthSorting = false;
 
 	private final Vector3f normal = new Vector3f(0, 0, 1);
 	private final Vector2f topleft = new Vector2f(0, 0), bottomleft = new Vector2f(0, 1),
@@ -35,16 +35,14 @@ public class SimpleParticleSource extends ParticleSource3 {
 		particles = new ShapedObject3(center);
 		particles.setRenderMode(GL11.GL_TRIANGLES);
 		particleList = new HashMap<Integer, Particle>();
-		freevertices = new LinkedList<Integer>();
 		freeindices = new LinkedList<Integer>();
-		// distanceList = new ArrayList<Particle>();
 		maxParticles = 0;
 		setCamera(cam);
 	}
 
 	@Override
 	public void addParticle(Vector3f position, Vector3f velocity, float size, int lifetime) {
-		Integer pos = freevertices.poll();
+		Integer pos = freeindices.poll();
 		int insertpos;
 		if (pos != null) {
 			insertpos = pos;
@@ -57,8 +55,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 					new Vector3f(1, 1, 1), bottomright, normal);
 			particles.setVertex(pos + 3, new Vector3f(position.x + size, position.y - size, position.z),
 					new Vector3f(1, 1, 1), bottomleft, normal);
-			int indexpos = freeindices.poll();
-			indexpos *= 6;
+			int indexpos = insertpos * 6;
 			particles.setIndex(indexpos, pos);
 			particles.setIndex(indexpos + 1, pos + 1);
 			particles.setIndex(indexpos + 2, pos + 2);
@@ -81,7 +78,6 @@ public class SimpleParticleSource extends ParticleSource3 {
 		}
 		Particle particle = new Particle(position, velocity, lifetime, size);
 		particleList.put(insertpos, particle);
-		// distanceList.add(particle);
 	}
 
 	private final Vector3f nullvec = new Vector3f();
@@ -129,13 +125,11 @@ public class SimpleParticleSource extends ParticleSource3 {
 					particles.getColor(i4 + 3).x = particleAlpha;
 				} else {
 					particleList.remove(i);
-					// distanceList.remove(p);
 					int i4 = i * 4;
 					particles.setVertex(i4 + 3, nullvec);
 					particles.setVertex(i4 + 2, nullvec);
 					particles.setVertex(i4 + 1, nullvec);
 					particles.setVertex(i4, nullvec);
-					freevertices.add(i);
 					int i6 = i * 6;
 					particles.setIndex(i6 + 5, 0);
 					particles.setIndex(i6 + 4, 0);
@@ -149,6 +143,45 @@ public class SimpleParticleSource extends ParticleSource3 {
 		}
 		// TODO: depth-sorting by insertion sort
 		// TODO: insert at right position to speed up sorting for new particles
+		if (useDepthSorting) {
+			for (int i = 0; i < maxParticles - 1; i++) {
+				Particle p = particleList.get(i);
+				if (p != null) {
+					int a = i;
+					Particle next = null;
+
+					while (next == null && a < maxParticles) {
+						a++;
+						next = particleList.get(a);
+					}
+
+					if (next != null && p.distance > next.distance) {
+						particleList.put(i, next);
+						particleList.put(a, p);
+						int i6 = i * 6;
+						int a6 = a * 6;
+						int index1 = particles.getIndex(i6);
+						int index2 = particles.getIndex(i6 + 1);
+						int index3 = particles.getIndex(i6 + 2);
+						int index4 = particles.getIndex(i6 + 3);
+						int index5 = particles.getIndex(i6 + 4);
+						int index6 = particles.getIndex(i6 + 5);
+						particles.setIndex(i6, particles.getIndex(a6));
+						particles.setIndex(i6 + 1, particles.getIndex(a6 + 1));
+						particles.setIndex(i6 + 2, particles.getIndex(a6 + 2));
+						particles.setIndex(i6 + 3, particles.getIndex(a6 + 3));
+						particles.setIndex(i6 + 4, particles.getIndex(a6 + 4));
+						particles.setIndex(i6 + 5, particles.getIndex(a6 + 5));
+						particles.setIndex(a6, index1);
+						particles.setIndex(a6 + 1, index2);
+						particles.setIndex(a6 + 2, index3);
+						particles.setIndex(a6 + 3, index4);
+						particles.setIndex(a6 + 4, index5);
+						particles.setIndex(a6 + 5, index6);
+					}
+				}
+			}
+		}
 		particles.prerender();
 	}
 

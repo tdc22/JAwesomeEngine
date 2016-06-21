@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import broadphase.DynamicAABBTree;
-import broadphase.SAP;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
@@ -57,7 +56,6 @@ public class CollisionDetectionTest extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
-		// mouse.setGrabbed(false);
 
 		defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
@@ -88,8 +86,8 @@ public class CollisionDetectionTest extends StandardGame {
 
 		manifolds = new ArrayList<ManifoldVisualization>();
 
-		space = new PhysicsSpace(new EulerIntegration(), new DynamicAABBTree(), new GJK(new EPA()), new NullResolution(),
-				new NullCorrection(), new SimpleManifoldManager<Vector3f>());
+		space = new PhysicsSpace(new EulerIntegration(), new DynamicAABBTree(), new GJK(new EPA()),
+				new NullResolution(), new NullCorrection(), new SimpleManifoldManager<Vector3f>());
 		space.setCullStaticOverlaps(false);
 
 		b1 = new Box(-1, 0, 0, 1, 1, 1);

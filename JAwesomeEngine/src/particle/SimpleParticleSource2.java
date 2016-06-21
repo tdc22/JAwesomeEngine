@@ -14,7 +14,7 @@ import vector.Vector3f;
 public class SimpleParticleSource2 extends ParticleSource2 {
 	ShapedObject2 particles;
 	HashMap<Integer, Particle> particleList;
-	LinkedList<Integer> freevertices, freeindices;
+	LinkedList<Integer> freeindices;
 	int maxParticles;
 
 	private final Vector2f topleft = new Vector2f(0, 0), bottomleft = new Vector2f(0, 1),
@@ -28,14 +28,13 @@ public class SimpleParticleSource2 extends ParticleSource2 {
 		particles = new ShapedObject2(center);
 		particles.setRenderMode(GL11.GL_TRIANGLES);
 		particleList = new HashMap<Integer, Particle>();
-		freevertices = new LinkedList<Integer>();
 		freeindices = new LinkedList<Integer>();
 		maxParticles = 0;
 	}
 
 	@Override
 	public void addParticle(Vector2f position, Vector2f velocity, float size, int lifetime) {
-		Integer pos = freevertices.poll();
+		Integer pos = freeindices.poll();
 		int insertpos;
 		if (pos != null) {
 			insertpos = pos;
@@ -48,8 +47,7 @@ public class SimpleParticleSource2 extends ParticleSource2 {
 					bottomright);
 			particles.setVertex(pos + 3, new Vector2f(position.x + size, position.y - size), new Vector3f(1, 1, 1),
 					bottomleft);
-			int indexpos = freeindices.poll();
-			indexpos *= 6;
+			int indexpos = insertpos * 6;
 			particles.setIndex(indexpos, pos);
 			particles.setIndex(indexpos + 1, pos + 1);
 			particles.setIndex(indexpos + 2, pos + 2);
@@ -105,7 +103,6 @@ public class SimpleParticleSource2 extends ParticleSource2 {
 					particles.setVertex(i4 + 2, nullvec);
 					particles.setVertex(i4 + 1, nullvec);
 					particles.setVertex(i4, nullvec);
-					freevertices.add(i);
 					int i6 = i * 6;
 					particles.setIndex(i6 + 5, 0);
 					particles.setIndex(i6 + 4, 0);
