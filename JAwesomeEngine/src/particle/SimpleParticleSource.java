@@ -21,7 +21,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 	LinkedList<Integer> freeindices;
 	int maxParticles;
 	Camera3 cam;
-	boolean useDepthSorting = false;
+	boolean useDepthSorting;
 
 	private final Vector3f normal = new Vector3f(0, 0, 1);
 	private final Vector2f topleft = new Vector2f(0, 0), bottomleft = new Vector2f(0, 1),
@@ -29,7 +29,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 
 	public SimpleParticleSource(Vector3f center, Vector3f spawnAreaHalfSize, Vector3f minAngle, Vector3f maxAngle,
 			float minVelocity, float maxVelocity, float minSize, float maxSize, int minLifeTime, int maxLifeTime,
-			float spawnRate, Camera3 cam) {
+			float spawnRate, Camera3 cam, boolean depthSorting) {
 		super(center, spawnAreaHalfSize, minAngle, maxAngle, minVelocity, maxVelocity, minSize, maxSize, minLifeTime,
 				maxLifeTime, spawnRate);
 		particles = new ShapedObject3(center);
@@ -37,6 +37,7 @@ public class SimpleParticleSource extends ParticleSource3 {
 		particleList = new HashMap<Integer, Particle>();
 		freeindices = new LinkedList<Integer>();
 		maxParticles = 0;
+		useDepthSorting = depthSorting;
 		setCamera(cam);
 	}
 
@@ -178,6 +179,9 @@ public class SimpleParticleSource extends ParticleSource3 {
 						particles.setIndex(a6 + 3, index4);
 						particles.setIndex(a6 + 4, index5);
 						particles.setIndex(a6 + 5, index6);
+						
+						if(a < maxParticles - 1)
+							i = a;
 					}
 				}
 			}
