@@ -51,8 +51,8 @@ public class Particle2d extends StandardGame {
 
 		particlesource = new SimpleParticleSource2(new Vector2f(200, 150), new Vector2f(), new Vector1f(0),
 				new Vector1f(360), 0.1f, 0.2f, 10f, 10f, 3000, 3500, 1f);
-		particlesource.getObject().setRenderHints(true, true, false);
-		particleshader.addObject(particlesource);
+		particlesource.getParticleSystem().getParticleObject().setRenderHints(true, true, false);
+		particleshader.addObject(particlesource.getParticleSystem());
 	}
 
 	@Override

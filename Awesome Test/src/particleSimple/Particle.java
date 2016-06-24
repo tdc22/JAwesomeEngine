@@ -50,8 +50,8 @@ public class Particle extends StandardGame {
 
 		particlesource = new SimpleParticleSource(new Vector3f(0, 0, 0), new Vector3f(), new Vector3f(0, 0, 0),
 				new Vector3f(360, 360, 360), 0.001f, 0.002f, 0.3f, 0.3f, 3000, 3500, 1f, cam, true);
-		particlesource.getObject().setRenderHints(true, true, false);
-		particleshader.addObject(particlesource);
+		particlesource.getParticleSystem().getParticleObject().setRenderHints(true, true, false);
+		particleshader.addObject(particlesource.getParticleSystem());
 	}
 
 	@Override

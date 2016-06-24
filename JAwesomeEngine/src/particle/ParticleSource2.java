@@ -27,10 +27,10 @@ public abstract class ParticleSource2 extends ParticleSource<Vector2f, Vector1f>
 			velocity.scale(minVelocity + (float) Math.random() * diffVelocity);
 			position.set(center.x + Math.random() * spawnAreaHalfSize.x,
 					center.y + Math.random() * spawnAreaHalfSize.y);
-			addParticle(position, velocity, minSize + (float) Math.random() * diffSize,
+			particles.addParticle(position, velocity, minSize + (float) Math.random() * diffSize,
 					minLifeTime + (int) (Math.random() * diffLifeTime));
 		}
-		updateParticles(delta);
+		particles.updateParticles(delta, minLifeTime + diffLifeTime);
 	}
 
 }

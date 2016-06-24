@@ -1,10 +1,10 @@
 package particle;
 
-import objects.RenderableObject;
 import objects.Updateable;
 import vector.Vector;
 
-public abstract class ParticleSource<L extends Vector, A extends Vector> implements Updateable, RenderableObject {
+public abstract class ParticleSource<L extends Vector, A extends Vector> implements Updateable {
+	ParticleSystem<L, A> particles;
 	L center, spawnAreaHalfSize;
 	A minAngle, diffAngle;
 	int minLifeTime, diffLifeTime;
@@ -39,7 +39,7 @@ public abstract class ParticleSource<L extends Vector, A extends Vector> impleme
 		diffLifeTime = maxLifeTime - minLifeTime;
 	}
 
-	public abstract void addParticle(L position, L velocity, float size, int lifetime);
-
-	public abstract void updateParticles(int delta);
+	public ParticleSystem<L, A> getParticleSystem() {
+		return particles;
+	}
 }

@@ -33,14 +33,14 @@ public abstract class ParticleSource3 extends ParticleSource<Vector3f, Vector3f>
 			Vector3f velocity = new Vector3f(0, 1, 0);
 			velocity.transform(helper);
 			velocity.scale(minVelocity + (float) Math.random() * diffVelocity);
-			addParticle(
+			particles.addParticle(
 					new Vector3f(center.x + Math.random() * spawnAreaHalfSize.x,
 							center.y + Math.random() * spawnAreaHalfSize.y,
 							center.z + Math.random() * spawnAreaHalfSize.z),
 					velocity, minSize + (float) Math.random() * diffSize,
 					minLifeTime + (int) (Math.random() * diffLifeTime));
 		}
-		updateParticles(delta);
+		particles.updateParticles(delta, minLifeTime + diffLifeTime);
 	}
 
 }
