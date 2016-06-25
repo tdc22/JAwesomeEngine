@@ -4,15 +4,15 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import org.lwjgl.opengl.GL11;
-
 import objects.ShapedObject;
 import objects.ShapedObject2;
-import vector.Vector1f;
+
+import org.lwjgl.opengl.GL11;
+
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class SimpleParticleSystem2 extends ParticleSystem<Vector2f, Vector1f> {
+public class SimpleParticleSystem2 extends ParticleSystem2 {
 	ShapedObject2 particles;
 	HashMap<Integer, Particle> particleList;
 	LinkedList<Integer> freeindices;

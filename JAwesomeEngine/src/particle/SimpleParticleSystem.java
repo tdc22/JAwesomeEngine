@@ -6,17 +6,18 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import org.lwjgl.opengl.GL11;
-
 import math.QuatMath;
 import math.VecMath;
 import objects.Camera3;
 import objects.ShapedObject;
 import objects.ShapedObject3;
+
+import org.lwjgl.opengl.GL11;
+
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class SimpleParticleSystem extends ParticleSystem<Vector3f, Vector3f> {
+public class SimpleParticleSystem extends ParticleSystem3 {
 	ShapedObject3 particles;
 	HashMap<Integer, Particle> particleList;
 	LinkedList<Integer> freeindices;
@@ -204,9 +205,11 @@ public class SimpleParticleSystem extends ParticleSystem<Vector3f, Vector3f> {
 
 	@Override
 	public void render() {
-		glDepthMask(false);
+		if(useDepthSorting)
+			glDepthMask(false);
 		particles.render();
-		glDepthMask(true);
+		if(useDepthSorting)
+			glDepthMask(true);
 	}
 
 	@Override
