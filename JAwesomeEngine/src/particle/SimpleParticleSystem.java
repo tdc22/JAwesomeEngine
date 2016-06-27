@@ -6,14 +6,13 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import org.lwjgl.opengl.GL11;
+
 import math.QuatMath;
 import math.VecMath;
 import objects.Camera3;
 import objects.ShapedObject;
 import objects.ShapedObject3;
-
-import org.lwjgl.opengl.GL11;
-
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -43,7 +42,7 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 	public int addParticle(Vector3f position, Vector3f velocity, Vector2f size, int lifetime) {
 		return addParticle(new Particle(position, velocity, lifetime, size));
 	}
-	
+
 	public int addParticle(Particle particle) {
 		Integer pos = freeindices.poll();
 		int insertpos;
@@ -51,14 +50,14 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 		if (pos != null) {
 			insertpos = pos;
 			pos *= 4;
-			particles.setVertex(pos, new Vector3f(particle.position.x - particle.size.x, particle.position.y - particle.size.y, particle.position.z),
-					color, topleft, normal);
-			particles.setVertex(pos + 1, new Vector3f(particle.position.x - particle.size.x, particle.position.y + particle.size.y, particle.position.z),
-					color, topright, normal);
-			particles.setVertex(pos + 2, new Vector3f(particle.position.x + particle.size.x, particle.position.y + particle.size.y, particle.position.z),
-					color, bottomright, normal);
-			particles.setVertex(pos + 3, new Vector3f(particle.position.x + particle.size.x, particle.position.y - particle.size.y, particle.position.z),
-					color, bottomleft, normal);
+			particles.setVertex(pos, new Vector3f(particle.position.x - particle.size.x,
+					particle.position.y - particle.size.y, particle.position.z), color, topleft, normal);
+			particles.setVertex(pos + 1, new Vector3f(particle.position.x - particle.size.x,
+					particle.position.y + particle.size.y, particle.position.z), color, topright, normal);
+			particles.setVertex(pos + 2, new Vector3f(particle.position.x + particle.size.x,
+					particle.position.y + particle.size.y, particle.position.z), color, bottomright, normal);
+			particles.setVertex(pos + 3, new Vector3f(particle.position.x + particle.size.x,
+					particle.position.y - particle.size.y, particle.position.z), color, bottomleft, normal);
 			int indexpos = insertpos * 6;
 			particles.setIndex(indexpos, pos);
 			particles.setIndex(indexpos + 1, pos + 1);
@@ -67,14 +66,14 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 			particles.setIndex(indexpos + 4, pos + 2);
 			particles.setIndex(indexpos + 5, pos + 3);
 		} else {
-			particles.addVertex(new Vector3f(particle.position.x - particle.size.x, particle.position.y - particle.size.y, particle.position.z), color,
-					topleft, normal);
-			particles.addVertex(new Vector3f(particle.position.x - particle.size.x, particle.position.y + particle.size.y, particle.position.z), color,
-					topright, normal);
-			particles.addVertex(new Vector3f(particle.position.x + particle.size.x, particle.position.y + particle.size.y, particle.position.z), color,
-					bottomright, normal);
-			particles.addVertex(new Vector3f(particle.position.x + particle.size.x, particle.position.y - particle.size.y, particle.position.z), color,
-					bottomleft, normal);
+			particles.addVertex(new Vector3f(particle.position.x - particle.size.x,
+					particle.position.y - particle.size.y, particle.position.z), color, topleft, normal);
+			particles.addVertex(new Vector3f(particle.position.x - particle.size.x,
+					particle.position.y + particle.size.y, particle.position.z), color, topright, normal);
+			particles.addVertex(new Vector3f(particle.position.x + particle.size.x,
+					particle.position.y + particle.size.y, particle.position.z), color, bottomright, normal);
+			particles.addVertex(new Vector3f(particle.position.x + particle.size.x,
+					particle.position.y - particle.size.y, particle.position.z), color, bottomleft, normal);
 			insertpos = maxParticles;
 			pos = maxParticles * 4;
 			particles.addIndices(pos, pos + 1, pos + 2, pos, pos + 2, pos + 3);
@@ -84,8 +83,12 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 		return insertpos;
 	}
 
+	public Particle getParticle(int particleID) {
+		return particleList.get(particleID);
+	}
+
 	private final Vector3f nullvec = new Vector3f();
-	
+
 	@Override
 	public void removeParticle(int particleID) {
 		particleList.remove(particleID);
@@ -110,7 +113,7 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 		Vector3f right = QuatMath.transform(cam.getRotation(), new Vector3f(1, 0, 0));
 		right.normalize();
 		Vector3f up = VecMath.crossproduct(right, cam.getDirection());
-		
+
 		for (int i = 0; i < maxParticles; i++) {
 			Particle p = particleList.get(i);
 			if (p != null) {
@@ -128,7 +131,7 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 					 * Math.abs(p.position.y - cam.getTranslation().y) +
 					 * Math.abs(p.position.z - cam.getTranslation().z);
 					 */
-					
+
 					int i4 = i * 4;
 					float rx = right.x * p.size.x;
 					float ux = up.x * p.size.y;
@@ -145,9 +148,9 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 					particles.getVertex(i4 + 3).set(p.position.x - bx, p.position.y + uy, p.position.z - by);
 					float particleAlpha = p.lifetime / (float) maxLifeTime;
 					particles.getColor(i4).x = particleAlpha;
-//					particles.getColor(i4 + 1).x = particleAlpha;
-//					particles.getColor(i4 + 2).x = particleAlpha;
-//					particles.getColor(i4 + 3).x = particleAlpha;
+					// particles.getColor(i4 + 1).x = particleAlpha;
+					// particles.getColor(i4 + 2).x = particleAlpha;
+					// particles.getColor(i4 + 3).x = particleAlpha;
 				} else {
 					removeParticle(i);
 				}
@@ -220,10 +223,10 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 
 	@Override
 	public void render() {
-		if(useDepthSorting)
+		if (useDepthSorting)
 			glDepthMask(false);
 		particles.render();
-		if(useDepthSorting)
+		if (useDepthSorting)
 			glDepthMask(true);
 	}
 

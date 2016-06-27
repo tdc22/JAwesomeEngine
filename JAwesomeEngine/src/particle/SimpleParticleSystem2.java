@@ -4,11 +4,10 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import objects.ShapedObject;
-import objects.ShapedObject2;
-
 import org.lwjgl.opengl.GL11;
 
+import objects.ShapedObject;
+import objects.ShapedObject2;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -33,7 +32,7 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 	public int addParticle(Vector2f position, Vector2f velocity, Vector2f size, int lifetime) {
 		return addParticle(new Particle(position, velocity, lifetime, size));
 	}
-	
+
 	public int addParticle(Particle particle) {
 		Integer pos = freeindices.poll();
 		int insertpos;
@@ -41,13 +40,17 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 		if (pos != null) {
 			insertpos = pos;
 			pos *= 4;
-			particles.setVertex(pos, new Vector2f(particle.position.x - particle.size.x, particle.position.y - particle.size.y), color,
+			particles.setVertex(pos,
+					new Vector2f(particle.position.x - particle.size.x, particle.position.y - particle.size.y), color,
 					topleft);
-			particles.setVertex(pos + 1, new Vector2f(particle.position.x - particle.size.x, particle.position.y + particle.size.y), color,
+			particles.setVertex(pos + 1,
+					new Vector2f(particle.position.x - particle.size.x, particle.position.y + particle.size.y), color,
 					topright);
-			particles.setVertex(pos + 2, new Vector2f(particle.position.x + particle.size.x, particle.position.y + particle.size.y), color,
+			particles.setVertex(pos + 2,
+					new Vector2f(particle.position.x + particle.size.x, particle.position.y + particle.size.y), color,
 					bottomright);
-			particles.setVertex(pos + 3, new Vector2f(particle.position.x + particle.size.x, particle.position.y - particle.size.y), color,
+			particles.setVertex(pos + 3,
+					new Vector2f(particle.position.x + particle.size.x, particle.position.y - particle.size.y), color,
 					bottomleft);
 			int indexpos = insertpos * 6;
 			particles.setIndex(indexpos, pos);
@@ -57,10 +60,18 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 			particles.setIndex(indexpos + 4, pos + 2);
 			particles.setIndex(indexpos + 5, pos + 3);
 		} else {
-			particles.addVertex(new Vector2f(particle.position.x - particle.size.x, particle.position.y - particle.size.y), color, topleft);
-			particles.addVertex(new Vector2f(particle.position.x - particle.size.x, particle.position.y + particle.size.y), color, topright);
-			particles.addVertex(new Vector2f(particle.position.x + particle.size.x, particle.position.y + particle.size.y), color, bottomright);
-			particles.addVertex(new Vector2f(particle.position.x + particle.size.x, particle.position.y - particle.size.y), color, bottomleft);
+			particles.addVertex(
+					new Vector2f(particle.position.x - particle.size.x, particle.position.y - particle.size.y), color,
+					topleft);
+			particles.addVertex(
+					new Vector2f(particle.position.x - particle.size.x, particle.position.y + particle.size.y), color,
+					topright);
+			particles.addVertex(
+					new Vector2f(particle.position.x + particle.size.x, particle.position.y + particle.size.y), color,
+					bottomright);
+			particles.addVertex(
+					new Vector2f(particle.position.x + particle.size.x, particle.position.y - particle.size.y), color,
+					bottomleft);
 			insertpos = maxParticles;
 			pos = maxParticles * 4;
 			particles.addIndices(pos, pos + 1, pos + 2, pos, pos + 2, pos + 3);
@@ -68,6 +79,10 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 		}
 		particleList.put(insertpos, particle);
 		return insertpos;
+	}
+
+	public Particle getParticle(int particleID) {
+		return particleList.get(particleID);
 	}
 
 	private final Vector2f nullvec = new Vector2f(0, 0);
@@ -89,7 +104,7 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 		particles.setIndex(i6, 0);
 		freeindices.add(particleID);
 	}
-	
+
 	@Override
 	public void updateParticles(int delta, float maxLifeTime) {
 		// TODO: parallel
@@ -113,9 +128,9 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 					particles.getVertex(i4 + 3).y += stepY;
 					float particleAlpha = p.lifetime / (float) maxLifeTime;
 					particles.getColor(i4).x = particleAlpha;
-//					particles.getColor(i4 + 1).x = particleAlpha;
-//					particles.getColor(i4 + 2).x = particleAlpha;
-//					particles.getColor(i4 + 3).x = particleAlpha;
+					// particles.getColor(i4 + 1).x = particleAlpha;
+					// particles.getColor(i4 + 2).x = particleAlpha;
+					// particles.getColor(i4 + 3).x = particleAlpha;
 				} else {
 					removeParticle(i);
 				}
