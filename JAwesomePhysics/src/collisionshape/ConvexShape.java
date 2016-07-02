@@ -15,15 +15,13 @@ public class ConvexShape extends CollisionShape3 {
 	protected class ConvexSupport implements SupportCalculator<Vector3f> {
 		private CollisionShape<Vector3f, Quaternionf, Quaternionf> collisionshape;
 
-		public ConvexSupport(
-				CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+		public ConvexSupport(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 			collisionshape = cs;
 		}
 
 		@Override
 		public Vector3f supportPointLocal(Vector3f direction) {
-			Vector3f v = QuatMath.transform(
-					collisionshape.getInverseRotation(), direction);
+			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
 
 			int lastVertex = 0;
 			int currentVertex = 0;
@@ -47,8 +45,7 @@ public class ConvexShape extends CollisionShape3 {
 
 		@Override
 		public Vector3f supportPointLocalNegative(Vector3f direction) {
-			Vector3f v = QuatMath.transform(
-					collisionshape.getInverseRotation(), direction);
+			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
 
 			int lastVertex = 0;
 			int currentVertex = 0;
@@ -79,8 +76,7 @@ public class ConvexShape extends CollisionShape3 {
 	List<Vector3f> vertices;
 	HashMap<Integer, Integer[]> adjacentsMap;
 
-	public ConvexShape(float x, float y, float z, List<Vector3f> vertices,
-			HashMap<Integer, Integer[]> adjacentsMap) {
+	public ConvexShape(float x, float y, float z, List<Vector3f> vertices, HashMap<Integer, Integer[]> adjacentsMap) {
 		super();
 		translate(x, y, z);
 		this.vertices = vertices;
@@ -88,8 +84,7 @@ public class ConvexShape extends CollisionShape3 {
 		init();
 	}
 
-	public ConvexShape(Vector3f pos, List<Vector3f> vertices,
-			HashMap<Integer, Integer[]> adjacentsMap) {
+	public ConvexShape(Vector3f pos, List<Vector3f> vertices, HashMap<Integer, Integer[]> adjacentsMap) {
 		super();
 		translate(pos);
 		this.vertices = vertices;
@@ -106,16 +101,13 @@ public class ConvexShape extends CollisionShape3 {
 	}
 
 	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(
-			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+	public SupportCalculator<Vector3f> createSupportCalculator(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		return new ConvexSupport(cs);
 	}
 
 	private void init() {
-		Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE,
-				Float.MAX_VALUE);
-		Vector3f max = new Vector3f(-Float.MAX_VALUE, -Float.MAX_VALUE,
-				-Float.MAX_VALUE);
+		Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+		Vector3f max = new Vector3f(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
 		for (Vector3f v : vertices) {
 			if (v.x < min.x)
 				min.x = v.x;
@@ -130,8 +122,7 @@ public class ConvexShape extends CollisionShape3 {
 			if (v.z > max.z)
 				max.z = v.z;
 		}
-		Vector3f center = VecMath.addition(min,
-				VecMath.scale(VecMath.subtraction(max, min), 0.5f));
+		Vector3f center = VecMath.addition(min, VecMath.scale(VecMath.subtraction(max, min), 0.5f));
 		float maxLength = 0;
 		for (Vector3f v : vertices) {
 			float l = (float) VecMath.subtraction(v, center).lengthSquared();
@@ -141,8 +132,7 @@ public class ConvexShape extends CollisionShape3 {
 		maxLength = (float) Math.sqrt(maxLength);
 
 		setRotationCenter(center);
-		setAABB(new Vector3f(-maxLength, -maxLength, -maxLength), new Vector3f(
-				maxLength, maxLength, maxLength));
+		setAABB(new Vector3f(-maxLength, -maxLength, -maxLength), new Vector3f(maxLength, maxLength, maxLength));
 		supportcalculator = createSupportCalculator(this);
 	}
 }

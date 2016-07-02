@@ -1,13 +1,15 @@
 package space;
 
-import integration.IntegrationSolver;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import broadphase.Broadphase;
+import broadphase.BroadphaseListener;
+import constraints.ConstraintSolverErin2;
+import integration.IntegrationSolver;
 import manifold.CollisionManifold;
 import manifold.ContactManifold;
 import manifold.ManifoldManager;
@@ -24,9 +26,6 @@ import quaternion.Rotation;
 import resolution.CollisionResolution;
 import utils.Pair;
 import vector.Vector;
-import broadphase.Broadphase;
-import broadphase.BroadphaseListener;
-import constraints.ConstraintSolverErin2;
 
 public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rotation, A3 extends Rotation>
 		implements Updateable {
@@ -169,7 +168,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> getOverlaps() {
 		return overlaps;
 	}
-	
+
 	public Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> getCollisionFilters() {
 		return collisionfilters;
 	}
@@ -195,21 +194,21 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 				return true;
 		return false;
 	}
-	
+
 	public boolean hasCollisionNoGhosts(RigidBody<L, ?, ?, ?> object) {
 		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
 			if (manifold.getObjects().contains(object))
 				return true;
 		return false;
 	}
-	
+
 	public boolean hasCollisionNoGhosts(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
 		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
 			if (manifold.getObjects().contains(objectA) && manifold.getObjects().contains(objectB))
 				return true;
 		return false;
 	}
-	
+
 	public CollisionManifold<L> getFirstCollisionManifold(RigidBody<L, ?, ?, ?> object) {
 		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
 			if (manifold.getObjects().contains(object))
@@ -217,21 +216,23 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		return null;
 	}
 
-	public CollisionManifold<L> getFirstCollisionManifold(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
+	public CollisionManifold<L> getFirstCollisionManifold(RigidBody<L, ?, ?, ?> objectA,
+			RigidBody<L, ?, ?, ?> objectB) {
 		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
 			if (manifold.getObjects().contains(objectA) && manifold.getObjects().contains(objectB))
 				return manifold;
 		return null;
 	}
-	
+
 	public CollisionManifold<L> getFirstCollisionManifoldNoGhosts(RigidBody<L, ?, ?, ?> object) {
 		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
 			if (manifold.getObjects().contains(object))
 				return manifold;
 		return null;
 	}
-	
-	public CollisionManifold<L> getFirstCollisionManifoldNoGhosts(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
+
+	public CollisionManifold<L> getFirstCollisionManifoldNoGhosts(RigidBody<L, ?, ?, ?> objectA,
+			RigidBody<L, ?, ?, ?> objectB) {
 		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
 			if (manifold.getObjects().contains(objectA) && manifold.getObjects().contains(objectB))
 				return manifold;
@@ -271,11 +272,11 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected abstract void resolve();
 
 	public void resolveConstraints(float delta) {
-		/*for (Constraint<L, A1, A2, A3> c : constraints)
-			c.initStep(delta);
-		for (int i = 0; i < constraintResolutionIterations; i++)
-			for (Constraint<L, A1, A2, A3> c : constraints)
-				c.solve(delta);*/
+		/*
+		 * for (Constraint<L, A1, A2, A3> c : constraints) c.initStep(delta);
+		 * for (int i = 0; i < constraintResolutionIterations; i++) for
+		 * (Constraint<L, A1, A2, A3> c : constraints) c.solve(delta);
+		 */
 		// source: http://www.cs.cmu.edu/~baraff/papers/sig96.pdf
 		// http://www.bulletphysics.com/ftp/pub/test/physics/papers/IterativeDynamics.pdf
 	}
@@ -295,7 +296,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public void setResolutionIterations(int count) {
 		resolutionIterations = count;
 	}
-	
+
 	public void setConstraintResolutionIterations(int count) {
 		constraintResolutionIterations = count;
 	}
@@ -316,7 +317,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public void addCollisionFilter(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
 		collisionfilters.add(collisionPair);
 	}
-	
+
 	public void removeCollisionFilter(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
 		removeCollisionFilter(new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(objectA, objectB));
 	}
@@ -428,8 +429,8 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 		integrate(delta);
 		correct();
-		
-		for(int i = 0; i < constraintResolutionIterations; i++) {
+
+		for (int i = 0; i < constraintResolutionIterations; i++) {
 			for (Constraint<L, A1, A2, A3> c : constraints) {
 				constraintsolver.solveVelocities((Constraint2) c);
 			}

@@ -3,7 +3,6 @@ package vector;
 import java.nio.FloatBuffer;
 
 import matrix.Matrix1;
-import matrix.Matrix1f;
 
 public class Vector1f extends Vector1 {
 	public float x;

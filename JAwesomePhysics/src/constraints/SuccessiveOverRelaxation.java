@@ -4,9 +4,10 @@ import java.util.Arrays;
 
 public class SuccessiveOverRelaxation implements LinearEquationSolver {
 	int dimension;
-	float relaxationFactor; // 0 < relaxationFactor < 2 (bigger = faster but higher inaccuracy)
+	float relaxationFactor; // 0 < relaxationFactor < 2 (bigger = faster but
+							// higher inaccuracy)
 	int maxIterations;
-	
+
 	public SuccessiveOverRelaxation(int dimension, float relaxationFactor, int maxIterations) {
 		this.dimension = dimension;
 		this.relaxationFactor = relaxationFactor;
@@ -17,12 +18,12 @@ public class SuccessiveOverRelaxation implements LinearEquationSolver {
 	public float[] solve(float[][] A, float[] b) {
 		float[] result = new float[dimension];
 		Arrays.fill(result, 0);
-		
-		for(int a = 0; a < maxIterations; a++) {
-			for(int i = 0; i < dimension; i++) {
+
+		for (int a = 0; a < maxIterations; a++) {
+			for (int i = 0; i < dimension; i++) {
 				float o = 0;
-				for(int j = 0; j < dimension; j++) {
-					if(j != i) {
+				for (int j = 0; j < dimension; j++) {
+					if (j != i) {
 						o += A[i][j] * result[j];
 					}
 				}
@@ -30,7 +31,7 @@ public class SuccessiveOverRelaxation implements LinearEquationSolver {
 			}
 			// TODO: check convergance
 		}
-		
+
 		return result;
 	}
 

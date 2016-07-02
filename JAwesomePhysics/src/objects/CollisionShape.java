@@ -28,8 +28,7 @@ public abstract class CollisionShape<L extends Vector, A1 extends Rotation, A2 e
 		supportcalculator = cs.createSupportCalculator(this);
 	}
 
-	public abstract SupportCalculator<L> createSupportCalculator(
-			CollisionShape<L, A1, A2> cs);
+	public abstract SupportCalculator<L> createSupportCalculator(CollisionShape<L, A1, A2> cs);
 
 	public AABB<L> getAABB() {
 		return aabb;

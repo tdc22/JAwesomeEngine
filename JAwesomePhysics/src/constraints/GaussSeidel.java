@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class GaussSeidel implements LinearEquationSolver {
 	int dimension;
 	int maxIterations;
-	
+
 	public GaussSeidel(int dimension, int maxIterations) {
 		this.dimension = dimension;
 		this.maxIterations = maxIterations;
@@ -15,12 +15,12 @@ public class GaussSeidel implements LinearEquationSolver {
 	public float[] solve(float[][] A, float[] b) {
 		float[] result = new float[dimension];
 		Arrays.fill(result, 0);
-		
-		for(int a = 0; a < maxIterations; a++) {
-			for(int i = 0; i < dimension; i++) {
+
+		for (int a = 0; a < maxIterations; a++) {
+			for (int i = 0; i < dimension; i++) {
 				float o = 0;
-				for(int j = 0; j < dimension; j++) {
-					if(j != i) {
+				for (int j = 0; j < dimension; j++) {
+					if (j != i) {
 						o += A[i][j] * result[j];
 					}
 				}
@@ -28,7 +28,7 @@ public class GaussSeidel implements LinearEquationSolver {
 			}
 			// TODO: check convergance
 		}
-		
+
 		return result;
 	}
 

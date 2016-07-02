@@ -245,7 +245,7 @@ public class Vector3f extends Vector3 {
 		y = transform.getf(1, 0) * xa + transform.getf(1, 1) * ya + transform.getf(1, 2) * z;
 		z = transform.getf(2, 0) * xa + transform.getf(2, 1) * ya + transform.getf(2, 2) * z;
 	}
-	
+
 	@Override
 	public void transform(Quaternion transform) {
 		Vector3f u = new Vector3f(transform.getQ1f(), transform.getQ2f(), transform.getQ3f());

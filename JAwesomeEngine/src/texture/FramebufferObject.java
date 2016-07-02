@@ -447,11 +447,11 @@ public class FramebufferObject {
 		}
 		return image;
 	}
-	
+
 	public Camera getCamera() {
 		return cam;
 	}
-	
+
 	public ViewFrustum getViewFrustum() {
 		return frustum;
 	}

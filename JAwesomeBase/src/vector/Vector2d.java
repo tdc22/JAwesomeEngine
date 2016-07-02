@@ -192,7 +192,7 @@ public class Vector2d extends Vector2 {
 		x = transform.get(0, 0) * xa + transform.get(0, 1) * y;
 		y = transform.get(1, 0) * xa + transform.get(1, 1) * y;
 	}
-	
+
 	@Override
 	public void transform(Complex transform) {
 		double xa = x;

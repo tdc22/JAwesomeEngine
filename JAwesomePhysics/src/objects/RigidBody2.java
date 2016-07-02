@@ -8,8 +8,7 @@ import quaternion.Complexf;
 import vector.Vector1f;
 import vector.Vector2f;
 
-public class RigidBody2 extends
-		RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>  implements InstancedBaseObject2 {
+public class RigidBody2 extends RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> implements InstancedBaseObject2 {
 	public RigidBody2() {
 		super(new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
 		aabb = new AABB2(new Vector2f(), new Vector2f());
@@ -44,7 +43,8 @@ public class RigidBody2 extends
 	public void applyImpulse(Vector2f impulse, Vector2f rel_pos) {
 		if (invMass != 0) {
 			applyCentralImpulse(impulse);
-			applyTorqueImpulse(new Vector1f(rel_pos.x * impulse.y * linearfactor.y - rel_pos.y * impulse.x * linearfactor.x));
+			applyTorqueImpulse(
+					new Vector1f(rel_pos.x * impulse.y * linearfactor.y - rel_pos.y * impulse.x * linearfactor.x));
 		}
 	}
 
@@ -59,8 +59,7 @@ public class RigidBody2 extends
 	}
 
 	@Override
-	public SupportCalculator<Vector2f> createSupportCalculator(
-			CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
+	public SupportCalculator<Vector2f> createSupportCalculator(CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 		return null;
 	}
 

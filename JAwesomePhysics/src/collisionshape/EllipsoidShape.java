@@ -12,8 +12,7 @@ public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructur
 	protected class EllipsoidSupport implements SupportCalculator<Vector3f> {
 		private CollisionShape<Vector3f, Quaternionf, Quaternionf> collisionshape;
 
-		public EllipsoidSupport(
-				CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+		public EllipsoidSupport(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 			collisionshape = cs;
 		}
 
@@ -22,8 +21,7 @@ public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructur
 			if (direction.lengthSquared() == 0)
 				direction = new Vector3f(0, 1, 0);
 			direction.normalize();
-			Vector3f v = QuatMath.transform(
-					collisionshape.getInverseRotation(), direction);
+			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
 			return new Vector3f(v.x * radiusX, v.y * radiusY, v.z * radiusZ);
 		}
 
@@ -32,8 +30,7 @@ public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructur
 			if (direction.lengthSquared() == 0)
 				direction = new Vector3f(0, -1, 0);
 			direction.normalize();
-			Vector3f v = QuatMath.transform(
-					collisionshape.getInverseRotation(), direction);
+			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
 			return new Vector3f(-v.x * radiusX, -v.y * radiusY, -v.z * radiusZ);
 		}
 
@@ -64,8 +61,7 @@ public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructur
 	}
 
 	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(
-			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+	public SupportCalculator<Vector3f> createSupportCalculator(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		return new EllipsoidSupport(cs);
 	}
 
@@ -73,21 +69,21 @@ public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructur
 	public float getRadiusX() {
 		return radiusX;
 	}
-	
+
 	@Override
 	public float getRadiusY() {
 		return radiusY;
 	}
-	
+
 	@Override
 	public float getRadiusZ() {
 		return radiusZ;
 	}
 
 	private void init() {
-		float longest = radiusX > radiusY ? (radiusX > radiusZ ? radiusX : radiusZ) : (radiusY > radiusZ ? radiusY : radiusZ);
-		setAABB(new Vector3f(-longest, -longest, -longest), new Vector3f(
-				longest, longest, longest));
+		float longest = radiusX > radiusY ? (radiusX > radiusZ ? radiusX : radiusZ)
+				: (radiusY > radiusZ ? radiusY : radiusZ);
+		setAABB(new Vector3f(-longest, -longest, -longest), new Vector3f(longest, longest, longest));
 		supportcalculator = createSupportCalculator(this);
 	}
 }

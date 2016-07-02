@@ -1,5 +1,6 @@
 package space;
 
+import broadphase.Broadphase;
 import integration.IntegrationSolver;
 import manifold.CollisionManifold;
 import manifold.ManifoldManager;
@@ -13,7 +14,6 @@ import quaternion.Complexf;
 import resolution.CollisionResolution;
 import vector.Vector1f;
 import vector.Vector2f;
-import broadphase.Broadphase;
 
 public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 
@@ -48,7 +48,7 @@ public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 		addRigidBody(compoundobject);
 		compoundObjects.add(compoundobject);
 	}
-	
+
 	public void setGlobalGravitation(float x, float y) {
 		globalGravitation.set(x, y);
 	}

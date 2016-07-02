@@ -6,8 +6,8 @@ import matrix.Matrix4f;
 import quaternion.Quaternionf;
 import vector.Vector3f;
 
-public class RigidBody3 extends
-		RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>  implements InstancedBaseObject3 {
+public class RigidBody3 extends RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>
+		implements InstancedBaseObject3 {
 	public RigidBody3() {
 		super(new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1));
 		aabb = new AABB3(new Vector3f(), new Vector3f());
@@ -37,8 +37,7 @@ public class RigidBody3 extends
 	@Override
 	public void applyForce(Vector3f force, Vector3f rel_pos) {
 		applyCentralForce(force);
-		applyTorque(VecMath.crossproduct(rel_pos,
-				VecMath.multiplication(force, linearfactor)));
+		applyTorque(VecMath.crossproduct(rel_pos, VecMath.multiplication(force, linearfactor)));
 	}
 
 	@Override
@@ -48,8 +47,8 @@ public class RigidBody3 extends
 			float ilX = impulse.x * linearfactor.x;
 			float ilY = impulse.y * linearfactor.y;
 			float ilZ = impulse.z * linearfactor.z;
-			applyTorqueImpulse(new Vector3f(rel_pos.y * ilZ - rel_pos.z * ilY,
-					rel_pos.z * ilX - rel_pos.x * ilZ, rel_pos.x * ilY - rel_pos.y * ilX));
+			applyTorqueImpulse(new Vector3f(rel_pos.y * ilZ - rel_pos.z * ilY, rel_pos.z * ilX - rel_pos.x * ilZ,
+					rel_pos.x * ilY - rel_pos.y * ilX));
 		}
 	}
 
@@ -70,8 +69,7 @@ public class RigidBody3 extends
 	}
 
 	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(
-			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+	public SupportCalculator<Vector3f> createSupportCalculator(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		return null;
 	}
 
@@ -107,13 +105,11 @@ public class RigidBody3 extends
 		rollingfriction = 0.000001f;
 	}
 
-	public void setAngularVelocity(float velocityX, float velocityY,
-			float velocityZ) {
+	public void setAngularVelocity(float velocityX, float velocityY, float velocityZ) {
 		angularvelocity.set(velocityX, velocityY, velocityZ);
 	}
 
-	public void setLinearVelocity(float velocityX, float velocityY,
-			float velocityZ) {
+	public void setLinearVelocity(float velocityX, float velocityY, float velocityZ) {
 		linearvelocity.set(velocityX, velocityY, velocityZ);
 	}
 

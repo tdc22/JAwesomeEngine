@@ -1,7 +1,6 @@
 package vector;
 
 import matrix.Matrix1;
-import matrix.Matrix1f;
 
 /**
  * Superclass for 1-dimensional vectors.

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import vector.Vector2f;
 import collisionshape2d.ConvexShape2;
+import vector.Vector2f;
 
 public class Quickhull2 {
 	// source:
@@ -90,8 +90,7 @@ public class Quickhull2 {
 			return -1;
 	}
 
-	private static void hullSet(Vector2f A, Vector2f B, List<Vector2f> set,
-			List<Vector2f> hull) {
+	private static void hullSet(Vector2f A, Vector2f B, List<Vector2f> set, List<Vector2f> hull) {
 		int insertPosition = hull.indexOf(B);
 		if (set.size() == 0)
 			return;

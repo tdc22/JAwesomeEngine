@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import collisionshape.ConvexShape;
 import math.VecMath;
 import vector.Vector3f;
-import collisionshape.ConvexShape;
 
 public class Quickhull {
 
@@ -67,8 +67,7 @@ public class Quickhull {
 		return computeConvexHullVertices(points, new ArrayList<Triangle>());
 	}
 
-	public static List<Vector3f> computeConvexHullVertices(
-			List<Vector3f> points, List<Triangle> faces) {
+	public static List<Vector3f> computeConvexHullVertices(List<Vector3f> points, List<Triangle> faces) {
 		points = new ArrayList<Vector3f>(points);
 		if (points.size() > 0) {
 			int a = getFurthestPoint(new Vector3f(-1, 0, 0), points);
@@ -120,24 +119,21 @@ public class Quickhull {
 					for (int i = 0; i < faces.size(); i++) {
 						Triangle f = faces.get(i);
 						Triangle[] adjs = findAdjacentTriangles(f, faces);
-						if (VecMath.dotproduct(VecMath.subtraction(f.c, f.a),
-								adjs[0].normal) > 0) {
+						if (VecMath.dotproduct(VecMath.subtraction(f.c, f.a), adjs[0].normal) > 0) {
 							Vector3f adjD = findTheD(f.a, f.b, adjs[0]);
 							faces.add(new Triangle(f.c, f.a, adjD));
 							faces.add(new Triangle(f.b, f.c, adjD));
 							faces.remove(i);
 							faces.remove(adjs[0]);
 							i--;
-						} else if (VecMath.dotproduct(
-								VecMath.subtraction(f.a, f.b), adjs[1].normal) > 0) {
+						} else if (VecMath.dotproduct(VecMath.subtraction(f.a, f.b), adjs[1].normal) > 0) {
 							Vector3f adjD = findTheD(f.b, f.c, adjs[1]);
 							faces.add(new Triangle(f.a, f.b, adjD));
 							faces.add(new Triangle(f.c, f.a, adjD));
 							faces.remove(i);
 							faces.remove(adjs[1]);
 							i--;
-						} else if (VecMath.dotproduct(
-								VecMath.subtraction(f.b, f.c), adjs[2].normal) > 0) {
+						} else if (VecMath.dotproduct(VecMath.subtraction(f.b, f.c), adjs[2].normal) > 0) {
 							Vector3f adjD = findTheD(f.c, f.a, adjs[2]);
 							faces.add(new Triangle(f.b, f.c, adjD));
 							faces.add(new Triangle(f.a, f.b, adjD));
@@ -183,8 +179,7 @@ public class Quickhull {
 		float distance = 0;
 		int pointID = -1;
 		for (int i = 0; i < points.size(); i++) {
-			float dist = Math.abs(VecMath.dotproduct(t.normal,
-					VecMath.subtraction(points.get(i), t.a)));
+			float dist = Math.abs(VecMath.dotproduct(t.normal, VecMath.subtraction(points.get(i), t.a)));
 			if (dist > distance) {
 				distance = dist;
 				pointID = i;
@@ -193,13 +188,11 @@ public class Quickhull {
 		return pointID;
 	}
 
-	private static int getFurthestPointDirection(Triangle t,
-			List<Vector3f> points) {
+	private static int getFurthestPointDirection(Triangle t, List<Vector3f> points) {
 		float distance = 0;
 		int pointID = -1;
 		for (int i = 0; i < points.size(); i++) {
-			float dist = VecMath.dotproduct(t.normal,
-					VecMath.subtraction(points.get(i), t.a));
+			float dist = VecMath.dotproduct(t.normal, VecMath.subtraction(points.get(i), t.a));
 			if (dist > distance) {
 				distance = dist;
 				pointID = i;
@@ -215,22 +208,18 @@ public class Quickhull {
 	 * @param faces
 	 * @return
 	 */
-	private static Triangle[] findAdjacentTriangles(Triangle t,
-			List<Triangle> faces) {
+	private static Triangle[] findAdjacentTriangles(Triangle t, List<Triangle> faces) {
 		Triangle[] result = new Triangle[3];
 		for (Triangle f : faces) {
 			if (!f.equals(t)) {
-				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b)
-						&& f.c.equals(t.a) || f.c.equals(t.b)
-						&& f.a.equals(t.a))
+				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b) && f.c.equals(t.a)
+						|| f.c.equals(t.b) && f.a.equals(t.a))
 					result[0] = f;
-				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c)
-						&& f.c.equals(t.b) || f.c.equals(t.c)
-						&& f.a.equals(t.b))
+				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c) && f.c.equals(t.b)
+						|| f.c.equals(t.c) && f.a.equals(t.b))
 					result[1] = f;
-				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a)
-						&& f.c.equals(t.c) || f.c.equals(t.a)
-						&& f.a.equals(t.c))
+				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a) && f.c.equals(t.c)
+						|| f.c.equals(t.a) && f.a.equals(t.c))
 					result[2] = f;
 			}
 		}

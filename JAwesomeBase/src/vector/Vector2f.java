@@ -192,7 +192,7 @@ public class Vector2f extends Vector2 {
 		x = transform.getf(0, 0) * xa + transform.getf(0, 1) * y;
 		y = transform.getf(1, 0) * xa + transform.getf(1, 1) * y;
 	}
-	
+
 	@Override
 	public void transform(Complex transform) {
 		float xa = x;

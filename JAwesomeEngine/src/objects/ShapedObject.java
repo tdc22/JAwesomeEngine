@@ -355,12 +355,16 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 		glVertexAttribPointer(NORMAL_POSITION, vertexsize, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+		glEnableVertexAttribArray(VERTEX_POSITION);
+
 		glBindVertexArray(0);
 
 		vboIndexHandle = glGenBuffers();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndexHandle);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData, GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		setRenderHints(renderColor, renderTexCoords, renderNormals);
 	}
 
 	@Override
@@ -368,37 +372,11 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 		if (render) {
 			glBindVertexArray(vaoHandle);
 
-			glEnableVertexAttribArray(VERTEX_POSITION);
-			glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
-
-			if (renderColor) {
-				glEnableVertexAttribArray(COLOR_POSITION);
-				glBindBuffer(GL_ARRAY_BUFFER, vboColorHandle);
-			}
-
-			if (renderTexCoords) {
-				glEnableVertexAttribArray(TEXTURE_POSITION);
-				glBindBuffer(GL_ARRAY_BUFFER, vboTextureCoordHandle);
-			}
-
-			if (renderNormals) {
-				glEnableVertexAttribArray(NORMAL_POSITION);
-				glBindBuffer(GL_ARRAY_BUFFER, vboNormalHandle);
-			}
-
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndexHandle);
 
 			glDrawElements(rendermode, renderedIndexCount, GL_UNSIGNED_INT, 0);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glDisableVertexAttribArray(VERTEX_POSITION);
-			if (renderNormals)
-				glDisableVertexAttribArray(NORMAL_POSITION);
-			if (renderTexCoords)
-				glDisableVertexAttribArray(TEXTURE_POSITION);
-			if (renderColor)
-				glDisableVertexAttribArray(COLOR_POSITION);
 
 			glBindVertexArray(0);
 		}
@@ -439,6 +417,26 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 		renderColor = rendercolors;
 		renderTexCoords = rendertexturecoords;
 		renderNormals = rendernormals;
+
+		glBindVertexArray(vaoHandle);
+
+		if (renderColor) {
+			glEnableVertexAttribArray(COLOR_POSITION);
+		} else {
+			glDisableVertexAttribArray(COLOR_POSITION);
+		}
+		if (renderTexCoords) {
+			glEnableVertexAttribArray(TEXTURE_POSITION);
+		} else {
+			glDisableVertexAttribArray(TEXTURE_POSITION);
+		}
+		if (renderNormals) {
+			glEnableVertexAttribArray(NORMAL_POSITION);
+		} else {
+			glDisableVertexAttribArray(NORMAL_POSITION);
+		}
+
+		glBindVertexArray(0);
 	}
 
 	public void setRendered(boolean render) {

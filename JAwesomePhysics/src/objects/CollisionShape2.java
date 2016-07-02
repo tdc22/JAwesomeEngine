@@ -7,8 +7,8 @@ import matrix.Matrix4f;
 import quaternion.Complexf;
 import vector.Vector2f;
 
-public abstract class CollisionShape2 extends
-		CollisionShape<Vector2f, Complexf, Matrix1f> implements InstancedBaseObject2 {
+public abstract class CollisionShape2 extends CollisionShape<Vector2f, Complexf, Matrix1f>
+		implements InstancedBaseObject2 {
 
 	public CollisionShape2() {
 		super(new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
@@ -37,26 +37,22 @@ public abstract class CollisionShape2 extends
 
 	@Override
 	public Vector2f supportPoint(Vector2f direction) {
-		return VecMath.addition(supportPointRelative(direction),
-				getTranslation());
+		return VecMath.addition(supportPointRelative(direction), getTranslation());
 	}
 
 	@Override
 	public Vector2f supportPointNegative(Vector2f direction) {
-		return VecMath.addition(supportPointRelativeNegative(direction),
-				getTranslation());
+		return VecMath.addition(supportPointRelativeNegative(direction), getTranslation());
 	}
 
 	@Override
 	public Vector2f supportPointRelative(Vector2f direction) {
-		return ComplexMath.transform(this.getRotation(),
-				supportcalculator.supportPointLocal(direction));
+		return ComplexMath.transform(this.getRotation(), supportcalculator.supportPointLocal(direction));
 	}
 
 	@Override
 	public Vector2f supportPointRelativeNegative(Vector2f direction) {
-		return ComplexMath.transform(this.getRotation(),
-				supportcalculator.supportPointLocalNegative(direction));
+		return ComplexMath.transform(this.getRotation(), supportcalculator.supportPointLocalNegative(direction));
 	}
 
 	@Override

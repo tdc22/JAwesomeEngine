@@ -1,7 +1,6 @@
 package vector;
 
 import matrix.Matrix3;
-import quaternion.Complex;
 import quaternion.Quaternion;
 
 /**
@@ -165,7 +164,7 @@ public abstract class Vector3 extends Vector {
 	 * @see Vector1#transform(matrix.Matrix1)
 	 */
 	public abstract void transform(Matrix3 transform);
-	
+
 	/**
 	 * Transforms the vector by a quaternion.
 	 * 

@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class JacobiMethod implements LinearEquationSolver {
 	int dimension;
 	int maxIterations;
-	
+
 	public JacobiMethod(int dimension, int maxIterations) {
 		this.dimension = dimension;
 		this.maxIterations = maxIterations;
@@ -16,12 +16,12 @@ public class JacobiMethod implements LinearEquationSolver {
 		float[] result = new float[dimension];
 		Arrays.fill(result, 0);
 		float[] nextResult = new float[dimension];
-		
-		for(int a = 0; a < maxIterations; a++) {
-			for(int i = 0; i < dimension; i++) {
+
+		for (int a = 0; a < maxIterations; a++) {
+			for (int i = 0; i < dimension; i++) {
 				float o = 0;
-				for(int j = 0; j < dimension; j++) {
-					if(j != i) {
+				for (int j = 0; j < dimension; j++) {
+					if (j != i) {
 						o += A[i][j] * result[j];
 					}
 				}
@@ -30,7 +30,7 @@ public class JacobiMethod implements LinearEquationSolver {
 			result = nextResult;
 			// TODO: check convergance
 		}
-		
+
 		return result;
 	}
 

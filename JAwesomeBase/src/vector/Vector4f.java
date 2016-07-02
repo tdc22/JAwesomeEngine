@@ -292,10 +292,14 @@ public class Vector4f extends Vector4 {
 		float xa = x;
 		float ya = y;
 		float za = z;
-		x = transform.getf(0, 0) * xa + transform.getf(0, 1) * ya + transform.getf(0, 2) * za + transform.getf(0, 3) * w;
-		y = transform.getf(1, 0) * xa + transform.getf(1, 1) * ya + transform.getf(1, 2) * za + transform.getf(1, 3) * w;
-		z = transform.getf(2, 0) * xa + transform.getf(2, 1) * ya + transform.getf(2, 2) * za + transform.getf(2, 3) * w;
-		w = transform.getf(3, 0) * xa + transform.getf(3, 1) * ya + transform.getf(3, 2) * za + transform.getf(3, 3) * w;
+		x = transform.getf(0, 0) * xa + transform.getf(0, 1) * ya + transform.getf(0, 2) * za
+				+ transform.getf(0, 3) * w;
+		y = transform.getf(1, 0) * xa + transform.getf(1, 1) * ya + transform.getf(1, 2) * za
+				+ transform.getf(1, 3) * w;
+		z = transform.getf(2, 0) * xa + transform.getf(2, 1) * ya + transform.getf(2, 2) * za
+				+ transform.getf(2, 3) * w;
+		w = transform.getf(3, 0) * xa + transform.getf(3, 1) * ya + transform.getf(3, 2) * za
+				+ transform.getf(3, 3) * w;
 	}
 
 	@Override

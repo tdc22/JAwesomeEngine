@@ -90,7 +90,7 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 		toString(root);
 		System.out.println();
 	}
-	
+
 	private Node insertNode(Node node, Node parent) {
 		if (parent.isLeaf()) {
 			Node newParent = new Node();
@@ -198,7 +198,7 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 
 	private void toString(Node n) {
 		System.out.print(n.aabb + "; " + n.isLeaf() + "; " + n.leftChild + "; " + n.rightChild);
-		if(n.isLeaf()) {
+		if (n.isLeaf()) {
 			System.out.print("; " + n.object.getAABB());
 		}
 		System.out.println();
