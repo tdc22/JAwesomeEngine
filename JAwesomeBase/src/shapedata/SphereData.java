@@ -34,4 +34,28 @@ public class SphereData extends DataObject3 implements SphereStructure {
 	public float getRadius() {
 		return radius;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public float getRadiusX() {
+		return radius;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public float getRadiusY() {
+		return radius;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public float getRadiusZ() {
+		return radius;
+	}
 }
