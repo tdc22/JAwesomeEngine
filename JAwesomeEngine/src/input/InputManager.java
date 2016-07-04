@@ -16,6 +16,14 @@ public class InputManager {
 		inputevents.put(inputevent.getName(), inputevent);
 	}
 
+	public void removeEvent(InputEvent inputevent) {
+		inputevents.remove(inputevent.getName());
+	}
+
+	public void removeEvent(String eventname) {
+		inputevents.remove(eventname);
+	}
+
 	public int getGamepadCount() {
 		return inputreader.getGamepadCount();
 	}
