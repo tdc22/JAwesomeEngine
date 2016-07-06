@@ -226,6 +226,10 @@ public class FramebufferObject {
 		return imageData;
 	}
 
+	public Layer getRenderedLayer() {
+		return render;
+	}
+
 	public int getDepthTextureID() {
 		return depthTexture.getTextureID();
 	}
@@ -244,6 +248,10 @@ public class FramebufferObject {
 
 	public int getWidth() {
 		return width;
+	}
+
+	public void setRenderedLayer(Layer layer) {
+		this.render = layer;
 	}
 
 	protected void init(Layer render, int width, int height, int samples, Camera camera, Texture colorbuffer,
