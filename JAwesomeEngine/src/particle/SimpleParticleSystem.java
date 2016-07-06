@@ -86,6 +86,10 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 	public Particle getParticle(int particleID) {
 		return particleList.get(particleID);
 	}
+	
+	public HashMap<Integer, Particle> getParticleList() {
+		return particleList;
+	}
 
 	private final Vector3f nullvec = new Vector3f();
 
@@ -207,7 +211,7 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 		this.cam = cam;
 	}
 
-	protected class Particle {
+	public class Particle {
 		Vector3f position, velocity;
 		int lifetime;
 		Vector2f size;
@@ -218,6 +222,26 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 			this.velocity = velocity;
 			this.lifetime = lifetime;
 			this.size = size;
+		}
+		
+		public Vector3f getPosition() {
+			return position;
+		}
+		
+		public Vector3f getVelocity() {
+			return velocity;
+		}
+		
+		public int getLifetime() {
+			return lifetime;
+		}
+		
+		public void setLifetime(int lifetime) {
+			this.lifetime = lifetime;
+		}
+		
+		public Vector2f getSize() {
+			return size;
 		}
 	}
 
