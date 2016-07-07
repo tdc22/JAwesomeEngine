@@ -14,6 +14,10 @@ public abstract class Sound {
 
 	public abstract void setLooping(boolean loop);
 
+	public abstract void setPitch(float pitch);
+
+	public abstract void setGain(float gain);
+
 	public abstract void delete();
 
 	public abstract void setSourcePositionRelative(boolean relative);

@@ -2,7 +2,9 @@ package sound;
 
 import static org.lwjgl.openal.AL10.AL_BUFFER;
 import static org.lwjgl.openal.AL10.AL_FALSE;
+import static org.lwjgl.openal.AL10.AL_GAIN;
 import static org.lwjgl.openal.AL10.AL_LOOPING;
+import static org.lwjgl.openal.AL10.AL_PITCH;
 import static org.lwjgl.openal.AL10.AL_POSITION;
 import static org.lwjgl.openal.AL10.AL_SOURCE_RELATIVE;
 import static org.lwjgl.openal.AL10.AL_TRUE;
@@ -14,7 +16,10 @@ import static org.lwjgl.openal.AL10.alSourcePause;
 import static org.lwjgl.openal.AL10.alSourcePlay;
 import static org.lwjgl.openal.AL10.alSourceRewind;
 import static org.lwjgl.openal.AL10.alSourceStop;
+import static org.lwjgl.openal.AL10.alSourcef;
 import static org.lwjgl.openal.AL10.alSourcei;
+
+import org.lwjgl.openal.AL10;
 
 import vector.Vector2f;
 import vector.Vector3f;
@@ -23,10 +28,19 @@ public class ALSound extends Sound {
 	int sourcehandle, bufferhandle;
 
 	public ALSound(int bufferhandle) {
+		this.bufferhandle = bufferhandle;
 		sourcehandle = alGenSources();
 		alSourcei(sourcehandle, AL_BUFFER, bufferhandle);
 		alSourcei(sourcehandle, AL_SOURCE_RELATIVE, AL_TRUE);
 		alSource3f(sourcehandle, AL_POSITION, 0.0f, 0.0f, 0.0f);
+	}
+
+	public int getSoundBufferHandle() {
+		return bufferhandle;
+	}
+
+	public int getSourceBufferHandle() {
+		return sourcehandle;
 	}
 
 	public void pause() {
@@ -49,6 +63,14 @@ public class ALSound extends Sound {
 		alSourcei(sourcehandle, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
 	}
 
+	public void setPitch(float pitch) {
+		alSourcef(sourcehandle, AL_PITCH, pitch);
+	}
+
+	public void setGain(float gain) {
+		alSourcef(sourcehandle, AL_GAIN, gain);
+	}
+
 	@Override
 	public void delete() {
 		alDeleteSources(sourcehandle);
@@ -57,6 +79,7 @@ public class ALSound extends Sound {
 
 	@Override
 	public void setSourcePosition(Vector3f position) {
+		AL10.alListener3f(AL_POSITION, position.x, position.y, position.z);
 		alSource3f(sourcehandle, AL_POSITION, position.x, position.y, position.z);
 	}
 

@@ -12,5 +12,9 @@ public abstract class SoundEnvironment {
 
 	public abstract void setListenerPosition(float x, float y);
 
+	public abstract void setListenerOrientation(Vector3f up, Vector3f front);
+
+	public abstract void setListenerOrientation(Vector2f up, Vector2f front);
+
 	public abstract void delete();
 }

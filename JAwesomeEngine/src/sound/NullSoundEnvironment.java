@@ -29,4 +29,14 @@ public class NullSoundEnvironment extends SoundEnvironment {
 	public void setListenerPosition(float x, float y) {
 
 	}
+
+	@Override
+	public void setListenerOrientation(Vector3f up, Vector3f front) {
+
+	}
+
+	@Override
+	public void setListenerOrientation(Vector2f up, Vector2f front) {
+
+	}
 }
