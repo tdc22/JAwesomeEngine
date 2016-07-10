@@ -73,10 +73,10 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 
 	@Override
 	public void add(RigidBody<Vector3f, ?, ?, ?> object) {
-		System.out.println("Insert: " + object.getAABB());
-		System.out.println("Before: ");
+		// System.out.println("Insert: " + object.getAABB());
+		// System.out.println("Before: ");
 		if (root != null) {
-			toString(root);
+			// toString(root);
 			Node node = new Node();
 			node.setLeaf(object);
 			node.updateAABB(margin);
@@ -86,29 +86,27 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 			root.setLeaf(object);
 			root.updateAABB(margin);
 		}
-		System.out.println("After: ");
+		// System.out.println("After: ");
 		toString(root);
-		System.out.println();
 	}
 
 	private Node insertNode(Node node, Node parent) {
 		if (parent.isLeaf()) {
 			Node newParent = new Node();
 			newParent.parent = parent.parent;
-			System.out.println("1: " + parent.isLeaf() + "; " + newParent.isLeaf() + "; " + node.isLeaf());
 			newParent.setBranch(node, parent);
 			parent = newParent;
-			System.out.println("2: " + parent.isLeaf() + "; " + newParent.isLeaf() + "; " + node.isLeaf());
 		} else {
 			final AABB<Vector3f> aabb0 = parent.leftChild.aabb;
 			final AABB<Vector3f> aabb1 = parent.rightChild.aabb;
 			final float volumeDiff0 = aabb0.union(node.aabb).volume() - aabb0.volume();
 			final float volumeDiff1 = aabb1.union(node.aabb).volume() - aabb1.volume();
 
-			if (volumeDiff0 < volumeDiff1)
-				insertNode(node, parent.leftChild);
-			else
-				insertNode(node, parent.rightChild);
+			if (volumeDiff0 < volumeDiff1) {
+				parent.leftChild = insertNode(node, parent.leftChild);
+			} else {
+				parent.rightChild = insertNode(node, parent.rightChild);
+			}
 		}
 		parent.updateAABB(margin);
 		return parent;
@@ -197,7 +195,7 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 	}
 
 	private void toString(Node n) {
-		System.out.print(n.aabb + "; " + n.isLeaf() + "; " + n.leftChild + "; " + n.rightChild);
+		System.out.print(n.aabb + "; " + n.isLeaf() + "; " + n.leftChild + "; " + n.rightChild + "; " + n);
 		if (n.isLeaf()) {
 			System.out.print("; " + n.object.getAABB());
 		}
@@ -246,7 +244,7 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 						root = sibling;
 
 					node.updateAABB(margin);
-					insertNode(node, root);
+					root = insertNode(node, root);
 				}
 				invalidNodes.clear();
 			}
