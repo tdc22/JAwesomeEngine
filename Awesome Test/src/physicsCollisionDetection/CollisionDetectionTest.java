@@ -10,6 +10,7 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
@@ -23,6 +24,7 @@ import narrowphase.EPA;
 import narrowphase.GJK;
 import objects.RigidBody;
 import objects.RigidBody3;
+import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import positionalcorrection.NullCorrection;
@@ -45,6 +47,7 @@ public class CollisionDetectionTest extends StandardGame {
 	Shader defaultshader, s1, s2, s3, s4, s5;
 	RigidBody3 rb1, rb2, rb3, rb4, rb5;
 	Debugger debugger;
+	PhysicsDebug physicsdebug;
 	List<ManifoldVisualization> manifolds;
 	InputEvent toggleMouseBind, giveMeData;
 
@@ -116,8 +119,9 @@ public class CollisionDetectionTest extends StandardGame {
 		s5.addObject(c1);
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
-		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
+		physicsdebug = new PhysicsDebug(inputs, font, space, defaultshader);
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "R", KeyInput.KEY_PRESSED));
 		giveMeData = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "P", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
@@ -127,6 +131,7 @@ public class CollisionDetectionTest extends StandardGame {
 	@Override
 	public void render() {
 		debugger.begin();
+		physicsdebug.render3d();
 		render3dLayer();
 		for (ManifoldVisualization mv : manifolds) {
 			defaultshader.removeObject(mv);
@@ -182,6 +187,7 @@ public class CollisionDetectionTest extends StandardGame {
 		}
 
 		space.update(delta);
+		physicsdebug.update();
 		if (giveMeData.isActive())
 			System.out.println(b1.getTranslation() + "; " + b1.getRotation());
 

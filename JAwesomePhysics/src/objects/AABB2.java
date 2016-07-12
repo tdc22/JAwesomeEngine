@@ -25,15 +25,15 @@ public class AABB2 extends AABB<Vector2f> {
 
 	@Override
 	public AABB<Vector2f> union(AABB<Vector2f> aabb) {
-		Vector2f min = new Vector2f();
-		Vector2f max = new Vector2f();
+		Vector2f newmin = new Vector2f();
+		Vector2f newmax = new Vector2f();
 
-		min.x = Math.min(min.x, aabb.min.x);
-		min.y = Math.min(min.y, aabb.min.y);
-		max.x = Math.max(max.x, aabb.max.x);
-		max.y = Math.max(max.y, aabb.max.y);
+		newmin.x = Math.min(min.x, aabb.min.x);
+		newmin.y = Math.min(min.y, aabb.min.y);
+		newmax.x = Math.max(max.x, aabb.max.x);
+		newmax.y = Math.max(max.y, aabb.max.y);
 
-		return new AABB2(min, max);
+		return new AABB2(newmin, newmax);
 	}
 
 	@Override

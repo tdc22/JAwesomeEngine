@@ -17,7 +17,7 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 	// main source:
 	// http://allenchou.net/2014/02/game-physics-broadphase-dynamic-aabb-tree/
 
-	protected class Node {
+	public class Node {
 		Node parent, leftChild, rightChild;
 
 		boolean childrenCrossed;
@@ -26,6 +26,18 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 
 		public Node() {
 			aabb = new AABB3();
+		}
+
+		public Node getLeftChild() {
+			return leftChild;
+		}
+
+		public Node getRightChild() {
+			return rightChild;
+		}
+
+		public AABB<Vector3f> getAABB() {
+			return aabb;
 		}
 
 		public Node getSibling() {
@@ -192,6 +204,10 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 			root = null;
 			node = null;
 		}
+	}
+
+	public Node getRoot() {
+		return root;
 	}
 
 	private void toString(Node n) {
