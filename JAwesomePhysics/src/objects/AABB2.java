@@ -1,6 +1,5 @@
 package objects;
 
-import math.VecMath;
 import vector.Vector2f;
 
 public class AABB2 extends AABB<Vector2f> {
@@ -38,8 +37,7 @@ public class AABB2 extends AABB<Vector2f> {
 
 	@Override
 	public float volume() {
-		Vector2f size = VecMath.subtraction(max, min);
-		return size.x * size.y;
+		return (max.x - min.x) * (max.y - min.y);
 	}
 
 	@Override

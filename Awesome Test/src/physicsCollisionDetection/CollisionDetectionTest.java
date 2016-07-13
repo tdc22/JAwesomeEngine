@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import broadphase.DynamicAABBTree;
+import broadphase.DynamicAABBTree3;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
@@ -89,7 +89,7 @@ public class CollisionDetectionTest extends StandardGame {
 
 		manifolds = new ArrayList<ManifoldVisualization>();
 
-		space = new PhysicsSpace(new EulerIntegration(), new DynamicAABBTree(), new GJK(new EPA()),
+		space = new PhysicsSpace(new EulerIntegration(), new DynamicAABBTree3(), new GJK(new EPA()),
 				new NullResolution(), new NullCorrection(), new SimpleManifoldManager<Vector3f>());
 		space.setCullStaticOverlaps(false);
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import broadphase.SAP2;
+import broadphase.DynamicAABBTree2;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
@@ -82,8 +82,8 @@ public class CollisionDetectionTest2d extends StandardGame {
 
 		manifolds = new ArrayList<ManifoldVisualization>();
 
-		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(new EPA2()), new NullResolution(),
-				new NullCorrection(), new SimpleManifoldManager<Vector2f>());
+		space = new PhysicsSpace2(new EulerIntegration(), new DynamicAABBTree2(), new GJK2(new EPA2()),
+				new NullResolution(), new NullCorrection(), new SimpleManifoldManager<Vector2f>());
 		space.setCullStaticOverlaps(false);
 
 		q1 = new Quad(400, 200, 25, 25);

@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import broadphase.DynamicAABBTree;
-import broadphase.DynamicAABBTree.Node;
+import broadphase.DynamicAABBTree3;
+import broadphase.DynamicAABBTree3.Node3;
 import gui.Font;
 import input.Input;
 import input.InputEvent;
@@ -35,7 +35,7 @@ public class PhysicsDebug {
 	boolean showCollisionTangents = false;
 	private InputEvent toggleAABBs, toggleCollisionNormals, toggleVelocities, toggleCollisionTangents;
 	private List<Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>> aabbObjects;
-	private List<Pair<ShapedObject3, Node>> aabbNodeObjects;
+	private List<Pair<ShapedObject3, Node3>> aabbNodeObjects;
 
 	public PhysicsDebug(InputManager inputs, Font f, Space3 physics, Shader defaultshader) {
 		font = f;
@@ -50,7 +50,7 @@ public class PhysicsDebug {
 			obj.getFirst().delete();
 		}
 		aabbObjects.clear();
-		for (Pair<ShapedObject3, Node> obj : aabbNodeObjects) {
+		for (Pair<ShapedObject3, Node3> obj : aabbNodeObjects) {
 			defaultshader.removeObject(obj.getFirst());
 			obj.getFirst().delete();
 		}
@@ -59,7 +59,7 @@ public class PhysicsDebug {
 
 	private void initAABBObjects() {
 		aabbObjects = new ArrayList<Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>>();
-		aabbNodeObjects = new ArrayList<Pair<ShapedObject3, Node>>();
+		aabbNodeObjects = new ArrayList<Pair<ShapedObject3, Node3>>();
 		Color c = Color.YELLOW;
 		for (RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> rb : physics.getObjects()) {
 			addAABB(rb, c);
@@ -69,19 +69,19 @@ public class PhysicsDebug {
 			addAABB(rb, c);
 		}
 		c = Color.BLUE;
-		if (physics.getBroadphase() instanceof DynamicAABBTree) {
-			Node root = ((DynamicAABBTree) physics.getBroadphase()).getRoot();
+		if (physics.getBroadphase() instanceof DynamicAABBTree3) {
+			Node3 root = (Node3) ((DynamicAABBTree3) physics.getBroadphase()).getRoot();
 			if (root != null) {
 				traverseAABBTree(root, c);
 			}
 		}
 	}
 
-	private void traverseAABBTree(Node root, Color c) {
+	private void traverseAABBTree(Node3 root, Color c) {
 		if (!root.isLeaf()) {
 			addAABB(root, c);
-			traverseAABBTree(root.getLeftChild(), c);
-			traverseAABBTree(root.getRightChild(), c);
+			traverseAABBTree((Node3) root.getLeftChild(), c);
+			traverseAABBTree((Node3) root.getRightChild(), c);
 		}
 	}
 
@@ -92,11 +92,11 @@ public class PhysicsDebug {
 		aabbObjects.add(new Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(aabbobj, rb));
 	}
 
-	private void addAABB(Node node, Color c) {
+	private void addAABB(Node3 node, Color c) {
 		AABB<Vector3f> aabb = node.getAABB();
 		ShapedObject3 aabbobj = new ShapedObject3();
 		addAABBShape(aabb, aabbobj, c);
-		aabbNodeObjects.add(new Pair<ShapedObject3, Node>(aabbobj, node));
+		aabbNodeObjects.add(new Pair<ShapedObject3, Node3>(aabbobj, node));
 	}
 
 	private void addAABBShape(AABB<Vector3f> aabb, ShapedObject3 aabbobj, Color c) {
@@ -142,9 +142,9 @@ public class PhysicsDebug {
 			for (Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> aabbobj : aabbObjects) {
 				aabbobj.getFirst().translateTo(aabbobj.getSecond().getTranslation());
 			}
-			for (Pair<ShapedObject3, Node> aabbobj : aabbNodeObjects) {
+			for (Pair<ShapedObject3, Node3> aabbobj : aabbNodeObjects) {
 				System.out.println(aabbobj.getSecond().getAABB().getCenter());
-				aabbobj.getFirst().translateTo(aabbobj.getSecond().getAABB().getCenter());
+				// aabbobj.getFirst().translateTo(aabbobj.getSecond().getAABB().getCenter());
 			}
 		}
 		if (showCollisionNormals) {

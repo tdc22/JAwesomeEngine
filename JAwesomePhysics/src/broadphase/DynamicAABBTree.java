@@ -5,28 +5,19 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import math.VecMath;
 import objects.AABB;
-import objects.AABB3;
-import objects.RigidBody;
+import objects.CollisionShape;
 import utils.Pair;
-import vector.Vector3f;
+import vector.Vector;
 
-public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> {
-
-	// main source:
-	// http://allenchou.net/2014/02/game-physics-broadphase-dynamic-aabb-tree/
-
-	public class Node {
+public abstract class DynamicAABBTree<L extends Vector, ObjectType extends CollisionShape<L, ?, ?>>
+		implements Broadphase<L, ObjectType> {
+	public abstract class Node {
 		Node parent, leftChild, rightChild;
 
 		boolean childrenCrossed;
-		AABB<Vector3f> aabb;
-		RigidBody<Vector3f, ?, ?, ?> object;
-
-		public Node() {
-			aabb = new AABB3();
-		}
+		AABB<L> aabb;
+		ObjectType object;
 
 		public Node getLeftChild() {
 			return leftChild;
@@ -36,7 +27,7 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 			return rightChild;
 		}
 
-		public AABB<Vector3f> getAABB() {
+		public AABB<L> getAABB() {
 			return aabb;
 		}
 
@@ -56,75 +47,33 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 			rightChild = b;
 		}
 
-		public void setLeaf(RigidBody<Vector3f, ?, ?, ?> object) {
+		public void setLeaf(ObjectType object) {
 			this.object = object;
 
 			leftChild = null;
 			rightChild = null;
 		}
 
-		public void updateAABB(float margin) {
-			if (isLeaf()) {
-				Vector3f marginVector = new Vector3f(margin, margin, margin);
-				aabb.setMin(VecMath.subtraction(object.getGlobalMinAABB(), marginVector));
-				aabb.setMax(VecMath.addition(object.getGlobalMaxAABB(), marginVector));
-			} else
-				aabb = leftChild.aabb.union(rightChild.aabb);
-		}
+		public abstract void updateAABB(float margin);
 	}
 
+	protected final float margin = 0.1f;
+	protected L marginVector;
+
 	Node root;
-	private final float margin = 0.1f;
-	List<Node> invalidNodes;
-	List<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>> overlaps;
+
+	final List<Node> invalidNodes;
+
+	final List<Pair<ObjectType, ObjectType>> overlaps;
 
 	public DynamicAABBTree() {
 		invalidNodes = new ArrayList<Node>();
-		overlaps = new ArrayList<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>>();
+		overlaps = new ArrayList<Pair<ObjectType, ObjectType>>();
 	}
 
-	@Override
-	public void add(RigidBody<Vector3f, ?, ?, ?> object) {
-		// System.out.println("Insert: " + object.getAABB());
-		// System.out.println("Before: ");
-		if (root != null) {
-			// toString(root);
-			Node node = new Node();
-			node.setLeaf(object);
-			node.updateAABB(margin);
-			root = insertNode(node, root);
-		} else {
-			root = new Node();
-			root.setLeaf(object);
-			root.updateAABB(margin);
-		}
-		// System.out.println("After: ");
-		toString(root);
-	}
+	protected abstract Node insertNode(Node node, Node parent);
 
-	private Node insertNode(Node node, Node parent) {
-		if (parent.isLeaf()) {
-			Node newParent = new Node();
-			newParent.parent = parent.parent;
-			newParent.setBranch(node, parent);
-			parent = newParent;
-		} else {
-			final AABB<Vector3f> aabb0 = parent.leftChild.aabb;
-			final AABB<Vector3f> aabb1 = parent.rightChild.aabb;
-			final float volumeDiff0 = aabb0.union(node.aabb).volume() - aabb0.volume();
-			final float volumeDiff1 = aabb1.union(node.aabb).volume() - aabb1.volume();
-
-			if (volumeDiff0 < volumeDiff1) {
-				parent.leftChild = insertNode(node, parent.leftChild);
-			} else {
-				parent.rightChild = insertNode(node, parent.rightChild);
-			}
-		}
-		parent.updateAABB(margin);
-		return parent;
-	}
-
-	private void clearChildrenCrossFlagHelper(Node node) {
+	protected void clearChildrenCrossFlagHelper(Node node) {
 		node.childrenCrossed = false;
 		if (!node.isLeaf()) {
 			clearChildrenCrossFlagHelper(node.leftChild);
@@ -132,12 +81,11 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 		}
 	}
 
-	private void computePairsHelper(Node node0, Node node1) {
+	protected void computePairsHelper(Node node0, Node node1) {
 		if (node0.isLeaf()) {
 			if (node1.isLeaf()) {
 				if (node0.object.getGlobalAABB().intersects(node1.object.getGlobalAABB())) {
-					overlaps.add(new Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>(node0.object,
-							node1.object));
+					overlaps.add(new Pair<ObjectType, ObjectType>(node0.object, node1.object));
 				}
 			} else {
 				crossChildren(node1);
@@ -160,7 +108,7 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 		}
 	}
 
-	private void crossChildren(Node node) {
+	protected void crossChildren(Node node) {
 		if (!node.childrenCrossed) {
 			computePairsHelper(node.leftChild, node.rightChild);
 			node.childrenCrossed = true;
@@ -168,18 +116,12 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 	}
 
 	@Override
-	public Set<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>> getOverlaps() {
-		return new LinkedHashSet<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>>(overlaps);
+	public Set<Pair<ObjectType, ObjectType>> getOverlaps() {
+		return new LinkedHashSet<Pair<ObjectType, ObjectType>>(overlaps);
 	}
 
 	@Override
-	public Set<RigidBody<Vector3f, ?, ?, ?>> raycast() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void remove(RigidBody<Vector3f, ?, ?, ?> object) {
+	public void remove(ObjectType object) {
 		// TODO Auto-generated method stub
 
 	}
@@ -210,7 +152,7 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 		return root;
 	}
 
-	private void toString(Node n) {
+	protected void toString(Node n) {
 		System.out.print(n.aabb + "; " + n.isLeaf() + "; " + n.leftChild + "; " + n.rightChild + "; " + n);
 		if (n.isLeaf()) {
 			System.out.print("; " + n.object.getAABB());
@@ -229,7 +171,7 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 		overlaps.clear();
 
 		System.out.println("-----------------------------");
-		toString(root);
+		// toString(root);
 
 		if (root == null || root.isLeaf())
 			return;
@@ -279,25 +221,31 @@ public class DynamicAABBTree implements Broadphase<Vector3f, RigidBody<Vector3f,
 	}
 
 	@Override
-	public List<RigidBody<Vector3f, ?, ?, ?>> getObjects() {
+	public Set<ObjectType> raycast() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean contains(RigidBody<Vector3f, ?, ?, ?> obj) {
+	public List<ObjectType> getObjects() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean contains(ObjectType obj) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public void addListener(BroadphaseListener<Vector3f, RigidBody<Vector3f, ?, ?, ?>> listener) {
+	public void addListener(BroadphaseListener<L, ObjectType> listener) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void removeListener(BroadphaseListener<Vector3f, RigidBody<Vector3f, ?, ?, ?>> listener) {
+	public void removeListener(BroadphaseListener<L, ObjectType> listener) {
 		// TODO Auto-generated method stub
 
 	}

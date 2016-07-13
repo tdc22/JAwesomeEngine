@@ -1,6 +1,5 @@
 package objects;
 
-import math.VecMath;
 import vector.Vector3f;
 
 public class AABB3 extends AABB<Vector3f> {
@@ -42,13 +41,11 @@ public class AABB3 extends AABB<Vector3f> {
 
 	@Override
 	public float volume() {
-		Vector3f size = VecMath.subtraction(max, min);
-		return size.x * size.y * size.z;
+		return (max.x - min.x) * (max.y - min.y) * (max.z - min.z);
 	}
 
 	@Override
 	public Vector3f getCenter() {
 		return new Vector3f(min.x + (max.x - min.x) / 2f, min.y + (max.y - min.y) / 2f, min.z + (max.z - min.z) / 2f);
 	}
-
 }
