@@ -58,7 +58,6 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 	}
 
 	protected final float margin = 0.1f;
-	protected L marginVector;
 
 	Node root;
 
@@ -170,7 +169,7 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 
 		overlaps.clear();
 
-		System.out.println("-----------------------------");
+		// System.out.println("-----------------------------");
 		// toString(root);
 
 		if (root == null || root.isLeaf())

@@ -2,7 +2,7 @@ package physicsBasicTest;
 
 import java.awt.Color;
 
-import broadphase.SAP;
+import broadphase.DynamicAABBTree3;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
@@ -65,9 +65,9 @@ public class BasicTest extends StandardGame {
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
-		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(new EPA()), new ImpulseResolution(),
-				new ProjectionCorrection(0.01f), new SimpleManifoldManager<Vector3f>());// new
-																						// MultiPointManifoldManager());
+		space = new PhysicsSpace(new VerletIntegration(), new DynamicAABBTree3(), new GJK(new EPA()),
+				new ImpulseResolution(), new ProjectionCorrection(0.01f), new SimpleManifoldManager<Vector3f>());// new
+																													// MultiPointManifoldManager());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");

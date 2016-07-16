@@ -48,4 +48,12 @@ public class AABB3 extends AABB<Vector3f> {
 	public Vector3f getCenter() {
 		return new Vector3f(min.x + (max.x - min.x) / 2f, min.y + (max.y - min.y) / 2f, min.z + (max.z - min.z) / 2f);
 	}
+
+	public void setMin(float minX, float minY, float minZ) {
+		min.set(minX, minY, minZ);
+	}
+
+	public void setMax(float maxX, float maxY, float maxZ) {
+		max.set(maxX, maxY, maxZ);
+	}
 }

@@ -1,6 +1,5 @@
 package broadphase;
 
-import math.VecMath;
 import objects.AABB;
 import objects.AABB2;
 import objects.RigidBody;
@@ -17,15 +16,13 @@ public class DynamicAABBTree2 extends DynamicAABBTree<Vector2f, RigidBody<Vector
 
 		public void updateAABB(float margin) {
 			if (isLeaf()) {
-				aabb.setMin(VecMath.subtraction(object.getGlobalMinAABB(), marginVector));
-				aabb.setMax(VecMath.addition(object.getGlobalMaxAABB(), marginVector));
+				Vector2f globalMinAABB = object.getGlobalMinAABB();
+				Vector2f globalMaxAABB = object.getGlobalMaxAABB();
+				aabb.getMin().set(globalMinAABB.x - margin, globalMinAABB.y - margin);
+				aabb.getMax().set(globalMaxAABB.x + margin, globalMaxAABB.y + margin);
 			} else
 				aabb = leftChild.aabb.union(rightChild.aabb);
 		}
-	}
-
-	public DynamicAABBTree2() {
-		marginVector = new Vector2f(margin, margin);
 	}
 
 	@Override
@@ -56,7 +53,6 @@ public class DynamicAABBTree2 extends DynamicAABBTree<Vector2f, RigidBody<Vector
 		} else {
 			final AABB<Vector2f> aabb0 = parent.leftChild.aabb;
 			final AABB<Vector2f> aabb1 = parent.rightChild.aabb;
-			System.out.println(aabb0.volume() + "; " + aabb1.volume());
 			final float volumeDiff0 = aabb0.union(node.aabb).volume() - aabb0.volume();
 			final float volumeDiff1 = aabb1.union(node.aabb).volume() - aabb1.volume();
 

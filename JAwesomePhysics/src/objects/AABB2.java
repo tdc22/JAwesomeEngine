@@ -45,4 +45,11 @@ public class AABB2 extends AABB<Vector2f> {
 		return new Vector2f(min.x + (max.x - min.x) / 2f, min.y + (max.y - min.y) / 2f);
 	}
 
+	public void setMin(float minX, float minY) {
+		min.set(minX, minY);
+	}
+
+	public void setMax(float maxX, float maxY) {
+		max.set(maxX, maxY);
+	}
 }
