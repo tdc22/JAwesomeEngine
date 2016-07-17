@@ -21,7 +21,7 @@ public class AABB3 extends AABB<Vector3f> {
 	@Override
 	public boolean intersects(AABB<Vector3f> aabb) {
 		return !(max.x < aabb.min.x || max.y < aabb.min.y || max.z < aabb.min.z || min.x > aabb.max.x
-				|| min.y > aabb.max.y || min.z > aabb.max.x);
+				|| min.y > aabb.max.y || min.z > aabb.max.z);
 	}
 
 	@Override

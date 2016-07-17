@@ -1,6 +1,7 @@
 package broadphase;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,9 @@ import vector.Vector;
 
 public abstract class DynamicAABBTree<L extends Vector, ObjectType extends CollisionShape<L, ?, ?>>
 		implements Broadphase<L, ObjectType> {
+	// main source:
+	// http://allenchou.net/2014/02/game-physics-broadphase-dynamic-aabb-tree/
+
 	public abstract class Node {
 		Node parent, leftChild, rightChild;
 
@@ -61,13 +65,22 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 
 	Node root;
 
+	final List<ObjectType> objects;
+
 	final List<Node> invalidNodes;
 
 	final List<Pair<ObjectType, ObjectType>> overlaps;
 
+	final Set<Pair<ObjectType, ObjectType>> overlapSet;
+
+	final List<BroadphaseListener<L, ObjectType>> listeners;
+
 	public DynamicAABBTree() {
+		objects = new ArrayList<ObjectType>();
 		invalidNodes = new ArrayList<Node>();
 		overlaps = new ArrayList<Pair<ObjectType, ObjectType>>();
+		overlapSet = new HashSet<Pair<ObjectType, ObjectType>>();
+		listeners = new ArrayList<BroadphaseListener<L, ObjectType>>();
 	}
 
 	protected abstract Node insertNode(Node node, Node parent);
@@ -80,11 +93,32 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 		}
 	}
 
+	final Pair<ObjectType, ObjectType> tempPair = new Pair<ObjectType, ObjectType>(null, null);
+
 	protected void computePairsHelper(Node node0, Node node1) {
 		if (node0.isLeaf()) {
 			if (node1.isLeaf()) {
+				tempPair.set(node0.object, node1.object);
 				if (node0.object.getGlobalAABB().intersects(node1.object.getGlobalAABB())) {
-					overlaps.add(new Pair<ObjectType, ObjectType>(node0.object, node1.object));
+					if (!overlapSet.contains(tempPair)) {
+						Pair<ObjectType, ObjectType> overlap = new Pair<ObjectType, ObjectType>(node0.object,
+								node1.object);
+						overlaps.add(overlap);
+						overlapSet.add(overlap);
+
+						for (BroadphaseListener<L, ObjectType> listener : listeners) {
+							listener.overlapStarted(overlap.getFirst(), overlap.getSecond());
+						}
+					}
+				} else {
+					if (overlapSet.contains(tempPair)) {
+						overlaps.remove(tempPair);
+						overlapSet.remove(tempPair);
+
+						for (BroadphaseListener<L, ObjectType> listener : listeners) {
+							listener.overlapEnded(tempPair.getFirst(), tempPair.getSecond());
+						}
+					}
 				}
 			} else {
 				crossChildren(node1);
@@ -154,7 +188,7 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 	protected void toString(Node n) {
 		System.out.print(n.aabb + "; " + n.isLeaf() + "; " + n.leftChild + "; " + n.rightChild + "; " + n);
 		if (n.isLeaf()) {
-			System.out.print("; " + n.object.getAABB());
+			System.out.print("; " + n.object.getAABB() + "; " + n.object.getTranslation());
 		}
 		System.out.println();
 		if (!n.isLeaf()) {
@@ -166,11 +200,6 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 	@Override
 	public void update() {
 		updateAABBTree();
-
-		overlaps.clear();
-
-		// System.out.println("-----------------------------");
-		// toString(root);
 
 		if (root == null || root.isLeaf())
 			return;
@@ -227,25 +256,21 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 
 	@Override
 	public List<ObjectType> getObjects() {
-		// TODO Auto-generated method stub
-		return null;
+		return objects;
 	}
 
 	@Override
 	public boolean contains(ObjectType obj) {
-		// TODO Auto-generated method stub
-		return false;
+		return objects.contains(obj);
 	}
 
 	@Override
 	public void addListener(BroadphaseListener<L, ObjectType> listener) {
-		// TODO Auto-generated method stub
-
+		listeners.add(listener);
 	}
 
 	@Override
 	public void removeListener(BroadphaseListener<L, ObjectType> listener) {
-		// TODO Auto-generated method stub
-
+		listeners.remove(listener);
 	}
 }

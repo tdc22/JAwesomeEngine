@@ -21,6 +21,11 @@ public class Pair<A, B> {
 		this.second = second;
 	}
 
+	public Pair(Pair<A, B> pair) {
+		this.first = pair.first;
+		this.second = pair.second;
+	}
+
 	/**
 	 * Checks if the pair contains a given object.
 	 * 
@@ -92,6 +97,19 @@ public class Pair<A, B> {
 	 *            new second pair element
 	 */
 	public void setSecond(B second) {
+		this.second = second;
+	}
+
+	/**
+	 * Sets the first and second pair element
+	 * 
+	 * @param first
+	 *            new first pair element
+	 * @param second
+	 *            new second pair element
+	 */
+	public void set(A first, B second) {
+		this.first = first;
 		this.second = second;
 	}
 }

@@ -7,8 +7,6 @@ import vector.Vector2f;
 
 public class DynamicAABBTree2 extends DynamicAABBTree<Vector2f, RigidBody<Vector2f, ?, ?, ?>> {
 
-	// main source:
-	// http://allenchou.net/2014/02/game-physics-broadphase-dynamic-aabb-tree/
 	public class Node2 extends Node {
 		public Node2() {
 			aabb = new AABB2();
@@ -27,10 +25,7 @@ public class DynamicAABBTree2 extends DynamicAABBTree<Vector2f, RigidBody<Vector
 
 	@Override
 	public void add(RigidBody<Vector2f, ?, ?, ?> object) {
-		// System.out.println("Insert: " + object.getAABB());
-		// System.out.println("Before: ");
 		if (root != null) {
-			// toString(root);
 			Node node = new Node2();
 			node.setLeaf(object);
 			node.updateAABB(margin);
@@ -40,8 +35,6 @@ public class DynamicAABBTree2 extends DynamicAABBTree<Vector2f, RigidBody<Vector
 			root.setLeaf(object);
 			root.updateAABB(margin);
 		}
-		// System.out.println("After: ");
-		// toString(root);
 	}
 
 	protected Node insertNode(Node node, Node parent) {

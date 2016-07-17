@@ -7,8 +7,6 @@ import vector.Vector3f;
 
 public class DynamicAABBTree3 extends DynamicAABBTree<Vector3f, RigidBody<Vector3f, ?, ?, ?>> {
 
-	// main source:
-	// http://allenchou.net/2014/02/game-physics-broadphase-dynamic-aabb-tree/
 	public class Node3 extends Node {
 		public Node3() {
 			aabb = new AABB3();
@@ -27,10 +25,7 @@ public class DynamicAABBTree3 extends DynamicAABBTree<Vector3f, RigidBody<Vector
 
 	@Override
 	public void add(RigidBody<Vector3f, ?, ?, ?> object) {
-		// System.out.println("Insert: " + object.getAABB());
-		// System.out.println("Before: ");
 		if (root != null) {
-			// toString(root);
 			Node node = new Node3();
 			node.setLeaf(object);
 			node.updateAABB(margin);
@@ -40,8 +35,6 @@ public class DynamicAABBTree3 extends DynamicAABBTree<Vector3f, RigidBody<Vector
 			root.setLeaf(object);
 			root.updateAABB(margin);
 		}
-		System.out.println("After: ");
-		toString(root);
 	}
 
 	protected Node insertNode(Node node, Node parent) {
@@ -55,8 +48,6 @@ public class DynamicAABBTree3 extends DynamicAABBTree<Vector3f, RigidBody<Vector
 			final AABB<Vector3f> aabb1 = parent.rightChild.aabb;
 			final float volumeDiff0 = aabb0.union(node.aabb).volume() - aabb0.volume();
 			final float volumeDiff1 = aabb1.union(node.aabb).volume() - aabb1.volume();
-
-			System.out.println(aabb0.volume() + "; " + aabb1.volume() + "; " + volumeDiff0 + "; " + volumeDiff1);
 
 			if (volumeDiff0 < volumeDiff1) {
 				parent.leftChild = insertNode(node, parent.leftChild);
