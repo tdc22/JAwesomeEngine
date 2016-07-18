@@ -11,6 +11,7 @@ import java.util.Set;
 import objects.AABB;
 import objects.CollisionShape;
 import objects.Ray;
+import utils.IntersectionLibrary;
 import utils.Pair;
 import vector.Vector;
 
@@ -102,7 +103,7 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 		if (node0.isLeaf()) {
 			if (node1.isLeaf()) {
 				tempPair.set(node0.object, node1.object);
-				if (node0.object.getGlobalAABB().intersects(node1.object.getGlobalAABB())) {
+				if (intersect(node0, node1)) {
 					if (!overlapSet.contains(tempPair)) {
 						Pair<ObjectType, ObjectType> overlap = new Pair<ObjectType, ObjectType>(node0.object,
 								node1.object);
@@ -143,6 +144,8 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 			}
 		}
 	}
+
+	protected abstract boolean intersect(Node node0, Node node1);
 
 	protected void crossChildren(Node node) {
 		if (!node.childrenCrossed) {
@@ -284,6 +287,14 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 		}
 	}
 
+	private final LinkedList<Node> raycastQueue = new LinkedList<Node>(); // TODO:
+																			// different
+																			// (faster?)
+																			// implementation?
+	HashSet<ObjectType> raycastResults = new HashSet<ObjectType>(); // TODO:
+																	// other
+																	// set-implementation?
+
 	@Override
 	public ObjectType raycast(Ray<L> ray) {
 		// TODO
@@ -292,48 +303,27 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 
 	@Override
 	public Set<ObjectType> raycastAll(Ray<L> ray) {
-		LinkedList<Node> q = new LinkedList<Node>(); // TODO: optimize AND look
-														// for faster
-														// implementation
+		raycastQueue.clear();
 		if (root != null) {
-			q.push(root);
+			raycastQueue.push(root);
 		}
+		raycastResults.clear();
 
-		HashSet<ObjectType> results = new HashSet<ObjectType>(); // TODO: other
-																	// set-implementation?
-		while (!q.isEmpty()) {
-			Node node = q.pop();
+		while (!raycastQueue.isEmpty()) {
+			Node node = raycastQueue.pop();
 			AABB<L> aabb = node.isLeaf() ? node.object.getGlobalAABB() : node.getAABB();
 
-			if (rayAABB(ray, aabb)) {
+			if (IntersectionLibrary.intersects(ray, aabb)) {
 				if (node.isLeaf()) {
-					results.add(node.object);
+					raycastResults.add(node.object);
 				} else {
-					q.push(node.leftChild);
-					q.push(node.rightChild);
+					raycastQueue.push(node.leftChild);
+					raycastQueue.push(node.rightChild);
 				}
 			}
 		}
 
-		return results;
-	}
-
-	private boolean rayAABB(Ray<L> ray, AABB<L> aabb) {
-		float t1 = (aabb.getMin().getf(0) - ray.getPosition().getf(0)) * (1 / ray.getDirection().getf(0));
-		float t2 = (aabb.getMax().getf(0) - ray.getPosition().getf(0)) * (1 / ray.getDirection().getf(0));
-
-		double tmin = Math.min(t1, t2);
-		double tmax = Math.max(t1, t2);
-
-		for (int i = 1; i < ray.getPosition().getDimensions(); ++i) {
-			t1 = (aabb.getMin().getf(i) - ray.getPosition().getf(i)) * (1 / ray.getDirection().getf(i));
-			t2 = (aabb.getMax().getf(i) - ray.getPosition().getf(i)) * (1 / ray.getDirection().getf(i));
-
-			tmin = Math.max(tmin, Math.min(Math.min(t1, t2), tmax));
-			tmax = Math.min(tmax, Math.max(Math.max(t1, t2), tmin));
-		}
-
-		return tmax > Math.max(tmin, 0.0);
+		return raycastResults;
 	}
 
 	@Override
