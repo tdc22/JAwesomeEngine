@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import objects.CollisionShape;
 import utils.Pair;
@@ -28,12 +27,6 @@ public class SAPGeneric<ObjectType extends CollisionShape<Vector3f, ?, ?>> exten
 		axisY.add(new SweepPoint(object, false, 1));
 		axisZ.add(new SweepPoint(object, true, 2));
 		axisZ.add(new SweepPoint(object, false, 2));
-	}
-
-	@Override
-	public Set<ObjectType> raycast() {
-		System.err.println("No raycasts possible in SAP.");
-		return null;
 	}
 
 	@Override

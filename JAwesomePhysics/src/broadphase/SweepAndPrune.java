@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import objects.CollisionShape;
+import objects.Ray;
 import utils.Pair;
 import vector.Vector;
 
@@ -71,6 +72,18 @@ public abstract class SweepAndPrune<L extends Vector, ObjectType extends Collisi
 
 	public boolean contains(ObjectType obj) {
 		return objects.contains(obj);
+	}
+
+	@Override
+	public ObjectType raycast(Ray<L> ray) {
+		System.err.println("No raycasts possible in SAP.");
+		return null;
+	}
+
+	@Override
+	public Set<ObjectType> raycastAll(Ray<L> ray) {
+		System.err.println("No raycasts possible in SAP.");
+		return null;
 	}
 
 	final Pair<ObjectType, ObjectType> tempPair = new Pair<ObjectType, ObjectType>(null, null);

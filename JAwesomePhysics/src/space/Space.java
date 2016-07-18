@@ -19,6 +19,7 @@ import objects.CompoundObject;
 import objects.Constraint;
 import objects.Constraint2;
 import objects.GhostObject;
+import objects.Ray;
 import objects.RigidBody;
 import objects.Updateable;
 import positionalcorrection.PositionalCorrection;
@@ -308,6 +309,24 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	@Override
 	public void update(int delta) {
 		updateTimestep(delta / 1000f);
+	}
+
+	public RigidBody<L, ?, ?, ?> raycastBroadphase(Ray<L> ray) {
+		return broadphase.raycast(ray);
+	}
+
+	public Set<RigidBody<L, ?, ?, ?>> raycastAllBroadphase(Ray<L> ray) {
+		return broadphase.raycastAll(ray);
+	}
+
+	public void raycast(Ray<L> ray) {
+		raycastAllBroadphase(ray);
+		// TODO
+	}
+
+	public void raycastAll(Ray<L> ray) {
+		raycastAllBroadphase(ray);
+		// TODO
 	}
 
 	public void addCollisionFilter(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {

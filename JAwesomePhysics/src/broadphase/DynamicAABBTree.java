@@ -2,12 +2,15 @@ package broadphase;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import objects.AABB;
 import objects.CollisionShape;
+import objects.Ray;
 import utils.Pair;
 import vector.Vector;
 
@@ -153,13 +156,46 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 		return new LinkedHashSet<Pair<ObjectType, ObjectType>>(overlaps);
 	}
 
-	@Override
-	public void remove(ObjectType object) {
-		// TODO Auto-generated method stub
-
+	protected Node getNode(Node startnode, ObjectType object, L objectGlobalMinAABB, L objectGlobalMaxAABB) {
+		// TODO: could be wrong if AABBs in tree are not up to date
+		if (startnode.isLeaf()) {
+			if (startnode.object.equals(object)) {
+				return startnode;
+			}
+			return null;
+		} else {
+			if (startnode.leftChild.aabb.contains(objectGlobalMinAABB)
+					&& startnode.leftChild.aabb.contains(objectGlobalMaxAABB)) {
+				return getNode(startnode.leftChild, object, objectGlobalMinAABB, objectGlobalMaxAABB);
+			} else if (startnode.rightChild.aabb.contains(objectGlobalMinAABB)
+					&& startnode.rightChild.aabb.contains(objectGlobalMaxAABB)) {
+				return getNode(startnode.rightChild, object, objectGlobalMinAABB, objectGlobalMaxAABB);
+			} else {
+				return null;
+			}
+		}
 	}
 
-	private void removeNode(Node node) {
+	@Override
+	public void remove(ObjectType object) {
+		removeNode(getNode(root, object, object.getGlobalMinAABB(), object.getGlobalMaxAABB()));
+
+		Iterator<Pair<ObjectType, ObjectType>> it = overlapSet.iterator();
+		while (it.hasNext()) {
+			if (it.next().contains(object)) {
+				it.remove();
+			}
+		}
+
+		for (int i = 0; i < overlaps.size();)
+			if (overlaps.get(i).contains(object))
+				overlaps.remove(i);
+			else
+				i++;
+		objects.remove(object);
+	}
+
+	protected void removeNode(Node node) {
 		Node parent = node.parent;
 		if (parent != null) {
 			Node sibling = node.getSibling();
@@ -249,9 +285,55 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 	}
 
 	@Override
-	public Set<ObjectType> raycast() {
-		// TODO Auto-generated method stub
+	public ObjectType raycast(Ray<L> ray) {
+		// TODO
 		return null;
+	}
+
+	@Override
+	public Set<ObjectType> raycastAll(Ray<L> ray) {
+		LinkedList<Node> q = new LinkedList<Node>(); // TODO: optimize AND look
+														// for faster
+														// implementation
+		if (root != null) {
+			q.push(root);
+		}
+
+		HashSet<ObjectType> results = new HashSet<ObjectType>(); // TODO: other
+																	// set-implementation?
+		while (!q.isEmpty()) {
+			Node node = q.pop();
+			AABB<L> aabb = node.isLeaf() ? node.object.getGlobalAABB() : node.getAABB();
+
+			if (rayAABB(ray, aabb)) {
+				if (node.isLeaf()) {
+					results.add(node.object);
+				} else {
+					q.push(node.leftChild);
+					q.push(node.rightChild);
+				}
+			}
+		}
+
+		return results;
+	}
+
+	private boolean rayAABB(Ray<L> ray, AABB<L> aabb) {
+		float t1 = (aabb.getMin().getf(0) - ray.getPosition().getf(0)) * (1 / ray.getDirection().getf(0));
+		float t2 = (aabb.getMax().getf(0) - ray.getPosition().getf(0)) * (1 / ray.getDirection().getf(0));
+
+		double tmin = Math.min(t1, t2);
+		double tmax = Math.max(t1, t2);
+
+		for (int i = 1; i < ray.getPosition().getDimensions(); ++i) {
+			t1 = (aabb.getMin().getf(i) - ray.getPosition().getf(i)) * (1 / ray.getDirection().getf(i));
+			t2 = (aabb.getMax().getf(i) - ray.getPosition().getf(i)) * (1 / ray.getDirection().getf(i));
+
+			tmin = Math.max(tmin, Math.min(Math.min(t1, t2), tmax));
+			tmax = Math.min(tmax, Math.max(Math.max(t1, t2), tmin));
+		}
+
+		return tmax > Math.max(tmin, 0.0);
 	}
 
 	@Override

@@ -1,7 +1,5 @@
-package physics2dCollisionDetection;
+package physics2dRaycasting;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import broadphase.DynamicAABBTree2;
@@ -15,10 +13,12 @@ import loader.InputLoader;
 import loader.ShaderLoader;
 import manifold.CollisionManifold;
 import manifold.SimpleManifoldManager;
+import math.ComplexMath;
 import matrix.Matrix1f;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
 import objects.CompoundObject2;
+import objects.Ray2;
 import objects.RigidBody;
 import objects.RigidBody2;
 import objects.ShapedObject2;
@@ -35,15 +35,18 @@ import utils.Pair;
 import vector.Vector2f;
 import vector.Vector4f;
 
-public class CollisionDetectionTest2d extends StandardGame {
+public class RaycastingTest2d extends StandardGame {
 	PhysicsSpace2 space;
-	Quad q1, q2, q3;
-	Circle c1;
+	Quad q2, q3;
+	Circle c, c1;
 	Ellipse e1;
 	Shader defaultshader, s1, s2, s3, s4, s5, s6;
 	RigidBody2 rb1, rb2, rb3, rb4, rb5;
 	CompoundObject2 rb6;
-	List<ManifoldVisualization> manifolds;
+	Ray2 ray;
+	RayVisualization rayVis;
+
+	final Vector2f up = new Vector2f(0, -1);
 
 	@Override
 	public void init() {
@@ -80,16 +83,15 @@ public class CollisionDetectionTest2d extends StandardGame {
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader);
 
-		manifolds = new ArrayList<ManifoldVisualization>();
-
 		space = new PhysicsSpace2(new EulerIntegration(), new DynamicAABBTree2(), new GJK2(new EPA2()),
 				new NullResolution(), new NullCorrection(), new SimpleManifoldManager<Vector2f>());
 		space.setCullStaticOverlaps(false);
 
-		q1 = new Quad(400, 200, 25, 25);
-		rb1 = new RigidBody2(PhysicsShapeCreator.create(q1));
-		space.addRigidBody(q1, rb1);
-		s1.addObject(q1);
+		c = new Circle(400, 200, 10, 36);
+		s1.addObject(c);
+		ray = new Ray2(c.getTranslation(), up);
+		rayVis = new RayVisualization(ray);
+		s1.addObject(rayVis);
 
 		q2 = new Quad(500, 200, 35, 35);
 		rb2 = new RigidBody2(PhysicsShapeCreator.create(q2));
@@ -133,11 +135,6 @@ public class CollisionDetectionTest2d extends StandardGame {
 	@Override
 	public void render2d() {
 		render2dLayer();
-		for (ManifoldVisualization mv : manifolds) {
-			defaultshader.removeObject(mv);
-			mv.delete();
-		}
-		manifolds.clear();
 	}
 
 	@Override
@@ -147,26 +144,24 @@ public class CollisionDetectionTest2d extends StandardGame {
 
 	@Override
 	public void update(int delta) {
-		// q1.rotate(delta / 10f);
-
 		if (inputs.isEventActive("Translate1")) {
-			q1.translate(0, -delta / 4f);
+			c.translate(0, -delta / 4f);
 		}
 		if (inputs.isEventActive("Translate2")) {
-			q1.translate(0, delta / 4f);
+			c.translate(0, delta / 4f);
 		}
 		if (inputs.isEventActive("Translate3")) {
-			q1.translate(-delta / 4f, 0);
+			c.translate(-delta / 4f, 0);
 		}
 		if (inputs.isEventActive("Translate4")) {
-			q1.translate(delta / 4f, 0);
+			c.translate(delta / 4f, 0);
 		}
 
 		if (inputs.isEventActive("Rotate2")) {
-			q1.rotate(delta / 10f);
+			c.rotate(delta / 10f);
 		}
 		if (inputs.isEventActive("Rotate3")) {
-			q1.rotate(-delta / 10f);
+			c.rotate(-delta / 10f);
 		}
 
 		space.update(delta);
@@ -178,26 +173,27 @@ public class CollisionDetectionTest2d extends StandardGame {
 		s5.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s6.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 
-		Set<Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>>> overlaps = space.getOverlaps();
-		for (Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>> o : overlaps) {
-			if (o.contains(rb1))
+		ray.setPosition(c.getTranslation());
+		ray.setDirection(ComplexMath.transform(c.getRotation(), up));
+		rayVis.updateVisualization();
+
+		Set<RigidBody<Vector2f, ?, ?, ?>> broadphaseHits = space.raycastAllBroadphase(ray);
+		for (RigidBody<Vector2f, ?, ?, ?> o : broadphaseHits) {
+			if (o.equals(rb1))
 				s1.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
-			if (o.contains(rb2))
+			if (o.equals(rb2))
 				s2.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
-			if (o.contains(rb3))
+			if (o.equals(rb3))
 				s3.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
-			if (o.contains(rb4))
+			if (o.equals(rb4))
 				s4.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
-			if (o.contains(rb5))
+			if (o.equals(rb5))
 				s5.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
-			if (o.contains(rb6))
+			if (o.equals(rb6))
 				s6.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 		}
 
 		for (CollisionManifold<Vector2f> cm : space.getCollisionManifolds()) {
-			ManifoldVisualization mv = new ManifoldVisualization(cm);
-			defaultshader.addObject(mv);
-			manifolds.add(mv);
 			Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>> o = cm.getObjects();
 			if (o.contains(rb1))
 				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
