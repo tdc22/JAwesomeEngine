@@ -9,6 +9,7 @@ import math.VecMath;
 import matrix.Matrix4f;
 import quaternion.Quaternionf;
 import utils.GLConstants;
+import utils.VectorConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -110,9 +111,9 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 
 	public void rotateTo(float rotX, float rotY, float rotZ) {
 		resetRotation();
-		rotation.rotate(rotZ, new Vector3f(0.0f, 0.0f, 1.0f));
-		rotation.rotate(rotY, new Vector3f(0.0f, 1.0f, 0.0f));
-		rotation.rotate(rotX, new Vector3f(1.0f, 0.0f, 0.0f));
+		rotation.rotate(rotZ, VectorConstants.AXIS_Z);
+		rotation.rotate(rotY, VectorConstants.AXIS_Y);
+		rotation.rotate(rotX, VectorConstants.AXIS_X);
 		updateBuffer();
 	}
 
@@ -193,9 +194,9 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 
 	@Override
 	public void rotate(float rotX, float rotY, float rotZ) {
-		rotation.rotate(rotZ, new Vector3f(0.0f, 0.0f, 1.0f));
-		rotation.rotate(rotY, new Vector3f(0.0f, 1.0f, 0.0f));
-		rotation.rotate(rotX, new Vector3f(1.0f, 0.0f, 0.0f));
+		rotation.rotate(rotZ, VectorConstants.AXIS_Z);
+		rotation.rotate(rotY, VectorConstants.AXIS_Y);
+		rotation.rotate(rotX, VectorConstants.AXIS_X);
 		updateBuffer();
 	}
 

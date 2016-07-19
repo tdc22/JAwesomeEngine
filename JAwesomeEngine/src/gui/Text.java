@@ -72,27 +72,29 @@ public class Text extends ShapedObject2 {
 		font.setSpaceSize(size);
 	}
 
+	private final Vector2f currPos = new Vector2f();
+
 	public void setText(String text) {
 		this.text = text;
 		char[] chars = text.toCharArray();
 
 		delete();
-		Vector2f position = new Vector2f();
+		currPos.set(0, 0);
 		int indexCount = 0;
 		for (int i = 0; i < chars.length; i++) {
 			char c = chars[i];
 			FontCharacter character = font.getCharacter(c);
 			for (Vector2f v : character.getVertices()) {
-				this.addVertex(VecMath.addition(position, v));
+				this.addVertex(VecMath.addition(currPos, v));
 			}
 			for (Integer index : character.getIndices()) {
 				this.addIndex(indexCount + index);
 			}
 			indexCount = getIndices().get(getIndices().size() - 1) + 1;
-			position.x += character.getMargin().x + charactermargin;
+			currPos.x += character.getMargin().x + charactermargin;
 			if (c == '\n') {
-				position.x = 0;
-				position.y += 1;
+				currPos.x = 0;
+				currPos.y += 1;
 			}
 		}
 		prerender();

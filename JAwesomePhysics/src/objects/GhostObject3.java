@@ -4,6 +4,7 @@ import math.QuatMath;
 import math.VecMath;
 import matrix.Matrix4f;
 import quaternion.Quaternionf;
+import utils.VectorConstants;
 import vector.Vector3f;
 
 public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Quaternionf>
@@ -66,17 +67,17 @@ public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Q
 
 	@Override
 	public void rotate(float rotX, float rotY, float rotZ) {
-		rotation.rotate(rotZ, new Vector3f(0.0d, 0.0d, 1.0d));
-		rotation.rotate(rotY, new Vector3f(0.0d, 1.0d, 0.0d));
-		rotation.rotate(rotX, new Vector3f(1.0d, 0.0d, 0.0d));
+		rotation.rotate(rotZ, VectorConstants.AXIS_Z);
+		rotation.rotate(rotY, VectorConstants.AXIS_Y);
+		rotation.rotate(rotX, VectorConstants.AXIS_X);
 	}
 
 	@Override
 	public void rotateTo(float rotX, float rotY, float rotZ) {
 		resetRotation();
-		rotation.rotate(rotZ, new Vector3f(0.0d, 0.0d, 1.0d));
-		rotation.rotate(rotY, new Vector3f(0.0d, 1.0d, 0.0d));
-		rotation.rotate(rotX, new Vector3f(1.0d, 0.0d, 0.0d));
+		rotation.rotate(rotZ, VectorConstants.AXIS_Z);
+		rotation.rotate(rotY, VectorConstants.AXIS_Y);
+		rotation.rotate(rotX, VectorConstants.AXIS_X);
 	}
 
 	@Override

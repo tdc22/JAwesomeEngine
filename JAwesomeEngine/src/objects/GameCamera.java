@@ -6,6 +6,7 @@ import input.InputManager;
 import input.KeyInput;
 import math.VecMath;
 import utils.DefaultValues;
+import utils.VectorConstants;
 import vector.Vector3f;
 
 public class GameCamera extends Camera3 implements Updateable {
@@ -140,6 +141,8 @@ public class GameCamera extends Camera3 implements Updateable {
 		inputs.addEvent(right);
 	}
 
+	final Vector3f move = new Vector3f();
+
 	@Override
 	public void update(int delta) {
 		if (flycam) {
@@ -155,23 +158,25 @@ public class GameCamera extends Camera3 implements Updateable {
 				rotate(mousedx / 10f, mousedy / 10f);
 			}
 
-			Vector3f move = new Vector3f(0, 0, 0);
+			move.set(0, 0, 0);
 			if (forwards.isActive()) {
-				move = VecMath.addition(move, direction);
+				move.translate(direction);
 			}
 			if (backwards.isActive()) {
-				move = VecMath.subtraction(move, direction);
+				move.translate(-direction.x, -direction.y, -direction.z);
 			}
 			if (left.isActive()) {
-				move = VecMath.subtraction(move, VecMath.crossproduct(direction, new Vector3f(0, 1, 0)));
+				Vector3f side = VecMath.crossproduct(direction, VectorConstants.UP);
+				move.translate(-side.x, -side.y, -side.z);
 			}
 			if (right.isActive()) {
-				move = VecMath.addition(move, VecMath.crossproduct(direction, new Vector3f(0, 1, 0)));
+				Vector3f side = VecMath.crossproduct(direction, VectorConstants.UP);
+				move.translate(side);
 			}
 			if (move.lengthSquared() != 0) {
-				move = VecMath.normalize(move);
-				move = VecMath.scale(move, delta * speed);
-				translateTo(VecMath.addition(getTranslation(), move));
+				move.normalize();
+				move.scale(delta * speed);
+				translate(move);
 			}
 		}
 	}
