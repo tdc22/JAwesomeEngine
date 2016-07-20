@@ -12,7 +12,7 @@ A list of most current, wip and planned features can be found here: [Featureslis
 
 ##Getting Started
 ###Setup
-[Setup](/SETUP.md)
+[Setup](https://github.com/tdc22/JAwesomeEngine/wiki/Setup)
 
 ###Tutorials
 [Tutorial](/Tutorial.md)
