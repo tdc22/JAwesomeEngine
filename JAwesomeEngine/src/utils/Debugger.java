@@ -242,6 +242,8 @@ public class Debugger {
 		setRenderWireframe(!wireframe);
 	}
 
+	private final StringBuilder stringbuilder = new StringBuilder();
+
 	public void update(int fps, int objects, int objects2d) {
 		if (toggledata.isActive())
 			toggleData();
@@ -260,9 +262,26 @@ public class Debugger {
 				isFirstError = false;
 			}
 
-			text.setText("FPS: " + fps + " (" + String.format("%.2f", 1000 / (float) fps) + " ms)\nObjects: " + objects
-					+ "\n2d Objects: " + objects2d + "\nPolygons:\nCamera: " + campos.x + "; " + campos.y + "; "
-					+ campos.z + "\nGL-Error: " + getGLErrorName(glGetError()) + " (" + firsterror + ")");
+			stringbuilder.setLength(0);
+			stringbuilder.append("FPS: ");
+			stringbuilder.append(fps);
+			stringbuilder.append(" (");
+			stringbuilder.append(String.format("%.2f", 1000 / (float) fps));
+			stringbuilder.append(" ms)\nObjects: ");
+			stringbuilder.append(objects);
+			stringbuilder.append("\n2d Objects: ");
+			stringbuilder.append(objects2d);
+			stringbuilder.append("\nPolygons:\nCamera: ");
+			stringbuilder.append(campos.x);
+			stringbuilder.append("; ");
+			stringbuilder.append(campos.y);
+			stringbuilder.append("; ");
+			stringbuilder.append("\nGL-Error: ");
+			stringbuilder.append(getGLErrorName(glGetError()));
+			stringbuilder.append(" (");
+			stringbuilder.append(firsterror);
+			stringbuilder.append(")");
+			text.setText(stringbuilder.toString());
 		}
 		if (showaxis) {
 			Vector3f campos = cam.getTranslation();

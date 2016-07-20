@@ -24,7 +24,7 @@ public class Profiler implements Updateable {
 	GameProfiler gameprofiler;
 	PhysicsProfiler physicsprofiler;
 	final int numvalues = 455;
-	float maxvalue = 0;
+	long maxvalue = 0;
 	List<Long> times;
 	HashMap<Integer, List<Long>> values;
 	boolean showScale = false;

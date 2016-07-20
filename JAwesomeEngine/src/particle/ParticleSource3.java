@@ -1,7 +1,7 @@
 package particle;
 
-import math.VecMath;
 import quaternion.Quaternionf;
+import utils.VectorConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -16,7 +16,10 @@ public abstract class ParticleSource3 extends ParticleSource<Vector3f, Vector3f>
 
 	public void setParticleAngle(Vector3f minAngle, Vector3f maxAngle) {
 		this.minAngle = minAngle;
-		diffAngle = VecMath.subtraction(maxAngle, minAngle);
+		diffAngle = maxAngle;
+		diffAngle.x -= minAngle.x;
+		diffAngle.y -= minAngle.y;
+		diffAngle.z -= minAngle.z;
 	}
 
 	private Quaternionf helper = new Quaternionf();
@@ -28,9 +31,9 @@ public abstract class ParticleSource3 extends ParticleSource<Vector3f, Vector3f>
 			float angleY = minAngle.y + (float) Math.random() * diffAngle.y;
 			float angleZ = minAngle.z + (float) Math.random() * diffAngle.z;
 			helper.setIdentity();
-			helper.rotate(angleZ, new Vector3f(0.0f, 0.0f, 1.0f));
-			helper.rotate(angleY, new Vector3f(0.0f, 1.0f, 0.0f));
-			helper.rotate(angleX, new Vector3f(1.0f, 0.0f, 0.0f));
+			helper.rotate(angleZ, VectorConstants.AXIS_Z);
+			helper.rotate(angleY, VectorConstants.AXIS_Y);
+			helper.rotate(angleX, VectorConstants.AXIS_X);
 			Vector3f velocity = new Vector3f(0, 1, 0);
 			velocity.transform(helper);
 			velocity.scale(minVelocity + (float) Math.random() * diffVelocity);
