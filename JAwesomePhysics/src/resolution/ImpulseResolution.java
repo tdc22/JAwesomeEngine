@@ -5,7 +5,6 @@ import math.VecMath;
 import objects.RigidBody2;
 import objects.RigidBody3;
 import quaternion.Quaternionf;
-import vector.Vector1f;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -157,11 +156,10 @@ public class ImpulseResolution implements CollisionResolution {
 		A.applyImpulse(frictionImpulse, contactA);
 
 		// Rolling friction (reduces difference in angular movement)
-		float rollingFriction = pythagoreanSolve(A.getRollingFriction(), B.getRollingFriction());
-		Vector1f rav = VecMath.subtraction(B.getAngularVelocity(), A.getAngularVelocity());
-		rav.scale(rollingFriction);
+		float rav = (B.getAngularVelocity().x - A.getAngularVelocity().x)
+				* pythagoreanSolve(A.getRollingFriction(), B.getRollingFriction());
 		A.applyTorqueImpulse(rav);
-		rav.negate();
+		rav = -rav;
 		B.applyTorqueImpulse(rav);
 	}
 }

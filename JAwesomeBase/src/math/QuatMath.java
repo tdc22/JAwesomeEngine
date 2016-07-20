@@ -242,24 +242,25 @@ public class QuatMath {
 	}
 
 	public static Vector3 transform(Quaternion q, Vector3 v) {
-		Vector3 u = new Vector3d(q.getQ1(), q.getQ2(), q.getQ3());
 		double s = q.getQ0();
-		double dotUV = VecMath.dotproduct(u, v);
-		double dotUU = VecMath.dotproduct(u, u);
+		double dotUV = q.getQ1() * v.getXf() + q.getQ2() * v.getYf() + q.getQ3() * v.getZf();
+		double dotUU = q.getQ1() * q.getQ1() + q.getQ2() * q.getQ2() + q.getQ3() * q.getQ3();
 		return new Vector3d(
-				u.getX() * 2 * dotUV + v.getX() * (s * s - dotUU) + (u.getY() * v.getZ() - u.getZ() * v.getY()) * 2 * s,
-				u.getY() * 2 * dotUV + v.getY() * (s * s - dotUU) + (u.getZ() * v.getX() - u.getX() * v.getZ()) * 2 * s,
-				u.getZ() * 2 * dotUV + v.getZ() * (s * s - dotUU)
-						+ (u.getX() * v.getY() - u.getY() * v.getX()) * 2 * s);
+				q.getQ1() * 2 * dotUV + v.getX() * (s * s - dotUU)
+						+ (q.getQ2() * v.getZ() - q.getQ3() * v.getY()) * 2 * s,
+				q.getQ2() * 2 * dotUV + v.getY() * (s * s - dotUU)
+						+ (q.getQ3() * v.getX() - q.getQ1() * v.getZ()) * 2 * s,
+				q.getQ3() * 2 * dotUV + v.getZ() * (s * s - dotUU)
+						+ (q.getQ1() * v.getY() - q.getQ2() * v.getX()) * 2 * s);
 	}
 
 	public static Vector3f transform(Quaternionf q, Vector3f v) {
-		Vector3f u = new Vector3f(q.getQ1f(), q.getQ2f(), q.getQ3f());
 		float s = q.getQ0f();
-		float dotUV = VecMath.dotproduct(u, v);
-		float dotUU = VecMath.dotproduct(u, u);
-		return new Vector3f(u.x * 2 * dotUV + v.x * (s * s - dotUU) + (u.y * v.z - u.z * v.y) * 2 * s,
-				u.y * 2 * dotUV + v.y * (s * s - dotUU) + (u.z * v.x - u.x * v.z) * 2 * s,
-				u.z * 2 * dotUV + v.z * (s * s - dotUU) + (u.x * v.y - u.y * v.x) * 2 * s);
+		double dotUV = q.getQ1() * v.getXf() + q.getQ2() * v.getYf() + q.getQ3() * v.getZf();
+		double dotUU = q.getQ1() * q.getQ1() + q.getQ2() * q.getQ2() + q.getQ3() * q.getQ3();
+		return new Vector3f(
+				q.getQ1f() * 2 * dotUV + v.x * (s * s - dotUU) + (q.getQ2f() * v.z - q.getQ3f() * v.y) * 2 * s,
+				q.getQ2f() * 2 * dotUV + v.y * (s * s - dotUU) + (q.getQ3f() * v.x - q.getQ1f() * v.z) * 2 * s,
+				q.getQ3f() * 2 * dotUV + v.z * (s * s - dotUU) + (q.getQ1f() * v.y - q.getQ2f() * v.x) * 2 * s);
 	}
 }

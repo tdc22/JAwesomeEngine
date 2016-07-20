@@ -53,9 +53,17 @@ public class RigidBody2 extends RigidBody<Vector2f, Vector1f, Complexf, Matrix1f
 		torqueaccumulator.x += torque.x * angularfactor.x;
 	}
 
+	public void applyTorque(float torque) {
+		torqueaccumulator.x += torque * angularfactor.x;
+	}
+
 	@Override
 	public void applyTorqueImpulse(Vector1f torque) {
 		angularvelocity.x += invinertia.getf(0, 0) * torque.x * angularfactor.x;
+	}
+
+	public void applyTorqueImpulse(float torque) {
+		angularvelocity.x += invinertia.getf(0, 0) * torque * angularfactor.x;
 	}
 
 	@Override

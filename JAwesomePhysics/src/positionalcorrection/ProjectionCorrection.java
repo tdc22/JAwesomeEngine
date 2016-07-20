@@ -33,7 +33,8 @@ public class ProjectionCorrection implements PositionalCorrection {
 				(Math.max(manifold.getPenetrationDepth() - slop, 0) / (A.getInverseMass() + B.getInverseMass()))
 						* correctionPercent);
 		A.translate(VecMath.scale(correction, -A.getInverseMass()));
-		B.translate(VecMath.scale(correction, B.getInverseMass()));
+		correction.scale(B.getInverseMass());
+		B.translate(correction);
 	}
 
 	@Override
@@ -44,7 +45,8 @@ public class ProjectionCorrection implements PositionalCorrection {
 				(Math.max(manifold.getPenetrationDepth() - slop, 0) / (A.getInverseMass() + B.getInverseMass()))
 						* correctionPercent);
 		A.translate(VecMath.scale(correction, -A.getInverseMass()));
-		B.translate(VecMath.scale(correction, B.getInverseMass()));
+		correction.scale(B.getInverseMass());
+		B.translate(correction);
 	}
 
 	public float getCorrectionPercent() {
