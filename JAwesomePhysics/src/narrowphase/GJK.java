@@ -255,6 +255,10 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 		// VecMath.substraction(Sa.supportPoint(dir),
 		// Sb.supportPoint(VecMath.negate(dir))) + ": " + Sa.supportPoint(dir) +
 		// "; " + Sb.supportPoint(VecMath.negate(dir)) + "; " + dir);
-		return VecMath.subtraction(Sa.supportPoint(dir), Sb.supportPointNegative(dir));
+		Vector3f suppA = Sa.supportPoint(dir);
+		Vector3f suppB = Sb.supportPointNegative(dir);
+		suppB.negate();
+		suppA.translate(suppB);
+		return suppA;
 	}
 }

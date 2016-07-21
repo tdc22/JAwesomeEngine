@@ -23,7 +23,8 @@ public class CylinderShape extends CollisionShape3 implements CylinderStructure 
 			Vector2f v2 = new Vector2f(v.x, v.z);
 			if (v2.lengthSquared() != 0)
 				v2.normalize();
-			return new Vector3f(v2.x * radius, v.y < 0 ? -halfheight : halfheight, v2.y * radius);
+			v.set(v2.x * radius, v.y < 0 ? -halfheight : halfheight, v2.y * radius);
+			return v;
 		}
 
 		@Override
@@ -32,7 +33,8 @@ public class CylinderShape extends CollisionShape3 implements CylinderStructure 
 			Vector2f v2 = new Vector2f(v.x, v.z);
 			if (v2.lengthSquared() != 0)
 				v2.normalize();
-			return new Vector3f(v2.x * -radius, v.y < 0 ? halfheight : -halfheight, v2.y * -radius);
+			v.set(v2.x * -radius, v.y < 0 ? halfheight : -halfheight, v2.y * -radius);
+			return v;
 		}
 
 		@Override

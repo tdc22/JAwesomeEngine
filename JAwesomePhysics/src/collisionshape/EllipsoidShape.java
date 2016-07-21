@@ -22,7 +22,8 @@ public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructur
 				direction = new Vector3f(0, 1, 0);
 			direction.normalize();
 			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
-			return new Vector3f(v.x * radiusX, v.y * radiusY, v.z * radiusZ);
+			v.scale(radiusX, radiusY, radiusZ);
+			return v;
 		}
 
 		@Override
@@ -31,7 +32,8 @@ public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructur
 				direction = new Vector3f(0, -1, 0);
 			direction.normalize();
 			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
-			return new Vector3f(-v.x * radiusX, -v.y * radiusY, -v.z * radiusZ);
+			v.scale(-radiusX, -radiusY, -radiusZ);
+			return v;
 		}
 
 		@Override

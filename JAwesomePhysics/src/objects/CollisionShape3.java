@@ -1,6 +1,5 @@
 package objects;
 
-import math.QuatMath;
 import math.VecMath;
 import matrix.Matrix4f;
 import quaternion.Quaternionf;
@@ -37,22 +36,30 @@ public abstract class CollisionShape3 extends CollisionShape<Vector3f, Quaternio
 
 	@Override
 	public Vector3f supportPoint(Vector3f direction) {
-		return VecMath.addition(supportPointRelative(direction), getTranslation());
+		Vector3f support = supportPointRelative(direction);
+		support.translate(getTranslation());
+		return support;
 	}
 
 	@Override
 	public Vector3f supportPointNegative(Vector3f direction) {
-		return VecMath.addition(supportPointRelativeNegative(direction), getTranslation());
+		Vector3f supportNeg = supportPointRelativeNegative(direction);
+		supportNeg.translate(getTranslation());
+		return supportNeg;
 	}
 
 	@Override
 	public Vector3f supportPointRelative(Vector3f direction) {
-		return QuatMath.transform(this.getRotation(), supportcalculator.supportPointLocal(direction));
+		Vector3f supportRel = supportcalculator.supportPointLocal(direction);
+		supportRel.transform(getRotation());
+		return supportRel;
 	}
 
 	@Override
 	public Vector3f supportPointRelativeNegative(Vector3f direction) {
-		return QuatMath.transform(this.getRotation(), supportcalculator.supportPointLocalNegative(direction));
+		Vector3f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
+		supportRelNeg.transform(getRotation());
+		return supportRelNeg;
 	}
 
 	@Override

@@ -77,7 +77,11 @@ public class MultiPointManifoldManager extends ManifoldManager<Vector3f> {
 	}
 
 	private Vector3f computeCenter(Vector3f a, Vector3f b, Vector3f c, Vector3f d) {
-		return VecMath.scale(VecMath.addition(VecMath.addition(VecMath.addition(a, b), c), d), 0.25f);
+		Vector3f result = VecMath.addition(a, b);
+		result.translate(c);
+		result.translate(d);
+		result.scale(0.25f);
+		return result;
 	}
 
 	@Override

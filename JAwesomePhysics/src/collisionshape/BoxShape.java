@@ -20,15 +20,17 @@ public class BoxShape extends CollisionShape3 implements BoxStructure {
 		@Override
 		public Vector3f supportPointLocal(Vector3f direction) {
 			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
-			return new Vector3f((v.x < 0 ? -1 : 1) * halfsize.x, (v.y < 0 ? -1 : 1) * halfsize.y,
-					(v.z < 0 ? -1 : 1) * halfsize.z);
+			v.set((v.x < 0 ? -halfsize.x : halfsize.x), (v.y < 0 ? -halfsize.y : halfsize.y),
+					(v.z < 0 ? -halfsize.z : halfsize.z));
+			return v;
 		}
 
 		@Override
 		public Vector3f supportPointLocalNegative(Vector3f direction) {
 			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
-			return new Vector3f((v.x < 0 ? 1 : -1) * halfsize.x, (v.y < 0 ? 1 : -1) * halfsize.y,
-					(v.z < 0 ? 1 : -1) * halfsize.z);
+			v.set((v.x < 0 ? halfsize.x : -halfsize.x), (v.y < 0 ? halfsize.y : -halfsize.y),
+					(v.z < 0 ? halfsize.z : -halfsize.z));
+			return v;
 		}
 
 		@Override

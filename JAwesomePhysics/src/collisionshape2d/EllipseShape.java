@@ -23,7 +23,8 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 				direction = new Vector2f(0, 1);
 			direction.normalize();
 			Vector2f v = ComplexMath.transform(collisionshape.getInverseRotation(), direction);
-			return new Vector2f(v.x * radius, v.y * halfheight);
+			v.scale(radius, halfheight);
+			return v;
 		}
 
 		@Override
@@ -32,7 +33,8 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 				direction = new Vector2f(0, 1);
 			direction.normalize();
 			Vector2f v = ComplexMath.transform(collisionshape.getInverseRotation(), direction);
-			return new Vector2f(v.x * -radius, v.y * -halfheight);
+			v.scale(-radius, -halfheight);
+			return v;
 		}
 
 		@Override

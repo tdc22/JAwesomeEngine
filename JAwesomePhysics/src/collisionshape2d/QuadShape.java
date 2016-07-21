@@ -21,13 +21,15 @@ public class QuadShape extends CollisionShape2 implements QuadStructure {
 		@Override
 		public Vector2f supportPointLocal(Vector2f direction) {
 			Vector2f v = ComplexMath.transform(collisionshape.getInverseRotation(), direction);
-			return new Vector2f((v.x < 0 ? -1 : 1) * halfsize.x, (v.y < 0 ? -1 : 1) * halfsize.y);
+			v.set((v.x < 0 ? -halfsize.x : halfsize.x), (v.y < 0 ? -halfsize.y : halfsize.y));
+			return v;
 		}
 
 		@Override
 		public Vector2f supportPointLocalNegative(Vector2f direction) {
 			Vector2f v = ComplexMath.transform(collisionshape.getInverseRotation(), direction);
-			return new Vector2f((v.x < 0 ? 1 : -1) * halfsize.x, (v.y < 0 ? 1 : -1) * halfsize.y);
+			v.set((v.x < 0 ? halfsize.x : -halfsize.x), (v.y < 0 ? halfsize.y : -halfsize.y));
+			return v;
 		}
 
 		@Override

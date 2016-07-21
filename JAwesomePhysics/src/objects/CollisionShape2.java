@@ -1,6 +1,5 @@
 package objects;
 
-import math.ComplexMath;
 import math.VecMath;
 import matrix.Matrix1f;
 import matrix.Matrix4f;
@@ -37,22 +36,30 @@ public abstract class CollisionShape2 extends CollisionShape<Vector2f, Complexf,
 
 	@Override
 	public Vector2f supportPoint(Vector2f direction) {
-		return VecMath.addition(supportPointRelative(direction), getTranslation());
+		Vector2f support = supportPointRelative(direction);
+		support.translate(getTranslation());
+		return support;
 	}
 
 	@Override
 	public Vector2f supportPointNegative(Vector2f direction) {
-		return VecMath.addition(supportPointRelativeNegative(direction), getTranslation());
+		Vector2f supportNeg = supportPointRelativeNegative(direction);
+		supportNeg.translate(getTranslation());
+		return supportNeg;
 	}
 
 	@Override
 	public Vector2f supportPointRelative(Vector2f direction) {
-		return ComplexMath.transform(this.getRotation(), supportcalculator.supportPointLocal(direction));
+		Vector2f supportRel = supportcalculator.supportPointLocal(direction);
+		supportRel.transform(getRotation());
+		return supportRel;
 	}
 
 	@Override
 	public Vector2f supportPointRelativeNegative(Vector2f direction) {
-		return ComplexMath.transform(this.getRotation(), supportcalculator.supportPointLocalNegative(direction));
+		Vector2f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
+		supportRelNeg.transform(getRotation());
+		return supportRelNeg;
 	}
 
 	@Override
