@@ -207,9 +207,11 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 	private boolean checkPlane(Vector3f a, Vector3f b, Vector3f normal) {
 		// System.out.println((cross.x * -a.x + cross.y * -a.y + cross.z
 		// * -a.z));
-		Vector3f ab = VecMath.subtraction(b, a);
-		return (((ab.y * normal.z - ab.z * normal.y) * -a.x + (ab.z * normal.x - ab.x * normal.z) * -a.y
-				+ (ab.x * normal.y - ab.y * normal.x) * -a.z) <= EPSILON);
+		float abX = b.x - a.x;
+		float abY = b.y - a.y;
+		float abZ = b.z - a.z;
+		return (((abY * normal.z - abZ * normal.y) * -a.x + (abZ * normal.x - abX * normal.z) * -a.y
+				+ (abX * normal.y - abY * normal.x) * -a.z) <= EPSILON);
 	}
 
 	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb, Vector3f dir) {

@@ -6,6 +6,7 @@ import java.util.List;
 import manifold.ContactManifold;
 import math.VecMath;
 import objects.SupportMap;
+import utils.VectorConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -71,7 +72,7 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 		if (normal.lengthSquared() == 0)
 			return null;
 
-		Vector3f tmp = VecMath.crossproduct(new Vector3f(normal), new Vector3f(0, 0, 1));
+		Vector3f tmp = VecMath.crossproduct(new Vector3f(normal), VectorConstants.AXIS_Z);
 		Vector2f tangentA = new Vector2f(tmp.x, tmp.y);
 		Vector2f tangentB = VecMath.negate(tangentA);
 
