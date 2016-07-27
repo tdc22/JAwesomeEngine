@@ -220,12 +220,14 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 				(edge.y * origin.z - edge.z * origin.y) * edge.y - (edge.z * origin.x - edge.x * origin.z) * edge.x);
 	}
 
+	final Vector3f startdirection = new Vector3f(1, 1, 1);
+
 	@Override
 	public boolean isColliding(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb) {
 		// System.out.println("---------- New Loop: ----------");
 		simplex.clear();
 		// S = Support(?)
-		direction = support(Sa, Sb, new Vector3f(1, 1, 1));
+		direction = support(Sa, Sb, startdirection);
 		// [] = S
 		simplex.add(direction);
 		// D = -S

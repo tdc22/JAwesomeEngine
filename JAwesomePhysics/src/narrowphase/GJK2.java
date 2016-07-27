@@ -100,11 +100,13 @@ public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 		return a;
 	}
 
+	final Vector2f startdirection = new Vector2f(1, 1);
+
 	@Override
 	public boolean isColliding(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb) {
 		simplex.clear();
 		// S = Support(?)
-		direction = support(Sa, Sb, new Vector2f(1, 1));
+		direction = support(Sa, Sb, startdirection);
 		// [] = S
 		simplex.add(direction);
 		// D = -S
@@ -164,10 +166,12 @@ public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 			}
 
 			// Y <- P u {p}
-			P.add(p);
+			List<Vector2f> Y = new ArrayList<Vector2f>(P);
+			Y.add(p);
 			// v <- v(conv({x} - Y))
 
 			// P <- "smalles X <= Y such that v e conv({x] - X)
+
 		}
 
 		return false;
