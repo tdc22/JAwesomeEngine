@@ -37,6 +37,7 @@ import matrix.Matrix4f;
 import objects.RenderableObject;
 import objects.ViewProjection;
 import texture.Texture;
+import utils.StringConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
@@ -406,7 +407,7 @@ public class Shader implements ViewProjection {
 	public void render() {
 		if (rendered) {
 			bind();
-			int modelLocation = uniformpositions.get(getArgumentID("model"));
+			int modelLocation = uniformpositions.get(getArgumentID(StringConstants.MVP_MODEL));
 			for (RenderableObject obj : objects) {
 				glUniformMatrix4fv(modelLocation, false, obj.getMatrixBuffer());
 				obj.render();
@@ -427,43 +428,43 @@ public class Shader implements ViewProjection {
 
 	@Override
 	public void setViewMatrix(FloatBuffer buffer) {
-		setArgumentDirect("view", buffer);
+		setArgumentDirect(StringConstants.MVP_VIEW, buffer);
 	}
 
 	@Override
 	public void setProjectionMatrix(FloatBuffer buffer) {
-		setArgumentDirect("projection", buffer);
+		setArgumentDirect(StringConstants.MVP_PROJECTION, buffer);
 	}
 
 	@Override
 	public void setViewProjectionMatrix(FloatBuffer viewBuffer, FloatBuffer projectionBuffer) {
-		setArgumentDirect("view", viewBuffer);
-		setArgumentDirect("projection", projectionBuffer);
+		setArgumentDirect(StringConstants.MVP_VIEW, viewBuffer);
+		setArgumentDirect(StringConstants.MVP_PROJECTION, projectionBuffer);
 	}
 
 	@Override
 	public void setViewMatrix(Matrix4f matrix) {
-		setArgument("view", matrix);
+		setArgument(StringConstants.MVP_VIEW, matrix);
 	}
 
 	@Override
 	public void setProjectionMatrix(Matrix4f matrix) {
-		setArgument("projection", matrix);
+		setArgument(StringConstants.MVP_PROJECTION, matrix);
 	}
 
 	@Override
 	public void setViewProjectionMatrix(Matrix4f viewMatrix, Matrix4f projectionMatrix) {
-		setArgument("view", viewMatrix);
-		setArgument("projection", projectionMatrix);
+		setArgument(StringConstants.MVP_VIEW, viewMatrix);
+		setArgument(StringConstants.MVP_PROJECTION, projectionMatrix);
 	}
 
 	@Override
 	public FloatBuffer getViewMatrixBuffer() {
-		return (FloatBuffer) getArgument("view");
+		return (FloatBuffer) getArgument(StringConstants.MVP_VIEW);
 	}
 
 	@Override
 	public FloatBuffer getProjectionMatrixBuffer() {
-		return (FloatBuffer) getArgument("projection");
+		return (FloatBuffer) getArgument(StringConstants.MVP_PROJECTION);
 	}
 }

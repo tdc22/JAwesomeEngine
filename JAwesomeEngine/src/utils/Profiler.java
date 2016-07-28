@@ -226,6 +226,8 @@ public class Profiler implements Updateable {
 		setShowPhysicsProfile(!showPhysicsProfile);
 	}
 
+	private final StringBuilder stringbuilder = new StringBuilder();
+
 	@Override
 	public void update(int delta) {
 		if (toggleScale.isActive())
@@ -253,10 +255,25 @@ public class Profiler implements Updateable {
 			gameProfileLine2.addValue(profilevalues[3]);
 			gameProfileLine3.addValue(profilevalues[4]);
 
-			gameProfileText0.setText("Update: " + profilevalues[1]);
-			gameProfileText1.setText("Render 3d: " + profilevalues[2]);
-			gameProfileText2.setText("Render 2d: " + profilevalues[3]);
-			gameProfileText3.setText("Display: " + profilevalues[4]);
+			stringbuilder.setLength(0);
+			stringbuilder.append(StringConstants.PROFILER_UPDATE);
+			stringbuilder.append(profilevalues[1]);
+			gameProfileText0.setText(stringbuilder.toString());
+
+			stringbuilder.setLength(0);
+			stringbuilder.append(StringConstants.PROFILER_RENDER_3D);
+			stringbuilder.append(profilevalues[2]);
+			gameProfileText1.setText(stringbuilder.toString());
+
+			stringbuilder.setLength(0);
+			stringbuilder.append(StringConstants.PROFILER_RENDER_2D);
+			stringbuilder.append(profilevalues[3]);
+			gameProfileText2.setText(stringbuilder.toString());
+
+			stringbuilder.setLength(0);
+			stringbuilder.append(StringConstants.PROFILER_DISPLAY);
+			stringbuilder.append(profilevalues[4]);
+			gameProfileText3.setText(stringbuilder.toString());
 		}
 		if (physicsprofiler != null) {
 			long[] profilevalues = physicsprofiler.getValues();
@@ -278,10 +295,25 @@ public class Profiler implements Updateable {
 			physicsProfileLine2.addValue(profilevalues[3]);
 			physicsProfileLine3.addValue(profilevalues[4]);
 
-			physicsProfileText0.setText("Broadphase: " + profilevalues[1]);
-			physicsProfileText1.setText("Narrowphase: " + profilevalues[2]);
-			physicsProfileText2.setText("Resolution: " + profilevalues[3]);
-			physicsProfileText3.setText("Integration: " + profilevalues[4]);
+			stringbuilder.setLength(0);
+			stringbuilder.append(StringConstants.PROFILER_BROADPHASE);
+			stringbuilder.append(profilevalues[1]);
+			physicsProfileText0.setText(stringbuilder.toString());
+
+			stringbuilder.setLength(0);
+			stringbuilder.append(StringConstants.PROFILER_NARROWPHASE);
+			stringbuilder.append(profilevalues[2]);
+			physicsProfileText1.setText(stringbuilder.toString());
+
+			stringbuilder.setLength(0);
+			stringbuilder.append(StringConstants.PROFILER_RESOLUTION);
+			stringbuilder.append(profilevalues[3]);
+			physicsProfileText2.setText(stringbuilder.toString());
+
+			stringbuilder.setLength(0);
+			stringbuilder.append(StringConstants.PROFILER_INTEGRATION);
+			stringbuilder.append(profilevalues[4]);
+			physicsProfileText3.setText(stringbuilder.toString());
 		}
 
 		if (gameprofiler != null && showScale && showGameProfile) {

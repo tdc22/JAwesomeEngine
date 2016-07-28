@@ -29,32 +29,32 @@ import vector.Vector3f;
 
 public class Debugger {
 	public static String getGLErrorName(int glErrorID) {
-		String glerror = "no error";
+		String glerror = StringConstants.GLERROR_NO_ERROR;
 		if (glErrorID != GL_NO_ERROR) {
 			switch (glErrorID) {
 			case GL_INVALID_ENUM:
-				glerror = "invalid enum";
+				glerror = StringConstants.GLERROR_INVALID_ENUM;
 				break;
 			case GL_INVALID_VALUE:
-				glerror = "invalid value";
+				glerror = StringConstants.GLERROR_INVALID_VALUE;
 				break;
 			case GL_INVALID_OPERATION:
-				glerror = "invalid operation";
+				glerror = StringConstants.GLERROR_INVALID_OPERATION;
 				break;
 			case GL_INVALID_FRAMEBUFFER_OPERATION:
-				glerror = "invalid framebuffer operation";
+				glerror = StringConstants.GLERROR_INVALID_FBO;
 				break;
 			case GL_OUT_OF_MEMORY:
-				glerror = "out of memory";
+				glerror = StringConstants.GLERROR_OUT_OF_MEMORY;
 				break;
 			case GL_STACK_UNDERFLOW:
-				glerror = "stack underflow";
+				glerror = StringConstants.GLERROR_STACK_UNDERFLOW;
 				break;
 			case GL_STACK_OVERFLOW:
-				glerror = "stack overflow";
+				glerror = StringConstants.GLERROR_STACK_OVERFLOW;
 				break;
 			default:
-				glerror = "unknown error";
+				glerror = StringConstants.GLERROR_UNKNOWN_ERROR;
 			}
 		}
 		return glerror;

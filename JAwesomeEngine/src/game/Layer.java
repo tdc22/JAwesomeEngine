@@ -16,6 +16,7 @@ import shader.PostProcessingShader;
 import shader.Shader;
 import texture.FramebufferObject;
 import texture.FramebufferObjectMultisample;
+import utils.StringConstants;
 
 public class Layer implements ViewProjection {
 	List<Shader> shader;
@@ -79,9 +80,9 @@ public class Layer implements ViewProjection {
 	}
 
 	public void addShader(Shader s) {
-		s.addArgument("projection", projectionMatrix);
-		s.addArgument("view", new Matrix4f());
-		s.addArgument("model", new Matrix4f());
+		s.addArgument(StringConstants.MVP_PROJECTION, projectionMatrix);
+		s.addArgument(StringConstants.MVP_VIEW, new Matrix4f());
+		s.addArgument(StringConstants.MVP_MODEL, new Matrix4f());
 		shader.add(s);
 	}
 
@@ -105,7 +106,7 @@ public class Layer implements ViewProjection {
 	public void setViewMatrix(FloatBuffer buffer) {
 		viewMatrix = buffer;
 		for (Shader s : shader) {
-			s.setArgumentDirect("view", buffer);
+			s.setArgumentDirect(StringConstants.MVP_VIEW, buffer);
 		}
 	}
 
@@ -113,7 +114,7 @@ public class Layer implements ViewProjection {
 	public void setProjectionMatrix(FloatBuffer buffer) {
 		projectionMatrix = buffer;
 		for (Shader s : shader) {
-			s.setArgumentDirect("projection", projectionMatrix);
+			s.setArgumentDirect(StringConstants.MVP_PROJECTION, projectionMatrix);
 		}
 	}
 
@@ -122,8 +123,8 @@ public class Layer implements ViewProjection {
 		viewMatrix = viewBuffer;
 		projectionMatrix = projectionBuffer;
 		for (Shader s : shader) {
-			s.setArgumentDirect("view", viewBuffer);
-			s.setArgumentDirect("projection", projectionMatrix);
+			s.setArgumentDirect(StringConstants.MVP_VIEW, viewBuffer);
+			s.setArgumentDirect(StringConstants.MVP_PROJECTION, projectionMatrix);
 		}
 	}
 
@@ -131,7 +132,7 @@ public class Layer implements ViewProjection {
 	public void setViewMatrix(Matrix4f matrix) {
 		viewMatrix = storeMatrix(matrix);
 		for (Shader s : shader) {
-			s.setArgumentDirect("view", viewMatrix);
+			s.setArgumentDirect(StringConstants.MVP_VIEW, viewMatrix);
 		}
 	}
 
@@ -139,7 +140,7 @@ public class Layer implements ViewProjection {
 	public void setProjectionMatrix(Matrix4f matrix) {
 		projectionMatrix = storeMatrix(matrix);
 		for (Shader s : shader) {
-			s.setArgumentDirect("projection", projectionMatrix);
+			s.setArgumentDirect(StringConstants.MVP_PROJECTION, projectionMatrix);
 		}
 	}
 
@@ -148,8 +149,8 @@ public class Layer implements ViewProjection {
 		this.viewMatrix = storeMatrix(viewMatrix);
 		this.projectionMatrix = storeMatrix(projectionMatrix);
 		for (Shader s : shader) {
-			s.setArgumentDirect("view", viewMatrix);
-			s.setArgumentDirect("projection", this.projectionMatrix);
+			s.setArgumentDirect(StringConstants.MVP_VIEW, viewMatrix);
+			s.setArgumentDirect(StringConstants.MVP_PROJECTION, this.projectionMatrix);
 		}
 	}
 
