@@ -276,6 +276,7 @@ public class Debugger {
 			stringbuilder.append("; ");
 			stringbuilder.append(campos.y);
 			stringbuilder.append("; ");
+			stringbuilder.append(campos.z);
 			stringbuilder.append("\nGL-Error: ");
 			stringbuilder.append(getGLErrorName(glGetError()));
 			stringbuilder.append(" (");

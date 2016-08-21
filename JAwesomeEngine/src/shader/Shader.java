@@ -318,17 +318,17 @@ public class Shader implements ViewProjection {
 	public void setArgument(int argumentID, Object argument) {
 		int argumentType = uniformtypes.get(argumentID);
 		if (argumentType == 8) {
-			FloatBuffer buf = BufferUtils.createFloatBuffer(16);
+			FloatBuffer buf = (FloatBuffer) uniformarguments.get(argumentID);
 			((Matrix4f) argument).store(buf);
 			buf.flip();
 			uniformarguments.set(argumentID, buf);
 		} else if (argumentType == 7) {
-			FloatBuffer buf = BufferUtils.createFloatBuffer(9);
+			FloatBuffer buf = (FloatBuffer) uniformarguments.get(argumentID);
 			((Matrix3f) argument).store(buf);
 			buf.flip();
 			uniformarguments.set(argumentID, buf);
 		} else if (argumentType == 6) {
-			FloatBuffer buf = BufferUtils.createFloatBuffer(4);
+			FloatBuffer buf = (FloatBuffer) uniformarguments.get(argumentID);
 			((Matrix2f) argument).store(buf);
 			buf.flip();
 			uniformarguments.set(argumentID, buf);

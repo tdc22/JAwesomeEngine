@@ -164,8 +164,9 @@ public class Layer implements ViewProjection {
 		return projectionMatrix;
 	}
 
+	private final FloatBuffer buf = BufferUtils.createFloatBuffer(16);
+
 	protected FloatBuffer storeMatrix(Matrix4f mat) {
-		FloatBuffer buf = BufferUtils.createFloatBuffer(16);
 		mat.store(buf);
 		buf.flip();
 		return buf;
