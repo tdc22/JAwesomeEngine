@@ -73,6 +73,7 @@ public class ConvexTest extends StandardGame {
 
 		ShapedObject3 bunny = ModelLoader.load("res/models/bunny.mobj");
 		RigidBody3 bunnyBody = new RigidBody3(PhysicsShapeCreator.createHull(bunny));
+		bunnyBody.setMass(1);
 
 		space.addRigidBody(bunny, bunnyBody);
 		defaultshader.addObject(bunny);

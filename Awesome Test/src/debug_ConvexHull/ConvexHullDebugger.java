@@ -21,6 +21,7 @@ import shader.Shader;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
 import utils.GLConstants;
+import utils.VectorConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -47,29 +48,24 @@ public class ConvexHullDebugger extends StandardGame {
 
 	PointCloud pointcloud;
 
-	// ------------------- EPA ---------------------
 	List<Triangle> faces;
 	int currT = 0;
 
 	List<Vector3f> points, vertices;
 
 	public void hullInit() {
-		int a = getFurthestPoint(new Vector3f(-1, 0, 0), points);
-		Vector3f A = points.get(a);
-		points.remove(a);
+		int a = getFurthestPoint(VectorConstants.AXIS_X, points);
+		Vector3f A = points.remove(a);
 
-		int b = getFurthestPoint(new Vector3f(1, 0, 0), points);
-		Vector3f B = points.get(b);
-		points.remove(b);
+		int b = getFurthestPoint(VectorConstants.AXIS_Y, points);
+		Vector3f B = points.remove(b);
 
-		int c = getFurthestPoint(new Vector3f(0, -1, 0), points);
-		Vector3f C = points.get(c);
-		points.remove(c);
+		int c = getFurthestPoint(VectorConstants.AXIS_Z, points);
+		Vector3f C = points.remove(c);
 
 		Triangle base = new Triangle(A, B, C);
 		int furthest = getFurthestPoint(base, points);
-		Vector3f D = points.get(furthest);
-		points.remove(furthest);
+		Vector3f D = points.remove(furthest);
 
 		faces = new ArrayList<Triangle>();
 		if (VecMath.dotproduct(base.normal, VecMath.subtraction(A, D)) > 0) {
@@ -169,6 +165,7 @@ public class ConvexHullDebugger extends StandardGame {
 				Triangle f = faces.get(i);
 				Triangle[] adjs = findAdjacentTriangles(f, faces);
 				if (VecMath.dotproduct(VecMath.subtraction(f.c, f.a), adjs[0].normal) > 0) {
+					System.out.println("DEB1");
 					Vector3f adjD = findTheD(f.a, f.b, adjs[0]);
 					faces.add(new Triangle(f.c, f.a, adjD));
 					faces.add(new Triangle(f.b, f.c, adjD));
@@ -176,6 +173,7 @@ public class ConvexHullDebugger extends StandardGame {
 					faces.remove(adjs[0]);
 					i--;
 				} else if (VecMath.dotproduct(VecMath.subtraction(f.a, f.b), adjs[1].normal) > 0) {
+					System.out.println("DEB2");
 					Vector3f adjD = findTheD(f.b, f.c, adjs[1]);
 					faces.add(new Triangle(f.a, f.b, adjD));
 					faces.add(new Triangle(f.c, f.a, adjD));
@@ -183,6 +181,7 @@ public class ConvexHullDebugger extends StandardGame {
 					faces.remove(adjs[1]);
 					i--;
 				} else if (VecMath.dotproduct(VecMath.subtraction(f.b, f.c), adjs[2].normal) > 0) {
+					System.out.println("DEB3");
 					Vector3f adjD = findTheD(f.c, f.a, adjs[2]);
 					faces.add(new Triangle(f.b, f.c, adjD));
 					faces.add(new Triangle(f.a, f.b, adjD));

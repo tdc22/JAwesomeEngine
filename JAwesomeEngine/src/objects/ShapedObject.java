@@ -26,6 +26,7 @@ import java.util.List;
 import org.lwjgl.BufferUtils;
 
 import quaternion.Rotation;
+import utils.GLConstants;
 import vector.Vector;
 import vector.Vector2f;
 import vector.Vector3f;
@@ -290,13 +291,21 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 
 	public void invertAllTriangles() {
 		List<Integer> newIndices = new ArrayList<Integer>();
-		for (int i = 0; i < indices.size(); i += 6) {
-			newIndices.add(indices.get(i + 4));
-			newIndices.add(indices.get(i + 5));
-			newIndices.add(indices.get(i + 2));
-			newIndices.add(indices.get(i + 3));
-			newIndices.add(indices.get(i));
-			newIndices.add(indices.get(i + 1));
+		if (rendermode == GLConstants.TRIANGLE_ADJACENCY) {
+			for (int i = 0; i < indices.size(); i += 6) {
+				newIndices.add(indices.get(i + 4));
+				newIndices.add(indices.get(i + 5));
+				newIndices.add(indices.get(i + 2));
+				newIndices.add(indices.get(i + 3));
+				newIndices.add(indices.get(i));
+				newIndices.add(indices.get(i + 1));
+			}
+		} else {
+			for (int i = 0; i < indices.size(); i += 3) {
+				newIndices.add(indices.get(i));
+				newIndices.add(indices.get(i + 2));
+				newIndices.add(indices.get(i + 1));
+			}
 		}
 		indices.clear();
 		indices = newIndices;

@@ -6,6 +6,7 @@ import java.util.List;
 
 import collisionshape.ConvexShape;
 import math.VecMath;
+import utils.VectorConstants;
 import vector.Vector3f;
 
 public class Quickhull {
@@ -22,9 +23,9 @@ public class Quickhull {
 		}
 	}
 
-	public static ConvexShape computeConvexHull(List<Vector3f> points) {
+	public static ConvexShape computeConvexHull(List<Vector3f> points, int iterations) {
 		List<Triangle> faces = new ArrayList<Triangle>();
-		List<Vector3f> vertices = computeConvexHullVertices(points, faces);
+		List<Vector3f> vertices = computeConvexHullVertices(points, faces, iterations);
 		HashMap<Integer, Integer[]> adjacentsMap = new HashMap<Integer, Integer[]>();
 		List<Integer> adjs = new ArrayList<Integer>();
 		for (int i = 0; i < vertices.size(); i++) {
@@ -63,29 +64,26 @@ public class Quickhull {
 		return shape;
 	}
 
-	public static List<Vector3f> computeConvexHullVertices(List<Vector3f> points) {
-		return computeConvexHullVertices(points, new ArrayList<Triangle>());
+	public static List<Vector3f> computeConvexHullVertices(List<Vector3f> points, int iterations) {
+		return computeConvexHullVertices(points, new ArrayList<Triangle>(), iterations);
 	}
 
-	public static List<Vector3f> computeConvexHullVertices(List<Vector3f> points, List<Triangle> faces) {
+	public static List<Vector3f> computeConvexHullVertices(List<Vector3f> points, List<Triangle> faces,
+			int iterations) {
 		points = new ArrayList<Vector3f>(points);
 		if (points.size() > 0) {
-			int a = getFurthestPoint(new Vector3f(-1, 0, 0), points);
-			Vector3f A = points.get(a);
-			points.remove(a);
+			int a = getFurthestPoint(VectorConstants.AXIS_X, points);
+			Vector3f A = points.remove(a);
 
-			int b = getFurthestPoint(new Vector3f(1, 0, 0), points);
-			Vector3f B = points.get(b);
-			points.remove(b);
+			int b = getFurthestPoint(VectorConstants.AXIS_Y, points);
+			Vector3f B = points.remove(b);
 
-			int c = getFurthestPoint(new Vector3f(0, -1, 0), points);
-			Vector3f C = points.get(c);
-			points.remove(c);
+			int c = getFurthestPoint(VectorConstants.AXIS_Z, points);
+			Vector3f C = points.remove(c);
 
 			Triangle base = new Triangle(A, B, C);
 			int furthest = getFurthestPoint(base, points);
-			Vector3f D = points.get(furthest);
-			points.remove(furthest);
+			Vector3f D = points.remove(furthest);
 
 			if (VecMath.dotproduct(base.normal, VecMath.subtraction(A, D)) > 0) {
 				faces.add(base);
@@ -102,16 +100,18 @@ public class Quickhull {
 			// starting tetrahedron created
 
 			int currT = 0;
-			while (currT < faces.size()) {
+			while (currT < faces.size() && iterations > 0) {
 				Triangle t = faces.get(currT);
 				furthest = getFurthestPointDirection(t, points);
 				if (furthest != -1) {
-					Vector3f p = points.get(furthest);
-					points.remove(furthest);
+					Vector3f p = points.remove(furthest);
 
-					faces.add(new Triangle(t.a, t.b, p));
-					faces.add(new Triangle(t.b, t.c, p));
-					faces.add(new Triangle(t.c, t.a, p));
+					if (!t.a.equals(p) && !t.b.equals(p))
+						faces.add(new Triangle(t.a, t.b, p));
+					if (!t.b.equals(p) && !t.c.equals(p))
+						faces.add(new Triangle(t.b, t.c, p));
+					if (!t.c.equals(p) && !t.a.equals(p))
+						faces.add(new Triangle(t.c, t.a, p));
 
 					faces.remove(t);
 
@@ -119,21 +119,29 @@ public class Quickhull {
 					for (int i = 0; i < faces.size(); i++) {
 						Triangle f = faces.get(i);
 						Triangle[] adjs = findAdjacentTriangles(f, faces);
-						if (VecMath.dotproduct(VecMath.subtraction(f.c, f.a), adjs[0].normal) > 0) {
+						if (adjs[0] != null && VecMath.dotproduct(VecMath.subtraction(f.c, f.a), adjs[0].normal) > 0) {
+							if (iterations == 1)
+								System.out.println("DA");
 							Vector3f adjD = findTheD(f.a, f.b, adjs[0]);
 							faces.add(new Triangle(f.c, f.a, adjD));
 							faces.add(new Triangle(f.b, f.c, adjD));
 							faces.remove(i);
 							faces.remove(adjs[0]);
 							i--;
-						} else if (VecMath.dotproduct(VecMath.subtraction(f.a, f.b), adjs[1].normal) > 0) {
+						} else if (adjs[1] != null
+								&& VecMath.dotproduct(VecMath.subtraction(f.a, f.b), adjs[1].normal) > 0) {
+							if (iterations == 1)
+								System.out.println("DB");
 							Vector3f adjD = findTheD(f.b, f.c, adjs[1]);
 							faces.add(new Triangle(f.a, f.b, adjD));
 							faces.add(new Triangle(f.c, f.a, adjD));
 							faces.remove(i);
 							faces.remove(adjs[1]);
 							i--;
-						} else if (VecMath.dotproduct(VecMath.subtraction(f.b, f.c), adjs[2].normal) > 0) {
+						} else if (adjs[2] != null
+								&& VecMath.dotproduct(VecMath.subtraction(f.b, f.c), adjs[2].normal) > 0) {
+							if (iterations == 1)
+								System.out.println("DC");
 							Vector3f adjD = findTheD(f.c, f.a, adjs[2]);
 							faces.add(new Triangle(f.b, f.c, adjD));
 							faces.add(new Triangle(f.a, f.b, adjD));
@@ -142,9 +150,11 @@ public class Quickhull {
 							i--;
 						}
 					}
+
 				} else {
 					currT++;
 				}
+				iterations--;
 			}
 
 			System.out.println("Num faces: " + faces.size());
