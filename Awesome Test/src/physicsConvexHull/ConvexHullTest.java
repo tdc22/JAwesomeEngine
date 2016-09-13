@@ -37,7 +37,7 @@ public class ConvexHullTest extends StandardGame {
 	InputEvent step, multistep;
 	Shader color;
 	List<Vector3f> pointcloud;
-	int iterations = 170;
+	int iterations = 51;//170;
 
 	@Override
 	public void init() {

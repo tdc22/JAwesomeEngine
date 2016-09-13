@@ -19,7 +19,8 @@ public class Quickhull {
 			this.b = b;
 			this.c = c;
 			normal = VecMath.computeNormal(a, b, c);
-			normal.normalize();
+			if(normal.lengthSquared() > 0)
+				normal.normalize();
 		}
 	}
 
@@ -60,6 +61,7 @@ public class Quickhull {
 			adjs.clear();
 		}
 
+//		System.out.println("Stats: " + faces.size() + "; " + vertices.size() + "; " + adjacentsMap.size());
 		ConvexShape shape = new ConvexShape(0, 0, 0, vertices, adjacentsMap);
 		return shape;
 	}
@@ -106,19 +108,18 @@ public class Quickhull {
 				if (furthest != -1) {
 					Vector3f p = points.remove(furthest);
 
-					if (!t.a.equals(p) && !t.b.equals(p))
-						faces.add(new Triangle(t.a, t.b, p));
-					if (!t.b.equals(p) && !t.c.equals(p))
-						faces.add(new Triangle(t.b, t.c, p));
-					if (!t.c.equals(p) && !t.a.equals(p))
-						faces.add(new Triangle(t.c, t.a, p));
+					faces.add(new Triangle(t.a, t.b, p));
+					faces.add(new Triangle(t.b, t.c, p));
+					faces.add(new Triangle(t.c, t.a, p));
 
 					faces.remove(t);
 
 					// check convex
 					for (int i = 0; i < faces.size(); i++) {
 						Triangle f = faces.get(i);
-						Triangle[] adjs = findAdjacentTriangles(f, faces);
+						Triangle[] adjs = findAdjacentTriangles(f, faces, iterations == 1);
+						if(iterations == 1)
+							System.out.println(faces.size() + "; " + adjs[1] + "; " + f.a + "; " + f.b + "; " + f.c + "; " + adjs[1].a + "; " + adjs[1].b + "; " + adjs[1].c + "; " + adjs[1].normal);
 						if (adjs[0] != null && VecMath.dotproduct(VecMath.subtraction(f.c, f.a), adjs[0].normal) > 0) {
 							if (iterations == 1)
 								System.out.println("DA");
@@ -157,7 +158,7 @@ public class Quickhull {
 				iterations--;
 			}
 
-			System.out.println("Num faces: " + faces.size());
+//			System.out.println("Num faces: " + faces.size());
 		}
 
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
@@ -218,20 +219,22 @@ public class Quickhull {
 	 * @param faces
 	 * @return
 	 */
-	private static Triangle[] findAdjacentTriangles(Triangle t, List<Triangle> faces) {
+	private static Triangle[] findAdjacentTriangles(Triangle t, List<Triangle> faces, boolean last) {
 		Triangle[] result = new Triangle[3];
+		int i = 0;
 		for (Triangle f : faces) {
 			if (!f.equals(t)) {
 				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b) && f.c.equals(t.a)
-						|| f.c.equals(t.b) && f.a.equals(t.a))
-					result[0] = f;
+						|| f.c.equals(t.b) && f.a.equals(t.a)){
+					result[0] = f;if(last)System.out.println("A" + i + " " + f.a + "; " + f.b + "; " + f.c + "; " + t.a + "; " + t.b + "; " + t.c);}
 				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c) && f.c.equals(t.b)
-						|| f.c.equals(t.c) && f.a.equals(t.b))
-					result[1] = f;
+						|| f.c.equals(t.c) && f.a.equals(t.b)){
+					result[1] = f;if(last)System.out.println("B" + i + " " + f.a + "; " + f.b + "; " + f.c + "; " + t.a + "; " + t.b + "; " + t.c);}
 				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a) && f.c.equals(t.c)
-						|| f.c.equals(t.a) && f.a.equals(t.c))
-					result[2] = f;
+						|| f.c.equals(t.a) && f.a.equals(t.c)){
+					result[2] = f;if(last)System.out.println("C" + i + " " + f.a + "; " + f.b + "; " + f.c + "; " + t.a + "; " + t.b + "; " + t.c);}
 			}
+			i++;
 		}
 		return result;
 	}
