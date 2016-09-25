@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import collisionshape.ConvexShape;
-import convexhull.Quickhull;
+import convexhull.Quickhull3Old;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
@@ -93,7 +93,7 @@ public class ConvexHullDebugger extends StandardGame {
 //		System.out.println("Stats: " + faces.size() + "; " + vertices.size() + "; " + adjacentsMap.size());
 		
 		//CHECK with algo
-		ConvexShape shape = Quickhull.computeConvexHull(points, iters);
+		ConvexShape shape = Quickhull3Old.computeConvexHull(points, iters);
 		System.out.println("-------------START COMPARISON----------------");
 		List<Vector3f> algoVerts = shape.getVertices();
 		HashMap<Integer, Integer[]> algoAdjacents = shape.getAdjacentsMap();

@@ -12,7 +12,7 @@ import math.VecMath;
 import utils.VectorConstants;
 import vector.Vector3f;
 
-public class Quickhull {
+public class Quickhull3Old {
 
 	public static class Triangle {
 		public int a, b, c;

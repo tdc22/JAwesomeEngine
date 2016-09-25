@@ -11,7 +11,7 @@ import collisionshape.EllipsoidShape;
 import collisionshape2d.ConvexShape2;
 import collisionshape2d.EllipseShape;
 import collisionshape2d.QuadShape;
-import convexhull.Quickhull;
+import convexhull.Quickhull3Old;
 import convexhull.Quickhull2;
 import objects.ShapedObject2;
 import objects.ShapedObject3;
@@ -50,7 +50,7 @@ public class PhysicsShapeCreator {
 	}
 
 	public static ConvexShape createHull(ShapedObject3 shapedobject) {
-		ConvexShape hull = Quickhull.computeConvexHull(shapedobject.getVertices());
+		ConvexShape hull = Quickhull3Old.computeConvexHull(shapedobject.getVertices());
 		hull.translateTo(shapedobject.getTranslation());
 		return hull;
 	}
