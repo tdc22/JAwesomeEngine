@@ -19,7 +19,6 @@ import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import math.VecMath;
-import objects.ShapedObject;
 import objects.ShapedObject3;
 import shader.Shader;
 import sound.NullSoundEnvironment;
@@ -39,7 +38,7 @@ public class ConvexHullDebugger extends StandardGame {
 			this.b = b;
 			this.c = c;
 			normal = VecMath.computeNormal(a, b, c);
-			if(normal.lengthSquared() > 0)
+			if (normal.lengthSquared() > 0)
 				normal.normalize();
 		}
 	}
@@ -87,46 +86,48 @@ public class ConvexHullDebugger extends StandardGame {
 		}
 
 		int iters = 106; // 170 (Successful: 50, 105, ???: 106, Failed: 170)
-		for(int i = 0; i < iters; i++)//170
-			hullStep(i == iters-1);
+		for (int i = 0; i < iters; i++)// 170
+			hullStep(i == iters - 1);
 		finishStep();
-//		System.out.println("Stats: " + faces.size() + "; " + vertices.size() + "; " + adjacentsMap.size());
-		
-		//CHECK with algo
+		// System.out.println("Stats: " + faces.size() + "; " + vertices.size()
+		// + "; " + adjacentsMap.size());
+
+		// CHECK with algo
 		ConvexShape shape = Quickhull3Old.computeConvexHull(points, iters);
 		System.out.println("-------------START COMPARISON----------------");
 		List<Vector3f> algoVerts = shape.getVertices();
 		HashMap<Integer, Integer[]> algoAdjacents = shape.getAdjacentsMap();
-		for(int i = 0; i < vertices.size(); i++) {
-			if(!vertices.get(i).equals(algoVerts.get(i))) {
+		for (int i = 0; i < vertices.size(); i++) {
+			if (!vertices.get(i).equals(algoVerts.get(i))) {
 				System.out.println("Vert " + i + ": " + vertices.get(i) + "; " + algoVerts.get(i));
 			}
 		}
-		for(int i = 0; i < adjacentsMap.size(); i++) {
+		for (int i = 0; i < adjacentsMap.size(); i++) {
 			Integer[] adjs = adjacentsMap.get(i);
 			Integer[] algoAdjs = algoAdjacents.get(i);
-			if(adjs.length == algoAdjs.length) {
-				for(int j = 0; j < adjs.length; j++) {
-					if(adjs[j] != algoAdjs[j]) {
+			if (adjs.length == algoAdjs.length) {
+				for (int j = 0; j < adjs.length; j++) {
+					if (adjs[j] != algoAdjs[j]) {
 						System.out.println("Adj " + i + ", " + j + ": " + adjs[j] + "; " + algoAdjs[j]);
 					}
 				}
-			}
-			else {
+			} else {
 				System.out.println("Adjs array length mismatch: " + i + "; " + adjs.length + "; " + algoAdjs.length);
 			}
 		}
-		if(algoVerts.size() != vertices.size()) System.out.println("Vertexcount mismatch.");
-		if(algoAdjacents.size() != adjacentsMap.size()) System.out.println("Adjacentsmapcount mismatch.");
+		if (algoVerts.size() != vertices.size())
+			System.out.println("Vertexcount mismatch.");
+		if (algoAdjacents.size() != adjacentsMap.size())
+			System.out.println("Adjacentsmapcount mismatch.");
 		System.out.println("END COMPARISON ---");
-		
+
 		simplex = new Simplex(faces, faces.get(0));
 		defaultshader.addObject(simplex);
 		// removePoints(faces, points);
 	}
 
 	HashMap<Integer, Integer[]> adjacentsMap;
-	
+
 	public void hullStep(boolean last) {
 		// removePoints(faces, points);
 		if (currT == faces.size()) {
@@ -163,10 +164,12 @@ public class ConvexHullDebugger extends StandardGame {
 			for (int i = 0; i < faces.size(); i++) {
 				Triangle f = faces.get(i);
 				Triangle[] adjs = findAdjacentTriangles(f, faces, last);
-				if(last)
-					System.out.println(faces.size() + "; " + adjs.length + "; " + adjs[1] + "; " + f.a + "; " + f.b + "; " + f.c + "; " + adjs[1].a + "; " + adjs[1].b + "; " + adjs[1].c + "; " + adjs[1].normal);
+				if (last)
+					System.out.println(
+							faces.size() + "; " + adjs.length + "; " + adjs[1] + "; " + f.a + "; " + f.b + "; " + f.c
+									+ "; " + adjs[1].a + "; " + adjs[1].b + "; " + adjs[1].c + "; " + adjs[1].normal);
 				if (adjs[0] != null && VecMath.dotproduct(VecMath.subtraction(f.c, f.a), adjs[0].normal) > 0) {
-					if(last)
+					if (last)
 						System.out.println("DEB1");
 					Vector3f adjD = findTheD(f.a, f.b, adjs[0]);
 					faces.add(new Triangle(f.c, f.a, adjD));
@@ -175,7 +178,7 @@ public class ConvexHullDebugger extends StandardGame {
 					faces.remove(adjs[0]);
 					i--;
 				} else if (adjs[1] != null && VecMath.dotproduct(VecMath.subtraction(f.a, f.b), adjs[1].normal) > 0) {
-					if(last)
+					if (last)
 						System.out.println("DEB2");
 					Vector3f adjD = findTheD(f.b, f.c, adjs[1]);
 					faces.add(new Triangle(f.a, f.b, adjD));
@@ -184,7 +187,7 @@ public class ConvexHullDebugger extends StandardGame {
 					faces.remove(adjs[1]);
 					i--;
 				} else if (adjs[2] != null && VecMath.dotproduct(VecMath.subtraction(f.b, f.c), adjs[2].normal) > 0) {
-					if(last)
+					if (last)
 						System.out.println("DEB3");
 					Vector3f adjD = findTheD(f.c, f.a, adjs[2]);
 					faces.add(new Triangle(f.b, f.c, adjD));
@@ -198,7 +201,7 @@ public class ConvexHullDebugger extends StandardGame {
 			currT++;
 		}
 	}
-	
+
 	private void finishStep() {
 		adjacentsMap = new HashMap<Integer, Integer[]>();
 		List<Integer> adjs = new ArrayList<Integer>();
@@ -309,23 +312,35 @@ public class ConvexHullDebugger extends StandardGame {
 		Triangle[] result = new Triangle[3];
 		int i = 0;
 		for (Triangle f : faces) {
-//			System.out.println("a");
+			// System.out.println("a");
 			if (!f.equals(t)) {
-//				System.out.println("b");
-//				System.out.println(f.a.equals(t.b) && f.b.equals(t.a));
+				// System.out.println("b");
+				// System.out.println(f.a.equals(t.b) && f.b.equals(t.a));
 				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b) && f.c.equals(t.a)
-						|| f.c.equals(t.b) && f.a.equals(t.a)){
-					result[0] = f;if(last)System.out.println("A" + i + " " + f.a + "; " + f.b + "; " + f.c + "; " + t.a + "; " + t.b + "; " + t.c);}
+						|| f.c.equals(t.b) && f.a.equals(t.a)) {
+					result[0] = f;
+					if (last)
+						System.out.println(
+								"A" + i + " " + f.a + "; " + f.b + "; " + f.c + "; " + t.a + "; " + t.b + "; " + t.c);
+				}
 				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c) && f.c.equals(t.b)
-						|| f.c.equals(t.c) && f.a.equals(t.b)){
-					result[1] = f;if(last)System.out.println("B" + i + " " + f.a + "; " + f.b + "; " + f.c + "; " + t.a + "; " + t.b + "; " + t.c);}
+						|| f.c.equals(t.c) && f.a.equals(t.b)) {
+					result[1] = f;
+					if (last)
+						System.out.println(
+								"B" + i + " " + f.a + "; " + f.b + "; " + f.c + "; " + t.a + "; " + t.b + "; " + t.c);
+				}
 				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a) && f.c.equals(t.c)
-						|| f.c.equals(t.a) && f.a.equals(t.c)){
-					result[2] = f;if(last)System.out.println("C" + i + " " + f.a + "; " + f.b + "; " + f.c + "; " + t.a + "; " + t.b + "; " + t.c);}
+						|| f.c.equals(t.a) && f.a.equals(t.c)) {
+					result[2] = f;
+					if (last)
+						System.out.println(
+								"C" + i + " " + f.a + "; " + f.b + "; " + f.c + "; " + t.a + "; " + t.b + "; " + t.c);
+				}
 			}
 			i++;
 		}
-//		System.out.println(result[0] + "; " + result[1] + "; " + result[2]);
+		// System.out.println(result[0] + "; " + result[1] + "; " + result[2]);
 		return result;
 	}
 
@@ -371,18 +386,18 @@ public class ConvexHullDebugger extends StandardGame {
 		inputs.addEvent(stepEPA);
 
 		points = new ArrayList<Vector3f>();
-//		 for (int i = 0; i < 1000; i++) {
-//		 points.add(new Vector3f(Math.random() * 10 - 5,
-//		 Math.random() * 10 - 5, Math.random() * 10 - 5));
-//		 }
+		// for (int i = 0; i < 1000; i++) {
+		// points.add(new Vector3f(Math.random() * 10 - 5,
+		// Math.random() * 10 - 5, Math.random() * 10 - 5));
+		// }
 		ShapedObject3 obj = ModelLoader.load("res/models/bunny_lowpoly.mobj");
-		for(Vector3f v : obj.getVertices())
+		for (Vector3f v : obj.getVertices())
 			points.add(v);
-//		points.add(new Vector3f(11.404785, 10.446343, -2.761249));
-//		points.add(new Vector3f(5.6260934, 5.6621804, 11.700975));
-//		points.add(new Vector3f(6.812222, -1.6368495, 9.790112));
-//		points.add(new Vector3f(2.2193725, -1.7034389, -4.2405186));
-//		points.add(new Vector3f(-0.8538285, 3.822501, 4.7598157));
+		// points.add(new Vector3f(11.404785, 10.446343, -2.761249));
+		// points.add(new Vector3f(5.6260934, 5.6621804, 11.700975));
+		// points.add(new Vector3f(6.812222, -1.6368495, 9.790112));
+		// points.add(new Vector3f(2.2193725, -1.7034389, -4.2405186));
+		// points.add(new Vector3f(-0.8538285, 3.822501, 4.7598157));
 		vertices = new ArrayList<Vector3f>();
 
 		hullInit();
@@ -407,19 +422,19 @@ public class ConvexHullDebugger extends StandardGame {
 		if (inputs.isEventActive("Step Hull")) {
 			simplex.delete();
 			defaultshader.removeObject(simplex);
-			if(points.size() > 1){
+			if (points.size() > 1) {
 				pointcloud.delete();
 				defaultshader.removeObject(pointcloud);
 			}
-			
+
 			hullStep(false);
-			
+
 			if (currT < faces.size())
 				simplex = new Simplex(faces, faces.get(currT));
 			else
 				simplex = new Simplex(faces, null);
 			defaultshader.addObject(simplex);
-			if(points.size() > 0) {
+			if (points.size() > 0) {
 				pointcloud = new PointCloud(points);
 				defaultshader.addObject(pointcloud);
 			}

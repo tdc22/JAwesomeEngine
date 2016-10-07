@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import collisionshape.ConvexShape;
+import convexhull.Quickhull3;
 import convexhull.Quickhull3Old;
 import display.DisplayMode;
 import display.GLDisplay;
@@ -37,7 +38,7 @@ public class ConvexHullTest extends StandardGame {
 	InputEvent step, multistep;
 	Shader color;
 	List<Vector3f> pointcloud;
-	int iterations = 51;//170;
+	int iterations = 51;// 170;
 
 	@Override
 	public void init() {
@@ -78,7 +79,7 @@ public class ConvexHullTest extends StandardGame {
 		color.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 		addShader(color);
 
-		ConvexShape convexHull = Quickhull3Old.computeConvexHull(pointcloud, iterations);
+		ConvexShape convexHull = Quickhull3.computeConvexHull(pointcloud, iterations);
 		ch = new ConvexHull(convexHull.getVertices(), convexHull.getAdjacentsMap(), color);
 		defaultshader.addObject(ch);
 		System.out.println("Point Count: " + pointcloud.size() + "; Hull Size: " + convexHull.getVertices().size());
