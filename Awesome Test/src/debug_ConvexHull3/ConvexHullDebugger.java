@@ -1,4 +1,4 @@
-package debug_ConvexHull2;
+package debug_ConvexHull3;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class ConvexHullDebugger extends StandardGame {
 
 	LinkedList<List<Vector3f>> listsOfFacePoints;
 
-	int faceIndex;
+	int faceIndex, facesDone;
 
 	Font font;
 
@@ -138,6 +138,7 @@ public class ConvexHullDebugger extends StandardGame {
 		points.remove(C);
 		points.remove(D);
 		if (keepOrientation) {
+			System.out.println("!! 0");
 			faces.add(new Triangle(0, 1, 2, VecMath.computeNormal(A, B, C)));
 			faces.add(new Triangle(0, 3, 1, VecMath.computeNormal(A, D, B)));
 			faces.add(new Triangle(3, 2, 1, VecMath.computeNormal(D, C, B)));
@@ -147,6 +148,7 @@ public class ConvexHullDebugger extends StandardGame {
 			adjacentsMap.put(2, new Integer[] { 0, 1, 3 });
 			adjacentsMap.put(3, new Integer[] { 1, 0, 2 });
 		} else {
+			System.out.println("!! 1");
 			faces.add(new Triangle(0, 2, 1, VecMath.computeNormal(A, C, B)));
 			faces.add(new Triangle(0, 1, 3, VecMath.computeNormal(A, B, D)));
 			faces.add(new Triangle(0, 3, 2, VecMath.computeNormal(A, D, C)));
@@ -341,6 +343,7 @@ public class ConvexHullDebugger extends StandardGame {
 					Vector3f vB = vertices.get(vertIDb);
 					Vector3f norm = VecMath.computeNormal(vA, vB, furthestPoint);
 					Triangle stichTriangle;
+					System.out.println(VecMath.dotproduct(t.normal, norm));
 					if (VecMath.dotproduct(t.normal, norm) >= 0) {
 						stichTriangle = new Triangle(vertIDa, vertIDb, furthestPointID, norm);
 					} else {
@@ -352,7 +355,6 @@ public class ConvexHullDebugger extends StandardGame {
 					newLightFaces.add(stichTriangle);
 
 					// Upade adjacents map
-					System.out.println("InsertingAdj: " + furthestPointID + "; " + vertIDa);
 					adjacentsMap.put(vertIDa, addArrayEntry(adjacentsMap.get(vertIDa), furthestPointID));
 				} else {
 					System.out.println("Stitchingerror!"); // TODO: investigate?
@@ -387,7 +389,7 @@ public class ConvexHullDebugger extends StandardGame {
 				System.out.println();
 			}
 		} else {
-			faceIndex++;
+			facesDone++;
 		}
 	}
 
@@ -511,9 +513,12 @@ public class ConvexHullDebugger extends StandardGame {
 		pointcloud = new PointCloud(points);
 		hullInit();
 
-		faceIndex = 0;
-		for (int i = 0; i < 167; i++)
+		facesDone = 1;
+		faceIndex = faces.size() - facesDone;
+		for (int i = 0; i < 39; i++) {
+			faceIndex = faces.size() - facesDone;
 			hullStep(faces.get(faceIndex));
+		}
 
 		simplex = new Simplex(vertices, faces, faces.get(faceIndex));
 		defaultshader.addObject(simplex);
@@ -542,12 +547,13 @@ public class ConvexHullDebugger extends StandardGame {
 		if (inputs.isEventActive("Step Hull")) {
 			simplex.delete();
 			defaultshader.removeObject(simplex);
-			if (points.size() > 1) {
-				pointcloud.delete();
-				defaultshader.removeObject(pointcloud);
-			}
+			// if (points.size() > 1) {
+			// pointcloud.delete();
+			// defaultshader.removeObject(pointcloud);
+			// }
 
 			if (faceIndex < faces.size()) {
+				faceIndex = faces.size() - facesDone;
 				hullStep(faces.get(faceIndex));
 			} else {
 				System.out.println("DONE!!! !");
@@ -558,10 +564,10 @@ public class ConvexHullDebugger extends StandardGame {
 			else
 				simplex = new Simplex(vertices, faces, null);
 			defaultshader.addObject(simplex);
-			if (points.size() > 0) {
-				pointcloud = new PointCloud(points);
-				defaultshader.addObject(pointcloud);
-			}
+			// if (points.size() > 0) {
+			// pointcloud = new PointCloud(points);
+			// defaultshader.addObject(pointcloud);
+			// }
 			System.out.println("NUM FACES : " + faces.size());
 			updateTexts();
 		}
