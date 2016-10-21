@@ -17,6 +17,9 @@ public class Simplex extends ShapedObject3 {
 			Color c;
 			if (t.equals(next)) {
 				c = Color.BLUE;
+				System.out.println("NEXT!!!!!!");
+				System.out.println(t + "; " + t.a + "; " + t.b + "; " + t.c + "; " + vertices.get(t.a) + "; "
+						+ vertices.get(t.b) + "; " + vertices.get(t.c));
 			} else {
 				c = Color.WHITE;
 			}
