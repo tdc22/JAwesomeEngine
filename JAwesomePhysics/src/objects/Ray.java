@@ -2,7 +2,7 @@ package objects;
 
 import vector.Vector;
 
-public class Ray<L extends Vector> {
+public abstract class Ray<L extends Vector> {
 	L pos, dir;
 
 	public Ray(L pos, L dir) {
@@ -30,4 +30,6 @@ public class Ray<L extends Vector> {
 		this.pos = pos;
 		this.dir = dir;
 	}
+
+	public abstract L pointOnRay(float lambda);
 }

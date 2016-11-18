@@ -3,7 +3,6 @@ package narrowphase;
 import java.util.List;
 
 import manifold.ContactManifold;
-import objects.Ray;
 import objects.SupportMap;
 import vector.Vector2f;
 
@@ -27,17 +26,5 @@ public class MPR2 extends MinkowskiPortalRefinement<Vector2f> {
 		// 1b
 		// Vector2f deep =
 		return false;
-	}
-
-	@Override
-	public boolean isColliding(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Vector2f computeCollision(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

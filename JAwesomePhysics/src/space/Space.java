@@ -319,18 +319,34 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		return broadphase.raycastAll(ray);
 	}
 
-	public void raycast(Ray<L> ray) {
-		raycastAllBroadphase(ray);
-		// TODO
-	}
+	public Pair<RigidBody<L, ?, ?, ?>, L> raycast(Ray<L> ray) {
+		Pair<RigidBody<L, ?, ?, ?>, L> result = new Pair<RigidBody<L, ?, ?, ?>, L>(null, null);
+		float distance = Float.MAX_VALUE;
 
-	public void raycastAll(Ray<L> ray) {
 		Set<RigidBody<L, ?, ?, ?>> raycastOverlaps = raycastAllBroadphase(ray);
 		for (RigidBody<L, ?, ?, ?> body : raycastOverlaps) {
 			if (narrowphase.isColliding(body, ray)) {
-				L hit = narrowphase.computeCollision(body, ray);
+				float lambda = narrowphase.computeCollisionOnRay(body, ray);
+				if (lambda < distance) {
+					result.set(body, ray.pointOnRay(lambda));
+				}
 			}
 		}
+
+		return result;
+	}
+
+	public Set<Pair<RigidBody<L, ?, ?, ?>, L>> raycastAll(Ray<L> ray) {
+		Set<Pair<RigidBody<L, ?, ?, ?>, L>> result = new HashSet<Pair<RigidBody<L, ?, ?, ?>, L>>();
+
+		Set<RigidBody<L, ?, ?, ?>> raycastOverlaps = raycastAllBroadphase(ray);
+		for (RigidBody<L, ?, ?, ?> body : raycastOverlaps) {
+			if (narrowphase.isColliding(body, ray)) {
+				result.add(new Pair<RigidBody<L, ?, ?, ?>, L>(body, narrowphase.computeCollision(body, ray)));
+			}
+		}
+
+		return result;
 	}
 
 	public void addCollisionFilter(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {

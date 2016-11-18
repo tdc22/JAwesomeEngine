@@ -192,20 +192,21 @@ public class RaycastingTest2d extends StandardGame {
 			if (o.equals(rb6))
 				s6.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 		}
-
-		for (CollisionManifold<Vector2f> cm : space.getCollisionManifolds()) {
-			Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>> o = cm.getObjects();
-			if (o.contains(rb1))
+		
+		Set<Pair<RigidBody<Vector2f, ?, ?, ?>, Vector2f>> hits = space.raycastAll(ray);
+		for (Pair<RigidBody<Vector2f, ?, ?, ?>, Vector2f> hit : hits) {
+			RigidBody<Vector2f, ?, ?, ?> o = hit.getFirst();
+			if (o.equals(rb1))
 				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
-			if (o.contains(rb2))
+			if (o.equals(rb2))
 				s2.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
-			if (o.contains(rb3))
+			if (o.equals(rb3))
 				s3.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
-			if (o.contains(rb4))
+			if (o.equals(rb4))
 				s4.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
-			if (o.contains(rb5))
+			if (o.equals(rb5))
 				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
-			if (o.contains(rb6))
+			if (o.equals(rb6))
 				s6.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 		}
 

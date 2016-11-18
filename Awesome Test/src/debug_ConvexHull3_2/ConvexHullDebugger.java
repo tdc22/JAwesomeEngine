@@ -1,4 +1,4 @@
-package debug_ConvexHull3;
+package debug_ConvexHull3_2;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -67,6 +67,8 @@ public class ConvexHullDebugger extends StandardGame {
 	Font font;
 
 	List<Text> texts;
+
+	boolean step2ready = false;
 
 	public void hullInit() {
 		// Initial Phase
@@ -171,13 +173,19 @@ public class ConvexHullDebugger extends StandardGame {
 		// 3. Push the 4 faces on the stack (done above)
 	}
 
+	private HashSet<Integer> lightFaceVertices;
+	private HashMap<Integer, List<Triangle>> lightFaceVerticesToTriangles;
+	private Vector3f furthestPoint;
+	private int furthestPointID;
+	private List<Vector3f> facepoints;
+
 	public void hullStep(Triangle t) {
 		System.out.println("a " + t.a + "; " + t.b + "; " + t.c + "; " + t.normal + "; " + faceIndex);
 		// 2. Get most distant point of the face's point set
-		Vector3f furthestPoint = null;
-		int furthestPointID = -1;
+		furthestPoint = null;
+		furthestPointID = -1;
 		Vector3f A = vertices.get(t.a);
-		List<Vector3f> facepoints = listsOfFacePoints.get(faceIndex);
+		facepoints = listsOfFacePoints.get(faceIndex);
 		float distance = 0;
 		for (int i = 0; i < facepoints.size(); i++) {
 			Vector3f P = facepoints.get(i);
@@ -206,9 +214,9 @@ public class ConvexHullDebugger extends StandardGame {
 			listsOfFacePoints.remove(faceIndex);
 
 			// 3. Find all faces that can be seen from this point
-			HashSet<Integer> lightFaceVertices = new HashSet<Integer>(); // TODO:
-																			// remove?
-			HashMap<Integer, List<Triangle>> lightFaceVerticesToTriangles = new HashMap<Integer, List<Triangle>>();
+			lightFaceVertices = new HashSet<Integer>(); // TODO:
+														// remove?
+			lightFaceVerticesToTriangles = new HashMap<Integer, List<Triangle>>();
 			lightFaceVertices.add(t.a);
 			lightFaceVertices.add(t.b);
 			lightFaceVertices.add(t.c);
@@ -258,187 +266,193 @@ public class ConvexHullDebugger extends StandardGame {
 				}
 			}
 
-			// 4. Extract horizon edges of light-faces and extrude to Point
-			// TODO: LÖSUNG IM CHAT MIT FLO
-			// 4.0 Remove all vertices that are only connected to
-			// lightFaceVertices
-			Iterator<Integer> iter = lightFaceVertices.iterator();
-			List<Integer> toRemove = new ArrayList<Integer>();
-			for (int i = 0; i < lightFaceVertices.size(); i++) {
-				int vert = iter.next(); // TODO: check
-				System.out.println("vert + " + i + "; " + vert + "; " + lightFaceVerticesToTriangles.get(vert).size()
-						+ "; " + adjacentsMap.get(vert).length);
-				if (lightFaceVerticesToTriangles.get(vert).size() == adjacentsMap.get(vert).length) {
-					toRemove.add(vert);
-				}
-			}
-			for (Integer i : toRemove) {
-				System.out.println("remove LFV " + i);
-				for (Integer adj : adjacentsMap.get(i)) {
-					adjacentsMap.put(adj, removeArrayEntry(adjacentsMap.get(adj), i));
-				}
-				lightFaceVertices.remove(i);
-				vertices.remove(i);
-			}
-			// 4.1 Get vertices on border between lighted and unlighted
-			// triangles
-			HashSet<Integer> vertsOnEdge = new HashSet<Integer>();
-			System.out.println("Light Face Vertices: " + lightFaceVertices.size());
-			for (Integer vert : lightFaceVertices) {
-				System.out.println("LFV: " + vert + "; " + lightFaceVerticesToTriangles.get(vert).size() + "; "
-						+ adjacentsMap.get(vert).length);
-				// if (lightFaceVerticesToTriangles.get(vert).size() !=
-				// adjacentsMap.get(vert).length) { (Wird oben schon entfernt)
-				vertsOnEdge.add(vert);
-				// }
-			}
-			System.out.println("Edges!");
-			for (Integer i : vertsOnEdge) {
-				System.out.println("Edge: " + i);
-			}
-			// 4.2 Get edges on border
-			int currentVert = vertsOnEdge.iterator().next();
-			List<Integer> edge = new ArrayList<Integer>(); // TODO: make HashSet
-			for (int i = 0; i < vertsOnEdge.size(); i++) {
-				edge.add(currentVert);
-				Integer[] adjs = adjacentsMap.get(currentVert);
+			step2ready = true;
 
-				for (int j = 0; j < adjs.length; j++) {
-					Integer currAdj = adjs[j];
-					System.out.println(currentVert + "; " + currAdj + "; " + vertsOnEdge.contains(currAdj) + "; "
-							+ (!edge.contains(currAdj)));
-					if (vertsOnEdge.contains(currAdj) && !edge.contains(currAdj)) {
-						int tricount = 0;
-						List<Triangle> vertexLightTriangles = lightFaceVerticesToTriangles.get(currentVert);
-						for (int k = 0; k < vertexLightTriangles.size() && tricount < 2; k++) {
-							Triangle kTri = vertexLightTriangles.get(k);
-							if (kTri.a == currAdj || kTri.b == currAdj || kTri.c == currAdj) {
-								tricount++;
-							}
-						}
-						System.out.println(tricount);
-						if (tricount == 1) {
-							currentVert = adjs[j];
-							break;
-						}
-					}
-				}
-			}
-
-			// 4.2.1 Notes and proof
-			// 17 keeps 4 as ADJ even though they aren't adjacent to each
-			// other after stiching!
-			// TODO: remove all adjacency-relations that get lost through
-			// stitching.
-			// Proposition 1: Iterate over all vertices on the stitching edge
-			// and remove
-			// all other vertices on the edge from the adjacency-list except
-			// their
-			// direct neighbours.
-			// Proof: A-----D
-			// | / |
-			// | / | (B and D are neighbours)
-			// | / |
-			// B-----C
-			// Becomes:
-			// A-----D
-			// |\ /|
-			// | E | (B and D are not neighbours anymore)
-			// |/ \|
-			// B-----C
-			int edgesize = edge.size();
-			int edgesizeMinusOne = edgesize - 1;
-			for (int i = 0; i < edgesize; i++) {
-				currentVert = edge.get(i);
-				List<Integer> removeAdj = new ArrayList<Integer>();
-				for (Integer adj : adjacentsMap.get(currentVert)) {
-					if (edge.contains(adj)) {
-						int adjIndexOnEdge = edge.indexOf(adj);
-						if (Math.abs(i - adjIndexOnEdge) > 1 && !(i == 0 && adjIndexOnEdge == edgesizeMinusOne)
-								&& !(i == edgesizeMinusOne && adjIndexOnEdge == 0)) {
-							System.out
-									.println("Diff: " + i + "; " + edge.indexOf(adj) + "; " + (i - edge.indexOf(adj)));
-							removeAdj.add(adj);
-						}
-					}
-				}
-				for (Integer removAdjacent : removeAdj) { // TODO: make faster
-					System.out.println("Remove adj " + removAdjacent + "; from vert " + currentVert);
-					adjacentsMap.put(currentVert, removeArrayEntry(adjacentsMap.get(currentVert), removAdjacent));
-				}
-			}
-
-			// 4.3 Stitch holes using edge
-			// TODO: fix adjacents map, fix triangle list
-			List<Triangle> newLightFaces = new ArrayList<Triangle>();
-			Integer[] furthestPointNeighbours = new Integer[edge.size()];
-			for (int i = 0; i < edge.size(); i++) {
-				int vertIDa, vertIDb;
-				if (i < edge.size() - 1) {
-					vertIDa = edge.get(i);
-					vertIDb = edge.get(i + 1);
-				} else {
-					vertIDa = edge.get(i);
-					vertIDb = edge.get(0);
-				}
-
-				System.out.println("Stitch!! " + i + "; " + vertIDa + "; " + vertIDb);
-				if (vertIDa != vertIDb) {
-					// TODO: correct?
-					Vector3f vA = vertices.get(vertIDa);
-					Vector3f vB = vertices.get(vertIDb);
-					Vector3f norm = VecMath.computeNormal(vA, vB, furthestPoint);
-					Triangle stichTriangle;
-					System.out.println(VecMath.dotproduct(t.normal, norm));
-					if (VecMath.dotproduct(t.normal, norm) >= 0) {
-						stichTriangle = new Triangle(vertIDa, vertIDb, furthestPointID, norm);
-					} else {
-						stichTriangle = new Triangle(vertIDa, furthestPointID, vertIDb,
-								VecMath.computeNormal(vA, furthestPoint, vB));
-					}
-
-					faces.add(0, stichTriangle);
-					newLightFaces.add(stichTriangle);
-
-					// Upade adjacents map
-					adjacentsMap.put(vertIDa, addArrayEntry(adjacentsMap.get(vertIDa), furthestPointID));
-				} else {
-					System.out.println("Stitchingerror!"); // TODO: investigate?
-				}
-				furthestPointNeighbours[i] = vertIDa; // TODO: maybe put back in
-														// if above?? (DANGER!)
-			}
-
-			// Update adjacents map for new point
-			System.out.println("new furthest point: " + furthestPointID);
-			adjacentsMap.put(furthestPointID, furthestPointNeighbours);
-
-			// 5. Assign all points of all light-faces to the new created faces
-			System.out.println(facepoints.size());
-			for (Triangle tri : newLightFaces) {
-				listsOfFacePoints.add(0, getLightPoints(tri, facepoints));
-			}
-			System.out.println("Points: ");
-			for (int i = 0; i < listsOfFacePoints.size(); i++) {
-				System.out.println(i + " : " + listsOfFacePoints.get(i).size());
-			}
-
-			// 6. Push new created faces on the stack and start at (1))
-
-			/////////// CHECK ADJS
-			System.out.println("CHECK ADJS");
-			for (int i = 0; i < vertices.size(); i++) {
-				System.out.print(i + "(" + adjacentsMap.get(i).length + "): ");
-				for (Integer a : adjacentsMap.get(i)) {
-					System.out.print(" " + a);
-					if (a == null)
-						System.exit(0);
-				}
-				System.out.println();
-			}
 		} else {
 			facesDone++;
 		}
+	}
+
+	private void step2(Triangle t) {
+		// 4. Extract horizon edges of light-faces and extrude to Point
+		// TODO: LÖSUNG IM CHAT MIT FLO
+		// 4.0 Remove all vertices that are only connected to
+		// lightFaceVertices
+		Iterator<Integer> iter = lightFaceVertices.iterator();
+		List<Integer> toRemove = new ArrayList<Integer>();
+		for (int i = 0; i < lightFaceVertices.size(); i++) {
+			int vert = iter.next(); // TODO: check
+			System.out.println("vert + " + i + "; " + vert + "; " + lightFaceVerticesToTriangles.get(vert).size() + "; "
+					+ adjacentsMap.get(vert).length);
+			if (lightFaceVerticesToTriangles.get(vert).size() == adjacentsMap.get(vert).length) {
+				toRemove.add(vert);
+			}
+		}
+		for (Integer i : toRemove) {
+			System.out.println("remove LFV " + i);
+			for (Integer adj : adjacentsMap.get(i)) {
+				adjacentsMap.put(adj, removeArrayEntry(adjacentsMap.get(adj), i));
+			}
+			lightFaceVertices.remove(i);
+			vertices.remove(i);
+		}
+		// 4.1 Get vertices on border between lighted and unlighted
+		// triangles
+		HashSet<Integer> vertsOnEdge = new HashSet<Integer>();
+		System.out.println("Light Face Vertices: " + lightFaceVertices.size());
+		for (Integer vert : lightFaceVertices) {
+			System.out.println("LFV: " + vert + "; " + lightFaceVerticesToTriangles.get(vert).size() + "; "
+					+ adjacentsMap.get(vert).length);
+			// if (lightFaceVerticesToTriangles.get(vert).size() !=
+			// adjacentsMap.get(vert).length) { (Wird oben schon entfernt)
+			vertsOnEdge.add(vert);
+			// }
+		}
+		System.out.println("Edges!");
+		for (Integer i : vertsOnEdge) {
+			System.out.println("Edge: " + i);
+		}
+		// 4.2 Get edges on border
+		int currentVert = vertsOnEdge.iterator().next();
+		List<Integer> edge = new ArrayList<Integer>(); // TODO: make HashSet
+		for (int i = 0; i < vertsOnEdge.size(); i++) {
+			edge.add(currentVert);
+			Integer[] adjs = adjacentsMap.get(currentVert);
+
+			for (int j = 0; j < adjs.length; j++) {
+				Integer currAdj = adjs[j];
+				System.out.println(currentVert + "; " + currAdj + "; " + vertsOnEdge.contains(currAdj) + "; "
+						+ (!edge.contains(currAdj)));
+				if (vertsOnEdge.contains(currAdj) && !edge.contains(currAdj)) {
+					int tricount = 0;
+					List<Triangle> vertexLightTriangles = lightFaceVerticesToTriangles.get(currentVert);
+					for (int k = 0; k < vertexLightTriangles.size() && tricount < 2; k++) {
+						Triangle kTri = vertexLightTriangles.get(k);
+						if (kTri.a == currAdj || kTri.b == currAdj || kTri.c == currAdj) {
+							tricount++;
+						}
+					}
+					System.out.println(tricount);
+					if (tricount == 1) {
+						currentVert = adjs[j];
+						break;
+					}
+				}
+			}
+		}
+
+		// 4.2.1 Notes and proof
+		// 17 keeps 4 as ADJ even though they aren't adjacent to each
+		// other after stiching!
+		// TODO: remove all adjacency-relations that get lost through
+		// stitching.
+		// Proposition 1: Iterate over all vertices on the stitching edge
+		// and remove
+		// all other vertices on the edge from the adjacency-list except
+		// their
+		// direct neighbours.
+		// Proof: A-----D
+		// | / |
+		// | / | (B and D are neighbours)
+		// | / |
+		// B-----C
+		// Becomes:
+		// A-----D
+		// |\ /|
+		// | E | (B and D are not neighbours anymore)
+		// |/ \|
+		// B-----C
+		int edgesize = edge.size();
+		int edgesizeMinusOne = edgesize - 1;
+		for (int i = 0; i < edgesize; i++) {
+			currentVert = edge.get(i);
+			List<Integer> removeAdj = new ArrayList<Integer>();
+			for (Integer adj : adjacentsMap.get(currentVert)) {
+				if (edge.contains(adj)) {
+					int adjIndexOnEdge = edge.indexOf(adj);
+					if (Math.abs(i - adjIndexOnEdge) > 1 && !(i == 0 && adjIndexOnEdge == edgesizeMinusOne)
+							&& !(i == edgesizeMinusOne && adjIndexOnEdge == 0)) {
+						System.out.println("Diff: " + i + "; " + edge.indexOf(adj) + "; " + (i - edge.indexOf(adj)));
+						removeAdj.add(adj);
+					}
+				}
+			}
+			for (Integer removAdjacent : removeAdj) { // TODO: make faster
+				System.out.println("Remove adj " + removAdjacent + "; from vert " + currentVert);
+				adjacentsMap.put(currentVert, removeArrayEntry(adjacentsMap.get(currentVert), removAdjacent));
+			}
+		}
+
+		// 4.3 Stitch holes using edge
+		// TODO: fix adjacents map, fix triangle list
+		List<Triangle> newLightFaces = new ArrayList<Triangle>();
+		Integer[] furthestPointNeighbours = new Integer[edge.size()];
+		for (int i = 0; i < edge.size(); i++) {
+			int vertIDa, vertIDb;
+			if (i < edge.size() - 1) {
+				vertIDa = edge.get(i);
+				vertIDb = edge.get(i + 1);
+			} else {
+				vertIDa = edge.get(i);
+				vertIDb = edge.get(0);
+			}
+
+			System.out.println("Stitch!! " + i + "; " + vertIDa + "; " + vertIDb);
+			if (vertIDa != vertIDb) {
+				// TODO: correct?
+				Vector3f vA = vertices.get(vertIDa);
+				Vector3f vB = vertices.get(vertIDb);
+				Vector3f norm = VecMath.computeNormal(vA, vB, furthestPoint);
+				Triangle stichTriangle;
+				System.out.println(VecMath.dotproduct(t.normal, norm));
+				if (VecMath.dotproduct(t.normal, norm) >= 0) {
+					stichTriangle = new Triangle(vertIDa, vertIDb, furthestPointID, norm);
+				} else {
+					stichTriangle = new Triangle(vertIDa, furthestPointID, vertIDb,
+							VecMath.computeNormal(vA, furthestPoint, vB));
+				}
+
+				faces.add(0, stichTriangle);
+				newLightFaces.add(stichTriangle);
+
+				// Upade adjacents map
+				adjacentsMap.put(vertIDa, addArrayEntry(adjacentsMap.get(vertIDa), furthestPointID));
+			} else {
+				System.out.println("Stitchingerror!"); // TODO: investigate?
+			}
+			furthestPointNeighbours[i] = vertIDa; // TODO: maybe put back in
+													// if above?? (DANGER!)
+		}
+
+		// Update adjacents map for new point
+		System.out.println("new furthest point: " + furthestPointID);
+		adjacentsMap.put(furthestPointID, furthestPointNeighbours);
+
+		// 5. Assign all points of all light-faces to the new created faces
+		System.out.println(facepoints.size());
+		for (Triangle tri : newLightFaces) {
+			listsOfFacePoints.add(0, getLightPoints(tri, facepoints));
+		}
+		System.out.println("Points: ");
+		for (int i = 0; i < listsOfFacePoints.size(); i++) {
+			System.out.println(i + " : " + listsOfFacePoints.get(i).size());
+		}
+
+		// 6. Push new created faces on the stack and start at (1))
+
+		/////////// CHECK ADJS
+		System.out.println("CHECK ADJS");
+		for (int i = 0; i < vertices.size(); i++) {
+			System.out.print(i + "(" + adjacentsMap.get(i).length + "): ");
+			for (Integer a : adjacentsMap.get(i)) {
+				System.out.print(" " + a);
+				if (a == null)
+					System.exit(0);
+			}
+			System.out.println();
+		}
+
+		step2ready = false;
 	}
 
 	private static Integer[] removeArrayEntry(Integer[] array, int remove) {
@@ -562,9 +576,15 @@ public class ConvexHullDebugger extends StandardGame {
 		hullInit();
 
 		facesDone = 1;
-		for (int i = 0; i < 60; i++) { // 112 /// Aktuelles Problem Iteration: 64 -> 65 Adj zwischen 2 und 58 geht verloren
+		for (int i = 0; i < 60; i++) { // 112 /// Aktuelles Problem Iteration:
+										// 64 -> 65 Adj zwischen 2 und 58 geht
+										// verloren
 			faceIndex = faces.size() - facesDone;
-			hullStep(faces.get(faceIndex));
+			Triangle t = faces.get(faceIndex);
+			hullStep(t);
+			if (step2ready) {
+				step2(t);
+			}
 		}
 		faceIndex = faces.size() - facesDone;
 
@@ -590,6 +610,8 @@ public class ConvexHullDebugger extends StandardGame {
 		debugger.end();
 	}
 
+	private Triangle mT;
+
 	@Override
 	public void update(int delta) {
 		if (inputs.isEventActive("Step Hull") || inputs.isKeyDown("R")) {
@@ -602,7 +624,12 @@ public class ConvexHullDebugger extends StandardGame {
 
 			if (facesDone <= faces.size()) {
 				faceIndex = faces.size() - facesDone;
-				hullStep(faces.get(faceIndex));
+				if (!step2ready) {
+					mT = faces.get(faceIndex);
+					hullStep(mT);
+				} else {
+					step2(mT);
+				}
 			} else {
 				System.out.println("DONE!!! !");
 			}
