@@ -11,13 +11,15 @@ public class Camera3 extends GameObject3 implements Camera {
 
 	public Camera3() {
 		super();
-		init(DefaultValues.DEFAULT_CAMERA_POSITION, DefaultValues.DEFAULT_CAMERA_HORIZONTAL_ROTATION,
+		init(DefaultValues.DEFAULT_CAMERA_POSITION,
+				DefaultValues.DEFAULT_CAMERA_HORIZONTAL_ROTATION,
 				DefaultValues.DEFAULT_CAMERA_VERTICAL_ROTATION);
 	}
 
 	public Camera3(Vector3f pos) {
 		super();
-		init(pos, DefaultValues.DEFAULT_CAMERA_HORIZONTAL_ROTATION, DefaultValues.DEFAULT_CAMERA_VERTICAL_ROTATION);
+		init(pos, DefaultValues.DEFAULT_CAMERA_HORIZONTAL_ROTATION,
+				DefaultValues.DEFAULT_CAMERA_VERTICAL_ROTATION);
 	}
 
 	public Camera3(Vector3f pos, float hRotation, float vRotation) {

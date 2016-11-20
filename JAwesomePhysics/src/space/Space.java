@@ -1,19 +1,18 @@
 package space;
 
+import integration.IntegrationSolver;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import broadphase.Broadphase;
-import broadphase.BroadphaseListener;
-import constraints.ConstraintSolverErin2;
-import integration.IntegrationSolver;
 import manifold.CollisionManifold;
 import manifold.ContactManifold;
 import manifold.ManifoldManager;
 import narrowphase.Narrowphase;
+import narrowphase.RaycastNarrowphase;
 import objects.CollisionShape;
 import objects.CompoundObject;
 import objects.Constraint;
@@ -27,12 +26,16 @@ import quaternion.Rotation;
 import resolution.CollisionResolution;
 import utils.Pair;
 import vector.Vector;
+import broadphase.Broadphase;
+import broadphase.BroadphaseListener;
+import constraints.ConstraintSolverErin2;
 
 public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rotation, A3 extends Rotation>
 		implements Updateable {
 	final IntegrationSolver integrationsolver;
 	final Broadphase<L, RigidBody<L, ?, ?, ?>> broadphase;
 	final Narrowphase<L> narrowphase;
+	final RaycastNarrowphase<L> raycastnarrowphase;
 	final CollisionResolution collisionresolution;
 	final PositionalCorrection positionalcorrection;
 	final ManifoldManager<L> manifoldmanager;
@@ -50,17 +53,21 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected boolean cullStaticOverlaps = true;
 	protected PhysicsProfiler profiler;
 
-	protected class CompoundListener implements BroadphaseListener<L, RigidBody<L, ?, ?, ?>> {
+	protected class CompoundListener implements
+			BroadphaseListener<L, RigidBody<L, ?, ?, ?>> {
 
 		@Override
-		public void overlapStarted(RigidBody<L, ?, ?, ?> objA, RigidBody<L, ?, ?, ?> objB) {
+		public void overlapStarted(RigidBody<L, ?, ?, ?> objA,
+				RigidBody<L, ?, ?, ?> objB) {
 		}
 
 		@Override
-		public void overlapEnded(RigidBody<L, ?, ?, ?> objA, RigidBody<L, ?, ?, ?> objB) {
+		public void overlapEnded(RigidBody<L, ?, ?, ?> objA,
+				RigidBody<L, ?, ?, ?> objB) {
 			if (objA.isCompound()) {
 				if (objB.isCompound()) {
-					for (CollisionShape<L, ?, ?> cs : objB.getCompound().getCollisionShapes()) {
+					for (CollisionShape<L, ?, ?> cs : objB.getCompound()
+							.getCollisionShapes()) {
 						objA.getCompound().getCompoundBroadphase().remove(cs);
 					}
 				} else {
@@ -77,12 +84,17 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	}
 
-	public Space(IntegrationSolver integrationsolver, Broadphase<L, RigidBody<L, ?, ?, ?>> broadphase,
-			Narrowphase<L> narrowphase, CollisionResolution collisionresolution,
-			PositionalCorrection positionalcorrection, ManifoldManager<L> manifoldmanager) {
+	public Space(IntegrationSolver integrationsolver,
+			Broadphase<L, RigidBody<L, ?, ?, ?>> broadphase,
+			Narrowphase<L> narrowphase,
+			RaycastNarrowphase<L> raycastnarrowphase,
+			CollisionResolution collisionresolution,
+			PositionalCorrection positionalcorrection,
+			ManifoldManager<L> manifoldmanager) {
 		this.integrationsolver = integrationsolver;
 		this.broadphase = broadphase;
 		this.narrowphase = narrowphase;
+		this.raycastnarrowphase = raycastnarrowphase;
 		this.collisionresolution = collisionresolution;
 		this.positionalcorrection = positionalcorrection;
 		this.manifoldmanager = manifoldmanager;
@@ -189,53 +201,65 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		return false;
 	}
 
-	public boolean hasCollision(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
+	public boolean hasCollision(RigidBody<L, ?, ?, ?> objectA,
+			RigidBody<L, ?, ?, ?> objectB) {
 		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
-			if (manifold.getObjects().contains(objectA) && manifold.getObjects().contains(objectB))
+			if (manifold.getObjects().contains(objectA)
+					&& manifold.getObjects().contains(objectB))
 				return true;
 		return false;
 	}
 
 	public boolean hasCollisionNoGhosts(RigidBody<L, ?, ?, ?> object) {
-		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
+		for (CollisionManifold<L> manifold : manifoldmanager
+				.getManifoldsNoGhosts())
 			if (manifold.getObjects().contains(object))
 				return true;
 		return false;
 	}
 
-	public boolean hasCollisionNoGhosts(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
-		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
-			if (manifold.getObjects().contains(objectA) && manifold.getObjects().contains(objectB))
+	public boolean hasCollisionNoGhosts(RigidBody<L, ?, ?, ?> objectA,
+			RigidBody<L, ?, ?, ?> objectB) {
+		for (CollisionManifold<L> manifold : manifoldmanager
+				.getManifoldsNoGhosts())
+			if (manifold.getObjects().contains(objectA)
+					&& manifold.getObjects().contains(objectB))
 				return true;
 		return false;
 	}
 
-	public CollisionManifold<L> getFirstCollisionManifold(RigidBody<L, ?, ?, ?> object) {
+	public CollisionManifold<L> getFirstCollisionManifold(
+			RigidBody<L, ?, ?, ?> object) {
 		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
 			if (manifold.getObjects().contains(object))
 				return manifold;
 		return null;
 	}
 
-	public CollisionManifold<L> getFirstCollisionManifold(RigidBody<L, ?, ?, ?> objectA,
-			RigidBody<L, ?, ?, ?> objectB) {
+	public CollisionManifold<L> getFirstCollisionManifold(
+			RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
 		for (CollisionManifold<L> manifold : manifoldmanager.getManifolds())
-			if (manifold.getObjects().contains(objectA) && manifold.getObjects().contains(objectB))
+			if (manifold.getObjects().contains(objectA)
+					&& manifold.getObjects().contains(objectB))
 				return manifold;
 		return null;
 	}
 
-	public CollisionManifold<L> getFirstCollisionManifoldNoGhosts(RigidBody<L, ?, ?, ?> object) {
-		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
+	public CollisionManifold<L> getFirstCollisionManifoldNoGhosts(
+			RigidBody<L, ?, ?, ?> object) {
+		for (CollisionManifold<L> manifold : manifoldmanager
+				.getManifoldsNoGhosts())
 			if (manifold.getObjects().contains(object))
 				return manifold;
 		return null;
 	}
 
-	public CollisionManifold<L> getFirstCollisionManifoldNoGhosts(RigidBody<L, ?, ?, ?> objectA,
-			RigidBody<L, ?, ?, ?> objectB) {
-		for (CollisionManifold<L> manifold : manifoldmanager.getManifoldsNoGhosts())
-			if (manifold.getObjects().contains(objectA) && manifold.getObjects().contains(objectB))
+	public CollisionManifold<L> getFirstCollisionManifoldNoGhosts(
+			RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
+		for (CollisionManifold<L> manifold : manifoldmanager
+				.getManifoldsNoGhosts())
+			if (manifold.getObjects().contains(objectA)
+					&& manifold.getObjects().contains(objectB))
 				return manifold;
 		return null;
 	}
@@ -247,7 +271,8 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		return false;
 	}
 
-	public boolean hasOverlap(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
+	public boolean hasOverlap(RigidBody<L, ?, ?, ?> objectA,
+			RigidBody<L, ?, ?, ?> objectB) {
 		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps)
 			if (overlap.contains(objectA) && overlap.contains(objectB))
 				return true;
@@ -320,13 +345,15 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	}
 
 	public Pair<RigidBody<L, ?, ?, ?>, L> raycast(Ray<L> ray) {
-		Pair<RigidBody<L, ?, ?, ?>, L> result = new Pair<RigidBody<L, ?, ?, ?>, L>(null, null);
+		Pair<RigidBody<L, ?, ?, ?>, L> result = new Pair<RigidBody<L, ?, ?, ?>, L>(
+				null, null);
 		float distance = Float.MAX_VALUE;
 
 		Set<RigidBody<L, ?, ?, ?>> raycastOverlaps = raycastAllBroadphase(ray);
 		for (RigidBody<L, ?, ?, ?> body : raycastOverlaps) {
-			if (narrowphase.isColliding(body, ray)) {
-				float lambda = narrowphase.computeCollisionOnRay(body, ray);
+			if (raycastnarrowphase.isColliding(body, ray)) {
+				float lambda = raycastnarrowphase.computeCollisionOnRay(body,
+						ray);
 				if (lambda < distance) {
 					result.set(body, ray.pointOnRay(lambda));
 				}
@@ -341,31 +368,51 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 		Set<RigidBody<L, ?, ?, ?>> raycastOverlaps = raycastAllBroadphase(ray);
 		for (RigidBody<L, ?, ?, ?> body : raycastOverlaps) {
-			if (narrowphase.isColliding(body, ray)) {
-				result.add(new Pair<RigidBody<L, ?, ?, ?>, L>(body, narrowphase.computeCollision(body, ray)));
+			if (!body.isCompound()) {
+				if (raycastnarrowphase.isColliding(body, ray)) {
+					result.add(new Pair<RigidBody<L, ?, ?, ?>, L>(body,
+							raycastnarrowphase.computeCollision(body, ray)));
+				}
+			} else {
+				Set<CollisionShape<L, ?, ?>> compoundRaycastOverlaps = body
+						.getCompound().getCompoundBroadphase().raycastAll(ray);
+				for (CollisionShape<L, ?, ?> compoundbody : compoundRaycastOverlaps) {
+					if (raycastnarrowphase.isColliding(compoundbody, ray)) {
+						result.add(new Pair<RigidBody<L, ?, ?, ?>, L>(body,
+								raycastnarrowphase.computeCollision(
+										compoundbody, ray)));
+					}
+				}
 			}
 		}
 
 		return result;
 	}
 
-	public void addCollisionFilter(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
-		addCollisionFilter(new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(objectA, objectB));
+	public void addCollisionFilter(RigidBody<L, ?, ?, ?> objectA,
+			RigidBody<L, ?, ?, ?> objectB) {
+		addCollisionFilter(new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
+				objectA, objectB));
 	}
 
-	public void addCollisionFilter(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
+	public void addCollisionFilter(
+			Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
 		collisionfilters.add(collisionPair);
 	}
 
-	public void removeCollisionFilter(RigidBody<L, ?, ?, ?> objectA, RigidBody<L, ?, ?, ?> objectB) {
-		removeCollisionFilter(new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(objectA, objectB));
+	public void removeCollisionFilter(RigidBody<L, ?, ?, ?> objectA,
+			RigidBody<L, ?, ?, ?> objectB) {
+		removeCollisionFilter(new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
+				objectA, objectB));
 	}
 
-	public void removeCollisionFilter(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
+	public void removeCollisionFilter(
+			Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
 		collisionfilters.remove(collisionPair);
 	}
 
-	public boolean isCollisionFiltered(Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
+	public boolean isCollisionFiltered(
+			Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> collisionPair) {
 		return collisionfilters.contains(collisionPair);
 	}
 
@@ -388,29 +435,40 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 		manifoldmanager.clear();
 		for (Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> overlap : overlaps) {
-			if ((overlap.getFirst().getMass() != 0 || overlap.getSecond().getMass() != 0 || !cullStaticOverlaps)
+			if ((overlap.getFirst().getMass() != 0
+					|| overlap.getSecond().getMass() != 0 || !cullStaticOverlaps)
 					&& !isCollisionFiltered(overlap)
-					&& !(overlap.getFirst().isGhost() && overlap.getSecond().isGhost())) {
+					&& !(overlap.getFirst().isGhost() && overlap.getSecond()
+							.isGhost())) {
 				if (!overlap.getFirst().isCompound()) {
 					if (!overlap.getSecond().isCompound()) {
-						if (narrowphase.isColliding(overlap.getFirst(), overlap.getSecond())) {
-							ContactManifold<L> contactManifold = narrowphase.computeCollision(overlap.getFirst(),
-									overlap.getSecond());
+						if (narrowphase.isColliding(overlap.getFirst(),
+								overlap.getSecond())) {
+							ContactManifold<L> contactManifold = narrowphase
+									.computeCollision(overlap.getFirst(),
+											overlap.getSecond());
 							if (contactManifold != null) {
-								manifoldmanager.add(new CollisionManifold<L>(overlap, contactManifold));
+								manifoldmanager.add(new CollisionManifold<L>(
+										overlap, contactManifold));
 							}
 						}
 					} else {
-						handleCompoundAndNonCompound(overlap.getSecond().getCompound(), overlap.getFirst());
+						handleCompoundAndNonCompound(overlap.getSecond()
+								.getCompound(), overlap.getFirst());
 					}
 				} else {
 					if (!overlap.getSecond().isCompound()) {
-						handleCompoundAndNonCompound(overlap.getFirst().getCompound(), overlap.getSecond());
+						handleCompoundAndNonCompound(overlap.getFirst()
+								.getCompound(), overlap.getSecond());
 					} else {
-						CompoundObject<L, ?> co1 = overlap.getFirst().getCompound();
-						CompoundObject<L, ?> co2 = overlap.getSecond().getCompound();
-						Broadphase<L, CollisionShape<L, ?, ?>> compoundBroadphase = co1.getCompoundBroadphase();
-						for (CollisionShape<L, ?, ?> cs : co2.getCollisionShapes()) {
+						CompoundObject<L, ?> co1 = overlap.getFirst()
+								.getCompound();
+						CompoundObject<L, ?> co2 = overlap.getSecond()
+								.getCompound();
+						Broadphase<L, CollisionShape<L, ?, ?>> compoundBroadphase = co1
+								.getCompoundBroadphase();
+						for (CollisionShape<L, ?, ?> cs : co2
+								.getCollisionShapes()) {
 							if (!compoundBroadphase.contains(cs)) {
 								compoundBroadphase.add(cs);
 							}
@@ -418,32 +476,47 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 						for (Pair<CollisionShape<L, ?, ?>, CollisionShape<L, ?, ?>> compoundoverlap : compoundBroadphase
 								.getOverlaps()) {
 							// first in first && second in second
-							if (co1.getCollisionShapes().contains(compoundoverlap.getFirst())
-									&& co2.getCollisionShapes().contains(compoundoverlap.getSecond())) {
-								if (narrowphase.isColliding(compoundoverlap.getFirst(), compoundoverlap.getSecond())) {
+							if (co1.getCollisionShapes().contains(
+									compoundoverlap.getFirst())
+									&& co2.getCollisionShapes().contains(
+											compoundoverlap.getSecond())) {
+								if (narrowphase.isColliding(
+										compoundoverlap.getFirst(),
+										compoundoverlap.getSecond())) {
 									ContactManifold<L> contactManifold = narrowphase
-											.computeCollision(compoundoverlap.getFirst(), compoundoverlap.getSecond());
+											.computeCollision(
+													compoundoverlap.getFirst(),
+													compoundoverlap.getSecond());
 									if (contactManifold != null) {
 										manifoldmanager
 												.add(new CollisionManifold<L>(
 														new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
-																co1.getRigidBody(), co2.getRigidBody()),
+																co1.getRigidBody(),
+																co2.getRigidBody()),
 														contactManifold));
 									}
 								}
 							} else {
 								// first in second && second in first
-								if (co2.getCollisionShapes().contains(compoundoverlap.getFirst())
-										&& co1.getCollisionShapes().contains(compoundoverlap.getSecond())) {
-									if (narrowphase.isColliding(compoundoverlap.getFirst(),
+								if (co2.getCollisionShapes().contains(
+										compoundoverlap.getFirst())
+										&& co1.getCollisionShapes().contains(
+												compoundoverlap.getSecond())) {
+									if (narrowphase.isColliding(
+											compoundoverlap.getFirst(),
 											compoundoverlap.getSecond())) {
-										ContactManifold<L> contactManifold = narrowphase.computeCollision(
-												compoundoverlap.getFirst(), compoundoverlap.getSecond());
+										ContactManifold<L> contactManifold = narrowphase
+												.computeCollision(
+														compoundoverlap
+																.getFirst(),
+														compoundoverlap
+																.getSecond());
 										if (contactManifold != null) {
 											manifoldmanager
 													.add(new CollisionManifold<L>(
 															new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
-																	co2.getRigidBody(), co1.getRigidBody()),
+																	co2.getRigidBody(),
+																	co1.getRigidBody()),
 															contactManifold));
 										}
 									}
@@ -481,27 +554,38 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		profiler.physicsEnd();
 	}
 
-	private void handleCompoundAndNonCompound(CompoundObject<L, ?> co, RigidBody<L, ?, ?, ?> rb) {
-		Broadphase<L, CollisionShape<L, ?, ?>> compoundBroadphase = co.getCompoundBroadphase();
+	private void handleCompoundAndNonCompound(CompoundObject<L, ?> co,
+			RigidBody<L, ?, ?, ?> rb) {
+		Broadphase<L, CollisionShape<L, ?, ?>> compoundBroadphase = co
+				.getCompoundBroadphase();
 		if (!compoundBroadphase.contains(rb)) {
 			compoundBroadphase.add(rb);
 		}
-		for (Pair<CollisionShape<L, ?, ?>, CollisionShape<L, ?, ?>> overlap : compoundBroadphase.getOverlaps()) {
+		for (Pair<CollisionShape<L, ?, ?>, CollisionShape<L, ?, ?>> overlap : compoundBroadphase
+				.getOverlaps()) {
 			if (overlap.contains(rb)) {
-				if ((co.getCollisionShapes().contains(overlap.getFirst()) && rb.equals(overlap.getSecond())
-						|| (co.getCollisionShapes().contains(overlap.getSecond()) && rb.equals(overlap.getFirst())))) {
-					if (narrowphase.isColliding(overlap.getFirst(), overlap.getSecond())) {
-						ContactManifold<L> contactManifold = narrowphase.computeCollision(overlap.getFirst(),
-								overlap.getSecond());
+				if ((co.getCollisionShapes().contains(overlap.getFirst())
+						&& rb.equals(overlap.getSecond()) || (co
+						.getCollisionShapes().contains(overlap.getSecond()) && rb
+						.equals(overlap.getFirst())))) {
+					if (narrowphase.isColliding(overlap.getFirst(),
+							overlap.getSecond())) {
+						ContactManifold<L> contactManifold = narrowphase
+								.computeCollision(overlap.getFirst(),
+										overlap.getSecond());
 						if (contactManifold != null) {
 							if (overlap.getFirst().equals(rb)) {
-								manifoldmanager.add(new CollisionManifold<L>(
-										new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(rb, co.getRigidBody()),
-										contactManifold));
+								manifoldmanager
+										.add(new CollisionManifold<L>(
+												new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
+														rb, co.getRigidBody()),
+												contactManifold));
 							} else {
-								manifoldmanager.add(new CollisionManifold<L>(
-										new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(co.getRigidBody(), rb),
-										contactManifold));
+								manifoldmanager
+										.add(new CollisionManifold<L>(
+												new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(
+														co.getRigidBody(), rb),
+												contactManifold));
 							}
 						}
 					}

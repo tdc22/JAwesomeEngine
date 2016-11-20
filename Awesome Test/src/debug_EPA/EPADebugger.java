@@ -1,16 +1,13 @@
 package debug_EPA;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
@@ -27,6 +24,10 @@ import shape.Box;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector3f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class EPADebugger extends StandardGame {
 	public class Triangle {
@@ -113,7 +114,9 @@ public class EPADebugger extends StandardGame {
 				// System.out.println("NOTNULL " + a.a + "; " + a.b + "; "
 				// + a.c);
 				// }
-				if (adjacents[0] != null && VecMath.dotproduct(VecMath.subtraction(p, t.a), adjacents[0].normal) > 0) {
+				if (adjacents[0] != null
+						&& VecMath.dotproduct(VecMath.subtraction(p, t.a),
+								adjacents[0].normal) > 0) {
 					Vector3f adjD = findTheD(t.a, t.b, adjacents[0]);
 					faces.add(new Triangle(p, t.a, adjD));
 					faces.add(new Triangle(t.b, p, adjD));
@@ -122,7 +125,9 @@ public class EPADebugger extends StandardGame {
 					faces.add(new Triangle(t.a, t.b, p));
 				}
 
-				if (adjacents[1] != null && VecMath.dotproduct(VecMath.subtraction(p, t.b), adjacents[1].normal) > 0) {
+				if (adjacents[1] != null
+						&& VecMath.dotproduct(VecMath.subtraction(p, t.b),
+								adjacents[1].normal) > 0) {
 					Vector3f adjD = findTheD(t.b, t.c, adjacents[1]);
 					faces.add(new Triangle(p, t.b, adjD));
 					faces.add(new Triangle(t.c, p, adjD));
@@ -131,7 +136,9 @@ public class EPADebugger extends StandardGame {
 					faces.add(new Triangle(t.b, t.c, p));
 				}
 
-				if (adjacents[2] != null && VecMath.dotproduct(VecMath.subtraction(p, t.c), adjacents[2].normal) > 0) {
+				if (adjacents[2] != null
+						&& VecMath.dotproduct(VecMath.subtraction(p, t.c),
+								adjacents[2].normal) > 0) {
 					Vector3f adjD = findTheD(t.c, t.a, adjacents[2]);
 					faces.add(new Triangle(p, t.c, adjD));
 					faces.add(new Triangle(t.a, p, adjD));
@@ -160,14 +167,17 @@ public class EPADebugger extends StandardGame {
 		Triangle[] result = new Triangle[3];
 		for (Triangle f : faces) {
 			if (!f.equals(t)) {
-				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b) && f.c.equals(t.a)
-						|| f.c.equals(t.b) && f.a.equals(t.a))
+				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b)
+						&& f.c.equals(t.a) || f.c.equals(t.b)
+						&& f.a.equals(t.a))
 					result[0] = f;
-				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c) && f.c.equals(t.b)
-						|| f.c.equals(t.c) && f.a.equals(t.b))
+				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c)
+						&& f.c.equals(t.b) || f.c.equals(t.c)
+						&& f.a.equals(t.b))
 					result[1] = f;
-				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a) && f.c.equals(t.c)
-						|| f.c.equals(t.a) && f.a.equals(t.c))
+				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a)
+						&& f.c.equals(t.c) || f.c.equals(t.a)
+						&& f.a.equals(t.c))
 					result[2] = f;
 			}
 		}
@@ -205,14 +215,17 @@ public class EPADebugger extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
-				new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings(), new NullSoundEnvironment());
 
-		defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile(
+						"res/shaders/defaultshader.vert",
+						"res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
 		display.bindMouse();
@@ -222,7 +235,8 @@ public class EPADebugger extends StandardGame {
 		cam.translateTo(0, 1, 3);
 		cam.setFlySpeed(0.01f);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
 		// Box b1 = new Box(-8.960001f, 8.190001f, 0.0f, 1f, 1f, 1f);
@@ -290,7 +304,8 @@ public class EPADebugger extends StandardGame {
 
 		// Test 5
 		Box s1 = new Box(0.0f, -3.5513985f, 0.0f, 0.5f, 0.5f, 0.5f);
-		s1.setRotation(new Quaternionf(0.99940574, -0.02437632, -1.1991114E-4, 0.024376713));
+		s1.setRotation(new Quaternionf(0.99940574, -0.02437632, -1.1991114E-4,
+				0.024376713));
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
 		Box s2 = new Box(0, -5, 0, 10, 1, 10);
@@ -319,21 +334,29 @@ public class EPADebugger extends StandardGame {
 		epaInit(gjk.getSimplex());
 
 		// Input to step EPA
-		InputEvent stepEPA = new InputEvent("Step EPA", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
+		InputEvent stepEPA = new InputEvent("Step EPA", new Input(
+				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(stepEPA);
 	}
 
 	private boolean isOriginInsideTriangleArea(Triangle t) {
-		return (checkPlane(t.a, t.b, t.normal) && checkPlane(t.b, t.c, t.normal) && checkPlane(t.c, t.a, t.normal));
+		return (checkPlane(t.a, t.b, t.normal)
+				&& checkPlane(t.b, t.c, t.normal) && checkPlane(t.c, t.a,
+					t.normal));
 	}
 
 	// (b - a) x normal * a <= EPSILON
 	private boolean checkPlane(Vector3f a, Vector3f b, Vector3f normal) {
 		Vector3f ab = VecMath.subtraction(b, a);
-		System.out.println((((ab.y * normal.z - ab.z * normal.y) * -a.x + (ab.z * normal.x - ab.x * normal.z) * -a.y
-				+ (ab.x * normal.y - ab.y * normal.x) * -a.z)));
-		return (((ab.y * normal.z - ab.z * normal.y) * -a.x + (ab.z * normal.x - ab.x * normal.z) * -a.y
-				+ (ab.x * normal.y - ab.y * normal.x) * -a.z) <= EPSILON);
+		System.out
+				.println((((ab.y * normal.z - ab.z * normal.y) * -a.x
+						+ (ab.z * normal.x - ab.x * normal.z) * -a.y + (ab.x
+						* normal.y - ab.y * normal.x)
+						* -a.z)));
+		return (((ab.y * normal.z - ab.z * normal.y) * -a.x
+				+ (ab.z * normal.x - ab.x * normal.z) * -a.y + (ab.x * normal.y - ab.y
+				* normal.x)
+				* -a.z) <= EPSILON);
 	}
 
 	@Override
@@ -348,9 +371,11 @@ public class EPADebugger extends StandardGame {
 		debugger.end();
 	}
 
-	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb, Vector3f dir) {
+	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
+			Vector3f dir) {
 		// System.out.println("DIRECTION: " + dir);
-		return VecMath.subtraction(Sa.supportPoint(dir), Sb.supportPointNegative(dir));
+		return VecMath.subtraction(Sa.supportPoint(dir),
+				Sb.supportPointNegative(dir));
 	}
 
 	@Override

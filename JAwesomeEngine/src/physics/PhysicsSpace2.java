@@ -1,13 +1,14 @@
 package physics;
 
+import integration.IntegrationSolver;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import broadphase.Broadphase;
-import integration.IntegrationSolver;
 import manifold.ManifoldManager;
 import matrix.Matrix1f;
 import narrowphase.Narrowphase;
+import narrowphase.RaycastNarrowphase;
 import objects.CollisionShape;
 import objects.CompoundObject2;
 import objects.GameObject;
@@ -18,15 +19,20 @@ import resolution.CollisionResolution;
 import space.Space2;
 import vector.Vector1f;
 import vector.Vector2f;
+import broadphase.Broadphase;
 
 public class PhysicsSpace2 extends Space2 {
 	List<GameObject<Vector2f, Complexf>> addedobjects;
 
 	public PhysicsSpace2(IntegrationSolver integrationsolver,
-			Broadphase<Vector2f, RigidBody<Vector2f, ?, ?, ?>> broadphase, Narrowphase<Vector2f> narrowphase,
-			CollisionResolution collisionresolution, PositionalCorrection positionalcorrection,
+			Broadphase<Vector2f, RigidBody<Vector2f, ?, ?, ?>> broadphase,
+			Narrowphase<Vector2f> narrowphase,
+			RaycastNarrowphase<Vector2f> raycastnarrowphase,
+			CollisionResolution collisionresolution,
+			PositionalCorrection positionalcorrection,
 			ManifoldManager<Vector2f> manifoldmanager) {
-		super(integrationsolver, broadphase, narrowphase, collisionresolution, positionalcorrection, manifoldmanager);
+		super(integrationsolver, broadphase, narrowphase, raycastnarrowphase,
+				collisionresolution, positionalcorrection, manifoldmanager);
 		addedobjects = new ArrayList<GameObject<Vector2f, Complexf>>();
 	}
 
@@ -48,10 +54,12 @@ public class PhysicsSpace2 extends Space2 {
 		removeRigidBody(body);
 	}
 
-	public void addCompoundObject(CompoundObject2 compoundobject, GameObject<Vector2f, Complexf>[] obj) {
+	public void addCompoundObject(CompoundObject2 compoundobject,
+			GameObject<Vector2f, Complexf>[] obj) {
 		for (int i = 0; i < obj.length; i++) {
 			GameObject<Vector2f, Complexf> dgo = obj[i];
-			CollisionShape<Vector2f, Complexf, ?> cs = compoundobject.getCollisionShapes().get(i);
+			CollisionShape<Vector2f, Complexf, ?> cs = compoundobject
+					.getCollisionShapes().get(i);
 			dgo.setRotation(cs.getRotation());
 			dgo.setTranslation(cs.getTranslation());
 			dgo.setRotationCenter(cs.getRotationCenter());

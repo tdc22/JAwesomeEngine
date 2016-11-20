@@ -1,9 +1,5 @@
 package shader3_Bump;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
@@ -15,6 +11,10 @@ import shape.Box;
 import sound.NullSoundEnvironment;
 import texture.Texture;
 import vector.Vector4f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ShaderTest3 extends StandardGame {
 	Texture texture, diffuse, bumpmap;
@@ -22,16 +22,16 @@ public class ShaderTest3 extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
-				new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings(), new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
 
 		// Shader Test 1
-		Shader colorshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader colorshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		colorshader.addArgumentName("u_color");
 		colorshader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 		addShader(colorshader);
@@ -40,10 +40,12 @@ public class ShaderTest3 extends StandardGame {
 		colorshader.addObject(a);
 
 		// Shader Test 2
-		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/stone.png"));
+		Texture texture = new Texture(
+				TextureLoader.loadTexture("res/textures/stone.png"));
 
-		Shader textureshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
+		Shader textureshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/textureshader.vert",
+				"res/shaders/textureshader.frag"));
 		textureshader.addArgumentName("u_texture");
 		textureshader.addArgument(texture);
 		addShader(textureshader);
@@ -53,11 +55,14 @@ public class ShaderTest3 extends StandardGame {
 		textureshader.addObject(b);
 
 		// Shader Test 3
-		diffuse = new Texture(TextureLoader.loadTexture("res/textures/stone.png"));
-		bumpmap = new Texture(TextureLoader.loadTexture("res/textures/stone_normal.png"));
+		diffuse = new Texture(
+				TextureLoader.loadTexture("res/textures/stone.png"));
+		bumpmap = new Texture(
+				TextureLoader.loadTexture("res/textures/stone_normal.png"));
 
-		Shader bumpmapshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/bumpmapshader.vert", "res/shaders/bumpmapshader.frag"));
+		Shader bumpmapshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/bumpmapshader.vert",
+				"res/shaders/bumpmapshader.frag"));
 		bumpmapshader.addArgumentNames("u_texture", "u_bumpmap");
 		bumpmapshader.addArguments(diffuse, bumpmap);
 		addShader(bumpmapshader);
@@ -66,7 +71,8 @@ public class ShaderTest3 extends StandardGame {
 		c.setRenderHints(false, true, false);
 		bumpmapshader.addObject(c);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 

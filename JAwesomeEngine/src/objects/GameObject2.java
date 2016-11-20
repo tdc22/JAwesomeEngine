@@ -4,14 +4,17 @@ import matrix.Matrix4f;
 import quaternion.Complexf;
 import vector.Vector2f;
 
-public class GameObject2 extends GameObject<Vector2f, Complexf> implements InstancedBaseObject2 {
+public class GameObject2 extends GameObject<Vector2f, Complexf> implements
+		InstancedBaseObject2 {
 
 	public GameObject2() {
-		super(new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
+		super(new Vector2f(), new Vector2f(), new Complexf(),
+				new Vector2f(1, 1));
 	}
 
 	public GameObject2(float x, float y) {
-		super(new Vector2f(), new Vector2f(x, y), new Complexf(), new Vector2f(1, 1));
+		super(new Vector2f(), new Vector2f(x, y), new Complexf(), new Vector2f(
+				1, 1));
 	}
 
 	public GameObject2(Vector2f pos) {
@@ -82,8 +85,9 @@ public class GameObject2 extends GameObject<Vector2f, Complexf> implements Insta
 	@Override
 	public Matrix4f getMatrix() {
 		float[][] mat = rotation.toMatrixf().getArrayf();
-		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, 0, 0, mat[1][0] * scale.y, mat[1][1] * scale.y, 0,
-				0, 0, 0, 0, 0, translation.getXf(), translation.getYf(), 0, 1);
+		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, 0, 0,
+				mat[1][0] * scale.y, mat[1][1] * scale.y, 0, 0, 0, 0, 0, 0,
+				translation.getXf(), translation.getYf(), 0, 1);
 	}
 
 	@Override

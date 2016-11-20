@@ -122,7 +122,8 @@ public class GJK2 extends GilbertJohnsonKeerthi<Vector2f> {
 		return false;
 	}
 
-	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb, Vector2f dir) {
+	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,
+			Vector2f dir) {
 		Vector2f suppA = Sa.supportPoint(dir);
 		Vector2f suppB = Sb.supportPointNegative(dir);
 		suppB.negate();

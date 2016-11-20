@@ -3,7 +3,8 @@ package anim;
 import quaternion.Rotation;
 import vector.Vector;
 
-public class DynamicAnimationTransition<L extends Vector, A extends Rotation> extends Animation<L, A> {
+public class DynamicAnimationTransition<L extends Vector, A extends Rotation>
+		extends Animation<L, A> {
 	float dynamicTransitionSpeed;
 
 	public DynamicAnimationTransition(float transitionspeed) {
@@ -11,7 +12,8 @@ public class DynamicAnimationTransition<L extends Vector, A extends Rotation> ex
 		dynamicTransitionSpeed = transitionspeed;
 	}
 
-	public DynamicAnimationTransition(float animationspeed, float transitionspeed) {
+	public DynamicAnimationTransition(float animationspeed,
+			float transitionspeed) {
 		super(animationspeed, true);
 		dynamicTransitionSpeed = transitionspeed;
 	}
@@ -21,12 +23,14 @@ public class DynamicAnimationTransition<L extends Vector, A extends Rotation> ex
 		dynamicTransitionSpeed = transitionspeed;
 	}
 
-	public DynamicAnimationTransition(float animationspeed, boolean loops, float transitionspeed) {
+	public DynamicAnimationTransition(float animationspeed, boolean loops,
+			float transitionspeed) {
 		super(animationspeed, loops);
 		dynamicTransitionSpeed = transitionspeed;
 	}
 
-	public DynamicAnimationTransition(Animation<L, A> animation, float transitionspeed) {
+	public DynamicAnimationTransition(Animation<L, A> animation,
+			float transitionspeed) {
 		super(animation);
 		dynamicTransitionSpeed = transitionspeed;
 	}

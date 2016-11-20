@@ -76,7 +76,8 @@ public abstract class UDPServer extends UDPConnecter {
 					portqueue.clear();
 
 					long current = System.currentTimeMillis();
-					for (Map.Entry<InetAddress, Long> client : clients.entrySet()) {
+					for (Map.Entry<InetAddress, Long> client : clients
+							.entrySet()) {
 						System.out.println(current - client.getValue());
 						if (current - client.getValue() > timeout) {
 							clients.remove(client.getKey());

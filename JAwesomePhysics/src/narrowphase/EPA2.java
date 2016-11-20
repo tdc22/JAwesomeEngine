@@ -38,8 +38,8 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 	}
 
 	@Override
-	public ContactManifold<Vector2f> computeCollision(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,
-			List<Vector2f> simplex) {
+	public ContactManifold<Vector2f> computeCollision(SupportMap<Vector2f> Sa,
+			SupportMap<Vector2f> Sb, List<Vector2f> simplex) {
 		edges.clear();
 
 		Vector2f A = simplex.get(0);
@@ -72,13 +72,16 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 		if (normal.lengthSquared() == 0)
 			return null;
 
-		Vector3f tmp = VecMath.crossproduct(new Vector3f(normal), VectorConstants.AXIS_Z);
+		Vector3f tmp = VecMath.crossproduct(new Vector3f(normal),
+				VectorConstants.AXIS_Z);
 		Vector2f tangentA = new Vector2f(tmp.x, tmp.y);
 		Vector2f tangentB = VecMath.negate(tangentA);
 
 		Vector2f negnormal = VecMath.negate(normal);
-		return new ContactManifold<Vector2f>(depth, normal, Sa.supportPoint(normal), Sb.supportPoint(negnormal),
-				Sa.supportPointRelative(normal), Sb.supportPointRelative(normal), Sa.supportPointLocal(normal),
+		return new ContactManifold<Vector2f>(depth, normal,
+				Sa.supportPoint(normal), Sb.supportPoint(negnormal),
+				Sa.supportPointRelative(normal),
+				Sb.supportPointRelative(normal), Sa.supportPointLocal(normal),
 				Sb.supportPointLocal(negnormal), tangentA, tangentB);
 	}
 
@@ -107,7 +110,8 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 		return closest;
 	}
 
-	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb, Vector2f dir) {
+	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,
+			Vector2f dir) {
 		Vector2f suppA = Sa.supportPoint(dir);
 		Vector2f suppB = Sb.supportPointNegative(dir);
 		suppB.negate();

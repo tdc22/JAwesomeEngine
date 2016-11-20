@@ -27,8 +27,10 @@ public class DistanceConstraint2Old {
 	final float maxLinearCorrection = 0.2f;
 	final float linearSlop = 0.005f;
 
-	public DistanceConstraint2Old(RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> bodyA,
-			RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> bodyB, Vector2f anchorA, Vector2f anchorB, float length) {
+	public DistanceConstraint2Old(
+			RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> bodyA,
+			RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> bodyB,
+			Vector2f anchorA, Vector2f anchorB, float length) {
 		this.bodyA = bodyA;
 		this.bodyB = bodyB;
 		this.anchorA = anchorA;
@@ -60,7 +62,8 @@ public class DistanceConstraint2Old {
 																				// cA
 																				// -
 																				// rA;
-		System.out.println(u + "; " + cA + "; " + vA + "; " + wA + "; " + cB + "; " + vB + "; " + wB);
+		System.out.println(u + "; " + cA + "; " + vA + "; " + wA + "; " + cB
+				+ "; " + vB + "; " + wB);
 
 		// Handle singularity.
 		float dist = (float) u.length();
@@ -72,8 +75,10 @@ public class DistanceConstraint2Old {
 
 		float crAu = VecMath.crossproduct(rA, u);
 		float crBu = VecMath.crossproduct(rB, u);
-		float invMass = (float) (bodyA.getInverseMass() + bodyA.getInverseInertia().get(0, 0) * crAu * crAu
-				+ bodyB.getInverseMass() + bodyB.getInverseInertia().get(0, 0) * crBu * crBu);
+		float invMass = (float) (bodyA.getInverseMass()
+				+ bodyA.getInverseInertia().get(0, 0) * crAu * crAu
+				+ bodyB.getInverseMass() + bodyB.getInverseInertia().get(0, 0)
+				* crBu * crBu);
 
 		// Compute the effective mass matrix.
 		mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
@@ -182,10 +187,12 @@ public class DistanceConstraint2Old {
 
 		cA.x -= bodyA.getInverseMass() * P.x;
 		cA.y -= bodyA.getInverseMass() * P.y;
-		aA -= bodyA.getInverseInertia().getf(0, 0) * VecMath.crossproduct(rA, P);
+		aA -= bodyA.getInverseInertia().getf(0, 0)
+				* VecMath.crossproduct(rA, P);
 		cB.x += bodyB.getInverseMass() * P.x;
 		cB.y += bodyB.getInverseMass() * P.y;
-		aB += bodyB.getInverseInertia().getf(0, 0) * VecMath.crossproduct(rB, P);
+		aB += bodyB.getInverseInertia().getf(0, 0)
+				* VecMath.crossproduct(rB, P);
 
 		bodyA.setTranslation(cA);
 		Complexf rotA = new Complexf();

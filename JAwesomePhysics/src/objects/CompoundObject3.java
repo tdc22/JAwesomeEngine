@@ -3,14 +3,15 @@ package objects;
 import java.util.ArrayList;
 import java.util.List;
 
-import broadphase.Broadphase;
-import broadphase.SAPGeneric;
 import math.QuatMath;
 import math.VecMath;
 import quaternion.Quaternionf;
 import vector.Vector3f;
+import broadphase.Broadphase;
+import broadphase.SAPGeneric;
 
-public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector3f, Quaternionf> {
+public class CompoundObject3 extends RigidBody3 implements
+		CompoundObject<Vector3f, Quaternionf> {
 	protected class CompoundSupport implements SupportCalculator<Vector3f> {
 
 		public CompoundSupport() {
@@ -46,7 +47,8 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 		center = new Vector3f();
 	}
 
-	public CompoundObject3(Broadphase<Vector3f, CollisionShape<Vector3f, ?, ?>> broad) {
+	public CompoundObject3(
+			Broadphase<Vector3f, CollisionShape<Vector3f, ?, ?>> broad) {
 		collisionshapes = new ArrayList<CollisionShape<Vector3f, Quaternionf, ?>>();
 		localtranslations = new ArrayList<Vector3f>();
 		broadphase = broad;
@@ -66,7 +68,9 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 		center = new Vector3f();
 	}
 
-	public CompoundObject3(Broadphase<Vector3f, CollisionShape<Vector3f, ?, ?>> broad, CollisionShape3... shapes) {
+	public CompoundObject3(
+			Broadphase<Vector3f, CollisionShape<Vector3f, ?, ?>> broad,
+			CollisionShape3... shapes) {
 		collisionshapes = new ArrayList<CollisionShape<Vector3f, Quaternionf, ?>>();
 		localtranslations = new ArrayList<Vector3f>();
 		broadphase = broad;
@@ -79,17 +83,20 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 	}
 
 	public void addCollisionShape(CollisionShape3 collisionshape) {
-		addCollisionShape(collisionshape, new Vector3f(collisionshape.getTranslation()));
+		addCollisionShape(collisionshape,
+				new Vector3f(collisionshape.getTranslation()));
 	}
 
-	public void addCollisionShape(CollisionShape3 collisionshape, Vector3f translation) {
+	public void addCollisionShape(CollisionShape3 collisionshape,
+			Vector3f translation) {
 		translation.translate(-center.x, -center.y, -center.z);
 		broadphase.add(collisionshape);
 		collisionshapes.add(collisionshape);
 		localtranslations.add(translation);
 		updateCenterAndAABB();
 
-		collisionshape.translateTo(VecMath.addition(getTranslation(), translation));
+		collisionshape.translateTo(VecMath.addition(getTranslation(),
+				translation));
 		collisionshape.setRotation(getRotation());
 		collisionshape.invrotation = this.invrotation;
 		for (CollisionShape<Vector3f, Quaternionf, ?> cs : collisionshapes)
@@ -98,8 +105,9 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 
 	public void updateTransformations() {
 		for (int i = 0; i < collisionshapes.size(); i++) {
-			collisionshapes.get(i).translateTo(VecMath.addition(getTranslation(),
-					QuatMath.transform(this.getRotation(), localtranslations.get(i))));
+			collisionshapes.get(i).translateTo(
+					VecMath.addition(getTranslation(), QuatMath.transform(
+							this.getRotation(), localtranslations.get(i))));
 		}
 	}
 
@@ -111,8 +119,10 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 		 * Recalculate local translations 2. Update AABB
 		 */
 
-		Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
-		Vector3f max = new Vector3f(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
+		Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE,
+				Float.MAX_VALUE);
+		Vector3f max = new Vector3f(-Float.MAX_VALUE, -Float.MAX_VALUE,
+				-Float.MAX_VALUE);
 		for (int i = 0; i < collisionshapes.size(); i++) {
 			CollisionShape<Vector3f, ?, ?> cs = collisionshapes.get(i);
 			Vector3f trans = cs.getTranslation();
@@ -131,8 +141,8 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 			if (csmax.z > max.z)
 				max.z = csmax.z;
 		}
-		Vector3f newcenter = new Vector3f(min.x + (max.x - min.x) / 2f, min.y + (max.y - min.y) / 2f,
-				min.z + (max.z - min.z) / 2f);
+		Vector3f newcenter = new Vector3f(min.x + (max.x - min.x) / 2f, min.y
+				+ (max.y - min.y) / 2f, min.z + (max.z - min.z) / 2f);
 		Vector3f centerDifference = VecMath.subtraction(center, newcenter);
 		center = newcenter;
 		translateTo(center);
@@ -155,7 +165,8 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 		}
 		maxLength = (float) Math.sqrt(maxLength);
 
-		setAABB(new Vector3f(-maxLength, -maxLength, -maxLength), new Vector3f(maxLength, maxLength, maxLength));
+		setAABB(new Vector3f(-maxLength, -maxLength, -maxLength), new Vector3f(
+				maxLength, maxLength, maxLength));
 	}
 
 	@Override
@@ -164,7 +175,8 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 	}
 
 	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+	public SupportCalculator<Vector3f> createSupportCalculator(
+			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		return new CompoundSupport();
 	}
 
@@ -187,7 +199,8 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 	public void updateInverseRotation() {
 		super.updateInverseRotation();
 		for (int i = 0; i < collisionshapes.size(); i++) {
-			CollisionShape<Vector3f, Quaternionf, ?> cs = collisionshapes.get(i);
+			CollisionShape<Vector3f, Quaternionf, ?> cs = collisionshapes
+					.get(i);
 			cs.invrotation = this.invrotation;
 		}
 	}

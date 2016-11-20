@@ -22,7 +22,8 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 			if (direction.lengthSquared() == 0)
 				direction = new Vector2f(0, 1);
 			direction.normalize();
-			Vector2f v = ComplexMath.transform(collisionshape.getInverseRotation(), direction);
+			Vector2f v = ComplexMath.transform(
+					collisionshape.getInverseRotation(), direction);
 			v.scale(radius, halfheight);
 			return v;
 		}
@@ -32,7 +33,8 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 			if (direction.lengthSquared() == 0)
 				direction = new Vector2f(0, 1);
 			direction.normalize();
-			Vector2f v = ComplexMath.transform(collisionshape.getInverseRotation(), direction);
+			Vector2f v = ComplexMath.transform(
+					collisionshape.getInverseRotation(), direction);
 			v.scale(-radius, -halfheight);
 			return v;
 		}
@@ -62,7 +64,8 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 	}
 
 	@Override
-	public SupportCalculator<Vector2f> createSupportCalculator(CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
+	public SupportCalculator<Vector2f> createSupportCalculator(
+			CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 		return new EllipseSupport(cs);
 	}
 
@@ -78,7 +81,8 @@ public class EllipseShape extends CollisionShape2 implements EllipseStructure {
 
 	private void init() {
 		float longest = radius > halfheight ? radius : halfheight;
-		setAABB(new Vector2f(-longest, -longest), new Vector2f(longest, longest));
+		setAABB(new Vector2f(-longest, -longest),
+				new Vector2f(longest, longest));
 		supportcalculator = createSupportCalculator(this);
 	}
 

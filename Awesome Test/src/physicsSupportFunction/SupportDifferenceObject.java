@@ -17,7 +17,8 @@ public class SupportDifferenceObject extends ShapedObject3 {
 	ShapedObject3 so1, so2;
 	CollisionShape<Vector3f, ?, ?> rb1, rb2;
 
-	public SupportDifferenceObject(ShapedObject3 s1, CollisionShape<Vector3f, ?, ?> r1, ShapedObject3 s2,
+	public SupportDifferenceObject(ShapedObject3 s1,
+			CollisionShape<Vector3f, ?, ?> r1, ShapedObject3 s2,
 			CollisionShape<Vector3f, ?, ?> r2) {
 		rendermode = GLConstants.POINTS;
 		so1 = s1;
@@ -27,7 +28,8 @@ public class SupportDifferenceObject extends ShapedObject3 {
 		updateShape();
 	}
 
-	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb, Vector3f dir) {
+	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
+			Vector3f dir) {
 		// System.out.println(Sa.supportPoint(dir).toString() + "; " +
 		// Sb.supportPoint(VecMath.negate(dir)) + "; " +
 		// VecMath.substraction(Sa.supportPoint(dir),
@@ -37,7 +39,8 @@ public class SupportDifferenceObject extends ShapedObject3 {
 		// System.out.println(Sb.supportPoint(dir).toString());
 		// System.out.println(VecMath.substraction(Sa.supportPoint(dir),
 		// Sb.supportPoint(VecMath.negate(dir))).toString());
-		return VecMath.subtraction(Sa.supportPoint(dir), Sb.supportPointNegative(dir));
+		return VecMath.subtraction(Sa.supportPoint(dir),
+				Sb.supportPointNegative(dir));
 	}
 
 	public List<Vector3f> updateShape() {
@@ -108,7 +111,8 @@ public class SupportDifferenceObject extends ShapedObject3 {
 		// result.size());
 
 		for (int r = 0; r < result.size(); r++) {
-			addVertex(result.get(r), Color.GRAY, new Vector2f(), new Vector3f(0, 1, 0));
+			addVertex(result.get(r), Color.GRAY, new Vector2f(), new Vector3f(
+					0, 1, 0));
 			addIndex(r);
 		}
 		this.prerender();

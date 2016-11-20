@@ -1,9 +1,5 @@
 package slerp2d;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import loader.ShaderLoader;
 import math.ComplexMath;
@@ -11,6 +7,10 @@ import quaternion.Complexf;
 import shader.Shader;
 import shape2d.Quad;
 import sound.NullSoundEnvironment;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class Test2d extends StandardGame {
 	Quad q1, q2, q3, q4, q5, q6;
@@ -19,14 +19,15 @@ public class Test2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
-				new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings(), new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader);
 
 		q1 = new Quad(200, 130, 30, 30);

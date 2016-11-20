@@ -12,12 +12,14 @@ public class Ellipsoid extends ShapedObject3 implements EllipsoidStructure {
 	float radiusX, radiusY, radiusZ;
 	int trisH, trisV;
 
-	public Ellipsoid(float x, float y, float z, float radiusX, float radiusY, float radiusZ, int trisH, int trisV) {
+	public Ellipsoid(float x, float y, float z, float radiusX, float radiusY,
+			float radiusZ, int trisH, int trisV) {
 		super(x, y, z);
 		init(radiusX, radiusY, radiusZ, trisH, trisV);
 	}
 
-	public Ellipsoid(Vector3f pos, float radiusX, float radiusY, float radiusZ, int trisH, int trisV) {
+	public Ellipsoid(Vector3f pos, float radiusX, float radiusY, float radiusZ,
+			int trisH, int trisV) {
 		super(pos);
 		init(radiusX, radiusY, radiusZ, trisH, trisV);
 	}
@@ -57,18 +59,24 @@ public class Ellipsoid extends ShapedObject3 implements EllipsoidStructure {
 		float angleSteph = 360 / (float) trisH;
 		for (int a = 0; a < trisV; a++) {
 			for (int b = 0; b < trisH; b++) {
-				Vector3f pos = new Vector3f(
-						radiusX * (float) Math.sin(Math.toRadians(angleStepv * (a / (float) 2)))
-								* (float) Math.sin(Math.toRadians(angleSteph * b)),
-						radiusY * (float) Math.cos(Math.toRadians(angleStepv * (a / (float) 2))),
-						radiusZ * (float) Math.sin(Math.toRadians(angleStepv * (a / (float) 2)))
-								* (float) Math.cos(Math.toRadians(angleSteph * b)));
+				Vector3f pos = new Vector3f(radiusX
+						* (float) Math.sin(Math.toRadians(angleStepv
+								* (a / (float) 2)))
+						* (float) Math.sin(Math.toRadians(angleSteph * b)),
+						radiusY
+								* (float) Math.cos(Math.toRadians(angleStepv
+										* (a / (float) 2))), radiusZ
+								* (float) Math.sin(Math.toRadians(angleStepv
+										* (a / (float) 2)))
+								* (float) Math.cos(Math.toRadians(angleSteph
+										* b)));
 				Vector3f normal = VecMath.normalize(pos);
 				addVertex(pos, Color.GRAY, new Vector2f(a, b), normal);
 			}
 		}
-		addVertex(VecMath.subtraction(getVertex(0), new Vector3f(0, radiusY * 2, 0)), Color.GRAY,
-				new Vector2f(trisV, trisH), new Vector3f(0, -1, 0));
+		addVertex(VecMath.subtraction(getVertex(0), new Vector3f(0,
+				radiusY * 2, 0)), Color.GRAY, new Vector2f(trisV, trisH),
+				new Vector3f(0, -1, 0));
 
 		int lv = trisV;
 		int lh = trisH;
@@ -88,26 +96,34 @@ public class Ellipsoid extends ShapedObject3 implements EllipsoidStructure {
 		pos++;
 		pos -= lh;
 		for (int v = 1; v < lv - 2; v++) {
-			addQuad(pos, pos - 1 + lh, pos + lh, pos + 2 * lh + 1, pos + lh + 1, pos + 2 + lh, pos + 1, pos - lh);
+			addQuad(pos, pos - 1 + lh, pos + lh, pos + 2 * lh + 1,
+					pos + lh + 1, pos + 2 + lh, pos + 1, pos - lh);
 			pos++;
 			for (int h = 1; h < lh - 2; h++) {
-				addQuad(pos, pos - 1, pos + lh, pos + 2 * lh + 1, pos + lh + 1, pos + lh + 2, pos + 1, pos - lh);
+				addQuad(pos, pos - 1, pos + lh, pos + 2 * lh + 1, pos + lh + 1,
+						pos + lh + 2, pos + 1, pos - lh);
 				pos++;
 			}
-			addQuad(pos, pos - 1, pos + lh, pos + 2 * lh + 1, pos + lh + 1, pos + 2, pos + 1, pos - lh);
+			addQuad(pos, pos - 1, pos + lh, pos + 2 * lh + 1, pos + lh + 1,
+					pos + 2, pos + 1, pos - lh);
 			pos++;
-			addQuad(pos, pos - 1, pos + lh, pos + lh + 1, pos + 1, pos + 2, pos + 1 - lh, pos - lh);
+			addQuad(pos, pos - 1, pos + lh, pos + lh + 1, pos + 1, pos + 2, pos
+					+ 1 - lh, pos - lh);
 			pos++;
 		}
-		addQuad(pos, pos - 1 + lh, pos + lh, num, pos + lh + 1, pos + 2 + lh, pos + 1, pos - lh);
+		addQuad(pos, pos - 1 + lh, pos + lh, num, pos + lh + 1, pos + 2 + lh,
+				pos + 1, pos - lh);
 		pos++;
 		for (int h = 1; h < lh - 2; h++) {
-			addQuad(pos, pos - 1, pos + lh, num, pos + lh + 1, pos + 2 + lh, pos + 1, pos - lh);
+			addQuad(pos, pos - 1, pos + lh, num, pos + lh + 1, pos + 2 + lh,
+					pos + 1, pos - lh);
 			pos++;
 		}
-		addQuad(pos, pos - 1, pos + lh, num, pos + lh + 1, pos + 2, pos + 1, pos - lh);
+		addQuad(pos, pos - 1, pos + lh, num, pos + lh + 1, pos + 2, pos + 1,
+				pos - lh);
 		pos++;
-		addQuad(pos, pos - 1, pos + lh, pos + lh + 1, pos + 1, pos + 2, pos + 1 - lh, pos - lh);
+		addQuad(pos, pos - 1, pos + lh, pos + lh + 1, pos + 1, pos + 2, pos + 1
+				- lh, pos - lh);
 		pos++;
 		addTriangle(pos + 1, pos - lh, pos, pos + lh - 1, num, pos + 2);
 		pos++;

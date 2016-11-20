@@ -93,32 +93,44 @@ public abstract class InputReader {
 			// Gamepad Events
 			switch (input.getEventType()) {
 			case GamepadInput.STICK_ACTIVE:
-				return getGamepadStickValue(((GamepadInput) input).getGamepadID(),
-						Integer.parseInt(((GamepadInput) input).getComponentName())) > ((GamepadInput) input)
-								.getDeadZone();
+				return getGamepadStickValue(
+						((GamepadInput) input).getGamepadID(),
+						Integer.parseInt(((GamepadInput) input)
+								.getComponentName())) > ((GamepadInput) input)
+						.getDeadZone();
 			case GamepadInput.BUTTON_PRESSED:
 				if (input.isFlag()) { // if event was already active during this
 										// press interval
-					if (!isGamepadButtonDown(((GamepadInput) input).getGamepadID(), input.getComponentName()))
+					if (!isGamepadButtonDown(
+							((GamepadInput) input).getGamepadID(),
+							input.getComponentName()))
 						input.setFlag(false);
 				} else { // if event wasn't yet active during this press
 							// interval
-					if (isGamepadButtonDown(((GamepadInput) input).getGamepadID(), input.getComponentName())) {
+					if (isGamepadButtonDown(
+							((GamepadInput) input).getGamepadID(),
+							input.getComponentName())) {
 						input.setFlag(true);
 						return true;
 					}
 				}
 				return false;
 			case GamepadInput.BUTTON_DOWN:
-				return isGamepadButtonDown(((GamepadInput) input).getGamepadID(), input.getComponentName());
+				return isGamepadButtonDown(
+						((GamepadInput) input).getGamepadID(),
+						input.getComponentName());
 			case GamepadInput.BUTTON_RELEASED:
 				if (input.isFlag()) { //
-					if (!isGamepadButtonDown(((GamepadInput) input).getGamepadID(), input.getComponentName())) {
+					if (!isGamepadButtonDown(
+							((GamepadInput) input).getGamepadID(),
+							input.getComponentName())) {
 						input.setFlag(false);
 						return true;
 					}
 				} else {
-					if (isGamepadButtonDown(((GamepadInput) input).getGamepadID(), input.getComponentName())) {
+					if (isGamepadButtonDown(
+							((GamepadInput) input).getGamepadID(),
+							input.getComponentName())) {
 						input.setFlag(true);
 					}
 				}

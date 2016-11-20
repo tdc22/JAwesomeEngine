@@ -9,7 +9,8 @@ import objects.CollisionShape;
 import utils.Pair;
 import vector.Vector3f;
 
-public class SAPGeneric<ObjectType extends CollisionShape<Vector3f, ?, ?>> extends SweepAndPrune<Vector3f, ObjectType> {
+public class SAPGeneric<ObjectType extends CollisionShape<Vector3f, ?, ?>>
+		extends SweepAndPrune<Vector3f, ObjectType> {
 	final List<SweepPoint> axisX, axisY, axisZ;
 
 	public SAPGeneric() {
@@ -67,7 +68,8 @@ public class SAPGeneric<ObjectType extends CollisionShape<Vector3f, ?, ?>> exten
 		sortAxis(axisY);
 		sortAxis(axisZ);
 
-		Iterator<Entry<Pair<ObjectType, ObjectType>, Counter>> iter = counters.entrySet().iterator();
+		Iterator<Entry<Pair<ObjectType, ObjectType>, Counter>> iter = counters
+				.entrySet().iterator();
 		while (iter.hasNext()) {
 			Entry<Pair<ObjectType, ObjectType>, Counter> entry = iter.next();
 			Counter c = entry.getValue();
@@ -90,7 +92,8 @@ public class SAPGeneric<ObjectType extends CollisionShape<Vector3f, ?, ?>> exten
 					c.wasOverlapping = true;
 
 					for (BroadphaseListener<Vector3f, ObjectType> listener : listeners) {
-						listener.overlapStarted(pair.getFirst(), pair.getSecond());
+						listener.overlapStarted(pair.getFirst(),
+								pair.getSecond());
 					}
 				}
 			}

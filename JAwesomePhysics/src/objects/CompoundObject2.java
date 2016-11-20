@@ -3,15 +3,16 @@ package objects;
 import java.util.ArrayList;
 import java.util.List;
 
-import broadphase.Broadphase;
-import broadphase.SAP2Generic;
 import math.ComplexMath;
 import math.VecMath;
 import matrix.Matrix1f;
 import quaternion.Complexf;
 import vector.Vector2f;
+import broadphase.Broadphase;
+import broadphase.SAP2Generic;
 
-public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector2f, Complexf> {
+public class CompoundObject2 extends RigidBody2 implements
+		CompoundObject<Vector2f, Complexf> {
 	protected class CompoundSupport implements SupportCalculator<Vector2f> {
 
 		public CompoundSupport() {
@@ -47,7 +48,8 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 		center = new Vector2f();
 	}
 
-	public CompoundObject2(Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broad) {
+	public CompoundObject2(
+			Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broad) {
 		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
 		localtranslations = new ArrayList<Vector2f>();
 		broadphase = broad;
@@ -67,7 +69,9 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 		center = new Vector2f();
 	}
 
-	public CompoundObject2(Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broad, CollisionShape2... shapes) {
+	public CompoundObject2(
+			Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broad,
+			CollisionShape2... shapes) {
 		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
 		localtranslations = new ArrayList<Vector2f>();
 		broadphase = broad;
@@ -80,17 +84,20 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 	}
 
 	public void addCollisionShape(CollisionShape2 collisionshape) {
-		addCollisionShape(collisionshape, new Vector2f(collisionshape.getTranslation()));
+		addCollisionShape(collisionshape,
+				new Vector2f(collisionshape.getTranslation()));
 	}
 
-	public void addCollisionShape(CollisionShape2 collisionshape, Vector2f translation) {
+	public void addCollisionShape(CollisionShape2 collisionshape,
+			Vector2f translation) {
 		translation.translate(-center.x, -center.y);
 		broadphase.add(collisionshape);
 		collisionshapes.add(collisionshape);
 		localtranslations.add(translation);
 		updateCenterAndAABB();
 
-		collisionshape.translateTo(VecMath.addition(getTranslation(), translation));
+		collisionshape.translateTo(VecMath.addition(getTranslation(),
+				translation));
 		collisionshape.setRotation(getRotation());
 		collisionshape.invrotation = this.invrotation;
 		for (CollisionShape<Vector2f, Complexf, ?> cs : collisionshapes)
@@ -99,8 +106,9 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 
 	public void updateTransformations() {
 		for (int i = 0; i < collisionshapes.size(); i++) {
-			collisionshapes.get(i).translateTo(VecMath.addition(getTranslation(),
-					ComplexMath.transform(this.getRotation(), localtranslations.get(i))));
+			collisionshapes.get(i).translateTo(
+					VecMath.addition(getTranslation(), ComplexMath.transform(
+							this.getRotation(), localtranslations.get(i))));
 		}
 	}
 
@@ -128,7 +136,8 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 			if (csmax.y > max.y)
 				max.y = csmax.y;
 		}
-		Vector2f newcenter = new Vector2f(min.x + (max.x - min.x) / 2f, min.y + (max.y - min.y) / 2f);
+		Vector2f newcenter = new Vector2f(min.x + (max.x - min.x) / 2f, min.y
+				+ (max.y - min.y) / 2f);
 		Vector2f centerDifference = VecMath.subtraction(center, newcenter);
 		center = newcenter;
 		translateTo(center);
@@ -151,7 +160,8 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 		}
 		maxLength = (float) Math.sqrt(maxLength);
 
-		setAABB(new Vector2f(-maxLength, -maxLength), new Vector2f(maxLength, maxLength));
+		setAABB(new Vector2f(-maxLength, -maxLength), new Vector2f(maxLength,
+				maxLength));
 	}
 
 	@Override
@@ -160,7 +170,8 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 	}
 
 	@Override
-	public SupportCalculator<Vector2f> createSupportCalculator(CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
+	public SupportCalculator<Vector2f> createSupportCalculator(
+			CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 		return new CompoundSupport();
 	}
 

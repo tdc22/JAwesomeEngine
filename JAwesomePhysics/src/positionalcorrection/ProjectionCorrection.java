@@ -29,8 +29,10 @@ public class ProjectionCorrection implements PositionalCorrection {
 	public void correct(CollisionManifold<Vector3f> manifold) {
 		RigidBody3 A = (RigidBody3) manifold.getObjects().getFirst();
 		RigidBody3 B = (RigidBody3) manifold.getObjects().getSecond();
-		Vector3f correction = VecMath.scale(manifold.getCollisionNormal(),
-				(Math.max(manifold.getPenetrationDepth() - slop, 0) / (A.getInverseMass() + B.getInverseMass()))
+		Vector3f correction = VecMath.scale(
+				manifold.getCollisionNormal(),
+				(Math.max(manifold.getPenetrationDepth() - slop, 0) / (A
+						.getInverseMass() + B.getInverseMass()))
 						* correctionPercent);
 		A.translate(VecMath.scale(correction, -A.getInverseMass()));
 		correction.scale(B.getInverseMass());
@@ -41,8 +43,10 @@ public class ProjectionCorrection implements PositionalCorrection {
 	public void correct2(CollisionManifold<Vector2f> manifold) {
 		RigidBody2 A = (RigidBody2) manifold.getObjects().getFirst();
 		RigidBody2 B = (RigidBody2) manifold.getObjects().getSecond();
-		Vector2f correction = VecMath.scale(manifold.getCollisionNormal(),
-				(Math.max(manifold.getPenetrationDepth() - slop, 0) / (A.getInverseMass() + B.getInverseMass()))
+		Vector2f correction = VecMath.scale(
+				manifold.getCollisionNormal(),
+				(Math.max(manifold.getPenetrationDepth() - slop, 0) / (A
+						.getInverseMass() + B.getInverseMass()))
 						* correctionPercent);
 		A.translate(VecMath.scale(correction, -A.getInverseMass()));
 		correction.scale(B.getInverseMass());

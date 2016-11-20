@@ -1,10 +1,5 @@
 package physicsImpulse;
 
-import broadphase.SAP;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import integration.EulerIntegration;
 import loader.FontLoader;
@@ -12,6 +7,7 @@ import loader.ShaderLoader;
 import manifold.SimpleManifoldManager;
 import narrowphase.EPA;
 import narrowphase.GJK;
+import narrowphase.SupportRaycast;
 import objects.RigidBody3;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
@@ -23,6 +19,11 @@ import shape.Box;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector3f;
+import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class ImpulseTest extends StandardGame {
 	PhysicsSpace space;
@@ -34,24 +35,28 @@ public class ImpulseTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
-				new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings(), new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 		display.bindMouse();
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile(
+						"res/shaders/defaultshader.vert",
+						"res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
-		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(new EPA()), new NullResolution(),
+		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(
+				new EPA()), new SupportRaycast(), new NullResolution(),
 				new NullCorrection(), new SimpleManifoldManager<Vector3f>());
 
 		b = new Box(0, 0, 0, 1, 1, 1);

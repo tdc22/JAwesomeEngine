@@ -10,4 +10,6 @@ public interface SupportMap<L extends Vector> extends SupportCalculator<L> {
 	public L supportPointRelative(L direction);
 
 	public L supportPointRelativeNegative(L direction);
+
+	public L getSupportCenter();
 }

@@ -3,8 +3,6 @@ package tool_animationEditor;
 import java.util.ArrayList;
 import java.util.List;
 
-import curves.BezierCurve2;
-import curves.SquadCurve2;
 import math.VecMath;
 import objects.ShapedObject2;
 import quaternion.Complexf;
@@ -13,6 +11,8 @@ import shape2d.Circle;
 import shape2d.Quad;
 import utils.GLConstants;
 import vector.Vector2f;
+import curves.BezierCurve2;
+import curves.SquadCurve2;
 
 public class AnimationPath {
 	List<ShapedObject2> markers;
@@ -37,7 +37,8 @@ public class AnimationPath {
 	boolean closed = false;
 	Vector2f clickpos;
 
-	public AnimationPath(Shader defaultshader, Shader markershader, Shader textureshader, Vector2f markersize) {
+	public AnimationPath(Shader defaultshader, Shader markershader,
+			Shader textureshader, Vector2f markersize) {
 		init(defaultshader, markershader, textureshader, markersize);
 	}
 
@@ -45,7 +46,8 @@ public class AnimationPath {
 		init(ap.defaultshader, ap.markershader, ap.textureshader, ap.markersize);
 	}
 
-	private void init(Shader defaultshader, Shader markershader, Shader textureshader, Vector2f markersize) {
+	private void init(Shader defaultshader, Shader markershader,
+			Shader textureshader, Vector2f markersize) {
 		this.defaultshader = defaultshader;
 		this.markershader = markershader;
 		this.textureshader = textureshader;
@@ -89,15 +91,16 @@ public class AnimationPath {
 		float mindistance = Float.MAX_VALUE;
 		double dist;
 		for (int i = 0; i < markers.size(); i++) {
-			if ((dist = VecMath.subtraction(pos, markers.get(i).getTranslation()).lengthSquared()) < mindistance) {
+			if ((dist = VecMath.subtraction(pos,
+					markers.get(i).getTranslation()).lengthSquared()) < mindistance) {
 				dragID = i;
 				mindistance = (float) dist;
 				isMarkerDragged = true;
 			}
 		}
 		for (int i = 0; i < rotationreferences.size(); i++) {
-			if ((dist = VecMath.subtraction(pos, rotationreferences.get(i).getTranslation())
-					.lengthSquared()) < mindistance) {
+			if ((dist = VecMath.subtraction(pos,
+					rotationreferences.get(i).getTranslation()).lengthSquared()) < mindistance) {
 				dragID = i;
 				mindistance = (float) dist;
 				isMarkerDragged = false;
@@ -165,27 +168,37 @@ public class AnimationPath {
 					BezierCurve2 b = rb.bezier;
 					rb.delete();
 					if (pointid == 0) {
-						rb = new RenderedBezierCurve(new BezierCurve2(pos, b.getP1(), b.getP2(), b.getP3()));
-						rotationreferences.get(bezierid).translate(VecMath.subtraction(pos, clickpos));
+						rb = new RenderedBezierCurve(new BezierCurve2(pos,
+								b.getP1(), b.getP2(), b.getP3()));
+						rotationreferences.get(bezierid).translate(
+								VecMath.subtraction(pos, clickpos));
 						if (closed) {
-							RenderedBezierCurve rbLast = beziercurves.get(beziercurves.size() - 1);
+							RenderedBezierCurve rbLast = beziercurves
+									.get(beziercurves.size() - 1);
 							BezierCurve2 b1 = rbLast.bezier;
 							rbLast.delete();
-							rbLast = new RenderedBezierCurve(new BezierCurve2(b1.getP0(), b1.getP1(), b1.getP2(), pos));
+							rbLast = new RenderedBezierCurve(new BezierCurve2(
+									b1.getP0(), b1.getP1(), b1.getP2(), pos));
 							beziercurves.set(beziercurves.size() - 1, rbLast);
 						}
 					} else if (pointid == 1) {
-						rb = new RenderedBezierCurve(new BezierCurve2(b.getP0(), pos, b.getP2(), b.getP3()));
+						rb = new RenderedBezierCurve(new BezierCurve2(
+								b.getP0(), pos, b.getP2(), b.getP3()));
 					} else if (pointid == 3) {
-						rb = new RenderedBezierCurve(new BezierCurve2(b.getP0(), b.getP1(), pos, b.getP3()));
+						rb = new RenderedBezierCurve(new BezierCurve2(
+								b.getP0(), b.getP1(), pos, b.getP3()));
 					} else if (pointid == 2) {
-						rb = new RenderedBezierCurve(new BezierCurve2(b.getP0(), b.getP1(), b.getP2(), pos));
-						rotationreferences.get(bezierid + 1).translate(VecMath.subtraction(pos, clickpos));
+						rb = new RenderedBezierCurve(new BezierCurve2(
+								b.getP0(), b.getP1(), b.getP2(), pos));
+						rotationreferences.get(bezierid + 1).translate(
+								VecMath.subtraction(pos, clickpos));
 						if (beziercurves.size() > bezierid + 1) {
-							RenderedBezierCurve rbNext = beziercurves.get(bezierid + 1);
+							RenderedBezierCurve rbNext = beziercurves
+									.get(bezierid + 1);
 							BezierCurve2 b1 = rbNext.bezier;
 							rbNext.delete();
-							rbNext = new RenderedBezierCurve(new BezierCurve2(pos, b1.getP1(), b1.getP2(), b1.getP3()));
+							rbNext = new RenderedBezierCurve(new BezierCurve2(
+									pos, b1.getP1(), b1.getP2(), b1.getP3()));
 							beziercurves.set(bezierid + 1, rbNext);
 						}
 					}
@@ -212,8 +225,9 @@ public class AnimationPath {
 				} else {
 					int p = markers.size();
 					addCircleMarker(pos);
-					addBezierCurve(new BezierCurve2(markers.get(temppoint).getTranslation(),
-							markers.get(tempreference).getTranslation(), markers.get(p).getTranslation(),
+					addBezierCurve(new BezierCurve2(markers.get(temppoint)
+							.getTranslation(), markers.get(tempreference)
+							.getTranslation(), markers.get(p).getTranslation(),
 							markers.get(temppoint2).getTranslation()));
 					updatePathMarker();
 
@@ -252,12 +266,13 @@ public class AnimationPath {
 		}
 
 		RenderedBezierCurve bezier = null;
-		Vector2f closevector = VecMath.subtraction(beziercurves.get(0).bezier.getP0(),
-				markers.get(temppoint).getTranslation());
+		Vector2f closevector = VecMath.subtraction(beziercurves.get(0).bezier
+				.getP0(), markers.get(temppoint).getTranslation());
 		closevector.scale(0.3f);
 		Vector2f pos1 = null;
 		Vector2f ref1 = null;
-		Vector2f ref2 = VecMath.subtraction(markers.get(0).getTranslation(), closevector);
+		Vector2f ref2 = VecMath.subtraction(markers.get(0).getTranslation(),
+				closevector);
 		Vector2f pos2 = markers.get(0).getTranslation();
 		if (tempreference != -1) {
 			pos1 = markers.get(temppoint).getTranslation();
@@ -266,23 +281,28 @@ public class AnimationPath {
 			markers.add(markers.get(temppoint));
 			markers.add(markers.get(tempreference));
 
-			bezier = new RenderedBezierCurve(new BezierCurve2(pos1, ref1, ref2, pos2));
+			bezier = new RenderedBezierCurve(new BezierCurve2(pos1, ref1, ref2,
+					pos2));
 		} else if (temppoint != -1) {
 			pos1 = markers.get(temppoint).getTranslation();
-			ref1 = VecMath.addition(markers.get(temppoint).getTranslation(), closevector);
+			ref1 = VecMath.addition(markers.get(temppoint).getTranslation(),
+					closevector);
 
 			markers.add(markers.get(temppoint));
 			addCircleMarker(ref1);
 
-			bezier = new RenderedBezierCurve(new BezierCurve2(pos1, ref1, ref2, pos2));
+			bezier = new RenderedBezierCurve(new BezierCurve2(pos1, ref1, ref2,
+					pos2));
 		} else {
 			pos1 = markers.get(markers.size() - 1).getTranslation();
-			ref1 = VecMath.addition(markers.get(temppoint).getTranslation(), closevector);
+			ref1 = VecMath.addition(markers.get(temppoint).getTranslation(),
+					closevector);
 
 			markers.add(markers.get(markers.size() - 1));
 			addCircleMarker(ref1);
 
-			bezier = new RenderedBezierCurve(new BezierCurve2(pos1, ref1, ref2, pos2));
+			bezier = new RenderedBezierCurve(new BezierCurve2(pos1, ref1, ref2,
+					pos2));
 		}
 
 		markers.add(markers.get(0));
@@ -324,9 +344,11 @@ public class AnimationPath {
 	public void updateSquad() {
 		List<Complexf> rotations = new ArrayList<Complexf>();
 		squadcurves.clear();
-		System.out.println("AAA " + rotationreferences.size() + "; " + markers.size());
+		System.out.println("AAA " + rotationreferences.size() + "; "
+				+ markers.size());
 		for (int i = 0; i < rotationreferences.size(); i++) {
-			rotations.add(getRotation(rotationreferences.get(i).getTranslation(), markers.get(i * 4).getTranslation()));
+			rotations.add(getRotation(rotationreferences.get(i)
+					.getTranslation(), markers.get(i * 4).getTranslation()));
 		}
 		int rs = rotations.size();
 		for (int i = 0; i < rs; i++) {

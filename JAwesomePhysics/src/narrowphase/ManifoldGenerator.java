@@ -7,5 +7,6 @@ import objects.SupportMap;
 import vector.Vector;
 
 public interface ManifoldGenerator<L extends Vector> {
-	public abstract ContactManifold<L> computeCollision(SupportMap<L> Sa, SupportMap<L> Sb, List<L> simplex);
+	public abstract ContactManifold<L> computeCollision(SupportMap<L> Sa,
+			SupportMap<L> Sb, List<L> simplex);
 }

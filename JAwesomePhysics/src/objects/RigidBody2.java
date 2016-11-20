@@ -8,16 +8,20 @@ import quaternion.Complexf;
 import vector.Vector1f;
 import vector.Vector2f;
 
-public class RigidBody2 extends RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> implements InstancedBaseObject2 {
+public class RigidBody2 extends
+		RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> implements
+		InstancedBaseObject2 {
 	public RigidBody2() {
-		super(new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
+		super(new Vector2f(), new Vector2f(), new Complexf(),
+				new Vector2f(1, 1));
 		aabb = new AABB2(new Vector2f(), new Vector2f());
 		invrotation = new Complexf();
 		init();
 	}
 
 	public RigidBody2(CollisionShape2 cs) {
-		super(cs, new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
+		super(cs, new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(
+				1, 1));
 		init();
 	}
 
@@ -36,15 +40,16 @@ public class RigidBody2 extends RigidBody<Vector2f, Vector1f, Complexf, Matrix1f
 	@Override
 	public void applyForce(Vector2f force, Vector2f rel_pos) {
 		applyCentralForce(force);
-		applyTorque(new Vector1f(rel_pos.x * force.y * linearfactor.y - rel_pos.y * force.x * linearfactor.x));
+		applyTorque(new Vector1f(rel_pos.x * force.y * linearfactor.y
+				- rel_pos.y * force.x * linearfactor.x));
 	}
 
 	@Override
 	public void applyImpulse(Vector2f impulse, Vector2f rel_pos) {
 		if (invMass != 0) {
 			applyCentralImpulse(impulse);
-			applyTorqueImpulse(
-					new Vector1f(rel_pos.x * impulse.y * linearfactor.y - rel_pos.y * impulse.x * linearfactor.x));
+			applyTorqueImpulse(new Vector1f(rel_pos.x * impulse.y
+					* linearfactor.y - rel_pos.y * impulse.x * linearfactor.x));
 		}
 	}
 
@@ -67,7 +72,8 @@ public class RigidBody2 extends RigidBody<Vector2f, Vector1f, Complexf, Matrix1f
 	}
 
 	@Override
-	public SupportCalculator<Vector2f> createSupportCalculator(CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
+	public SupportCalculator<Vector2f> createSupportCalculator(
+			CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 		return null;
 	}
 
@@ -138,7 +144,8 @@ public class RigidBody2 extends RigidBody<Vector2f, Vector1f, Complexf, Matrix1f
 
 	@Override
 	public Vector2f supportPointRelativeNegative(Vector2f direction) {
-		Vector2f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
+		Vector2f supportRelNeg = supportcalculator
+				.supportPointLocalNegative(direction);
 		supportRelNeg.transform(getRotation());
 		return supportRelNeg;
 	}
@@ -191,8 +198,9 @@ public class RigidBody2 extends RigidBody<Vector2f, Vector1f, Complexf, Matrix1f
 	@Override
 	public Matrix4f getMatrix() {
 		float[][] mat = rotation.toMatrixf().getArrayf();
-		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, 0, 0, mat[1][0] * scale.y, mat[1][1] * scale.y, 0,
-				0, 0, 0, 0, 0, translation.getXf(), translation.getYf(), 0, 1);
+		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, 0, 0,
+				mat[1][0] * scale.y, mat[1][1] * scale.y, 0, 0, 0, 0, 0, 0,
+				translation.getXf(), translation.getYf(), 0, 1);
 	}
 
 	@Override

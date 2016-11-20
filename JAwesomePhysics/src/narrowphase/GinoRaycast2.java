@@ -12,7 +12,7 @@ public class GinoRaycast2 implements RaycastNarrowphase<Vector2f> {
 	private final int MAX_ITERATIONS_RAYCAST = 50;
 	final float EPSILON = 0.001f;
 	final float EPSILON_SQR = EPSILON * EPSILON;
-	
+
 	// source:
 	// http://www.bulletphysics.com/ftp/pub/test/physics/papers/jgt04raycast.pdf
 	@Override
@@ -20,7 +20,8 @@ public class GinoRaycast2 implements RaycastNarrowphase<Vector2f> {
 		float lambda = 0;
 		Vector2f x = new Vector2f(ray.getPosition());
 		Vector2f n = new Vector2f();
-		Vector2f v = VecMath.subtraction(x, Sa.supportPoint(ray.getDirection()));
+		Vector2f v = VecMath
+				.subtraction(x, Sa.supportPoint(ray.getDirection()));
 		List<Vector2f> P = new ArrayList<Vector2f>();
 
 		for (int i = 0; i < MAX_ITERATIONS_RAYCAST; i++) {
@@ -34,7 +35,8 @@ public class GinoRaycast2 implements RaycastNarrowphase<Vector2f> {
 				if (VecMath.dotproduct(v, ray.getDirection()) >= 0) {
 					return false;
 				}
-				lambda -= VecMath.dotproduct(v, w) / VecMath.dotproduct(v, ray.getDirection());
+				lambda -= VecMath.dotproduct(v, w)
+						/ VecMath.dotproduct(v, ray.getDirection());
 				x = ray.getPosition();
 				x.translate(VecMath.scale(ray.getDirection(), lambda));
 				n = v;
@@ -53,7 +55,8 @@ public class GinoRaycast2 implements RaycastNarrowphase<Vector2f> {
 	}
 
 	@Override
-	public float computeCollisionOnRay(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
+	public float computeCollisionOnRay(SupportMap<Vector2f> Sa,
+			Ray<Vector2f> ray) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

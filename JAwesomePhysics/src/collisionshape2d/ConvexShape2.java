@@ -22,7 +22,8 @@ public class ConvexShape2 extends CollisionShape2 {
 
 		@Override
 		public Vector2f supportPointLocal(Vector2f direction) {
-			Vector2f v = ComplexMath.transform(collisionshape.getInverseRotation(), direction);
+			Vector2f v = ComplexMath.transform(
+					collisionshape.getInverseRotation(), direction);
 
 			int lastVertex = 0;
 			int currentVertex = 0;
@@ -46,7 +47,8 @@ public class ConvexShape2 extends CollisionShape2 {
 
 		@Override
 		public Vector2f supportPointLocalNegative(Vector2f direction) {
-			Vector2f v = ComplexMath.transform(collisionshape.getInverseRotation(), direction);
+			Vector2f v = ComplexMath.transform(
+					collisionshape.getInverseRotation(), direction);
 
 			int lastVertex = 0;
 			int currentVertex = 0;
@@ -77,7 +79,8 @@ public class ConvexShape2 extends CollisionShape2 {
 	List<Vector2f> vertices;
 	HashMap<Integer, Integer[]> adjacentsMap;
 
-	public ConvexShape2(float x, float y, List<Vector2f> vertices, HashMap<Integer, Integer[]> adjacentsMap) {
+	public ConvexShape2(float x, float y, List<Vector2f> vertices,
+			HashMap<Integer, Integer[]> adjacentsMap) {
 		super();
 		translate(x, y);
 		this.vertices = vertices;
@@ -85,7 +88,8 @@ public class ConvexShape2 extends CollisionShape2 {
 		init();
 	}
 
-	public ConvexShape2(Vector2f pos, List<Vector2f> vertices, HashMap<Integer, Integer[]> adjacentsMap) {
+	public ConvexShape2(Vector2f pos, List<Vector2f> vertices,
+			HashMap<Integer, Integer[]> adjacentsMap) {
 		super();
 		translate(pos);
 		this.vertices = vertices;
@@ -102,7 +106,8 @@ public class ConvexShape2 extends CollisionShape2 {
 	}
 
 	@Override
-	public SupportCalculator<Vector2f> createSupportCalculator(CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
+	public SupportCalculator<Vector2f> createSupportCalculator(
+			CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 		return new ConvexSupport2(cs);
 	}
 
@@ -119,7 +124,8 @@ public class ConvexShape2 extends CollisionShape2 {
 			if (v.y > max.y)
 				max.y = v.y;
 		}
-		Vector2f center = VecMath.addition(min, VecMath.scale(VecMath.subtraction(max, min), 0.5f));
+		Vector2f center = VecMath.addition(min,
+				VecMath.scale(VecMath.subtraction(max, min), 0.5f));
 		float maxLength = 0;
 		for (Vector2f v : vertices) {
 			float l = (float) VecMath.subtraction(v, center).lengthSquared();
@@ -129,7 +135,8 @@ public class ConvexShape2 extends CollisionShape2 {
 		maxLength = (float) Math.sqrt(maxLength);
 
 		setRotationCenter(center);
-		setAABB(new Vector2f(-maxLength, -maxLength), new Vector2f(maxLength, maxLength));
+		setAABB(new Vector2f(-maxLength, -maxLength), new Vector2f(maxLength,
+				maxLength));
 		supportcalculator = createSupportCalculator(this);
 	}
 }

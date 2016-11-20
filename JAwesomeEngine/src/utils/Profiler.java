@@ -1,9 +1,5 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import game.StandardGame;
 import gui.Font;
 import gui.Text;
@@ -11,6 +7,11 @@ import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import loader.ShaderLoader;
 import objects.ShapedObject2;
 import objects.Updateable;
@@ -31,29 +32,35 @@ public class Profiler implements Updateable {
 	boolean showGameProfile = false;
 	boolean showPhysicsProfile = false;
 	InputEvent toggleScale, toggleGameProfile, togglePhysicsProfile;
-	Text gameProfileText0, gameProfileText1, gameProfileText2, gameProfileText3, physicsProfileText0,
-			physicsProfileText1, physicsProfileText2, physicsProfileText3, scaleMin, scaleMid, scaleMax;
-	Shader backgroundshader, scaleshader, colorShader0, colorShader1, colorShader2, colorShader3, colorShader4,
-			colorShader5, colorShader6, colorShader7;
-	ProfileLine gameProfileLine0, gameProfileLine1, gameProfileLine2, gameProfileLine3, physicsProfileLine0,
-			physicsProfileLine1, physicsProfileLine2, physicsProfileLine3;
+	Text gameProfileText0, gameProfileText1, gameProfileText2,
+			gameProfileText3, physicsProfileText0, physicsProfileText1,
+			physicsProfileText2, physicsProfileText3, scaleMin, scaleMid,
+			scaleMax;
+	Shader backgroundshader, scaleshader, colorShader0, colorShader1,
+			colorShader2, colorShader3, colorShader4, colorShader5,
+			colorShader6, colorShader7;
+	ProfileLine gameProfileLine0, gameProfileLine1, gameProfileLine2,
+			gameProfileLine3, physicsProfileLine0, physicsProfileLine1,
+			physicsProfileLine2, physicsProfileLine3;
 	float sizeX = 600, sizeY = 128;
 
-	public Profiler(StandardGame game, InputManager i, Font f, GameProfiler gameprofiler,
-			PhysicsProfiler physicsprofiler) {
+	public Profiler(StandardGame game, InputManager i, Font f,
+			GameProfiler gameprofiler, PhysicsProfiler physicsprofiler) {
 		this.gameprofiler = gameprofiler;
 		this.physicsprofiler = physicsprofiler;
 		setupEvents(i);
 		init(game, f);
 	}
 
-	public Profiler(StandardGame game, InputManager i, Font f, GameProfiler gameprofiler) {
+	public Profiler(StandardGame game, InputManager i, Font f,
+			GameProfiler gameprofiler) {
 		this.gameprofiler = gameprofiler;
 		setupEvents(i);
 		init(game, f);
 	}
 
-	public Profiler(StandardGame game, InputManager i, Font f, PhysicsProfiler physicsprofiler) {
+	public Profiler(StandardGame game, InputManager i, Font f,
+			PhysicsProfiler physicsprofiler) {
 		this.physicsprofiler = physicsprofiler;
 		setupEvents(i);
 		init(game, f);
@@ -72,11 +79,13 @@ public class Profiler implements Updateable {
 		values.put(7, new ArrayList<Long>());
 
 		String c = "u_color";
-		int colorShaderID = ShaderLoader.loadShader(DefaultShader.COLOR_SHADER_VERTEX,
+		int colorShaderID = ShaderLoader.loadShader(
+				DefaultShader.COLOR_SHADER_VERTEX,
 				DefaultShader.COLOR_SHADER_FRAGMENT);
 
 		Quad background = new Quad(305, 533, sizeX / 2f, sizeY / 2f);
-		backgroundshader = new Shader(colorShaderID, c, new Vector4f(1f, 1f, 1f, 0.5f));
+		backgroundshader = new Shader(colorShaderID, c, new Vector4f(1f, 1f,
+				1f, 0.5f));
 		backgroundshader.addObject(background);
 		game.addShaderInterface(backgroundshader);
 
@@ -89,14 +98,22 @@ public class Profiler implements Updateable {
 		physicsProfileText2 = new Text("", 10, 575, f);
 		physicsProfileText3 = new Text("", 10, 590, f);
 
-		colorShader0 = new Shader(colorShaderID, c, new Vector4f(1f, 0f, 0f, 1f));
-		colorShader1 = new Shader(colorShaderID, c, new Vector4f(0f, 1f, 0f, 1f));
-		colorShader2 = new Shader(colorShaderID, c, new Vector4f(0f, 0f, 1f, 1f));
-		colorShader3 = new Shader(colorShaderID, c, new Vector4f(1f, 1f, 0f, 1f));
-		colorShader4 = new Shader(colorShaderID, c, new Vector4f(0f, 1f, 1f, 1f));
-		colorShader5 = new Shader(colorShaderID, c, new Vector4f(1f, 0f, 1f, 1f));
-		colorShader6 = new Shader(colorShaderID, c, new Vector4f(1f, 1f, 1f, 1f));
-		colorShader7 = new Shader(colorShaderID, c, new Vector4f(0.5f, 0.5f, 0.5f, 1f));
+		colorShader0 = new Shader(colorShaderID, c,
+				new Vector4f(1f, 0f, 0f, 1f));
+		colorShader1 = new Shader(colorShaderID, c,
+				new Vector4f(0f, 1f, 0f, 1f));
+		colorShader2 = new Shader(colorShaderID, c,
+				new Vector4f(0f, 0f, 1f, 1f));
+		colorShader3 = new Shader(colorShaderID, c,
+				new Vector4f(1f, 1f, 0f, 1f));
+		colorShader4 = new Shader(colorShaderID, c,
+				new Vector4f(0f, 1f, 1f, 1f));
+		colorShader5 = new Shader(colorShaderID, c,
+				new Vector4f(1f, 0f, 1f, 1f));
+		colorShader6 = new Shader(colorShaderID, c,
+				new Vector4f(1f, 1f, 1f, 1f));
+		colorShader7 = new Shader(colorShaderID, c, new Vector4f(0.5f, 0.5f,
+				0.5f, 1f));
 
 		game.addShaderInterface(colorShader0);
 		game.addShaderInterface(colorShader1);
@@ -165,7 +182,8 @@ public class Profiler implements Updateable {
 	}
 
 	private void setupEvents(InputManager inputs) {
-		toggleScale = new InputEvent("profile_showscale", new Input(Input.KEYBOARD_EVENT, "F9", KeyInput.KEY_PRESSED));
+		toggleScale = new InputEvent("profile_showscale", new Input(
+				Input.KEYBOARD_EVENT, "F9", KeyInput.KEY_PRESSED));
 		toggleGameProfile = new InputEvent("profile_showgameprofile",
 				new Input(Input.KEYBOARD_EVENT, "F10", KeyInput.KEY_PRESSED));
 		togglePhysicsProfile = new InputEvent("profile_showphysicsprofile",

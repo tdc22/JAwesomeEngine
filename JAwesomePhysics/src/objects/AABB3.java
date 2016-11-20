@@ -14,14 +14,14 @@ public class AABB3 extends AABB<Vector3f> {
 
 	@Override
 	public boolean contains(Vector3f point) {
-		return (point.x >= min.x && point.y >= min.y && point.z >= min.z && point.x <= max.x && point.y <= max.y
-				&& point.z <= max.z);
+		return (point.x >= min.x && point.y >= min.y && point.z >= min.z
+				&& point.x <= max.x && point.y <= max.y && point.z <= max.z);
 	}
 
 	@Override
 	public boolean intersects(AABB<Vector3f> aabb) {
-		return !(max.x < aabb.min.x || max.y < aabb.min.y || max.z < aabb.min.z || min.x > aabb.max.x
-				|| min.y > aabb.max.y || min.z > aabb.max.z);
+		return !(max.x < aabb.min.x || max.y < aabb.min.y || max.z < aabb.min.z
+				|| min.x > aabb.max.x || min.y > aabb.max.y || min.z > aabb.max.z);
 	}
 
 	@Override
@@ -46,7 +46,8 @@ public class AABB3 extends AABB<Vector3f> {
 
 	@Override
 	public Vector3f getCenter() {
-		return new Vector3f(min.x + (max.x - min.x) / 2f, min.y + (max.y - min.y) / 2f, min.z + (max.z - min.z) / 2f);
+		return new Vector3f(min.x + (max.x - min.x) / 2f, min.y
+				+ (max.y - min.y) / 2f, min.z + (max.z - min.z) / 2f);
 	}
 
 	public void setMin(float minX, float minY, float minZ) {

@@ -13,22 +13,26 @@ import utils.VectorConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implements InstancedBaseObject3 {
+public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf>
+		implements InstancedBaseObject3 {
 	final Vector2f vec2 = new Vector2f();
 	final Vector3f vec3 = new Vector3f();
 
 	public ShapedObject3() {
-		super(new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1));
+		super(new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(
+				1, 1, 1));
 		init();
 	}
 
 	public ShapedObject3(float x, float y, float z) {
-		super(new Vector3f(), new Vector3f(x, y, z), new Quaternionf(), new Vector3f(1, 1, 1));
+		super(new Vector3f(), new Vector3f(x, y, z), new Quaternionf(),
+				new Vector3f(1, 1, 1));
 		init();
 	}
 
 	public ShapedObject3(Vector3f pos) {
-		super(new Vector3f(), new Vector3f(pos), new Quaternionf(), new Vector3f(1, 1, 1));
+		super(new Vector3f(), new Vector3f(pos), new Quaternionf(),
+				new Vector3f(1, 1, 1));
 		init();
 	}
 
@@ -56,10 +60,14 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 			Vector3f normal1 = getNormal(index1);
 			Vector3f normal2 = getNormal(index2);
 			Vector3f normal3 = getNormal(index3);
-			Vector3f newnormal = VecMath.computeNormal(getVertex(index1), getVertex(index2), getVertex(index3));
-			setNormal(index1, VecMath.normalize(VecMath.addition(normal1, newnormal)));
-			setNormal(index2, VecMath.normalize(VecMath.addition(normal2, newnormal)));
-			setNormal(index3, VecMath.normalize(VecMath.addition(normal3, newnormal)));
+			Vector3f newnormal = VecMath.computeNormal(getVertex(index1),
+					getVertex(index2), getVertex(index3));
+			setNormal(index1,
+					VecMath.normalize(VecMath.addition(normal1, newnormal)));
+			setNormal(index2,
+					VecMath.normalize(VecMath.addition(normal2, newnormal)));
+			setNormal(index3,
+					VecMath.normalize(VecMath.addition(normal3, newnormal)));
 			ci += 3;
 		}
 	}
@@ -132,9 +140,11 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 	@Override
 	public Matrix4f getMatrix() {
 		float[][] mat = rotation.toMatrixf().getArrayf();
-		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, mat[0][2] * scale.x, 0, mat[1][0] * scale.y,
-				mat[1][1] * scale.y, mat[1][2] * scale.y, 0, mat[2][0] * scale.z, mat[2][1] * scale.z,
-				mat[2][2] * scale.z, 0, translation.getXf(), translation.getYf(), translation.getZf(), 1);
+		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, mat[0][2]
+				* scale.x, 0, mat[1][0] * scale.y, mat[1][1] * scale.y,
+				mat[1][2] * scale.y, 0, mat[2][0] * scale.z, mat[2][1]
+						* scale.z, mat[2][2] * scale.z, 0, translation.getXf(),
+				translation.getYf(), translation.getZf(), 1);
 	}
 
 	public void addVertex(Vector3f vertex) {
@@ -165,7 +175,8 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 		setVertex(id, vertex, c, vec2, vec3);
 	}
 
-	public void setVertex(int id, Vector3f vertex, Color c, Vector2f texturecoord) {
+	public void setVertex(int id, Vector3f vertex, Color c,
+			Vector2f texturecoord) {
 		setVertex(id, vertex, c, texturecoord, vec3);
 	}
 
@@ -173,18 +184,21 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 		setVertex(id, vertex, c, vec2, vec3);
 	}
 
-	public void setVertex(int id, Vector3f vertex, Vector3f c, Vector2f texturecoord) {
+	public void setVertex(int id, Vector3f vertex, Vector3f c,
+			Vector2f texturecoord) {
 		setVertex(id, vertex, c, texturecoord, vec3);
 	}
 
 	@Override
-	protected void fillBuffers(int allVertices, IntBuffer indexData, FloatBuffer vertexData, FloatBuffer colorData,
+	protected void fillBuffers(int allVertices, IntBuffer indexData,
+			FloatBuffer vertexData, FloatBuffer colorData,
 			FloatBuffer textureData, FloatBuffer normalData) {
 		for (int v = 0; v < allVertices; v++) {
 			Vector3f vertex = vertices.get(v);
 			vertexData.put(new float[] { vertex.x, vertex.y, vertex.z, 1 });
 			Vector3f vertcolor = colors.get(v);
-			colorData.put(new float[] { vertcolor.x, vertcolor.y, vertcolor.z });
+			colorData
+					.put(new float[] { vertcolor.x, vertcolor.y, vertcolor.z });
 			Vector2f tex = texturecoords.get(v);
 			textureData.put(new float[] { tex.x, tex.y });
 			Vector3f normal = normals.get(v);

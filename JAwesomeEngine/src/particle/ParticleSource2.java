@@ -3,13 +3,16 @@ package particle;
 import vector.Vector1f;
 import vector.Vector2f;
 
-public abstract class ParticleSource2 extends ParticleSource<Vector2f, Vector1f> {
+public abstract class ParticleSource2 extends
+		ParticleSource<Vector2f, Vector1f> {
 
-	public ParticleSource2(Vector2f center, Vector2f spawnAreaHalfSize, Vector1f minAngle, Vector1f maxAngle,
-			float minVelocity, float maxVelocity, float minSize, float maxSize, int minLifeTime, int maxLifeTime,
-			float spawnRate) {
-		super(center, spawnAreaHalfSize, minAngle, maxAngle, minVelocity, maxVelocity, minSize, maxSize, minLifeTime,
-				maxLifeTime, spawnRate);
+	public ParticleSource2(Vector2f center, Vector2f spawnAreaHalfSize,
+			Vector1f minAngle, Vector1f maxAngle, float minVelocity,
+			float maxVelocity, float minSize, float maxSize, int minLifeTime,
+			int maxLifeTime, float spawnRate) {
+		super(center, spawnAreaHalfSize, minAngle, maxAngle, minVelocity,
+				maxVelocity, minSize, maxSize, minLifeTime, maxLifeTime,
+				spawnRate);
 	}
 
 	public void setParticleAngle(Vector1f minAngle, Vector1f maxAngle) {

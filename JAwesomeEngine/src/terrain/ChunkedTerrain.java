@@ -42,7 +42,8 @@ class Chunk extends ShapedObject {
 	}
 
 	public void computeCenter(Quaternion rotation, Vector3f translation) {
-		center = new Vector3f(posx * (sizex - 1) + sizex / 2f, 0, posy * (sizey - 1) + sizey / 2f);
+		center = new Vector3f(posx * (sizex - 1) + sizex / 2f, 0, posy
+				* (sizey - 1) + sizey / 2f);
 		Vector3f transformed = new Vector3f(center.x, center.y, center.z);
 		QuatMath.transform(rotation, transformed);
 		transformed.translate(translation);
@@ -75,8 +76,8 @@ class Chunk extends ShapedObject {
 		int sy = heightmap[0].length;
 		for (int vx = 0; vx < sx; vx++) {
 			for (int vz = 0; vz < sy; vz++) {
-				addVertex(new Vector3f(vx, heightmap[vx][vz], vz), Color.GRAY, new Vector2f(0, 0),
-						new Vector3f(0, 1, 0));
+				addVertex(new Vector3f(vx, heightmap[vx][vz], vz), Color.GRAY,
+						new Vector2f(0, 0), new Vector3f(0, 1, 0));
 			}
 		}
 		int pos = 0;
@@ -127,13 +128,15 @@ public class ChunkedTerrain extends RenderedObject {
 		chunks = new Chunk[anzx][anzy];
 		for (int cx = 0; cx < anzx; cx++) {
 			for (int cy = 0; cy < anzy; cy++) {
-				chunks[cx][cy] = new Chunk(cx, cy, chunksizex + 1, chunksizey + 1);
+				chunks[cx][cy] = new Chunk(cx, cy, chunksizex + 1,
+						chunksizey + 1);
 			}
 		}
 	}
 
 	private int computeLOD(Vector3f chunkcenter, Vector3f campos) {
-		float distance = VecMath.length(VecMath.subtraction(chunkcenter, campos));
+		float distance = VecMath.length(VecMath
+				.subtraction(chunkcenter, campos));
 		if (distance <= lod1) {
 			if (distance <= lod5) {
 				return 5;
@@ -193,7 +196,8 @@ public class ChunkedTerrain extends RenderedObject {
 		return new Color(heightmap.getRGB(imgx, imgy)).getRed() / 10f;
 	}
 
-	private float[][] getHeights(int chunklod, int chunkx, int chunky, int stepsize) {
+	private float[][] getHeights(int chunklod, int chunkx, int chunky,
+			int stepsize) {
 		int w = (int) (chunksizex / (float) stepsize) + 1;
 		int h = (int) (chunksizey / (float) stepsize) + 1;
 		float[][] heights = new float[w][h];
@@ -249,7 +253,8 @@ public class ChunkedTerrain extends RenderedObject {
 		glPopMatrix();
 	}
 
-	public void setLODs(float lod1, float lod2, float lod3, float lod4, float lod5) {
+	public void setLODs(float lod1, float lod2, float lod3, float lod4,
+			float lod5) {
 		this.lod1 = lod1;
 		this.lod2 = lod2;
 		this.lod3 = lod3;
@@ -262,7 +267,8 @@ public class ChunkedTerrain extends RenderedObject {
 		shader = s;
 	}
 
-	private void smootheEdges(Chunk chunk, int chunklod, int chunkx, int chunky, int stepsize) {
+	private void smootheEdges(Chunk chunk, int chunklod, int chunkx,
+			int chunky, int stepsize) {
 		int w = (int) (chunksizex / (float) stepsize) + 1;
 		int h = (int) (chunksizey / (float) stepsize) + 1;
 		boolean s = false;
@@ -317,16 +323,19 @@ public class ChunkedTerrain extends RenderedObject {
 		chunk.setSmoothed(s);
 	}
 
-	private void unsmootheEdges(Chunk chunk, int chunkx, int chunky, int stepsize) {
+	private void unsmootheEdges(Chunk chunk, int chunkx, int chunky,
+			int stepsize) {
 		int w = (int) (chunksizex / (float) stepsize) + 1;
 		int h = (int) (chunksizey / (float) stepsize) + 1;
 		for (int x = 1; x < w; x += 2) {
 			chunk.getVertex(x * w).y = getHeight(x, 0, chunkx, chunky, stepsize);
-			chunk.getVertex(h + x * w).y = getHeight(x, h, chunkx, chunky, stepsize);
+			chunk.getVertex(h + x * w).y = getHeight(x, h, chunkx, chunky,
+					stepsize);
 		}
 		for (int y = 1; y < h; y += 2) {
 			chunk.getVertex(y).y = getHeight(0, y, chunkx, chunky, stepsize);
-			chunk.getVertex(w * (h - 1) + y).y = getHeight(w, y, chunkx, chunky, stepsize);
+			chunk.getVertex(w * (h - 1) + y).y = getHeight(w, y, chunkx,
+					chunky, stepsize);
 		}
 	}
 
@@ -350,8 +359,10 @@ public class ChunkedTerrain extends RenderedObject {
 				if (chunk.LODchanged()) {
 					if (prevlod != chunklod) {
 						if (chunklod != 0)
-							chunk.setHeightmap(getHeights(chunklod, (int) chunk.getPosition().x,
-									(int) chunk.getPosition().y, getStepsize(chunklod)));
+							chunk.setHeightmap(getHeights(chunklod,
+									(int) chunk.getPosition().x,
+									(int) chunk.getPosition().y,
+									getStepsize(chunklod)));
 						else
 							chunk.deleteData();
 						int difference = prevlod - chunklod;
@@ -369,7 +380,8 @@ public class ChunkedTerrain extends RenderedObject {
 				if (chunks[chx][chy].LODchanged()) {
 					Chunk chunk = chunks[chx][chy];
 					int chunklod = chunk.getLOD();
-					smootheEdges(chunk, chunklod, chx, chy, getStepsize(chunklod));
+					smootheEdges(chunk, chunklod, chx, chy,
+							getStepsize(chunklod));
 					chunk.prerender();
 				}
 			}
@@ -384,8 +396,9 @@ public class ChunkedTerrain extends RenderedObject {
 				int chunklod = computeLOD(chunk.getCenter(), campos);
 				chunk.setLOD(chunklod);
 				if (chunklod != 0)
-					chunk.setHeightmap(getHeights(chunklod, (int) chunk.getPosition().x, (int) chunk.getPosition().y,
-							getStepsize(chunklod)));
+					chunk.setHeightmap(getHeights(chunklod,
+							(int) chunk.getPosition().x,
+							(int) chunk.getPosition().y, getStepsize(chunklod)));
 				else
 					chunk.deleteData();
 				int difference = prevlod - chunklod;

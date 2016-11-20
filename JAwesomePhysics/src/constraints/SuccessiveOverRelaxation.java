@@ -8,7 +8,8 @@ public class SuccessiveOverRelaxation implements LinearEquationSolver {
 							// higher inaccuracy)
 	int maxIterations;
 
-	public SuccessiveOverRelaxation(int dimension, float relaxationFactor, int maxIterations) {
+	public SuccessiveOverRelaxation(int dimension, float relaxationFactor,
+			int maxIterations) {
 		this.dimension = dimension;
 		this.relaxationFactor = relaxationFactor;
 		this.maxIterations = maxIterations;
@@ -27,7 +28,8 @@ public class SuccessiveOverRelaxation implements LinearEquationSolver {
 						o += A[i][j] * result[j];
 					}
 				}
-				result[i] = (1 - relaxationFactor) * result[i] + (relaxationFactor / A[i][i]) * (b[i] - o);
+				result[i] = (1 - relaxationFactor) * result[i]
+						+ (relaxationFactor / A[i][i]) * (b[i] - o);
 			}
 			// TODO: check convergance
 		}

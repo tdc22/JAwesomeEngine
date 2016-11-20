@@ -19,17 +19,19 @@ public class BoxShape extends CollisionShape3 implements BoxStructure {
 
 		@Override
 		public Vector3f supportPointLocal(Vector3f direction) {
-			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
-			v.set((v.x < 0 ? -halfsize.x : halfsize.x), (v.y < 0 ? -halfsize.y : halfsize.y),
-					(v.z < 0 ? -halfsize.z : halfsize.z));
+			Vector3f v = QuatMath.transform(
+					collisionshape.getInverseRotation(), direction);
+			v.set((v.x < 0 ? -halfsize.x : halfsize.x), (v.y < 0 ? -halfsize.y
+					: halfsize.y), (v.z < 0 ? -halfsize.z : halfsize.z));
 			return v;
 		}
 
 		@Override
 		public Vector3f supportPointLocalNegative(Vector3f direction) {
-			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
-			v.set((v.x < 0 ? halfsize.x : -halfsize.x), (v.y < 0 ? halfsize.y : -halfsize.y),
-					(v.z < 0 ? halfsize.z : -halfsize.z));
+			Vector3f v = QuatMath.transform(
+					collisionshape.getInverseRotation(), direction);
+			v.set((v.x < 0 ? halfsize.x : -halfsize.x), (v.y < 0 ? halfsize.y
+					: -halfsize.y), (v.z < 0 ? halfsize.z : -halfsize.z));
 			return v;
 		}
 
@@ -41,7 +43,8 @@ public class BoxShape extends CollisionShape3 implements BoxStructure {
 
 	Vector3f halfsize;
 
-	public BoxShape(float x, float y, float z, float halfsizex, float halfsizey, float halfsizez) {
+	public BoxShape(float x, float y, float z, float halfsizex,
+			float halfsizey, float halfsizez) {
 		super();
 		translate(x, y, z);
 		halfsize = new Vector3f(halfsizex, halfsizey, halfsizez);
@@ -55,7 +58,8 @@ public class BoxShape extends CollisionShape3 implements BoxStructure {
 		init();
 	}
 
-	public BoxShape(Vector3f pos, float halfsizex, float halfsizey, float halfsizez) {
+	public BoxShape(Vector3f pos, float halfsizex, float halfsizey,
+			float halfsizez) {
 		super();
 		translate(pos);
 		halfsize = new Vector3f(halfsizex, halfsizey, halfsizez);
@@ -70,7 +74,8 @@ public class BoxShape extends CollisionShape3 implements BoxStructure {
 	}
 
 	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+	public SupportCalculator<Vector3f> createSupportCalculator(
+			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		return new BoxSupport(cs);
 	}
 
@@ -85,8 +90,10 @@ public class BoxShape extends CollisionShape3 implements BoxStructure {
 	}
 
 	private void init() {
-		float diag = (float) Math.sqrt(halfsize.x * halfsize.x + halfsize.y * halfsize.y + halfsize.z * halfsize.z);
-		setAABB(new Vector3f(-diag, -diag, -diag), new Vector3f(diag, diag, diag));
+		float diag = (float) Math.sqrt(halfsize.x * halfsize.x + halfsize.y
+				* halfsize.y + halfsize.z * halfsize.z);
+		setAABB(new Vector3f(-diag, -diag, -diag), new Vector3f(diag, diag,
+				diag));
 		supportcalculator = createSupportCalculator(this);
 	}
 }

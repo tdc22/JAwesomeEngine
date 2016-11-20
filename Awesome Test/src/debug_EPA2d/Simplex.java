@@ -3,10 +3,10 @@ package debug_EPA2d;
 import java.awt.Color;
 import java.util.List;
 
-import debug_EPA2d.EPA2dDebugger.Edge;
 import objects.ShapedObject2;
 import utils.GLConstants;
 import vector.Vector2f;
+import debug_EPA2d.EPA2dDebugger.Edge;
 
 public class Simplex extends ShapedObject2 {
 	public Simplex(List<Edge> edges, Edge closest) {

@@ -25,19 +25,14 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glHint;
 import static org.lwjgl.opengl.GL11.glShadeModel;
-
-import java.util.List;
-
-import display.Display;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import input.GLFWInputReader;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
+
+import java.util.List;
+
 import loader.ShaderLoader;
 import objects.Camera2;
 import objects.GameCamera;
@@ -50,6 +45,11 @@ import utils.DefaultShader;
 import utils.GameProfiler;
 import utils.NullGameProfiler;
 import utils.ProjectionHelper;
+import display.Display;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public abstract class StandardGame extends AbstractGame implements Updateable {
 	public VideoSettings settings;
@@ -119,7 +119,8 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		layerInterface.postProcessing.remove(shader);
 	}
 
-	public void setRendered(boolean render3d, boolean render2d, boolean renderInterface) {
+	public void setRendered(boolean render3d, boolean render2d,
+			boolean renderInterface) {
 		layer3d.setActive(render3d);
 		layer2d.setActive(render2d);
 		layerInterface.setActive(renderInterface);
@@ -173,13 +174,16 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 	protected void endRender() {
 		if (useFBO) {
 			if (layer3d.isActive()) {
-				layer3d.applyPostProcessing(screenShader, display.getWidth(), display.getHeight());
+				layer3d.applyPostProcessing(screenShader, display.getWidth(),
+						display.getHeight());
 			}
 			if (layer2d.isActive()) {
-				layer2d.applyPostProcessing(screenShader, display.getWidth(), display.getHeight());
+				layer2d.applyPostProcessing(screenShader, display.getWidth(),
+						display.getHeight());
 			}
 			if (layerInterface.isActive()) {
-				layerInterface.applyPostProcessing(screenShader, display.getWidth(), display.getHeight());
+				layerInterface.applyPostProcessing(screenShader,
+						display.getWidth(), display.getHeight());
 			}
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
@@ -198,8 +202,9 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		return settings;
 	}
 
-	public void initDisplay(Display display, DisplayMode displaymode, PixelFormat pixelformat,
-			VideoSettings videosettings, SoundEnvironment soundenvironment) {
+	public void initDisplay(Display display, DisplayMode displaymode,
+			PixelFormat pixelformat, VideoSettings videosettings,
+			SoundEnvironment soundenvironment) {
 		this.display = display;
 		display.open(displaymode, pixelformat);
 		this.settings = videosettings;
@@ -207,28 +212,36 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 
 		// GLFW input fix
 		if (inputs.getInputReader() instanceof GLFWInputReader)
-			((GLFWInputReader) inputs.getInputReader()).addWindowID(((GLDisplay) display).getWindowID());
+			((GLFWInputReader) inputs.getInputReader())
+					.addWindowID(((GLDisplay) display).getWindowID());
 
 		if (useFBO) {
-			layer3d.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples());
-			layer2d.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples());
-			layerInterface.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples());
+			layer3d.initLayer(settings.getResolutionX(),
+					settings.getResolutionY(), pixelformat.getSamples());
+			layer2d.initLayer(settings.getResolutionX(),
+					settings.getResolutionY(), pixelformat.getSamples());
+			layerInterface.initLayer(settings.getResolutionX(),
+					settings.getResolutionY(), pixelformat.getSamples());
 
 			screen = new Quad(0, 0, 1, -1, false);
 			screen.setRenderHints(false, true, false);
 
-			screenShader = new Shader(
-					ShaderLoader.loadShader(DefaultShader.SCREEN_SHADER_VERTEX, DefaultShader.SCREEN_SHADER_FRAGMENT));
+			screenShader = new Shader(ShaderLoader.loadShader(
+					DefaultShader.SCREEN_SHADER_VERTEX,
+					DefaultShader.SCREEN_SHADER_FRAGMENT));
 			screenShader.addObject(screen);
 		}
 
-		layer3d.setProjectionMatrix(ProjectionHelper.perspective(settings.getFOVy(),
-				settings.getResolutionX() / (float) settings.getResolutionY(), settings.getZNear(),
-				settings.getZFar()));
-		layer2d.setProjectionMatrix(
-				ProjectionHelper.ortho(0, settings.getResolutionX(), settings.getResolutionY(), 0, -1, 1));
-		layerInterface.setProjectionMatrix(
-				ProjectionHelper.ortho(0, settings.getResolutionX(), settings.getResolutionY(), 0, -1, 1));
+		layer3d.setProjectionMatrix(ProjectionHelper.perspective(
+				settings.getFOVy(), settings.getResolutionX()
+						/ (float) settings.getResolutionY(),
+				settings.getZNear(), settings.getZFar()));
+		layer2d.setProjectionMatrix(ProjectionHelper.ortho(0,
+				settings.getResolutionX(), settings.getResolutionY(), 0, -1, 1));
+		layerInterface
+				.setProjectionMatrix(ProjectionHelper.ortho(0,
+						settings.getResolutionX(), settings.getResolutionY(),
+						0, -1, 1));
 	}
 
 	@Override
@@ -241,7 +254,8 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		inputs = new InputManager(new GLFWInputReader());
 		System.out.println("Using GLFW input.");
 		// }
-		closeEvent = new InputEvent("game_close", new Input(Input.KEYBOARD_EVENT, "Escape", KeyInput.KEY_DOWN));
+		closeEvent = new InputEvent("game_close", new Input(
+				Input.KEYBOARD_EVENT, "Escape", KeyInput.KEY_DOWN));
 		inputs.addEvent(closeEvent);
 
 		cam = new GameCamera(inputs);

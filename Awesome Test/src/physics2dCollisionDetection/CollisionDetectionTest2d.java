@@ -1,16 +1,12 @@
 package physics2dCollisionDetection;
 
+import game.StandardGame;
+import integration.EulerIntegration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import broadphase.DynamicAABBTree2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
-import game.StandardGame;
-import integration.EulerIntegration;
 import loader.InputLoader;
 import loader.ShaderLoader;
 import manifold.CollisionManifold;
@@ -18,6 +14,7 @@ import manifold.SimpleManifoldManager;
 import matrix.Matrix1f;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
+import narrowphase.SupportRaycast2;
 import objects.CompoundObject2;
 import objects.RigidBody;
 import objects.RigidBody2;
@@ -34,6 +31,11 @@ import sound.NullSoundEnvironment;
 import utils.Pair;
 import vector.Vector2f;
 import vector.Vector4f;
+import broadphase.DynamicAABBTree2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class CollisionDetectionTest2d extends StandardGame {
 	PhysicsSpace2 space;
@@ -47,14 +49,14 @@ public class CollisionDetectionTest2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
-				new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings(), new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		int shaderprogram = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
-				"res/shaders/colorshader.frag");
+		int shaderprogram = ShaderLoader.loadShaderFromFile(
+				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
 		s1 = new Shader(shaderprogram);
 		s2 = new Shader(shaderprogram);
 		s3 = new Shader(shaderprogram);
@@ -76,14 +78,17 @@ public class CollisionDetectionTest2d extends StandardGame {
 		addShader2d(s5);
 		addShader2d(s6);
 
-		defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader);
 
 		manifolds = new ArrayList<ManifoldVisualization>();
 
-		space = new PhysicsSpace2(new EulerIntegration(), new DynamicAABBTree2(), new GJK2(new EPA2()),
-				new NullResolution(), new NullCorrection(), new SimpleManifoldManager<Vector2f>());
+		space = new PhysicsSpace2(new EulerIntegration(),
+				new DynamicAABBTree2(), new GJK2(new EPA2()),
+				new SupportRaycast2(), new NullResolution(),
+				new NullCorrection(), new SimpleManifoldManager<Vector2f>());
 		space.setCullStaticOverlaps(false);
 
 		q1 = new Quad(400, 200, 25, 25);
@@ -178,7 +183,8 @@ public class CollisionDetectionTest2d extends StandardGame {
 		s5.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s6.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 
-		Set<Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>>> overlaps = space.getOverlaps();
+		Set<Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>>> overlaps = space
+				.getOverlaps();
 		for (Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>> o : overlaps) {
 			if (o.contains(rb1))
 				s1.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
@@ -198,7 +204,8 @@ public class CollisionDetectionTest2d extends StandardGame {
 			ManifoldVisualization mv = new ManifoldVisualization(cm);
 			defaultshader.addObject(mv);
 			manifolds.add(mv);
-			Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>> o = cm.getObjects();
+			Pair<RigidBody<Vector2f, ?, ?, ?>, RigidBody<Vector2f, ?, ?, ?>> o = cm
+					.getObjects();
 			if (o.contains(rb1))
 				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 			if (o.contains(rb2))

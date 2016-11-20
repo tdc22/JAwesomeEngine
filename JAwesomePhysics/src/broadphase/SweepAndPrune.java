@@ -86,7 +86,8 @@ public abstract class SweepAndPrune<L extends Vector, ObjectType extends Collisi
 		return null;
 	}
 
-	final Pair<ObjectType, ObjectType> tempPair = new Pair<ObjectType, ObjectType>(null, null);
+	final Pair<ObjectType, ObjectType> tempPair = new Pair<ObjectType, ObjectType>(
+			null, null);
 
 	protected void sortAxis(List<SweepPoint> axis) {
 		for (int j = 1; j < axis.size(); j++) {
@@ -105,7 +106,9 @@ public abstract class SweepAndPrune<L extends Vector, ObjectType extends Collisi
 					} else {
 						Counter counter = new Counter();
 						counter.overlaps = 1;
-						counters.put(new Pair<ObjectType, ObjectType>(tempPair), counter);
+						counters.put(
+								new Pair<ObjectType, ObjectType>(tempPair),
+								counter);
 					}
 				} else if (!keyelement.begin && swapper.begin) {
 					tempPair.set(keyelement.object, swapper.object);

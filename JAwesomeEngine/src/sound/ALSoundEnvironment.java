@@ -61,12 +61,14 @@ public class ALSoundEnvironment extends SoundEnvironment {
 		alListener3f(AL_POSITION, x, y, 0);
 	}
 
-	private FloatBuffer orientationHelperBuffer = (FloatBuffer) BufferUtils.createFloatBuffer(6);
+	private FloatBuffer orientationHelperBuffer = (FloatBuffer) BufferUtils
+			.createFloatBuffer(6);
 
 	@Override
 	public void setListenerOrientation(Vector3f up, Vector3f front) {
 		orientationHelperBuffer.clear();
-		orientationHelperBuffer.put(new float[] { front.x, front.y, front.z, up.x, up.y, up.z });
+		orientationHelperBuffer.put(new float[] { front.x, front.y, front.z,
+				up.x, up.y, up.z });
 		orientationHelperBuffer.rewind();
 		alListenerfv(AL_ORIENTATION, orientationHelperBuffer);
 	}

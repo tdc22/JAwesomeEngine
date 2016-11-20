@@ -1,10 +1,5 @@
 package physics2dBasicTest;
 
-import broadphase.DynamicAABBTree2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import integration.VerletIntegration;
@@ -14,6 +9,7 @@ import manifold.MultiPointManifoldManager2;
 import matrix.Matrix1f;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
+import narrowphase.SupportRaycast2;
 import objects.RigidBody2;
 import physics.PhysicsDebug2;
 import physics.PhysicsShapeCreator;
@@ -31,6 +27,11 @@ import utils.GameProfiler;
 import utils.Profiler;
 import utils.SimpleGameProfiler;
 import vector.Vector2f;
+import broadphase.DynamicAABBTree2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class BasicTest2d extends StandardGame {
 	PhysicsSpace2 space;
@@ -42,28 +43,36 @@ public class BasicTest2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "TEST", false), new PixelFormat(), new VideoSettings(),
+		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "TEST", false),
+				new PixelFormat(), new VideoSettings(),
 				new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		defaultshader2 = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader2);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile(
+						"res/shaders/defaultshader.vert",
+						"res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
-		space = new PhysicsSpace2(new VerletIntegration(), new DynamicAABBTree2(), new GJK2(new EPA2()),
-				new ImpulseResolution(), new ProjectionCorrection(1), new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
+		space = new PhysicsSpace2(new VerletIntegration(),
+				new DynamicAABBTree2(), new GJK2(new EPA2()),
+				new SupportRaycast2(), new ImpulseResolution(),
+				new ProjectionCorrection(1), new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
 		space.setGlobalGravitation(new Vector2f(0, 120));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				font, cam);
 		physicsdebug = new PhysicsDebug2(inputs, defaultshader2, font, space);
 		GameProfiler gp = new SimpleGameProfiler();
 		setProfiler(gp);
@@ -131,10 +140,12 @@ public class BasicTest2d extends StandardGame {
 		}
 
 		if (inputs.isKeyDown("O")) {
-			space.getObjects().get(space.getObjects().size() - 1).applyCentralForce(new Vector2f(100, 0));
+			space.getObjects().get(space.getObjects().size() - 1)
+					.applyCentralForce(new Vector2f(100, 0));
 		}
 		if (inputs.isKeyDown("I")) {
-			space.getObjects().get(space.getObjects().size() - 1).applyCentralForce(new Vector2f(-100, 0));
+			space.getObjects().get(space.getObjects().size() - 1)
+					.applyCentralForce(new Vector2f(-100, 0));
 		}
 
 		debugger.update(fps, 0, defaultshader2.getObjects().size());

@@ -35,7 +35,8 @@ public class Updater extends TCPByteClient implements ActionListener {
 	int filesize;
 	boolean download;
 
-	public Updater(String title, String pathgame, String pathversion, String jarname, String hostname, int port) {
+	public Updater(String title, String pathgame, String pathversion,
+			String jarname, String hostname, int port) {
 		super();
 		init(title, pathgame, pathversion, jarname, hostname, port);
 	}
@@ -43,9 +44,12 @@ public class Updater extends TCPByteClient implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(start)) {
-			String libpath = gamefile.getAbsolutePath().replace(jarname,
-					"native" + SystemProperties.getFileSeperator() + SystemProperties.getOSName().toLowerCase());
-			ProcessBuilder pb = new ProcessBuilder("java", "-Djava.library.path=" + libpath, "-jar",
+			String libpath = gamefile.getAbsolutePath().replace(
+					jarname,
+					"native" + SystemProperties.getFileSeperator()
+							+ SystemProperties.getOSName().toLowerCase());
+			ProcessBuilder pb = new ProcessBuilder("java",
+					"-Djava.library.path=" + libpath, "-jar",
 					gamefile.getAbsolutePath());
 			System.out.print("command: ");
 			for (String s : pb.command()) {
@@ -59,16 +63,20 @@ public class Updater extends TCPByteClient implements ActionListener {
 			// OSProperties.getOSName().toLowerCase()));
 			System.out.println(SystemProperties.getOSName().toLowerCase());
 			System.out.println(libpath);
-			System.out.println(gamefile.getAbsolutePath().replace(jarname,
-					"native" + SystemProperties.getFileSeperator() + SystemProperties.getOSName().toLowerCase()));
+			System.out.println(gamefile.getAbsolutePath().replace(
+					jarname,
+					"native" + SystemProperties.getFileSeperator()
+							+ SystemProperties.getOSName().toLowerCase()));
 			pb.redirectErrorStream(true);
-			pb.directory(new File(gamefile.getAbsolutePath().replace(jarname, "")));
+			pb.directory(new File(gamefile.getAbsolutePath().replace(jarname,
+					"")));
 			try {
 				Process process = pb.start();
 				frame.dispose();
 
 				String output;
-				BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				BufferedReader stdout = new BufferedReader(
+						new InputStreamReader(process.getInputStream()));
 				while ((output = stdout.readLine()) != null) {
 					System.out.println(output);
 				}
@@ -85,7 +93,8 @@ public class Updater extends TCPByteClient implements ActionListener {
 		}
 	}
 
-	private void init(String title, String pathgame, String pathversion, String jarname, String hostname, int port) {
+	private void init(String title, String pathgame, String pathversion,
+			String jarname, String hostname, int port) {
 		ImageIcon icon = new ImageIcon("");
 
 		this.jarname = jarname;
@@ -140,7 +149,8 @@ public class Updater extends TCPByteClient implements ActionListener {
 	 * e.printStackTrace(); } } }
 	 */
 
-	private void initDownload(String pathgame, String pathversion, String hostname, int port) {
+	private void initDownload(String pathgame, String pathversion,
+			String hostname, int port) {
 		downloadfile = new File(pathgame);
 		versionfile = new File(pathversion);
 		download = false;
@@ -173,13 +183,16 @@ public class Updater extends TCPByteClient implements ActionListener {
 						e.printStackTrace();
 					}
 				}
-				System.out.println("Download file: " + downloadfile.getAbsolutePath());
-				System.out.println("File renamed: " + tmpfile.getAbsolutePath());
+				System.out.println("Download file: "
+						+ downloadfile.getAbsolutePath());
+				System.out
+						.println("File renamed: " + tmpfile.getAbsolutePath());
 			}
 		}
 		try {
-			gamefile = new File(ZipExtractor.extract(downloadfile) + "/" + downloadfile.getName().replace(".zip", "")
-					+ "/" + jarname);
+			gamefile = new File(ZipExtractor.extract(downloadfile) + "/"
+					+ downloadfile.getName().replace(".zip", "") + "/"
+					+ jarname);
 			System.out.println(gamefile);
 		} catch (IOException e) {
 			e.printStackTrace();

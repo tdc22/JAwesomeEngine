@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
+import net.java.games.input.Keyboard;
+import net.java.games.input.Mouse;
+
 public class JInputReader extends InputReader {
 	List<Mouse> mousecontrollers;
 	List<Keyboard> keyboardcontrollers;
@@ -84,7 +89,8 @@ public class JInputReader extends InputReader {
 	}
 
 	public boolean isUseable() {
-		return (mousecontrollers.size() > 0) && (keyboardcontrollers.size() > 0);
+		return (mousecontrollers.size() > 0)
+				&& (keyboardcontrollers.size() > 0);
 	}
 
 	private void setupKeys() {
@@ -242,7 +248,8 @@ public class JInputReader extends InputReader {
 		keyboardcontrollers.clear();
 		gamepadcontrollers.clear();
 
-		Controller[] ca = ControllerEnvironment.getDefaultEnvironment().getControllers();
+		Controller[] ca = ControllerEnvironment.getDefaultEnvironment()
+				.getControllers();
 		for (Controller c : ca) {
 			Type t = c.getType();
 			if (t == Type.MOUSE)

@@ -216,8 +216,9 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 		float eXoYeYoX = edge.x * origin.y - edge.y * origin.x;
 		float eYoZeZoY = edge.y * origin.z - edge.z * origin.y;
 		float eZoXeXeZ = edge.z * origin.x - edge.x * origin.z;
-		return new Vector3f((eZoXeXeZ) * edge.z - (eXoYeYoX) * edge.y, (eXoYeYoX) * edge.x - (eYoZeZoY) * edge.z,
-				(eYoZeZoY) * edge.y - (eZoXeXeZ) * edge.x);
+		return new Vector3f((eZoXeXeZ) * edge.z - (eXoYeYoX) * edge.y,
+				(eXoYeYoX) * edge.x - (eYoZeZoY) * edge.z, (eYoZeZoY) * edge.y
+						- (eZoXeXeZ) * edge.x);
 	}
 
 	final Vector3f startdirection = new Vector3f(1, 1, 1);
@@ -253,7 +254,8 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 		return false;
 	}
 
-	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb, Vector3f dir) {
+	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
+			Vector3f dir) {
 		// System.out.println("sup: " +
 		// VecMath.substraction(Sa.supportPoint(dir),
 		// Sb.supportPoint(VecMath.negate(dir))) + ": " + Sa.supportPoint(dir) +

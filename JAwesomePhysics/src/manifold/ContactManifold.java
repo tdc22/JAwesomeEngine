@@ -26,8 +26,9 @@ public class ContactManifold<L extends Vector> {
 		this.tangentB = manifold.getContactTangentB();
 	}
 
-	public ContactManifold(float penetrationdepth, L collisionnormal, L contactA, L contactB, L relativecontactA,
-			L relativecontactB, L localcontactA, L localcontactB, L tangentA, L tangentB) {
+	public ContactManifold(float penetrationdepth, L collisionnormal,
+			L contactA, L contactB, L relativecontactA, L relativecontactB,
+			L localcontactA, L localcontactB, L tangentA, L tangentB) {
 		this.penetrationdepth = penetrationdepth;
 		this.collisionnormal = collisionnormal;
 		this.contactA = contactA;

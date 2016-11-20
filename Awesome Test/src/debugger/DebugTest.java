@@ -1,9 +1,5 @@
 package debugger;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import loader.FontLoader;
@@ -12,6 +8,10 @@ import loader.ShaderLoader;
 import shader.Shader;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class DebugTest extends StandardGame {
 	Debugger debugger;
@@ -20,22 +20,26 @@ public class DebugTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
-				new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings(), new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
 		cam.rotateTo(0, 0);
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile(
+						"res/shaders/defaultshader.vert",
+						"res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
+				font, cam);
 		// GameProfiler gp = new SimpleGameProfiler();
 		// setProfiler(gp);
 		// profiler = new Profiler(inputs, font, gp, null);

@@ -23,9 +23,10 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import matrix.Matrix4f;
+
 import org.lwjgl.BufferUtils;
 
-import matrix.Matrix4f;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -52,7 +53,8 @@ public class InstancedObject extends ShapedObject {
 		instances.add(instance);
 	}
 
-	public void setRenderHints(boolean rendercolors, boolean rendertexturecoords, boolean rendernormals,
+	public void setRenderHints(boolean rendercolors,
+			boolean rendertexturecoords, boolean rendernormals,
 			boolean renderinstances) {
 		renderColor = rendercolors;
 		renderTexCoords = rendertexturecoords;
@@ -138,18 +140,25 @@ public class InstancedObject extends ShapedObject {
 		renderedInstanceCount = instances.size();
 		int allVertices = vertices.size();
 
-		IntBuffer indexData = BufferUtils.createIntBuffer(renderedIndexCount * polysize);
-		FloatBuffer vertexData = BufferUtils.createFloatBuffer(allVertices * vertexsize);
-		FloatBuffer colorData = BufferUtils.createFloatBuffer(allVertices * colorsize);
-		FloatBuffer textureData = BufferUtils.createFloatBuffer(allVertices * texsize);
-		FloatBuffer normalData = BufferUtils.createFloatBuffer(allVertices * vertexsize);
-		FloatBuffer instanceData = BufferUtils.createFloatBuffer(renderedInstanceCount * instancesize);
+		IntBuffer indexData = BufferUtils.createIntBuffer(renderedIndexCount
+				* polysize);
+		FloatBuffer vertexData = BufferUtils.createFloatBuffer(allVertices
+				* vertexsize);
+		FloatBuffer colorData = BufferUtils.createFloatBuffer(allVertices
+				* colorsize);
+		FloatBuffer textureData = BufferUtils.createFloatBuffer(allVertices
+				* texsize);
+		FloatBuffer normalData = BufferUtils.createFloatBuffer(allVertices
+				* vertexsize);
+		FloatBuffer instanceData = BufferUtils
+				.createFloatBuffer(renderedInstanceCount * instancesize);
 
 		for (int v = 0; v < allVertices; v++) {
 			Vector3f vertex = vertices.get(v);
 			vertexData.put(new float[] { vertex.x, vertex.y, vertex.z, 1 });
 			Color vertcolor = colors.get(v);
-			colorData.put(new float[] { vertcolor.getRed(), vertcolor.getGreen(), vertcolor.getBlue() });
+			colorData.put(new float[] { vertcolor.getRed(),
+					vertcolor.getGreen(), vertcolor.getBlue() });
 			Vector2f tex = texturecoords.get(v);
 			textureData.put(new float[] { tex.x, tex.y });
 			Vector3f normal = normals.get(v);
@@ -177,7 +186,8 @@ public class InstancedObject extends ShapedObject {
 		vboVertexHandle = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
 		glBufferData(GL_ARRAY_BUFFER, vertexData, GL_STATIC_DRAW);
-		glVertexAttribPointer(VERTEX_POSITION, vertexsize, GL_FLOAT, false, 0, 0);
+		glVertexAttribPointer(VERTEX_POSITION, vertexsize, GL_FLOAT, false, 0,
+				0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		vboColorHandle = glGenBuffers();
@@ -195,19 +205,24 @@ public class InstancedObject extends ShapedObject {
 		vboNormalHandle = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboNormalHandle);
 		glBufferData(GL_ARRAY_BUFFER, normalData, GL_STATIC_DRAW);
-		glVertexAttribPointer(NORMAL_POSITION, vertexsize, GL_FLOAT, false, 0, 0);
+		glVertexAttribPointer(NORMAL_POSITION, vertexsize, GL_FLOAT, false, 0,
+				0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		vboInstanceHandle = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboInstanceHandle);
 		glBufferData(GL_ARRAY_BUFFER, instanceData, GL_STATIC_DRAW);
-		glVertexAttribPointer(INSTANCE_POSITION, vertexsize, GL_FLOAT, false, 0, instancesize);
+		glVertexAttribPointer(INSTANCE_POSITION, vertexsize, GL_FLOAT, false,
+				0, instancesize);
 		glVertexAttribDivisor(INSTANCE_POSITION, 1);
-		glVertexAttribPointer(INSTANCE_POSITION + 1, vertexsize, GL_FLOAT, false, 0, 2 * instancesize);
+		glVertexAttribPointer(INSTANCE_POSITION + 1, vertexsize, GL_FLOAT,
+				false, 0, 2 * instancesize);
 		glVertexAttribDivisor(INSTANCE_POSITION + 1, 1);
-		glVertexAttribPointer(INSTANCE_POSITION + 2, vertexsize, GL_FLOAT, false, 0, 3 * instancesize);
+		glVertexAttribPointer(INSTANCE_POSITION + 2, vertexsize, GL_FLOAT,
+				false, 0, 3 * instancesize);
 		glVertexAttribDivisor(INSTANCE_POSITION + 2, 1);
-		glVertexAttribPointer(INSTANCE_POSITION + 3, vertexsize, GL_FLOAT, false, 0, 4 * instancesize);
+		glVertexAttribPointer(INSTANCE_POSITION + 3, vertexsize, GL_FLOAT,
+				false, 0, 4 * instancesize);
 		glVertexAttribDivisor(INSTANCE_POSITION + 3, 1);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -252,7 +267,8 @@ public class InstancedObject extends ShapedObject {
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndexHandle);
 
-			glDrawElementsInstanced(rendermode, renderedIndexCount, GL_UNSIGNED_INT, 0, renderedInstanceCount);
+			glDrawElementsInstanced(rendermode, renderedIndexCount,
+					GL_UNSIGNED_INT, 0, renderedInstanceCount);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);

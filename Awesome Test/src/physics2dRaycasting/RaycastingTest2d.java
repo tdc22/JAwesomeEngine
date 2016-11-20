@@ -1,22 +1,19 @@
 package physics2dRaycasting;
 
-import java.util.Set;
-
-import broadphase.DynamicAABBTree2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import integration.EulerIntegration;
+
+import java.util.Set;
+
 import loader.InputLoader;
 import loader.ShaderLoader;
-import manifold.CollisionManifold;
 import manifold.SimpleManifoldManager;
 import math.ComplexMath;
 import matrix.Matrix1f;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
+import narrowphase.SupportRaycast2;
+import objects.CollisionShape;
 import objects.CompoundObject2;
 import objects.Ray2;
 import objects.RigidBody;
@@ -34,6 +31,12 @@ import sound.NullSoundEnvironment;
 import utils.Pair;
 import vector.Vector2f;
 import vector.Vector4f;
+import broadphase.DynamicAABBTree2;
+import broadphase.DynamicAABBTree2Generic;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class RaycastingTest2d extends StandardGame {
 	PhysicsSpace2 space;
@@ -50,14 +53,14 @@ public class RaycastingTest2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
-				new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings(), new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		int shaderprogram = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
-				"res/shaders/colorshader.frag");
+		int shaderprogram = ShaderLoader.loadShaderFromFile(
+				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
 		s1 = new Shader(shaderprogram);
 		s2 = new Shader(shaderprogram);
 		s3 = new Shader(shaderprogram);
@@ -79,12 +82,15 @@ public class RaycastingTest2d extends StandardGame {
 		addShader2d(s5);
 		addShader2d(s6);
 
-		defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader);
 
-		space = new PhysicsSpace2(new EulerIntegration(), new DynamicAABBTree2(), new GJK2(new EPA2()),
-				new NullResolution(), new NullCorrection(), new SimpleManifoldManager<Vector2f>());
+		space = new PhysicsSpace2(new EulerIntegration(),
+				new DynamicAABBTree2(), new GJK2(new EPA2()),
+				new SupportRaycast2(), new NullResolution(),
+				new NullCorrection(), new SimpleManifoldManager<Vector2f>());
 		space.setCullStaticOverlaps(false);
 
 		c = new Circle(400, 200, 10, 36);
@@ -115,7 +121,8 @@ public class RaycastingTest2d extends StandardGame {
 
 		Quad q = new Quad(500, 500, 20, 20);
 		Circle c = new Circle(500, 500, 20, 10);
-		rb6 = new CompoundObject2();
+		rb6 = new CompoundObject2(
+				new DynamicAABBTree2Generic<CollisionShape<Vector2f, ?, ?>>());
 		rb6.addCollisionShape(PhysicsShapeCreator.create(q));
 		rb6.addCollisionShape(PhysicsShapeCreator.create(c));
 		rb6.setMass(1f);
@@ -177,7 +184,8 @@ public class RaycastingTest2d extends StandardGame {
 		ray.setDirection(ComplexMath.transform(c.getRotation(), up));
 		rayVis.updateVisualization();
 
-		Set<RigidBody<Vector2f, ?, ?, ?>> broadphaseHits = space.raycastAllBroadphase(ray);
+		Set<RigidBody<Vector2f, ?, ?, ?>> broadphaseHits = space
+				.raycastAllBroadphase(ray);
 		for (RigidBody<Vector2f, ?, ?, ?> o : broadphaseHits) {
 			if (o.equals(rb1))
 				s1.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
@@ -192,8 +200,9 @@ public class RaycastingTest2d extends StandardGame {
 			if (o.equals(rb6))
 				s6.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 		}
-		
-		Set<Pair<RigidBody<Vector2f, ?, ?, ?>, Vector2f>> hits = space.raycastAll(ray);
+
+		Set<Pair<RigidBody<Vector2f, ?, ?, ?>, Vector2f>> hits = space
+				.raycastAll(ray);
 		for (Pair<RigidBody<Vector2f, ?, ?, ?>, Vector2f> hit : hits) {
 			RigidBody<Vector2f, ?, ?, ?> o = hit.getFirst();
 			if (o.equals(rb1))

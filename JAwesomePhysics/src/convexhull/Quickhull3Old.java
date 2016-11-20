@@ -7,10 +7,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import collisionshape.ConvexShape;
 import math.VecMath;
 import utils.VectorConstants;
 import vector.Vector3f;
+import collisionshape.ConvexShape;
 
 public class Quickhull3Old {
 
@@ -24,10 +24,12 @@ public class Quickhull3Old {
 		}
 	}
 
-	public static ConvexShape computeConvexHull(List<Vector3f> points, int iterations) {
+	public static ConvexShape computeConvexHull(List<Vector3f> points,
+			int iterations) {
 		List<Triangle> faces = new ArrayList<Triangle>();
 		HashMap<Integer, Integer[]> adjacentsMap = new HashMap<Integer, Integer[]>();
-		List<Vector3f> vertices = computeConvexHullVertices(points, faces, adjacentsMap, iterations);
+		List<Vector3f> vertices = computeConvexHullVertices(points, faces,
+				adjacentsMap, iterations);
 		// List<Integer> adjs = new ArrayList<Integer>();
 		// for (int i = 0; i < vertices.size(); i++) {
 		// Vector3f v = vertices.get(i);
@@ -67,12 +69,14 @@ public class Quickhull3Old {
 		return shape;
 	}
 
-	public static List<Vector3f> computeConvexHullVertices(List<Vector3f> points, int iterations) {
-		return computeConvexHullVertices(points, new ArrayList<Triangle>(), new HashMap<Integer, Integer[]>(),
-				iterations);
+	public static List<Vector3f> computeConvexHullVertices(
+			List<Vector3f> points, int iterations) {
+		return computeConvexHullVertices(points, new ArrayList<Triangle>(),
+				new HashMap<Integer, Integer[]>(), iterations);
 	}
 
-	public static List<Vector3f> computeConvexHullVertices(List<Vector3f> points, List<Triangle> faces,
+	public static List<Vector3f> computeConvexHullVertices(
+			List<Vector3f> points, List<Triangle> faces,
 			HashMap<Integer, Integer[]> adjacentsMap, int iterations) {
 		points = new ArrayList<Vector3f>(points);
 		Set<Vector3f> verticesSet = new HashSet<Vector3f>();
@@ -148,9 +152,12 @@ public class Quickhull3Old {
 					faces.add(new Triangle(t.a, t.b, p));
 					faces.add(new Triangle(t.b, t.c, p));
 					faces.add(new Triangle(t.c, t.a, p));
-					facenormals.add(computeNormal(vertices.get(t.a), vertices.get(t.b), vertices.get(p)));
-					facenormals.add(computeNormal(vertices.get(t.b), vertices.get(t.c), vertices.get(p)));
-					facenormals.add(computeNormal(vertices.get(t.c), vertices.get(t.a), vertices.get(p)));
+					facenormals.add(computeNormal(vertices.get(t.a),
+							vertices.get(t.b), vertices.get(p)));
+					facenormals.add(computeNormal(vertices.get(t.b),
+							vertices.get(t.c), vertices.get(p)));
+					facenormals.add(computeNormal(vertices.get(t.c),
+							vertices.get(t.a), vertices.get(p)));
 
 					// TODO: (DONE) add after remove? No! Check convex later, so
 					// special case not to remove double adjs?
@@ -168,9 +175,12 @@ public class Quickhull3Old {
 					faces.remove(currT);
 					facenormals.remove(currT);
 
-					System.out.println("----------------OUTPUT EVERYTHING----------------");
-					System.out.println(t.a + "; " + t.b + "; " + t.c + "; " + p);
-					System.out.println("-----------------END EVERYTHING------------------");
+					System.out
+							.println("----------------OUTPUT EVERYTHING----------------");
+					System.out
+							.println(t.a + "; " + t.b + "; " + t.c + "; " + p);
+					System.out
+							.println("-----------------END EVERYTHING------------------");
 
 					// check convex
 					for (int i = 0; i < faces.size(); i++) {
@@ -185,13 +195,16 @@ public class Quickhull3Old {
 						int adjC = findTriangle(f.c, f.a, f, adjacentsMap);
 						Vector3f adjANormal = null;
 						if (adjA != -1)
-							adjANormal = computeNormal(fa, fb, vertices.get(adjA));
+							adjANormal = computeNormal(fa, fb,
+									vertices.get(adjA));
 						Vector3f adjBNormal = null;
 						if (adjB != -1)
-							adjBNormal = computeNormal(fb, fc, vertices.get(adjB));
+							adjBNormal = computeNormal(fb, fc,
+									vertices.get(adjB));
 						Vector3f adjCNormal = null;
 						if (adjC != -1)
-							adjCNormal = computeNormal(fc, fa, vertices.get(adjC));
+							adjCNormal = computeNormal(fc, fa,
+									vertices.get(adjC));
 						// if(iterations == 1)
 						// System.out.println(faces.size() + "; " + adjs[1] + ";
 						// " + f.a + "; " + f.b + "; " + f.c + "; " + adjs[1].a
@@ -199,57 +212,74 @@ public class Quickhull3Old {
 						// adjs[1].normal);
 						// System.out.println("RAWR " + fa + "; " + fb + "; " +
 						// fc + "; " + adjs);
-						if (adjA != -1 && VecMath.dotproduct(VecMath.subtraction(fc, fa), adjANormal) > 0) {
+						if (adjA != -1
+								&& VecMath
+										.dotproduct(
+												VecMath.subtraction(fc, fa),
+												adjANormal) > 0) {
 							if (iterations == 1)
 								System.out.println("DA");
 							int adjD = findTheD(f.a, f.b, faces.get(adjA));
 							faces.add(new Triangle(f.c, f.a, adjD));
 							faces.add(new Triangle(f.b, f.c, adjD));
-							facenormals.add(computeNormal(fc, fa, vertices.get(adjD)));
-							facenormals.add(computeNormal(fb, fc, vertices.get(adjD)));
+							facenormals.add(computeNormal(fc, fa,
+									vertices.get(adjD)));
+							facenormals.add(computeNormal(fb, fc,
+									vertices.get(adjD)));
 							faces.remove(i);
 							faces.remove(adjA);
-							boolean triangleAJustChanged = checkTriangles(f.c, f.a, adjD, t.a, p, t.c, t.b); // TODO:
-																												// move
-																												// inside
-																												// of
-																												// r-loop
-																												// (performance!)
-							boolean triangleBJustChanged = checkTriangles(f.b, f.c, adjD, t.a, t.b, p, t.c);
-							System.out.println(
-									f.b + "; " + f.c + "; " + adjD + "; " + t.a + "; " + t.b + "; " + t.c + "; " + p);
-							System.out.println("changed a " + triangleAJustChanged); // TODO:
-																						// ERROR
-																						// IN
-																						// CHECKTRIANGLE
-							System.out.println("changed b " + triangleBJustChanged);
+							boolean triangleAJustChanged = checkTriangles(f.c,
+									f.a, adjD, t.a, p, t.c, t.b); // TODO:
+																	// move
+																	// inside
+																	// of
+																	// r-loop
+																	// (performance!)
+							boolean triangleBJustChanged = checkTriangles(f.b,
+									f.c, adjD, t.a, t.b, p, t.c);
+							System.out.println(f.b + "; " + f.c + "; " + adjD
+									+ "; " + t.a + "; " + t.b + "; " + t.c
+									+ "; " + p);
+							System.out.println("changed a "
+									+ triangleAJustChanged); // TODO:
+																// ERROR
+																// IN
+																// CHECKTRIANGLE
+							System.out.println("changed b "
+									+ triangleBJustChanged);
 							Integer[] adjsOfA = adjacentsMap.get(f.a);
 							Integer[] adjsOfB = adjacentsMap.get(f.b);
 							Integer[] adjsOfC = adjacentsMap.get(f.c);
 							Integer[] adjsOfD = adjacentsMap.get(adjD);
 							Integer[] newAdjsA = new Integer[adjsOfA.length - 1];
 							Integer[] newAdjsB = new Integer[adjsOfB.length - 1];
-							Integer[] newAdjsC = Arrays.copyOf(adjsOfC, adjsOfC.length + 1);
-							Integer[] newAdjsD = Arrays.copyOf(adjsOfD, adjsOfD.length + 1);
+							Integer[] newAdjsC = Arrays.copyOf(adjsOfC,
+									adjsOfC.length + 1);
+							Integer[] newAdjsD = Arrays.copyOf(adjsOfD,
+									adjsOfD.length + 1);
 							int x = 0;
 							for (int r = 0; r < adjsOfA.length; r++) {
-								if (adjsOfA[r] != f.b || (triangleAJustChanged && r == adjsOfA.length - 1)) {
+								if (adjsOfA[r] != f.b
+										|| (triangleAJustChanged && r == adjsOfA.length - 1)) {
 									newAdjsA[x] = adjsOfA[r];
 									x++;
 								}
 							}
 							x = 0;
 							for (int r = 0; r < adjsOfB.length; r++) {
-								System.out.println(r + ".. " + adjsOfB.length + ".. " + newAdjsB.length + ".. "
+								System.out.println(r + ".. " + adjsOfB.length
+										+ ".. " + newAdjsB.length + ".. "
 										+ triangleBJustChanged);
-								if (adjsOfB[r] != f.a || (triangleBJustChanged && r == adjsOfB.length - 1)) {
+								if (adjsOfB[r] != f.a
+										|| (triangleBJustChanged && r == adjsOfB.length - 1)) {
 									newAdjsB[x] = adjsOfB[r];
 									x++;
 								}
 							}
 							newAdjsC[newAdjsC.length - 1] = adjD;
 							newAdjsD[newAdjsD.length - 1] = f.c;
-							System.out.println("L1 " + f.a + "; " + f.b + "; " + f.c + "; " + adjD);
+							System.out.println("L1 " + f.a + "; " + f.b + "; "
+									+ f.c + "; " + adjD);
 							System.out.println("A " + newAdjsA);
 							outputArray(adjsOfA);
 							outputArray(newAdjsA);
@@ -267,43 +297,56 @@ public class Quickhull3Old {
 							adjacentsMap.put(f.c, newAdjsC);
 							adjacentsMap.put(adjD, newAdjsD);
 							i--;
-						} else if (adjB != -1 && VecMath.dotproduct(VecMath.subtraction(fa, fb), adjBNormal) > 0) {
+						} else if (adjB != -1
+								&& VecMath
+										.dotproduct(
+												VecMath.subtraction(fa, fb),
+												adjBNormal) > 0) {
 							if (iterations == 1)
 								System.out.println("DB");
 							int adjD = findTheD(f.b, f.c, faces.get(adjB));
 							faces.add(new Triangle(f.a, f.b, adjD));
 							faces.add(new Triangle(f.c, f.a, adjD));
-							facenormals.add(computeNormal(fa, fb, vertices.get(adjD)));
-							facenormals.add(computeNormal(fc, fa, vertices.get(adjD)));
+							facenormals.add(computeNormal(fa, fb,
+									vertices.get(adjD)));
+							facenormals.add(computeNormal(fc, fa,
+									vertices.get(adjD)));
 							faces.remove(i);
 							faces.remove(adjB);
-							boolean triangleBJustChanged = checkTriangles(f.a, f.b, adjD, t.a, t.b, t.c, p);
-							boolean triangleCJustChanged = checkTriangles(f.c, f.a, adjD, t.a, t.b, t.c, p);
+							boolean triangleBJustChanged = checkTriangles(f.a,
+									f.b, adjD, t.a, t.b, t.c, p);
+							boolean triangleCJustChanged = checkTriangles(f.c,
+									f.a, adjD, t.a, t.b, t.c, p);
 							Integer[] adjsOfA = adjacentsMap.get(f.a);
 							Integer[] adjsOfB = adjacentsMap.get(f.b);
 							Integer[] adjsOfC = adjacentsMap.get(f.c);
 							Integer[] adjsOfD = adjacentsMap.get(adjD);
-							Integer[] newAdjsA = Arrays.copyOf(adjsOfA, adjsOfA.length + 1);
+							Integer[] newAdjsA = Arrays.copyOf(adjsOfA,
+									adjsOfA.length + 1);
 							Integer[] newAdjsB = new Integer[adjsOfB.length - 1];
 							Integer[] newAdjsC = new Integer[adjsOfC.length - 1];
-							Integer[] newAdjsD = Arrays.copyOf(adjsOfD, adjsOfD.length + 1);
+							Integer[] newAdjsD = Arrays.copyOf(adjsOfD,
+									adjsOfD.length + 1);
 							newAdjsA[newAdjsA.length - 1] = adjD;
 							int x = 0;
 							for (int r = 0; r < adjsOfB.length; r++) {
-								if (adjsOfB[r] != f.c || (triangleBJustChanged && r == adjsOfB.length - 1)) {
+								if (adjsOfB[r] != f.c
+										|| (triangleBJustChanged && r == adjsOfB.length - 1)) {
 									newAdjsB[x] = adjsOfB[r];
 									x++;
 								}
 							}
 							x = 0;
 							for (int r = 0; r < adjsOfC.length; r++) {
-								if (adjsOfC[r] != f.b || (triangleCJustChanged && r == adjsOfC.length - 1)) {
+								if (adjsOfC[r] != f.b
+										|| (triangleCJustChanged && r == adjsOfC.length - 1)) {
 									newAdjsC[x] = adjsOfC[r];
 									x++;
 								}
 							}
 							newAdjsD[newAdjsD.length - 1] = f.a;
-							System.out.println("L2 " + f.a + "; " + f.b + "; " + f.c + "; " + adjD);
+							System.out.println("L2 " + f.a + "; " + f.b + "; "
+									+ f.c + "; " + adjD);
 							System.out.println("A " + newAdjsA);
 							outputArray(newAdjsA);
 							System.out.println("B " + newAdjsB);
@@ -317,32 +360,45 @@ public class Quickhull3Old {
 							adjacentsMap.put(f.c, newAdjsC);
 							adjacentsMap.put(adjD, newAdjsD);
 							i--;
-						} else if (adjC != -1 && VecMath.dotproduct(VecMath.subtraction(fb, fc), adjCNormal) > 0) {
+						} else if (adjC != -1
+								&& VecMath
+										.dotproduct(
+												VecMath.subtraction(fb, fc),
+												adjCNormal) > 0) {
 							if (iterations == 1)
 								System.out.println("DC");
 							int adjD = findTheD(f.c, f.a, faces.get(adjC));
 							faces.add(new Triangle(f.b, f.c, adjD));
 							faces.add(new Triangle(f.a, f.b, adjD));
-							facenormals.add(computeNormal(fb, fc, vertices.get(adjD)));
-							facenormals.add(computeNormal(fa, fb, vertices.get(adjD)));
+							facenormals.add(computeNormal(fb, fc,
+									vertices.get(adjD)));
+							facenormals.add(computeNormal(fa, fb,
+									vertices.get(adjD)));
 							faces.remove(i);
 							faces.remove(adjC);
-							System.out.println(
-									f.a + "; " + f.b + "; " + adjD + "; " + t.a + "; " + t.b + "; " + t.c + "; " + p);
-							boolean triangleCJustChanged = checkTriangles(f.b, f.c, adjD, t.a, t.b, t.c, p);
-							boolean triangleAJustChanged = checkTriangles(f.a, f.b, adjD, t.a, t.b, t.c, p);
-							System.out.println("changed: " + triangleAJustChanged);
+							System.out.println(f.a + "; " + f.b + "; " + adjD
+									+ "; " + t.a + "; " + t.b + "; " + t.c
+									+ "; " + p);
+							boolean triangleCJustChanged = checkTriangles(f.b,
+									f.c, adjD, t.a, t.b, t.c, p);
+							boolean triangleAJustChanged = checkTriangles(f.a,
+									f.b, adjD, t.a, t.b, t.c, p);
+							System.out.println("changed: "
+									+ triangleAJustChanged);
 							Integer[] adjsOfA = adjacentsMap.get(f.a);
 							Integer[] adjsOfB = adjacentsMap.get(f.b);
 							Integer[] adjsOfC = adjacentsMap.get(f.c);
 							Integer[] adjsOfD = adjacentsMap.get(adjD);
 							Integer[] newAdjsA = new Integer[adjsOfA.length - 1];
-							Integer[] newAdjsB = Arrays.copyOf(adjsOfB, adjsOfB.length + 1);
+							Integer[] newAdjsB = Arrays.copyOf(adjsOfB,
+									adjsOfB.length + 1);
 							Integer[] newAdjsC = new Integer[adjsOfC.length - 1];
-							Integer[] newAdjsD = Arrays.copyOf(adjsOfD, adjsOfD.length + 1);
+							Integer[] newAdjsD = Arrays.copyOf(adjsOfD,
+									adjsOfD.length + 1);
 							int x = 0;
 							for (int r = 0; r < adjsOfA.length; r++) {
-								if (adjsOfA[r] != f.c || (triangleAJustChanged && r == adjsOfA.length - 1)) {
+								if (adjsOfA[r] != f.c
+										|| (triangleAJustChanged && r == adjsOfA.length - 1)) {
 									newAdjsA[x] = adjsOfA[r];
 									x++;
 								}
@@ -350,13 +406,15 @@ public class Quickhull3Old {
 							newAdjsB[newAdjsB.length - 1] = adjD;
 							x = 0;
 							for (int r = 0; r < adjsOfC.length; r++) {
-								if (adjsOfC[r] != f.a || (triangleCJustChanged && r == adjsOfC.length - 1)) {
+								if (adjsOfC[r] != f.a
+										|| (triangleCJustChanged && r == adjsOfC.length - 1)) {
 									newAdjsC[x] = adjsOfC[r];
 									x++;
 								}
 							}
 							newAdjsD[newAdjsD.length - 1] = f.b;
-							System.out.println("L3 " + f.a + "; " + f.b + "; " + f.c + "; " + adjD);
+							System.out.println("L3 " + f.a + "; " + f.b + "; "
+									+ f.c + "; " + adjD);
 							System.out.println("A " + newAdjsA);
 							outputArray(adjsOfA);
 							outputArray(newAdjsA);
@@ -402,17 +460,21 @@ public class Quickhull3Old {
 		return result;
 	}
 
-	private static boolean checkTriangles(float aa, float ab, float ac, float qa, float qb, float qc, float qd) {
-		return (checkTriangle(aa, ab, ac, qa, qb, qd) || checkTriangle(aa, ab, ac, qb, qc, qd)
-				|| checkTriangle(aa, ab, ac, qc, qa, qd));
+	private static boolean checkTriangles(float aa, float ab, float ac,
+			float qa, float qb, float qc, float qd) {
+		return (checkTriangle(aa, ab, ac, qa, qb, qd)
+				|| checkTriangle(aa, ab, ac, qb, qc, qd) || checkTriangle(aa,
+					ab, ac, qc, qa, qd));
 	}
 
-	private static boolean checkTriangle(float aa, float ab, float ac, float ba, float bb, float bc) {
-		return ((aa == ba && ab == bb && ac == bc) || (aa == bb && ab == bc && ac == ba)
-				|| (aa == bc && ab == ba && ac == bb));
+	private static boolean checkTriangle(float aa, float ab, float ac,
+			float ba, float bb, float bc) {
+		return ((aa == ba && ab == bb && ac == bc)
+				|| (aa == bb && ab == bc && ac == ba) || (aa == bc && ab == ba && ac == bb));
 	}
 
-	private static int insertVertex(Vector3f v, List<Vector3f> vertices, Set<Vector3f> verticesSet, int pos) {
+	private static int insertVertex(Vector3f v, List<Vector3f> vertices,
+			Set<Vector3f> verticesSet, int pos) {
 		if (!verticesSet.contains(v)) {
 			vertices.add(v);
 			verticesSet.add(v);
@@ -435,12 +497,14 @@ public class Quickhull3Old {
 		return pointID;
 	}
 
-	private static int getFurthestPoint(Triangle t, Vector3f normal, List<Vector3f> points, List<Vector3f> vertices) {
+	private static int getFurthestPoint(Triangle t, Vector3f normal,
+			List<Vector3f> points, List<Vector3f> vertices) {
 		float distance = 0;
 		int pointID = -1;
 		Vector3f A = vertices.get(t.a);
 		for (int i = 0; i < points.size(); i++) {
-			float dist = Math.abs(VecMath.dotproduct(normal, VecMath.subtraction(points.get(i), A)));
+			float dist = Math.abs(VecMath.dotproduct(normal,
+					VecMath.subtraction(points.get(i), A)));
 			if (dist > distance) {
 				distance = dist;
 				pointID = i;
@@ -449,13 +513,14 @@ public class Quickhull3Old {
 		return pointID;
 	}
 
-	private static int getFurthestPointDirection(Triangle t, Vector3f normal, List<Vector3f> points,
-			List<Vector3f> vertices) {
+	private static int getFurthestPointDirection(Triangle t, Vector3f normal,
+			List<Vector3f> points, List<Vector3f> vertices) {
 		float distance = 0;
 		int pointID = -1;
 		Vector3f A = vertices.get(t.a);
 		for (int i = 0; i < points.size(); i++) {
-			float dist = VecMath.dotproduct(normal, VecMath.subtraction(points.get(i), A));
+			float dist = VecMath.dotproduct(normal,
+					VecMath.subtraction(points.get(i), A));
 			if (dist > distance) {
 				distance = dist;
 				pointID = i;
@@ -513,7 +578,8 @@ public class Quickhull3Old {
 		return b.c;
 	}
 
-	private static int findTriangle(int ax, int ay, Triangle triangle, HashMap<Integer, Integer[]> adjacentMap) {
+	private static int findTriangle(int ax, int ay, Triangle triangle,
+			HashMap<Integer, Integer[]> adjacentMap) {
 		for (int i = 0; i < 3; i++) {
 			int adj = 0;
 			switch (i) {

@@ -80,107 +80,110 @@ public class StencilLightSourceOLD { // implements Runnable {
 		 * try { Thread.sleep(delay); } catch (InterruptedException e) {
 		 * e.printStackTrace(); } } } while(running); }
 		 *//*
-		 * 
-		 * public void render() { glColor3f(1.0f, 1.0f, 1.0f);
-		 * glBegin(GL_QUADS); // Top Face glVertex3f(pos.x - 0.1f, pos.y + 0.1f,
-		 * pos.z - 0.1f); glVertex3f(pos.x - 0.1f, pos.y + 0.1f, pos.z + 0.1f);
-		 * glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z + 0.1f);
-		 * glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z - 0.1f); // Front Face
-		 * glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z + 0.1f);
-		 * glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z + 0.1f);
-		 * glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z + 0.1f);
-		 * glVertex3f(pos.x - 0.1f, pos.y + 0.1f, pos.z + 0.1f); // Right face
-		 * glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z - 0.1f);
-		 * glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z - 0.1f);
-		 * glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z + 0.1f);
-		 * glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z + 0.1f); // Back Face
-		 * glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z - 0.1f);
-		 * glVertex3f(pos.x - 0.1f, pos.y + 0.1f, pos.z - 0.1f);
-		 * glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z - 0.1f);
-		 * glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z - 0.1f); // Left Face
-		 * glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z - 0.1f);
-		 * glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z + 0.1f);
-		 * glVertex3f(pos.x - 0.1f, pos.y + 0.1f, pos.z + 0.1f);
-		 * glVertex3f(pos.x - 0.1f, pos.y + 0.1f, pos.z - 0.1f); // Bottom Face
-		 * glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z - 0.1f);
-		 * glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z - 0.1f);
-		 * glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z + 0.1f);
-		 * glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z + 0.1f); glEnd();
-		 * 
-		 * glColorMask(false, false, false, false); glDepthMask(false);
-		 * 
-		 * for (int o = 0; o < objects.size(); o++) { GameObject obj =
-		 * objects.get(o);
-		 * 
-		 * objectedges.clear(); objectprojecteds.clear();
-		 * 
-		 * glPushMatrix();
-		 * 
-		 * Matrix4f matr = obj.getMatrix(); FloatBuffer fbr =
-		 * BufferUtils.createFloatBuffer(16 * 4); FloatBuffer fb2r =
-		 * BufferUtils.createFloatBuffer(16 * 4);
-		 * 
-		 * matr.store(fb2r); float xr = matr.m30; float yr = matr.m31; float zr
-		 * = matr.m32; fb2r.rewind(); matr.negate(); matr.m33 = 1; matr.m30 =
-		 * xr; matr.m31 = yr; matr.m32 = zr;
-		 * 
-		 * matr.store(fbr); fbr.rewind(); glMultMatrix(fbr);
-		 * 
-		 * matr.load(fb2r);
-		 * 
-		 * for (int e = 0; e < edges.get(o).size(); e++) { Vector3f[] edge =
-		 * edges.get(o).get(e); objectedges.add(edge); } for (int p = 0; p <
-		 * projecteds.get(o).size(); p++) { Vector3f[] projected =
-		 * projecteds.get(o).get(p); objectprojecteds.add(projected); }
-		 * 
-		 * currentobject = o; drawShadow(); glPopMatrix(); } endDrawShadows();
-		 * 
-		 * /* for(int o = 0; o < objects.size(); o++) { GameObject obj =
-		 * objects.get(o);
-		 * 
-		 * objectedges.clear(); objectprojecteds.clear();
-		 * 
-		 * glPushMatrix();
-		 * 
-		 * Matrix4f matr = obj.getMatrix(); FloatBuffer fbr =
-		 * BufferUtils.createFloatBuffer(16*4); FloatBuffer fb2r =
-		 * BufferUtils.createFloatBuffer(16*4);
-		 * 
-		 * matr.store(fb2r); float xr = matr.m30; float yr = matr.m31; float zr
-		 * = matr.m32; fb2r.rewind(); matr.negate(); matr.m33 = 1; matr.m30 =
-		 * xr; matr.m31 = yr; matr.m32 = zr;
-		 * 
-		 * matr.store(fbr); fbr.rewind(); glMultMatrix(fbr);
-		 * 
-		 * matr.load(fb2r);
-		 * 
-		 * for(int e = 0; e < edges.get(o).size(); e++) { Vector3f[] edge =
-		 * edges.get(o).get(e); objectedges.add(edge); } for(int p = 0; p <
-		 * projecteds.get(o).size(); p++) { Vector3f[] projected =
-		 * projecteds.get(o).get(p); objectprojecteds.add(projected); }
-		 * 
-		 * currentobject = o; drawShadowVolume(); drawCaps(); glPopMatrix(); }
-		 * endDrawShadows();
-		 *//*
-			 * }
 			 * 
-			 * public void drawShadow() { glEnable(GL_STENCIL_TEST);
-			 * glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFF); glEnable(GL_CULL_FACE);
+			 * public void render() { glColor3f(1.0f, 1.0f, 1.0f);
+			 * glBegin(GL_QUADS); // Top Face glVertex3f(pos.x - 0.1f, pos.y +
+			 * 0.1f, pos.z - 0.1f); glVertex3f(pos.x - 0.1f, pos.y + 0.1f, pos.z
+			 * + 0.1f); glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z + 0.1f);
+			 * glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z - 0.1f); // Front
+			 * Face glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z + 0.1f);
+			 * glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z + 0.1f);
+			 * glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z + 0.1f);
+			 * glVertex3f(pos.x - 0.1f, pos.y + 0.1f, pos.z + 0.1f); // Right
+			 * face glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z - 0.1f);
+			 * glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z - 0.1f);
+			 * glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z + 0.1f);
+			 * glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z + 0.1f); // Back
+			 * Face glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z - 0.1f);
+			 * glVertex3f(pos.x - 0.1f, pos.y + 0.1f, pos.z - 0.1f);
+			 * glVertex3f(pos.x + 0.1f, pos.y + 0.1f, pos.z - 0.1f);
+			 * glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z - 0.1f); // Left
+			 * Face glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z - 0.1f);
+			 * glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z + 0.1f);
+			 * glVertex3f(pos.x - 0.1f, pos.y + 0.1f, pos.z + 0.1f);
+			 * glVertex3f(pos.x - 0.1f, pos.y + 0.1f, pos.z - 0.1f); // Bottom
+			 * Face glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z - 0.1f);
+			 * glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z - 0.1f);
+			 * glVertex3f(pos.x + 0.1f, pos.y - 0.1f, pos.z + 0.1f);
+			 * glVertex3f(pos.x - 0.1f, pos.y - 0.1f, pos.z + 0.1f); glEnd();
 			 * 
-			 * if (near) { glCullFace(GL_FRONT); glStencilOp(GL_KEEP,
-			 * GL_INCR_WRAP, GL_KEEP); drawCaps(); drawShadowVolume();
+			 * glColorMask(false, false, false, false); glDepthMask(false);
 			 * 
-			 * glCullFace(GL_BACK); glStencilOp(GL_KEEP, GL_DECR_WRAP, GL_KEEP);
-			 * drawCaps(); drawShadowVolume(); } else { glFrontFace(GL_CCW);
-			 * drawShadowVolume(); glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
-			 * glFrontFace(GL_CW); drawShadowVolume(); glStencilOp(GL_KEEP,
-			 * GL_KEEP, GL_INCR); glFrontFace(GL_CCW); }
+			 * for (int o = 0; o < objects.size(); o++) { GameObject obj =
+			 * objects.get(o);
 			 * 
-			 * /* glFrontFace(GL_CCW); drawShadowVolume(); //
-			 * glStencilOp(GL_KEEP, GL_KEEP, GL_DECR); glFrontFace(GL_CW);
-			 * drawShadowVolume(); // glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
-			 * glFrontFace(GL_CCW);
-			 */
+			 * objectedges.clear(); objectprojecteds.clear();
+			 * 
+			 * glPushMatrix();
+			 * 
+			 * Matrix4f matr = obj.getMatrix(); FloatBuffer fbr =
+			 * BufferUtils.createFloatBuffer(16 * 4); FloatBuffer fb2r =
+			 * BufferUtils.createFloatBuffer(16 * 4);
+			 * 
+			 * matr.store(fb2r); float xr = matr.m30; float yr = matr.m31; float
+			 * zr = matr.m32; fb2r.rewind(); matr.negate(); matr.m33 = 1;
+			 * matr.m30 = xr; matr.m31 = yr; matr.m32 = zr;
+			 * 
+			 * matr.store(fbr); fbr.rewind(); glMultMatrix(fbr);
+			 * 
+			 * matr.load(fb2r);
+			 * 
+			 * for (int e = 0; e < edges.get(o).size(); e++) { Vector3f[] edge =
+			 * edges.get(o).get(e); objectedges.add(edge); } for (int p = 0; p <
+			 * projecteds.get(o).size(); p++) { Vector3f[] projected =
+			 * projecteds.get(o).get(p); objectprojecteds.add(projected); }
+			 * 
+			 * currentobject = o; drawShadow(); glPopMatrix(); }
+			 * endDrawShadows();
+			 * 
+			 * /* for(int o = 0; o < objects.size(); o++) { GameObject obj =
+			 * objects.get(o);
+			 * 
+			 * objectedges.clear(); objectprojecteds.clear();
+			 * 
+			 * glPushMatrix();
+			 * 
+			 * Matrix4f matr = obj.getMatrix(); FloatBuffer fbr =
+			 * BufferUtils.createFloatBuffer(16*4); FloatBuffer fb2r =
+			 * BufferUtils.createFloatBuffer(16*4);
+			 * 
+			 * matr.store(fb2r); float xr = matr.m30; float yr = matr.m31; float
+			 * zr = matr.m32; fb2r.rewind(); matr.negate(); matr.m33 = 1;
+			 * matr.m30 = xr; matr.m31 = yr; matr.m32 = zr;
+			 * 
+			 * matr.store(fbr); fbr.rewind(); glMultMatrix(fbr);
+			 * 
+			 * matr.load(fb2r);
+			 * 
+			 * for(int e = 0; e < edges.get(o).size(); e++) { Vector3f[] edge =
+			 * edges.get(o).get(e); objectedges.add(edge); } for(int p = 0; p <
+			 * projecteds.get(o).size(); p++) { Vector3f[] projected =
+			 * projecteds.get(o).get(p); objectprojecteds.add(projected); }
+			 * 
+			 * currentobject = o; drawShadowVolume(); drawCaps(); glPopMatrix();
+			 * } endDrawShadows();
+			 *//*
+				 * }
+				 * 
+				 * public void drawShadow() { glEnable(GL_STENCIL_TEST);
+				 * glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFF);
+				 * glEnable(GL_CULL_FACE);
+				 * 
+				 * if (near) { glCullFace(GL_FRONT); glStencilOp(GL_KEEP,
+				 * GL_INCR_WRAP, GL_KEEP); drawCaps(); drawShadowVolume();
+				 * 
+				 * glCullFace(GL_BACK); glStencilOp(GL_KEEP, GL_DECR_WRAP,
+				 * GL_KEEP); drawCaps(); drawShadowVolume(); } else {
+				 * glFrontFace(GL_CCW); drawShadowVolume(); glStencilOp(GL_KEEP,
+				 * GL_KEEP, GL_DECR); glFrontFace(GL_CW); drawShadowVolume();
+				 * glStencilOp(GL_KEEP, GL_KEEP, GL_INCR); glFrontFace(GL_CCW);
+				 * }
+				 * 
+				 * /* glFrontFace(GL_CCW); drawShadowVolume(); //
+				 * glStencilOp(GL_KEEP, GL_KEEP, GL_DECR); glFrontFace(GL_CW);
+				 * drawShadowVolume(); // glStencilOp(GL_KEEP, GL_KEEP,
+				 * GL_INCR); glFrontFace(GL_CCW);
+				 */
 
 	/*
 	 * glEnable(GL_STENCIL_TEST); glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFF);

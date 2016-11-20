@@ -53,18 +53,30 @@ public class IsoSphere extends ShapedObject3 implements SphereStructure {
 		// faces.add(new Integer[] {0, 2, 3, 2, 1, 2});
 		// faces.add(new Integer[] {0, 3, 1, 3, 2, 3});
 
-		vertices.add(VecMath.scale(new Vector3f(0.5257311, 0.8506508, 0.0), radius));
-		vertices.add(VecMath.scale(new Vector3f(-0.5257311, 0.8506508, 0.0), radius));
-		vertices.add(VecMath.scale(new Vector3f(0.5257311, -0.8506508, 0.0), radius));
-		vertices.add(VecMath.scale(new Vector3f(-0.5257311, -0.8506508, 0.0), radius));
-		vertices.add(VecMath.scale(new Vector3f(0.0, 0.5257311, 0.8506508), radius));
-		vertices.add(VecMath.scale(new Vector3f(0.0, -0.5257311, 0.8506508), radius));
-		vertices.add(VecMath.scale(new Vector3f(0.0, 0.5257311, -0.8506508), radius));
-		vertices.add(VecMath.scale(new Vector3f(0.0, -0.5257311, -0.8506508), radius));
-		vertices.add(VecMath.scale(new Vector3f(0.8506508, 0.0, 0.5257311), radius));
-		vertices.add(VecMath.scale(new Vector3f(-0.8506508, 0.0, 0.5257311), radius));
-		vertices.add(VecMath.scale(new Vector3f(0.8506508, 0.0, -0.5257311), radius));
-		vertices.add(VecMath.scale(new Vector3f(-0.8506508, 0.0, -0.5257311), radius));
+		vertices.add(VecMath.scale(new Vector3f(0.5257311, 0.8506508, 0.0),
+				radius));
+		vertices.add(VecMath.scale(new Vector3f(-0.5257311, 0.8506508, 0.0),
+				radius));
+		vertices.add(VecMath.scale(new Vector3f(0.5257311, -0.8506508, 0.0),
+				radius));
+		vertices.add(VecMath.scale(new Vector3f(-0.5257311, -0.8506508, 0.0),
+				radius));
+		vertices.add(VecMath.scale(new Vector3f(0.0, 0.5257311, 0.8506508),
+				radius));
+		vertices.add(VecMath.scale(new Vector3f(0.0, -0.5257311, 0.8506508),
+				radius));
+		vertices.add(VecMath.scale(new Vector3f(0.0, 0.5257311, -0.8506508),
+				radius));
+		vertices.add(VecMath.scale(new Vector3f(0.0, -0.5257311, -0.8506508),
+				radius));
+		vertices.add(VecMath.scale(new Vector3f(0.8506508, 0.0, 0.5257311),
+				radius));
+		vertices.add(VecMath.scale(new Vector3f(-0.8506508, 0.0, 0.5257311),
+				radius));
+		vertices.add(VecMath.scale(new Vector3f(0.8506508, 0.0, -0.5257311),
+				radius));
+		vertices.add(VecMath.scale(new Vector3f(-0.8506508, 0.0, -0.5257311),
+				radius));
 
 		faces.add(new Integer[] { 0, 0, 2, 0, 11, 0 });
 		faces.add(new Integer[] { 0, 0, 5, 0, 7, 0 });
@@ -124,9 +136,12 @@ public class IsoSphere extends ShapedObject3 implements SphereStructure {
 			for (int j = currfaces.size() - 1; j >= 0; j--) {
 				Integer[] f = currfaces.get(j);
 
-				int a = vertices.indexOf(getCenter(vertices.get(f[0]), vertices.get(f[2])));
-				int b = vertices.indexOf(getCenter(vertices.get(f[4]), vertices.get(f[0])));
-				int c = vertices.indexOf(getCenter(vertices.get(f[2]), vertices.get(f[4])));
+				int a = vertices.indexOf(getCenter(vertices.get(f[0]),
+						vertices.get(f[2])));
+				int b = vertices.indexOf(getCenter(vertices.get(f[4]),
+						vertices.get(f[0])));
+				int c = vertices.indexOf(getCenter(vertices.get(f[2]),
+						vertices.get(f[4])));
 
 				System.out.println(a + "; " + b + "; " + c);
 

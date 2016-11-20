@@ -40,7 +40,8 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 		}
 
 		public Node getSibling() {
-			return this == parent.leftChild ? parent.rightChild : parent.leftChild;
+			return this == parent.leftChild ? parent.rightChild
+					: parent.leftChild;
 		}
 
 		public boolean isLeaf() {
@@ -97,7 +98,8 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 		}
 	}
 
-	final Pair<ObjectType, ObjectType> tempPair = new Pair<ObjectType, ObjectType>(null, null);
+	final Pair<ObjectType, ObjectType> tempPair = new Pair<ObjectType, ObjectType>(
+			null, null);
 
 	protected void computePairsHelper(Node node0, Node node1) {
 		if (node0.isLeaf()) {
@@ -105,13 +107,14 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 				tempPair.set(node0.object, node1.object);
 				if (intersect(node0, node1)) {
 					if (!overlapSet.contains(tempPair)) {
-						Pair<ObjectType, ObjectType> overlap = new Pair<ObjectType, ObjectType>(node0.object,
-								node1.object);
+						Pair<ObjectType, ObjectType> overlap = new Pair<ObjectType, ObjectType>(
+								node0.object, node1.object);
 						overlaps.add(overlap);
 						overlapSet.add(overlap);
 
 						for (BroadphaseListener<L, ObjectType> listener : listeners) {
-							listener.overlapStarted(overlap.getFirst(), overlap.getSecond());
+							listener.overlapStarted(overlap.getFirst(),
+									overlap.getSecond());
 						}
 					}
 				} else {
@@ -120,7 +123,8 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 						overlapSet.remove(tempPair);
 
 						for (BroadphaseListener<L, ObjectType> listener : listeners) {
-							listener.overlapEnded(tempPair.getFirst(), tempPair.getSecond());
+							listener.overlapEnded(tempPair.getFirst(),
+									tempPair.getSecond());
 						}
 					}
 				}
@@ -159,7 +163,8 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 		return new LinkedHashSet<Pair<ObjectType, ObjectType>>(overlaps);
 	}
 
-	protected Node getNode(Node startnode, ObjectType object, L objectGlobalMinAABB, L objectGlobalMaxAABB) {
+	protected Node getNode(Node startnode, ObjectType object,
+			L objectGlobalMinAABB, L objectGlobalMaxAABB) {
 		// TODO: could be wrong if AABBs in tree are not up to date
 		if (startnode.isLeaf()) {
 			if (startnode.object.equals(object)) {
@@ -169,10 +174,12 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 		} else {
 			if (startnode.leftChild.aabb.contains(objectGlobalMinAABB)
 					&& startnode.leftChild.aabb.contains(objectGlobalMaxAABB)) {
-				return getNode(startnode.leftChild, object, objectGlobalMinAABB, objectGlobalMaxAABB);
+				return getNode(startnode.leftChild, object,
+						objectGlobalMinAABB, objectGlobalMaxAABB);
 			} else if (startnode.rightChild.aabb.contains(objectGlobalMinAABB)
 					&& startnode.rightChild.aabb.contains(objectGlobalMaxAABB)) {
-				return getNode(startnode.rightChild, object, objectGlobalMinAABB, objectGlobalMaxAABB);
+				return getNode(startnode.rightChild, object,
+						objectGlobalMinAABB, objectGlobalMaxAABB);
 			} else {
 				return null;
 			}
@@ -181,7 +188,10 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 
 	@Override
 	public void remove(ObjectType object) {
-		removeNode(getNode(root, object, object.getGlobalMinAABB(), object.getGlobalMaxAABB()));
+		Node remove = getNode(root, object, object.getGlobalMinAABB(),
+				object.getGlobalMaxAABB());
+		if (remove != null)
+			removeNode(remove);
 
 		Iterator<Pair<ObjectType, ObjectType>> it = overlapSet.iterator();
 		while (it.hasNext()) {
@@ -225,9 +235,11 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 	}
 
 	protected void toString(Node n) {
-		System.out.print(n.aabb + "; " + n.isLeaf() + "; " + n.leftChild + "; " + n.rightChild + "; " + n);
+		System.out.print(n.aabb + "; " + n.isLeaf() + "; " + n.leftChild + "; "
+				+ n.rightChild + "; " + n);
 		if (n.isLeaf()) {
-			System.out.print("; " + n.object.getAABB() + "; " + n.object.getTranslation());
+			System.out.print("; " + n.object.getAABB() + "; "
+					+ n.object.getTranslation());
 		}
 		System.out.println();
 		if (!n.isLeaf()) {
@@ -259,7 +271,8 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 				for (Node node : invalidNodes) {
 					Node parent = node.parent;
 					Node sibling = node.getSibling();
-					sibling.parent = (parent.parent != null) ? parent.parent : null;
+					sibling.parent = (parent.parent != null) ? parent.parent
+							: null;
 					if (parent.parent != null) {
 						if (parent == parent.parent.leftChild)
 							parent.parent.leftChild = sibling;
@@ -311,7 +324,8 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 
 		while (!raycastQueue.isEmpty()) {
 			Node node = raycastQueue.pop();
-			AABB<L> aabb = node.isLeaf() ? node.object.getGlobalAABB() : node.getAABB();
+			AABB<L> aabb = node.isLeaf() ? node.object.getGlobalAABB() : node
+					.getAABB();
 
 			if (IntersectionLibrary.intersects(ray, aabb)) {
 				if (node.isLeaf()) {

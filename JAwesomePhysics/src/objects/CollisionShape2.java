@@ -6,17 +6,20 @@ import matrix.Matrix4f;
 import quaternion.Complexf;
 import vector.Vector2f;
 
-public abstract class CollisionShape2 extends CollisionShape<Vector2f, Complexf, Matrix1f>
-		implements InstancedBaseObject2 {
+public abstract class CollisionShape2 extends
+		CollisionShape<Vector2f, Complexf, Matrix1f> implements
+		InstancedBaseObject2 {
 
 	public CollisionShape2() {
-		super(new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
+		super(new Vector2f(), new Vector2f(), new Complexf(),
+				new Vector2f(1, 1));
 		aabb = new AABB2(new Vector2f(), new Vector2f());
 		invrotation = new Complexf();
 	}
 
 	public CollisionShape2(CollisionShape2 cs) {
-		super(cs, new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
+		super(cs, new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(
+				1, 1));
 	}
 
 	@Override
@@ -57,7 +60,8 @@ public abstract class CollisionShape2 extends CollisionShape<Vector2f, Complexf,
 
 	@Override
 	public Vector2f supportPointRelativeNegative(Vector2f direction) {
-		Vector2f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
+		Vector2f supportRelNeg = supportcalculator
+				.supportPointLocalNegative(direction);
 		supportRelNeg.transform(getRotation());
 		return supportRelNeg;
 	}
@@ -143,7 +147,8 @@ public abstract class CollisionShape2 extends CollisionShape<Vector2f, Complexf,
 	@Override
 	public Matrix4f getMatrix() {
 		float[][] mat = rotation.toMatrixf().getArrayf();
-		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, 0, 0, mat[1][0] * scale.y, mat[1][1] * scale.y, 0,
-				0, 0, 0, 0, 0, translation.getXf(), translation.getYf(), 0, 1);
+		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, 0, 0,
+				mat[1][0] * scale.y, mat[1][1] * scale.y, 0, 0, 0, 0, 0, 0,
+				translation.getXf(), translation.getYf(), 0, 1);
 	}
 }

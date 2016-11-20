@@ -2226,7 +2226,7 @@ public class HACD {
 	//
 	// public int getVoxel(int i, int j, int k) {
 	// int id = (int) (i + j * m_dim.x + k * m_dim.x * m_dim.y) % m_data.length;
-	//// if (id < 0) System.out.println((i + j * m_dim.x + k * m_dim.x *
+	// // if (id < 0) System.out.println((i + j * m_dim.x + k * m_dim.x *
 	// m_dim.y) + " (" + i + "; " + j + "; " + k + "); " + m_data.length);
 	// return m_data[Math.abs(id)];
 	// }
@@ -2328,8 +2328,8 @@ public class HACD {
 	// i = (int) (p[c].x + 0.5);
 	// j = (int) (p[c].y + 0.5);
 	// k = (int) (p[c].z + 0.5);
-	//// assert (i < m_dim.x && i >= 0 && j < m_dim.y && j >= 0
-	//// && k < m_dim.z && k >= 0);
+	// // assert (i < m_dim.x && i >= 0 && j < m_dim.y && j >= 0
+	// // && k < m_dim.z && k >= 0);
 	//
 	// if (c == 0) {
 	// i0 = i1 = i;

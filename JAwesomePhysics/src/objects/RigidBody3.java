@@ -7,17 +7,20 @@ import quaternion.Quaternionf;
 import utils.VectorConstants;
 import vector.Vector3f;
 
-public class RigidBody3 extends RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>
-		implements InstancedBaseObject3 {
+public class RigidBody3 extends
+		RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> implements
+		InstancedBaseObject3 {
 	public RigidBody3() {
-		super(new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1));
+		super(new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(
+				1, 1, 1));
 		aabb = new AABB3(new Vector3f(), new Vector3f());
 		invrotation = new Quaternionf();
 		init();
 	}
 
 	public RigidBody3(CollisionShape3 cs) {
-		super(cs, new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1));
+		super(cs, new Vector3f(), new Vector3f(), new Quaternionf(),
+				new Vector3f(1, 1, 1));
 		init();
 	}
 
@@ -38,7 +41,8 @@ public class RigidBody3 extends RigidBody<Vector3f, Vector3f, Quaternionf, Quate
 	@Override
 	public void applyForce(Vector3f force, Vector3f rel_pos) {
 		applyCentralForce(force);
-		applyTorque(VecMath.crossproduct(rel_pos, VecMath.multiplication(force, linearfactor)));
+		applyTorque(VecMath.crossproduct(rel_pos,
+				VecMath.multiplication(force, linearfactor)));
 	}
 
 	@Override
@@ -48,8 +52,9 @@ public class RigidBody3 extends RigidBody<Vector3f, Vector3f, Quaternionf, Quate
 			float ilX = impulse.x * linearfactor.x;
 			float ilY = impulse.y * linearfactor.y;
 			float ilZ = impulse.z * linearfactor.z;
-			applyTorqueImpulse(new Vector3f(rel_pos.y * ilZ - rel_pos.z * ilY, rel_pos.z * ilX - rel_pos.x * ilZ,
-					rel_pos.x * ilY - rel_pos.y * ilX));
+			applyTorqueImpulse(new Vector3f(rel_pos.y * ilZ - rel_pos.z * ilY,
+					rel_pos.z * ilX - rel_pos.x * ilZ, rel_pos.x * ilY
+							- rel_pos.y * ilX));
 		}
 	}
 
@@ -70,7 +75,8 @@ public class RigidBody3 extends RigidBody<Vector3f, Vector3f, Quaternionf, Quate
 	}
 
 	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+	public SupportCalculator<Vector3f> createSupportCalculator(
+			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		return null;
 	}
 
@@ -106,11 +112,13 @@ public class RigidBody3 extends RigidBody<Vector3f, Vector3f, Quaternionf, Quate
 		rollingfriction = 0.000001f;
 	}
 
-	public void setAngularVelocity(float velocityX, float velocityY, float velocityZ) {
+	public void setAngularVelocity(float velocityX, float velocityY,
+			float velocityZ) {
 		angularvelocity.set(velocityX, velocityY, velocityZ);
 	}
 
-	public void setLinearVelocity(float velocityX, float velocityY, float velocityZ) {
+	public void setLinearVelocity(float velocityX, float velocityY,
+			float velocityZ) {
 		linearvelocity.set(velocityX, velocityY, velocityZ);
 	}
 
@@ -141,7 +149,8 @@ public class RigidBody3 extends RigidBody<Vector3f, Vector3f, Quaternionf, Quate
 
 	@Override
 	public Vector3f supportPointRelativeNegative(Vector3f direction) {
-		Vector3f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
+		Vector3f supportRelNeg = supportcalculator
+				.supportPointLocalNegative(direction);
 		supportRelNeg.transform(getRotation());
 		return supportRelNeg;
 	}
@@ -194,9 +203,11 @@ public class RigidBody3 extends RigidBody<Vector3f, Vector3f, Quaternionf, Quate
 	@Override
 	public Matrix4f getMatrix() {
 		float[][] mat = rotation.toMatrixf().getArrayf();
-		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, mat[0][2] * scale.x, 0, mat[1][0] * scale.y,
-				mat[1][1] * scale.y, mat[1][2] * scale.y, 0, mat[2][0] * scale.z, mat[2][1] * scale.z,
-				mat[2][2] * scale.z, 0, translation.getXf(), translation.getYf(), translation.getZf(), 1);
+		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, mat[0][2]
+				* scale.x, 0, mat[1][0] * scale.y, mat[1][1] * scale.y,
+				mat[1][2] * scale.y, 0, mat[2][0] * scale.z, mat[2][1]
+						* scale.z, mat[2][2] * scale.z, 0, translation.getXf(),
+				translation.getYf(), translation.getZf(), 1);
 	}
 
 	@Override

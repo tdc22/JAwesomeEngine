@@ -17,7 +17,8 @@ public class SupportDifferenceObject2 extends ShapedObject2 {
 	ShapedObject2 so1, so2;
 	CollisionShape<Vector2f, ?, ?> rb1, rb2;
 
-	public SupportDifferenceObject2(ShapedObject2 s1, CollisionShape<Vector2f, ?, ?> r1, ShapedObject2 s2,
+	public SupportDifferenceObject2(ShapedObject2 s1,
+			CollisionShape<Vector2f, ?, ?> r1, ShapedObject2 s2,
 			CollisionShape<Vector2f, ?, ?> r2) {
 		rendermode = GLConstants.POINTS;
 		so1 = s1;
@@ -27,7 +28,8 @@ public class SupportDifferenceObject2 extends ShapedObject2 {
 		updateShape();
 	}
 
-	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb, Vector2f dir) {
+	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,
+			Vector2f dir) {
 		// System.out.println(Sa.supportPoint(dir).toString() + "; " +
 		// Sb.supportPoint(VecMath.negate(dir)) + "; " +
 		// VecMath.substraction(Sa.supportPoint(dir),
@@ -37,7 +39,8 @@ public class SupportDifferenceObject2 extends ShapedObject2 {
 		// System.out.println(Sb.supportPoint(dir).toString());
 		// System.out.println(VecMath.substraction(Sa.supportPoint(dir),
 		// Sb.supportPoint(VecMath.negate(dir))).toString());
-		return VecMath.subtraction(Sa.supportPoint(dir), Sb.supportPointNegative(dir));
+		return VecMath.subtraction(Sa.supportPoint(dir),
+				Sb.supportPointNegative(dir));
 	}
 
 	public List<Vector2f> updateShape() {

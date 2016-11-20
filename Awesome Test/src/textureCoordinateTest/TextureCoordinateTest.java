@@ -1,9 +1,5 @@
 package textureCoordinateTest;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import loader.ShaderLoader;
 import loader.TextureLoader;
@@ -14,22 +10,29 @@ import shape.Ellipsoid;
 import shape.Sphere;
 import sound.NullSoundEnvironment;
 import texture.Texture;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class TextureCoordinateTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
-				new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings(), new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
 
-		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/textureCoordinateTest.png"));
+		Texture texture = new Texture(
+				TextureLoader
+						.loadTexture("res/textures/textureCoordinateTest.png"));
 
-		Shader textureshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
+		Shader textureshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/textureshader.vert",
+				"res/shaders/textureshader.frag"));
 		textureshader.addArgumentName("u_texture");
 		textureshader.addArgument(texture);
 		addShader(textureshader);

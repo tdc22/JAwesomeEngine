@@ -7,19 +7,22 @@ import quaternion.Quaternionf;
 import utils.VectorConstants;
 import vector.Vector3f;
 
-public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Quaternionf>
-		implements InstancedBaseObject3 {
+public class GhostObject3 extends
+		GhostObject<Vector3f, Vector3f, Quaternionf, Quaternionf> implements
+		InstancedBaseObject3 {
 
 	public GhostObject3() {
-		super(new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1));
+		super(new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(
+				1, 1, 1));
 	}
 
 	public GhostObject3(CollisionShape3 cs) {
-		super(cs, new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1));
+		super(cs, new Vector3f(), new Vector3f(), new Quaternionf(),
+				new Vector3f(1, 1, 1));
 	}
 
-	public GhostObject3(CollisionShape3 cs, Vector3f rotationcenter, Vector3f translation, Quaternionf rotation,
-			Vector3f scale) {
+	public GhostObject3(CollisionShape3 cs, Vector3f rotationcenter,
+			Vector3f translation, Quaternionf rotation, Vector3f scale) {
 		super(cs, rotationcenter, translation, rotation, scale);
 	}
 
@@ -50,9 +53,15 @@ public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Q
 
 	@Override
 	public Vector3f supportPointRelativeNegative(Vector3f direction) {
-		Vector3f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
+		Vector3f supportRelNeg = supportcalculator
+				.supportPointLocalNegative(direction);
 		supportRelNeg.transform(getRotation());
 		return supportRelNeg;
+	}
+
+	@Override
+	public Vector3f getSupportCenter() {
+		return getTranslation();
 	}
 
 	@Override
@@ -133,7 +142,8 @@ public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Q
 	}
 
 	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+	public SupportCalculator<Vector3f> createSupportCalculator(
+			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		// TODO Auto-generated method stub
 		return null;
 	}

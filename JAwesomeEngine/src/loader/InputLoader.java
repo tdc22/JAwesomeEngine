@@ -1,5 +1,10 @@
 package loader;
 
+import input.GamepadInput;
+import input.Input;
+import input.InputEvent;
+import input.InputManager;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,11 +14,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import input.GamepadInput;
-import input.Input;
-import input.InputEvent;
-import input.InputManager;
 
 public class InputLoader {
 	protected static String getCleanString(String line) {
@@ -47,14 +47,19 @@ public class InputLoader {
 						int type = Integer.parseInt(params[0].replace(" ", ""));
 						Input trigger = null;
 						if (type == Input.GAMEPAD_EVENT) {
-							int gamepadid = Integer.parseInt(params[1].replace(" ", ""));
+							int gamepadid = Integer.parseInt(params[1].replace(
+									" ", ""));
 							String componentname = params[2];
-							int eventtype = Integer.parseInt(params[3].replace(" ", ""));
-							float deadzone = Float.parseFloat(params[4].replace(" ", ""));
-							trigger = new GamepadInput(gamepadid, componentname, eventtype, deadzone);
+							int eventtype = Integer.parseInt(params[3].replace(
+									" ", ""));
+							float deadzone = Float.parseFloat(params[4]
+									.replace(" ", ""));
+							trigger = new GamepadInput(gamepadid,
+									componentname, eventtype, deadzone);
 						} else {
 							String componentname = params[1];
-							int eventtype = Integer.parseInt(params[2].replace(" ", ""));
+							int eventtype = Integer.parseInt(params[2].replace(
+									" ", ""));
 							trigger = new Input(type, componentname, eventtype);
 						}
 						inputevent.addEventTrigger(trigger);
@@ -81,7 +86,8 @@ public class InputLoader {
 
 		writer.write("Input Settings\n");
 		StringBuilder sb;
-		List<InputEvent> inputevents = new ArrayList<InputEvent>(inputs.getInputEvents().values());
+		List<InputEvent> inputevents = new ArrayList<InputEvent>(inputs
+				.getInputEvents().values());
 		for (InputEvent e : inputevents) {
 			sb = new StringBuilder();
 			sb.append("\"" + e.getName() + "\":");

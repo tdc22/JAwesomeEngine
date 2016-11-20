@@ -1,16 +1,15 @@
 package physics;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.InputManager;
 import input.KeyInput;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import manifold.CollisionManifold;
 import math.VecMath;
 import matrix.Matrix1f;
@@ -18,6 +17,9 @@ import objects.AABB;
 import objects.GhostObject;
 import objects.RigidBody;
 import objects.ShapedObject2;
+
+import org.lwjgl.opengl.GL11;
+
 import quaternion.Complexf;
 import shader.Shader;
 import space.Space2;
@@ -32,7 +34,8 @@ public class PhysicsDebug2 {
 	boolean showVelocities = false;
 	boolean showCollisionNormals = false;
 	boolean showCollisionTangents = false;
-	private InputEvent toggleAABBs, toggleCollisionNormals, toggleVelocities, toggleCollisionTangents;
+	private InputEvent toggleAABBs, toggleCollisionNormals, toggleVelocities,
+			toggleCollisionTangents;
 	private List<Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>> aabbObjects;
 	private List<Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>> velocityObjects;
 	private List<ShapedObject2> lastNormals;
@@ -67,16 +70,19 @@ public class PhysicsDebug2 {
 	private void initAABBObjects() {
 		aabbObjects = new ArrayList<Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>>();
 		Color c = Color.YELLOW;
-		for (RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> rb : physics.getObjects()) {
+		for (RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> rb : physics
+				.getObjects()) {
 			addAABB(rb, c);
 		}
 		c = Color.GREEN;
-		for (GhostObject<Vector2f, Vector1f, Complexf, Matrix1f> rb : physics.getGhostObjects()) {
+		for (GhostObject<Vector2f, Vector1f, Complexf, Matrix1f> rb : physics
+				.getGhostObjects()) {
 			addAABB(rb, c);
 		}
 	}
 
-	private void addAABB(RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> rb, Color c) {
+	private void addAABB(RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> rb,
+			Color c) {
 		AABB<Vector2f> aabb = rb.getAABB();
 		ShapedObject2 aabbobj = new ShapedObject2();
 		aabbobj.setRenderMode(GL11.GL_LINE_LOOP);
@@ -87,13 +93,16 @@ public class PhysicsDebug2 {
 		aabbobj.addIndices(0, 1, 2, 3);
 		aabbobj.prerender();
 		shader.addObject(aabbobj);
-		aabbObjects.add(new Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>(rb, aabbobj));
+		aabbObjects
+				.add(new Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>(
+						rb, aabbobj));
 	}
 
 	private void initVelocityObjects() {
 		velocityObjects = new ArrayList<Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>>();
 		Color c = Color.BLUE;
-		for (RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> rb : physics.getObjects()) {
+		for (RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> rb : physics
+				.getObjects()) {
 			Vector2f velocity = rb.getLinearVelocity();
 			ShapedObject2 velocityObj = new ShapedObject2();
 			velocityObj.setRenderMode(GL11.GL_LINES);
@@ -104,7 +113,8 @@ public class PhysicsDebug2 {
 			velocityObj.prerender();
 			shader.addObject(velocityObj);
 			velocityObjects
-					.add(new Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>(rb, velocityObj));
+					.add(new Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>(
+							rb, velocityObj));
 		}
 	}
 
@@ -159,14 +169,16 @@ public class PhysicsDebug2 {
 	}
 
 	private void setupEvents(InputManager inputs) {
-		toggleAABBs = new InputEvent("debug_physics2_showAABBs",
-				new Input(Input.KEYBOARD_EVENT, "F5", KeyInput.KEY_PRESSED));
+		toggleAABBs = new InputEvent("debug_physics2_showAABBs", new Input(
+				Input.KEYBOARD_EVENT, "F5", KeyInput.KEY_PRESSED));
 		toggleVelocities = new InputEvent("debug_physics2_showVelocities",
 				new Input(Input.KEYBOARD_EVENT, "F6", KeyInput.KEY_PRESSED));
-		toggleCollisionNormals = new InputEvent("debug_physics2_showCollisionNormals",
-				new Input(Input.KEYBOARD_EVENT, "F7", KeyInput.KEY_PRESSED));
-		toggleCollisionTangents = new InputEvent("debug_physics2_showCollisionTangents",
-				new Input(Input.KEYBOARD_EVENT, "F8", KeyInput.KEY_PRESSED));
+		toggleCollisionNormals = new InputEvent(
+				"debug_physics2_showCollisionNormals", new Input(
+						Input.KEYBOARD_EVENT, "F7", KeyInput.KEY_PRESSED));
+		toggleCollisionTangents = new InputEvent(
+				"debug_physics2_showCollisionTangents", new Input(
+						Input.KEYBOARD_EVENT, "F8", KeyInput.KEY_PRESSED));
 
 		inputs.addEvent(toggleAABBs);
 		inputs.addEvent(toggleCollisionNormals);
@@ -202,20 +214,24 @@ public class PhysicsDebug2 {
 
 		if (showAABBs) {
 			for (Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2> aabbobj : aabbObjects) {
-				aabbobj.getSecond().translateTo(aabbobj.getFirst().getTranslation());
+				aabbobj.getSecond().translateTo(
+						aabbobj.getFirst().getTranslation());
 			}
 		}
 		if (showVelocities) {
 			for (Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2> velocityObj : velocityObjects) {
-				velocityObj.getSecond().translateTo(velocityObj.getFirst().getTranslation());
+				velocityObj.getSecond().translateTo(
+						velocityObj.getFirst().getTranslation());
 				velocityObj.getSecond().removeVertex(1);
-				velocityObj.getSecond().addVertex(velocityObj.getFirst().getLinearVelocity(), Color.BLUE);
+				velocityObj.getSecond().addVertex(
+						velocityObj.getFirst().getLinearVelocity(), Color.BLUE);
 				velocityObj.getSecond().prerender();
 			}
 		}
 		if (showCollisionNormals) {
 			clearLastNormals();
-			List<CollisionManifold<Vector2f>> manifolds = physics.getCollisionManifolds();
+			List<CollisionManifold<Vector2f>> manifolds = physics
+					.getCollisionManifolds();
 			for (CollisionManifold<Vector2f> cm : manifolds) {
 				Color c = Color.RED;
 				ShapedObject2 normal1 = new ShapedObject2();
@@ -223,11 +239,16 @@ public class PhysicsDebug2 {
 				normal1.setRenderMode(GL11.GL_LINES);
 				normal2.setRenderMode(GL11.GL_LINES);
 
-				Vector2f scalednormal = VecMath.scale(cm.getCollisionNormal(), 10f);
+				Vector2f scalednormal = VecMath.scale(cm.getCollisionNormal(),
+						10f);
 				normal1.addVertex(cm.getContactPointA(), c);
-				normal1.addVertex(VecMath.addition(cm.getContactPointA(), VecMath.negate(scalednormal)), c);
+				normal1.addVertex(
+						VecMath.addition(cm.getContactPointA(),
+								VecMath.negate(scalednormal)), c);
 				normal2.addVertex(cm.getContactPointB(), c);
-				normal2.addVertex(VecMath.addition(cm.getContactPointB(), scalednormal), c);
+				normal2.addVertex(
+						VecMath.addition(cm.getContactPointB(), scalednormal),
+						c);
 				normal1.addIndices(0, 1);
 				normal2.addIndices(0, 1);
 				normal1.prerender();

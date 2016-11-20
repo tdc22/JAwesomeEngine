@@ -5,8 +5,10 @@ import objects.ShapedObject;
 import vector.Vector;
 import vector.Vector2f;
 
-public abstract class ParticleSystem<L extends Vector, A extends Vector> implements RenderableObject {
-	public abstract int addParticle(L position, L velocity, Vector2f size, int lifetime);
+public abstract class ParticleSystem<L extends Vector, A extends Vector>
+		implements RenderableObject {
+	public abstract int addParticle(L position, L velocity, Vector2f size,
+			int lifetime);
 
 	public abstract void removeParticle(int particleID);
 

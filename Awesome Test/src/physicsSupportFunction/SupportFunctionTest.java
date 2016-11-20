@@ -1,10 +1,5 @@
 package physicsSupportFunction;
 
-import broadphase.SAP;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
@@ -16,6 +11,7 @@ import loader.ShaderLoader;
 import manifold.SimpleManifoldManager;
 import narrowphase.EmptyManifoldGenerator;
 import narrowphase.GJK;
+import narrowphase.SupportRaycast;
 import objects.RigidBody3;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
@@ -29,6 +25,11 @@ import shape.Sphere;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector3f;
+import broadphase.SAP;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class SupportFunctionTest extends StandardGame {
 	PhysicsSpace space;
@@ -45,26 +46,32 @@ public class SupportFunctionTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings(),
+		initDisplay(new GLDisplay(), new DisplayMode(),
+				new PixelFormat().withSamples(0), new VideoSettings(),
 				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile(
+						"res/shaders/defaultshader.vert",
+						"res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
-		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(new EmptyManifoldGenerator()),
-				new NullResolution(), new NullCorrection(), new SimpleManifoldManager<Vector3f>());
+		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(
+				new EmptyManifoldGenerator()), new SupportRaycast(),
+				new NullResolution(), new NullCorrection(),
+				new SimpleManifoldManager<Vector3f>());
 
 		// b1 = new Box(-1, 0, 0, 1, 1, 1);
 		b1 = new Box(0, 0, 0, 1, 1, 1); // new Sphere(0, 0, 0, 1, 36, 36);
@@ -122,7 +129,8 @@ public class SupportFunctionTest extends StandardGame {
 		// Vector3f(2,5,2)); add(new Vector3f(8,5,2)); add(new Vector3f(2,5,8));
 		// add(new Vector3f(4,8,4)); }}));
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 

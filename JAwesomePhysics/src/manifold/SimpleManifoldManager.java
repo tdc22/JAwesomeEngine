@@ -17,7 +17,8 @@ public class SimpleManifoldManager<L extends Vector> extends ManifoldManager<L> 
 	@Override
 	public void add(CollisionManifold<L> cm) {
 		collisionmanifolds.add(cm);
-		if (!cm.getObjects().getFirst().isGhost() && !cm.getObjects().getSecond().isGhost()) {
+		if (!cm.getObjects().getFirst().isGhost()
+				&& !cm.getObjects().getSecond().isGhost()) {
 			collisionmanifoldsnoghosts.add(cm);
 		}
 	}

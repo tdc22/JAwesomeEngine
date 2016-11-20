@@ -1,5 +1,10 @@
 package debug_GJKRegion;
 
+import game.StandardGame;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,14 +14,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
-import game.StandardGame;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
@@ -25,6 +22,10 @@ import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector2f;
 import vector.Vector3f;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 
 public class RegionTest extends StandardGame {
 	List<Vector3f> simplices;
@@ -32,7 +33,8 @@ public class RegionTest extends StandardGame {
 	int pointshader;
 	Simplex simplex;
 	boolean rebuildsimplex = false;
-	Vector3f minbounds = new Vector3f(0, 0, 0), maxbounds = new Vector3f(10, 10, 10);
+	Vector3f minbounds = new Vector3f(0, 0, 0), maxbounds = new Vector3f(10,
+			10, 10);
 	HashMap<Vector3f, Integer> generated;
 	Debugger debugger;
 	boolean runthreads = true;
@@ -192,13 +194,15 @@ public class RegionTest extends StandardGame {
 		Vector3f BCD = VecMath.crossproduct(BD, BC);
 
 		System.out.println("fix");
-		System.out.println(
-				"A: " + A.toString() + "; B: " + B.toString() + "; C: " + C.toString() + "; D: " + D.toString());
+		System.out.println("A: " + A.toString() + "; B: " + B.toString()
+				+ "; C: " + C.toString() + "; D: " + D.toString());
 		System.out.println("BC: " + BC.toString() + "; BD: " + BD.toString());
 		System.out.println("BCD: " + BCD.toString() + "; BA: " + BA.toString());
-		System.out.println(
-				"Correct Orientation: " + !(VecMath.dotproduct(BCD, BA) > 0) + "; " + !(VecMath.dotproduct(ACD, AB) > 0)
-						+ "; " + !(VecMath.dotproduct(ABD, AC) > 0) + "; " + !(VecMath.dotproduct(ABC, AD) > 0));
+		System.out.println("Correct Orientation: "
+				+ !(VecMath.dotproduct(BCD, BA) > 0) + "; "
+				+ !(VecMath.dotproduct(ACD, AB) > 0) + "; "
+				+ !(VecMath.dotproduct(ABD, AC) > 0) + "; "
+				+ !(VecMath.dotproduct(ABC, AD) > 0));
 		if (VecMath.dotproduct(BCD, BA) > 0) {
 			System.out.println("fixed");
 			Vector3f temp = new Vector3f(D);
@@ -209,14 +213,17 @@ public class RegionTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
-				new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
+				new VideoSettings(), new NullSoundEnvironment());
 
-		defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
+				"res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile(
+						"res/shaders/defaultshader.vert",
+						"res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
@@ -224,7 +231,8 @@ public class RegionTest extends StandardGame {
 		display.bindMouse();
 		cam.setFlyCam(true);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
+				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
 		simplices = new ArrayList<Vector3f>();
@@ -234,7 +242,8 @@ public class RegionTest extends StandardGame {
 
 		defaultshader.addObject(simplex);
 
-		pointshader = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
+		pointshader = ShaderLoader.loadShaderFromFile(
+				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
 
 		Thread input = new Thread() {
 			/**
@@ -254,7 +263,9 @@ public class RegionTest extends StandardGame {
 						line = line.replace(" ", "");
 						String[] points = line.split(",");
 						if (points.length >= 3) {
-							Vector3f vec = new Vector3f(Float.parseFloat(points[0]), Float.parseFloat(points[1]),
+							Vector3f vec = new Vector3f(
+									Float.parseFloat(points[0]),
+									Float.parseFloat(points[1]),
 									Float.parseFloat(points[2]));
 							if (simplices.size() < 4) {
 								simplices.add(vec);
@@ -272,14 +283,22 @@ public class RegionTest extends StandardGame {
 								simplices.remove(simplices.size() - 1);
 								rebuildsimplex = true;
 							}
-							if (line.startsWith("add") || line.startsWith("generate")) {
+							if (line.startsWith("add")
+									|| line.startsWith("generate")) {
 								adding = true;
-								float num = Float.parseFloat(line.replace("add", "").replace("generate", ""));
+								float num = Float.parseFloat(line.replace(
+										"add", "").replace("generate", ""));
 								for (int i = 0; i < num; i++) {
 									Vector3f point = new Vector3f(
-											minbounds.x + Math.random() * (maxbounds.x - minbounds.x),
-											minbounds.y + Math.random() * (maxbounds.y - minbounds.y),
-											minbounds.z + Math.random() * (maxbounds.z - minbounds.z));
+											minbounds.x
+													+ Math.random()
+													* (maxbounds.x - minbounds.x),
+											minbounds.y
+													+ Math.random()
+													* (maxbounds.y - minbounds.y),
+											minbounds.z
+													+ Math.random()
+													* (maxbounds.z - minbounds.z));
 									int region = doSimplex(point);
 									generated.put(point, region);
 								}
@@ -337,7 +356,8 @@ public class RegionTest extends StandardGame {
 				numregions = 8;
 			}
 			for (int i = 0; i < numregions; i++) {
-				Points p = new Points(i, ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
+				Points p = new Points(i, ShaderLoader.loadShaderFromFile(
+						"res/shaders/colorshader.vert",
 						"res/shaders/colorshader.frag"));
 				pointbatches.add(p);
 				defaultshader.addObject(p);
@@ -346,7 +366,8 @@ public class RegionTest extends StandardGame {
 			rebuildsimplex = false;
 		}
 		if (generated.size() > 0 && !adding) {
-			Iterator<Map.Entry<Vector3f, Integer>> it = generated.entrySet().iterator();
+			Iterator<Map.Entry<Vector3f, Integer>> it = generated.entrySet()
+					.iterator();
 			while (it.hasNext()) {
 				Map.Entry<Vector3f, Integer> pairs = it.next();
 				Points p = pointbatches.get(pairs.getValue() - 1);

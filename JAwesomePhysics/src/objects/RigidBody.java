@@ -12,7 +12,8 @@ import vector.Vector;
 
 public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends Rotation, A3 extends Rotation>
 		extends CollisionShape<L, A2, A3> {
-	float invMass, staticfriction, dynamicfriction, rollingfriction, restitution, lineardamping, angulardamping;
+	float invMass, staticfriction, dynamicfriction, rollingfriction,
+			restitution, lineardamping, angulardamping;
 	L linearfactor, linearvelocity, forceaccumulator;
 	A1 angularfactor, angularvelocity, torqueaccumulator;
 	A3 invinertia;
@@ -22,7 +23,8 @@ public abstract class RigidBody<L extends Vector, A1 extends Vector, A2 extends 
 		init();
 	}
 
-	public RigidBody(CollisionShape<L, A2, A3> cs, L rotationcenter, L translation, A2 rotation, L scale) {
+	public RigidBody(CollisionShape<L, A2, A3> cs, L rotationcenter,
+			L translation, A2 rotation, L scale) {
 		super(cs, rotationcenter, translation, rotation, scale);
 		init();
 	}
