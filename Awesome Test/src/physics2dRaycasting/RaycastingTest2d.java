@@ -3,6 +3,8 @@ package physics2dRaycasting;
 import game.StandardGame;
 import integration.EulerIntegration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import loader.InputLoader;
@@ -43,11 +45,12 @@ public class RaycastingTest2d extends StandardGame {
 	Quad q2, q3;
 	Circle c, c1;
 	Ellipse e1;
-	Shader defaultshader, s1, s2, s3, s4, s5, s6;
+	Shader defaultshader, s1, s2, s3, s4, s5, s6, hitmarkershader;
 	RigidBody2 rb1, rb2, rb3, rb4, rb5;
 	CompoundObject2 rb6;
 	Ray2 ray;
 	RayVisualization rayVis;
+	List<Circle> hitmarkers;
 
 	final Vector2f up = new Vector2f(0, -1);
 
@@ -67,6 +70,7 @@ public class RaycastingTest2d extends StandardGame {
 		s4 = new Shader(shaderprogram);
 		s5 = new Shader(shaderprogram);
 		s6 = new Shader(shaderprogram);
+		hitmarkershader = new Shader(shaderprogram);
 
 		s1.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s2.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
@@ -74,6 +78,7 @@ public class RaycastingTest2d extends StandardGame {
 		s4.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s5.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s6.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
+		hitmarkershader.addArgument("u_color", new Vector4f(0f, 1f, 0f, 1f));
 
 		addShader2d(s1);
 		addShader2d(s2);
@@ -81,6 +86,7 @@ public class RaycastingTest2d extends StandardGame {
 		addShader2d(s4);
 		addShader2d(s5);
 		addShader2d(s6);
+		addShader2d(hitmarkershader);
 
 		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
 				"res/shaders/defaultshader.vert",
@@ -130,6 +136,13 @@ public class RaycastingTest2d extends StandardGame {
 		space.addCompoundObject(rb6, new ShapedObject2[] { q, c });
 		s6.addObject(q);
 		s6.addObject(c);
+		
+		hitmarkers = new ArrayList<Circle>();
+		for(int i = 0; i < 6; i++) {
+			Circle hitmarker = new Circle(-100, -100, 3, 36);
+			hitmarkershader.addObject(hitmarker);
+			hitmarkers.add(hitmarker);
+		}
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
 	}
@@ -203,6 +216,9 @@ public class RaycastingTest2d extends StandardGame {
 
 		Set<Pair<RigidBody<Vector2f, ?, ?, ?>, Vector2f>> hits = space
 				.raycastAll(ray);
+		for(Circle c : hitmarkers)
+			c.setRendered(false);
+		int c = 0;
 		for (Pair<RigidBody<Vector2f, ?, ?, ?>, Vector2f> hit : hits) {
 			RigidBody<Vector2f, ?, ?, ?> o = hit.getFirst();
 			if (o.equals(rb1))
@@ -217,6 +233,12 @@ public class RaycastingTest2d extends StandardGame {
 				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 			if (o.equals(rb6))
 				s6.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
+			
+			Circle hitmarker = hitmarkers.get(c);
+			hitmarker.translateTo(hit.getSecond());
+			hitmarker.setRendered(true);
+			
+			c++;
 		}
 
 		// System.out.println(rb6.getCompoundBroadphase().getObjects().size() +

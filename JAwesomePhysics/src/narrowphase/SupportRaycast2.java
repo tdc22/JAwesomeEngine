@@ -37,17 +37,75 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 		// TODO
 		return 0;
 	}
+	
+	private final static float EPSILON = 0.01f;
+	private final static float MAX_ITERATIONS = 20;
 
 	@Override
 	public Vector2f computeCollision(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
 		// Take line from before, make triangle, refine iteratively, k?
-		Vector2f bound1, bound2;
-		bound1 = Sa.supportPointNegative(ray.getDirection());
-		bound2 = v2;
-		System.out.println(bound1 + "; " + bound2);
-		System.out.println(dotRay(ray.getPosition(), bound1, v1));
-		System.out.println(dotRay(ray.getPosition(), bound2, v1));
-		return new Vector2f();
-	}
+		Vector2f dir1 = VecMath.negate(ray.getDirection());
+		Vector2f bound1 = Sa.supportPoint(dir1);
+		float dot1 = dotRay(ray.getPosition(), bound1, v1);
+		if(Math.abs(dot1) < EPSILON) return bound1;
 
+		Vector2f dir2 = new Vector2f(v1);
+		Vector2f bound2;
+		
+		if(dot1 < 0) {
+			dir2.negate();
+			bound2 = Sa.supportPoint(dir2);
+		}
+		else
+		{
+			bound2 = v2;
+		}
+		float dot2 = dotRay(ray.getPosition(), bound2, v1);
+		if(Math.abs(dot2) < EPSILON) return bound2;
+		
+		System.out.println("Start");
+		
+		Vector2f negativeRayDirection = VecMath.negate(ray.getDirection());
+		Vector2f dir3;
+		for(int i = 0; i < MAX_ITERATIONS; i++) {
+			dir3 = getMiddleVector(dir1, dir2, negativeRayDirection);
+			Vector2f bound3 = Sa.supportPoint(dir3);
+			float dot3 = dotRay(ray.getPosition(), bound3, v1);
+			
+			if(Math.abs(dot3) < EPSILON) {
+				System.out.println(bound3 + "; success!");
+				return bound3;
+			}
+			System.out.println(dir1 + "; " + dir2 + "; " + dir3 + "; " + dot3);
+			if(dot3 > 0) {
+				dir1 = dir3;
+				bound1 = bound3;
+				dot1 = dot3;
+			}
+			else {
+				dir2 = dir3;
+				bound2 = bound3;
+				dot2 = dot3;
+			}
+		}
+		
+		System.out.println("fail");
+		return (Math.abs(dot1) < Math.abs(dot2)) ? bound1 : bound2;
+	}
+	
+	private Vector2f getMiddleVector(Vector2f a, Vector2f b, Vector2f dir) {
+		Vector2f c = new Vector2f(a);
+		c.translate(b);
+		
+		if(c.lengthSquared() > 0) {
+			c.normalize();
+			if(VecMath.dotproduct(c, dir) < 0) {
+				c.negate();
+			}
+		}
+		else
+			c = dir;
+		
+		return c;
+	}
 }
