@@ -1,5 +1,9 @@
 package massBoxesInstancing;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -12,41 +16,32 @@ import sound.NullSoundEnvironment;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector3f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class MassBoxesInstancingTest extends StandardGame {
 	Debugger debugger;
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(800, 600,
-				"JAwesomeEngine", false), new PixelFormat(),
+		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "JAwesomeEngine", false), new PixelFormat(),
 				new VideoSettings(), new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 0, 0);
 		cam.rotateTo(180, 0);
 
-		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader2);
 
-		debugger = new Debugger(inputs, defaultshader, defaultshader2,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshader2, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
 
-		Texture texture = new Texture(
-				TextureLoader.loadTexture("res/textures/cobblestone.png"));
+		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/cobblestone.png"));
 
-		Shader textureshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/textureinstanceshader.vert",
+		Shader textureshader = new Shader(ShaderLoader.loadShaderFromFile("res/shaders/textureinstanceshader.vert",
 				"res/shaders/textureinstanceshader.frag"));
 		textureshader.addArgumentName("u_texture");
 		textureshader.addArgument(texture);

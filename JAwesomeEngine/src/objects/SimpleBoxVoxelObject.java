@@ -65,8 +65,7 @@ public class SimpleBoxVoxelObject extends ShapedObject3 {
 							indicesLeftRight[x][y][z] = getVertexCount() - 1;
 							addVertex(new Vector3f(x, y, z + 1), color, b, left);
 							indicesLeftRight[x][y][z + 1] = getVertexCount() - 1;
-							addVertex(new Vector3f(x, y + 1, z + 1), color, c,
-									left);
+							addVertex(new Vector3f(x, y + 1, z + 1), color, c, left);
 							indicesLeftRight[x][y + 1][z + 1] = getVertexCount() - 1;
 							addVertex(new Vector3f(x, y + 1, z), color, d, left);
 							indicesLeftRight[x][y + 1][z] = getVertexCount() - 1;
@@ -74,44 +73,33 @@ public class SimpleBoxVoxelObject extends ShapedObject3 {
 							if (data[x - 1][y][z] == 0) {
 								addVertex(new Vector3f(x, y, z), color, a, left);
 								indicesLeftRight[x][y][z] = getVertexCount() - 1;
-								addVertex(new Vector3f(x, y, z + 1), color, b,
-										left);
+								addVertex(new Vector3f(x, y, z + 1), color, b, left);
 								indicesLeftRight[x][y][z + 1] = getVertexCount() - 1;
-								addVertex(new Vector3f(x, y + 1, z + 1), color,
-										c, left);
+								addVertex(new Vector3f(x, y + 1, z + 1), color, c, left);
 								indicesLeftRight[x][y + 1][z + 1] = getVertexCount() - 1;
-								addVertex(new Vector3f(x, y + 1, z), color, d,
-										left);
+								addVertex(new Vector3f(x, y + 1, z), color, d, left);
 								indicesLeftRight[x][y + 1][z] = getVertexCount() - 1;
 							}
 						}
 						// right
 						if (x == data.length - 1) {
-							addVertex(new Vector3f(x + 1, y, z), color, a,
-									right);
+							addVertex(new Vector3f(x + 1, y, z), color, a, right);
 							indicesLeftRight[x + 1][y][z] = getVertexCount() - 1;
-							addVertex(new Vector3f(x + 1, y + 1, z), color, d,
-									right);
+							addVertex(new Vector3f(x + 1, y + 1, z), color, d, right);
 							indicesLeftRight[x + 1][y + 1][z] = getVertexCount() - 1;
-							addVertex(new Vector3f(x + 1, y + 1, z + 1), color,
-									c, right);
+							addVertex(new Vector3f(x + 1, y + 1, z + 1), color, c, right);
 							indicesLeftRight[x + 1][y + 1][z + 1] = getVertexCount() - 1;
-							addVertex(new Vector3f(x + 1, y, z + 1), color, b,
-									right);
+							addVertex(new Vector3f(x + 1, y, z + 1), color, b, right);
 							indicesLeftRight[x + 1][y][z + 1] = getVertexCount() - 1;
 						} else {
 							if (data[x + 1][y][z] == 0) {
-								addVertex(new Vector3f(x + 1, y, z), color, a,
-										right);
+								addVertex(new Vector3f(x + 1, y, z), color, a, right);
 								indicesLeftRight[x + 1][y][z] = getVertexCount() - 1;
-								addVertex(new Vector3f(x + 1, y + 1, z), color,
-										d, right);
+								addVertex(new Vector3f(x + 1, y + 1, z), color, d, right);
 								indicesLeftRight[x + 1][y + 1][z] = getVertexCount() - 1;
-								addVertex(new Vector3f(x + 1, y + 1, z + 1),
-										color, c, right);
+								addVertex(new Vector3f(x + 1, y + 1, z + 1), color, c, right);
 								indicesLeftRight[x + 1][y + 1][z + 1] = getVertexCount() - 1;
-								addVertex(new Vector3f(x + 1, y, z + 1), color,
-										b, right);
+								addVertex(new Vector3f(x + 1, y, z + 1), color, b, right);
 								indicesLeftRight[x + 1][y][z + 1] = getVertexCount() - 1;
 							}
 						}
@@ -122,8 +110,7 @@ public class SimpleBoxVoxelObject extends ShapedObject3 {
 							indicesUpDown[x][y][z] = getVertexCount() - 1;
 							addVertex(new Vector3f(x + 1, y, z), color, b, down);
 							indicesUpDown[x + 1][y][z] = getVertexCount() - 1;
-							addVertex(new Vector3f(x + 1, y, z + 1), color, c,
-									down);
+							addVertex(new Vector3f(x + 1, y, z + 1), color, c, down);
 							indicesUpDown[x + 1][y][z + 1] = getVertexCount() - 1;
 							addVertex(new Vector3f(x, y, z + 1), color, d, down);
 							indicesUpDown[x][y][z + 1] = getVertexCount() - 1;
@@ -131,14 +118,11 @@ public class SimpleBoxVoxelObject extends ShapedObject3 {
 							if (data[x][y - 1][z] == 0) {
 								addVertex(new Vector3f(x, y, z), color, a, down);
 								indicesUpDown[x][y][z] = getVertexCount() - 1;
-								addVertex(new Vector3f(x + 1, y, z), color, b,
-										down);
+								addVertex(new Vector3f(x + 1, y, z), color, b, down);
 								indicesUpDown[x + 1][y][z] = getVertexCount() - 1;
-								addVertex(new Vector3f(x + 1, y, z + 1), color,
-										c, down);
+								addVertex(new Vector3f(x + 1, y, z + 1), color, c, down);
 								indicesUpDown[x + 1][y][z + 1] = getVertexCount() - 1;
-								addVertex(new Vector3f(x, y, z + 1), color, d,
-										down);
+								addVertex(new Vector3f(x, y, z + 1), color, d, down);
 								indicesUpDown[x][y][z + 1] = getVertexCount() - 1;
 							}
 						}
@@ -146,28 +130,21 @@ public class SimpleBoxVoxelObject extends ShapedObject3 {
 						if (y == data[0].length - 1) {
 							addVertex(new Vector3f(x, y + 1, z), color, a, up);
 							indicesUpDown[x][y + 1][z] = getVertexCount() - 1;
-							addVertex(new Vector3f(x, y + 1, z + 1), color, d,
-									up);
+							addVertex(new Vector3f(x, y + 1, z + 1), color, d, up);
 							indicesUpDown[x][y + 1][z + 1] = getVertexCount() - 1;
-							addVertex(new Vector3f(x + 1, y + 1, z + 1), color,
-									c, up);
+							addVertex(new Vector3f(x + 1, y + 1, z + 1), color, c, up);
 							indicesUpDown[x + 1][y + 1][z + 1] = getVertexCount() - 1;
-							addVertex(new Vector3f(x + 1, y + 1, z), color, b,
-									up);
+							addVertex(new Vector3f(x + 1, y + 1, z), color, b, up);
 							indicesUpDown[x + 1][y + 1][z] = getVertexCount() - 1;
 						} else {
 							if (data[x][y + 1][z] == 0) {
-								addVertex(new Vector3f(x, y + 1, z), color, a,
-										up);
+								addVertex(new Vector3f(x, y + 1, z), color, a, up);
 								indicesUpDown[x][y + 1][z] = getVertexCount() - 1;
-								addVertex(new Vector3f(x, y + 1, z + 1), color,
-										d, up);
+								addVertex(new Vector3f(x, y + 1, z + 1), color, d, up);
 								indicesUpDown[x][y + 1][z + 1] = getVertexCount() - 1;
-								addVertex(new Vector3f(x + 1, y + 1, z + 1),
-										color, c, up);
+								addVertex(new Vector3f(x + 1, y + 1, z + 1), color, c, up);
 								indicesUpDown[x + 1][y + 1][z + 1] = getVertexCount() - 1;
-								addVertex(new Vector3f(x + 1, y + 1, z), color,
-										b, up);
+								addVertex(new Vector3f(x + 1, y + 1, z), color, b, up);
 								indicesUpDown[x + 1][y + 1][z] = getVertexCount() - 1;
 							}
 						}
@@ -178,8 +155,7 @@ public class SimpleBoxVoxelObject extends ShapedObject3 {
 							indicesFrontBack[x][y][z] = getVertexCount() - 1;
 							addVertex(new Vector3f(x, y + 1, z), color, d, back);
 							indicesFrontBack[x][y + 1][z] = getVertexCount() - 1;
-							addVertex(new Vector3f(x + 1, y + 1, z), color, c,
-									back);
+							addVertex(new Vector3f(x + 1, y + 1, z), color, c, back);
 							indicesFrontBack[x + 1][y + 1][z] = getVertexCount() - 1;
 							addVertex(new Vector3f(x + 1, y, z), color, b, back);
 							indicesFrontBack[x + 1][y][z] = getVertexCount() - 1;
@@ -187,44 +163,33 @@ public class SimpleBoxVoxelObject extends ShapedObject3 {
 							if (data[x][y][z - 1] == 0) {
 								addVertex(new Vector3f(x, y, z), color, a, back);
 								indicesFrontBack[x][y][z] = getVertexCount() - 1;
-								addVertex(new Vector3f(x, y + 1, z), color, d,
-										back);
+								addVertex(new Vector3f(x, y + 1, z), color, d, back);
 								indicesFrontBack[x][y + 1][z] = getVertexCount() - 1;
-								addVertex(new Vector3f(x + 1, y + 1, z), color,
-										c, back);
+								addVertex(new Vector3f(x + 1, y + 1, z), color, c, back);
 								indicesFrontBack[x + 1][y + 1][z] = getVertexCount() - 1;
-								addVertex(new Vector3f(x + 1, y, z), color, b,
-										back);
+								addVertex(new Vector3f(x + 1, y, z), color, b, back);
 								indicesFrontBack[x + 1][y][z] = getVertexCount() - 1;
 							}
 						}
 						// front
 						if (z == data.length - 1) {
-							addVertex(new Vector3f(x, y, z + 1), color, a,
-									front);
+							addVertex(new Vector3f(x, y, z + 1), color, a, front);
 							indicesFrontBack[x][y][z + 1] = getVertexCount() - 1;
-							addVertex(new Vector3f(x + 1, y, z + 1), color, b,
-									front);
+							addVertex(new Vector3f(x + 1, y, z + 1), color, b, front);
 							indicesFrontBack[x + 1][y][z + 1] = getVertexCount() - 1;
-							addVertex(new Vector3f(x + 1, y + 1, z + 1), color,
-									c, front);
+							addVertex(new Vector3f(x + 1, y + 1, z + 1), color, c, front);
 							indicesFrontBack[x + 1][y + 1][z + 1] = getVertexCount() - 1;
-							addVertex(new Vector3f(x, y + 1, z + 1), color, d,
-									front);
+							addVertex(new Vector3f(x, y + 1, z + 1), color, d, front);
 							indicesFrontBack[x][y + 1][z + 1] = getVertexCount() - 1;
 						} else {
 							if (data[x][y][z + 1] == 0) {
-								addVertex(new Vector3f(x, y, z + 1), color, a,
-										front);
+								addVertex(new Vector3f(x, y, z + 1), color, a, front);
 								indicesFrontBack[x][y][z + 1] = getVertexCount() - 1;
-								addVertex(new Vector3f(x + 1, y, z + 1), color,
-										b, front);
+								addVertex(new Vector3f(x + 1, y, z + 1), color, b, front);
 								indicesFrontBack[x + 1][y][z + 1] = getVertexCount() - 1;
-								addVertex(new Vector3f(x + 1, y + 1, z + 1),
-										color, c, front);
+								addVertex(new Vector3f(x + 1, y + 1, z + 1), color, c, front);
 								indicesFrontBack[x + 1][y + 1][z + 1] = getVertexCount() - 1;
-								addVertex(new Vector3f(x, y + 1, z + 1), color,
-										d, front);
+								addVertex(new Vector3f(x, y + 1, z + 1), color, d, front);
 								indicesFrontBack[x][y + 1][z + 1] = getVertexCount() - 1;
 							}
 						}
@@ -241,88 +206,64 @@ public class SimpleBoxVoxelObject extends ShapedObject3 {
 
 						// left
 						if (x == 0) {
-							addQuad(indicesLeftRight[x][y][z], 0,
-									indicesLeftRight[x][y][z + 1], 0,
-									indicesLeftRight[x][y + 1][z + 1], 0,
-									indicesLeftRight[x][y + 1][z], 0);
+							addQuad(indicesLeftRight[x][y][z], 0, indicesLeftRight[x][y][z + 1], 0,
+									indicesLeftRight[x][y + 1][z + 1], 0, indicesLeftRight[x][y + 1][z], 0);
 						} else {
 							if (data[x - 1][y][z] == 0) {
-								addQuad(indicesLeftRight[x][y][z], 0,
-										indicesLeftRight[x][y][z + 1], 0,
-										indicesLeftRight[x][y + 1][z + 1], 0,
-										indicesLeftRight[x][y + 1][z], 0);
+								addQuad(indicesLeftRight[x][y][z], 0, indicesLeftRight[x][y][z + 1], 0,
+										indicesLeftRight[x][y + 1][z + 1], 0, indicesLeftRight[x][y + 1][z], 0);
 							}
 						}
 						// right
 						if (x == data.length - 1) {
-							addQuad(indicesLeftRight[x + 1][y][z], 0,
-									indicesLeftRight[x + 1][y + 1][z], 0,
-									indicesLeftRight[x + 1][y + 1][z + 1], 0,
-									indicesLeftRight[x + 1][y][z + 1], 0);
+							addQuad(indicesLeftRight[x + 1][y][z], 0, indicesLeftRight[x + 1][y + 1][z], 0,
+									indicesLeftRight[x + 1][y + 1][z + 1], 0, indicesLeftRight[x + 1][y][z + 1], 0);
 						} else {
 							if (data[x + 1][y][z] == 0) {
-								addQuad(indicesLeftRight[x + 1][y][z], 0,
-										indicesLeftRight[x + 1][y + 1][z], 0,
-										indicesLeftRight[x + 1][y + 1][z + 1],
-										0, indicesLeftRight[x + 1][y][z + 1], 0);
+								addQuad(indicesLeftRight[x + 1][y][z], 0, indicesLeftRight[x + 1][y + 1][z], 0,
+										indicesLeftRight[x + 1][y + 1][z + 1], 0, indicesLeftRight[x + 1][y][z + 1], 0);
 							}
 						}
 
 						// down
 						if (y == 0) {
-							addQuad(indicesUpDown[x][y][z], 0,
-									indicesUpDown[x + 1][y][z], 0,
-									indicesUpDown[x + 1][y][z + 1], 0,
-									indicesUpDown[x][y][z + 1], 0);
+							addQuad(indicesUpDown[x][y][z], 0, indicesUpDown[x + 1][y][z], 0,
+									indicesUpDown[x + 1][y][z + 1], 0, indicesUpDown[x][y][z + 1], 0);
 						} else {
 							if (data[x][y - 1][z] == 0) {
-								addQuad(indicesUpDown[x][y][z], 0,
-										indicesUpDown[x + 1][y][z], 0,
-										indicesUpDown[x + 1][y][z + 1], 0,
-										indicesUpDown[x][y][z + 1], 0);
+								addQuad(indicesUpDown[x][y][z], 0, indicesUpDown[x + 1][y][z], 0,
+										indicesUpDown[x + 1][y][z + 1], 0, indicesUpDown[x][y][z + 1], 0);
 							}
 						}
 						// up
 						if (y == data[0].length - 1) {
-							addQuad(indicesUpDown[x][y + 1][z], 0,
-									indicesUpDown[x][y + 1][z + 1], 0,
-									indicesUpDown[x + 1][y + 1][z + 1], 0,
-									indicesUpDown[x + 1][y + 1][z], 0);
+							addQuad(indicesUpDown[x][y + 1][z], 0, indicesUpDown[x][y + 1][z + 1], 0,
+									indicesUpDown[x + 1][y + 1][z + 1], 0, indicesUpDown[x + 1][y + 1][z], 0);
 						} else {
 							if (data[x][y + 1][z] == 0) {
-								addQuad(indicesUpDown[x][y + 1][z], 0,
-										indicesUpDown[x][y + 1][z + 1], 0,
-										indicesUpDown[x + 1][y + 1][z + 1], 0,
-										indicesUpDown[x + 1][y + 1][z], 0);
+								addQuad(indicesUpDown[x][y + 1][z], 0, indicesUpDown[x][y + 1][z + 1], 0,
+										indicesUpDown[x + 1][y + 1][z + 1], 0, indicesUpDown[x + 1][y + 1][z], 0);
 							}
 						}
 
 						// back
 						if (z == 0) {
-							addQuad(indicesFrontBack[x][y][z], 0,
-									indicesFrontBack[x][y + 1][z], 0,
-									indicesFrontBack[x + 1][y + 1][z], 0,
-									indicesFrontBack[x + 1][y][z], 0);
+							addQuad(indicesFrontBack[x][y][z], 0, indicesFrontBack[x][y + 1][z], 0,
+									indicesFrontBack[x + 1][y + 1][z], 0, indicesFrontBack[x + 1][y][z], 0);
 						} else {
 							if (data[x][y][z - 1] == 0) {
-								addQuad(indicesFrontBack[x][y][z], 0,
-										indicesFrontBack[x][y + 1][z], 0,
-										indicesFrontBack[x + 1][y + 1][z], 0,
-										indicesFrontBack[x + 1][y][z], 0);
+								addQuad(indicesFrontBack[x][y][z], 0, indicesFrontBack[x][y + 1][z], 0,
+										indicesFrontBack[x + 1][y + 1][z], 0, indicesFrontBack[x + 1][y][z], 0);
 							}
 						}
 						// front
 						if (z == data.length - 1) {
-							addQuad(indicesFrontBack[x][y][z + 1], 0,
-									indicesFrontBack[x + 1][y][z + 1], 0,
-									indicesFrontBack[x + 1][y + 1][z + 1], 0,
-									indicesFrontBack[x][y + 1][z + 1], 0);
+							addQuad(indicesFrontBack[x][y][z + 1], 0, indicesFrontBack[x + 1][y][z + 1], 0,
+									indicesFrontBack[x + 1][y + 1][z + 1], 0, indicesFrontBack[x][y + 1][z + 1], 0);
 						} else {
 							if (data[x][y][z + 1] == 0) {
-								addQuad(indicesFrontBack[x][y][z + 1], 0,
-										indicesFrontBack[x + 1][y][z + 1], 0,
-										indicesFrontBack[x + 1][y + 1][z + 1],
-										0, indicesFrontBack[x][y + 1][z + 1], 0);
+								addQuad(indicesFrontBack[x][y][z + 1], 0, indicesFrontBack[x + 1][y][z + 1], 0,
+										indicesFrontBack[x + 1][y + 1][z + 1], 0, indicesFrontBack[x][y + 1][z + 1], 0);
 							}
 						}
 					}

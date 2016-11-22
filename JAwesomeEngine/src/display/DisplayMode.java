@@ -8,58 +8,42 @@ public class DisplayMode {
 	String title;
 
 	public DisplayMode() {
-		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X,
-				DefaultValues.DEFAULT_DISPLAY_POSITION_Y,
-				DefaultValues.DEFAULT_DISPLAY_RESOLUTION_X,
-				DefaultValues.DEFAULT_DISPLAY_RESOLUTION_Y,
-				DefaultValues.DEFAULT_DISPLAY_TITLE,
-				DefaultValues.DEFAULT_DISPLAY_VSYNC,
-				DefaultValues.DEFAULT_DISPLAY_RESIZEABLE,
-				DefaultValues.DEFAULT_DISPLAY_FULLSCREEN);
+		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X, DefaultValues.DEFAULT_DISPLAY_POSITION_Y,
+				DefaultValues.DEFAULT_DISPLAY_RESOLUTION_X, DefaultValues.DEFAULT_DISPLAY_RESOLUTION_Y,
+				DefaultValues.DEFAULT_DISPLAY_TITLE, DefaultValues.DEFAULT_DISPLAY_VSYNC,
+				DefaultValues.DEFAULT_DISPLAY_RESIZEABLE, DefaultValues.DEFAULT_DISPLAY_FULLSCREEN);
 	}
 
 	public DisplayMode(int width, int height) {
-		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X,
-				DefaultValues.DEFAULT_DISPLAY_POSITION_Y, width, height,
-				DefaultValues.DEFAULT_DISPLAY_TITLE,
-				DefaultValues.DEFAULT_DISPLAY_VSYNC,
-				DefaultValues.DEFAULT_DISPLAY_RESIZEABLE,
-				DefaultValues.DEFAULT_DISPLAY_FULLSCREEN);
+		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X, DefaultValues.DEFAULT_DISPLAY_POSITION_Y, width, height,
+				DefaultValues.DEFAULT_DISPLAY_TITLE, DefaultValues.DEFAULT_DISPLAY_VSYNC,
+				DefaultValues.DEFAULT_DISPLAY_RESIZEABLE, DefaultValues.DEFAULT_DISPLAY_FULLSCREEN);
 	}
 
 	public DisplayMode(int width, int height, String title) {
-		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X,
-				DefaultValues.DEFAULT_DISPLAY_POSITION_Y, width, height, title,
-				DefaultValues.DEFAULT_DISPLAY_VSYNC,
-				DefaultValues.DEFAULT_DISPLAY_RESIZEABLE,
+		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X, DefaultValues.DEFAULT_DISPLAY_POSITION_Y, width, height, title,
+				DefaultValues.DEFAULT_DISPLAY_VSYNC, DefaultValues.DEFAULT_DISPLAY_RESIZEABLE,
 				DefaultValues.DEFAULT_DISPLAY_FULLSCREEN);
 	}
 
 	public DisplayMode(int width, int height, String title, boolean vsync) {
-		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X,
-				DefaultValues.DEFAULT_DISPLAY_POSITION_Y, width, height, title,
-				vsync, DefaultValues.DEFAULT_DISPLAY_RESIZEABLE,
-				DefaultValues.DEFAULT_DISPLAY_FULLSCREEN);
+		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X, DefaultValues.DEFAULT_DISPLAY_POSITION_Y, width, height, title,
+				vsync, DefaultValues.DEFAULT_DISPLAY_RESIZEABLE, DefaultValues.DEFAULT_DISPLAY_FULLSCREEN);
 	}
 
-	public DisplayMode(int width, int height, String title, boolean vsync,
-			boolean resizeable) {
-		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X,
-				DefaultValues.DEFAULT_DISPLAY_POSITION_Y, width, height, title,
+	public DisplayMode(int width, int height, String title, boolean vsync, boolean resizeable) {
+		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X, DefaultValues.DEFAULT_DISPLAY_POSITION_Y, width, height, title,
 				vsync, resizeable, DefaultValues.DEFAULT_DISPLAY_FULLSCREEN);
 	}
 
-	public DisplayMode(int width, int height, String title, boolean vsync,
-			boolean resizeable, boolean fullscreen) {
-		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X,
-				DefaultValues.DEFAULT_DISPLAY_POSITION_Y, width, height, title,
+	public DisplayMode(int width, int height, String title, boolean vsync, boolean resizeable, boolean fullscreen) {
+		init(DefaultValues.DEFAULT_DISPLAY_POSITION_X, DefaultValues.DEFAULT_DISPLAY_POSITION_Y, width, height, title,
 				vsync, resizeable, fullscreen);
 	}
 
-	public DisplayMode(int positionX, int positionY, int width, int height,
-			String title, boolean vsync, boolean resizeable, boolean fullscreen) {
-		init(positionX, positionY, width, height, title, vsync, resizeable,
-				fullscreen);
+	public DisplayMode(int positionX, int positionY, int width, int height, String title, boolean vsync,
+			boolean resizeable, boolean fullscreen) {
+		init(positionX, positionY, width, height, title, vsync, resizeable, fullscreen);
 	}
 
 	public int getHeight() {
@@ -82,8 +66,8 @@ public class DisplayMode {
 		return positionY;
 	}
 
-	private void init(int positionX, int positionY, int width, int height,
-			String title, boolean vsync, boolean resizeable, boolean fullscreen) {
+	private void init(int positionX, int positionY, int width, int height, String title, boolean vsync,
+			boolean resizeable, boolean fullscreen) {
 		this.positionX = positionX;
 		this.positionY = positionY;
 		this.width = width;

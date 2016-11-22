@@ -8,22 +8,18 @@ import quaternion.Complexf;
 import vector.Vector1f;
 import vector.Vector2f;
 
-public class GhostObject2 extends
-		GhostObject<Vector2f, Vector1f, Complexf, Matrix1f> implements
-		InstancedBaseObject2 {
+public class GhostObject2 extends GhostObject<Vector2f, Vector1f, Complexf, Matrix1f> implements InstancedBaseObject2 {
 
 	public GhostObject2() {
-		super(new Vector2f(), new Vector2f(), new Complexf(),
-				new Vector2f(1, 1));
+		super(new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
 	}
 
 	public GhostObject2(CollisionShape2 cs) {
-		super(cs, new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(
-				1, 1));
+		super(cs, new Vector2f(), new Vector2f(), new Complexf(), new Vector2f(1, 1));
 	}
 
-	public GhostObject2(CollisionShape2 cs, Vector2f rotationcenter,
-			Vector2f translation, Complexf rotation, Vector2f scale) {
+	public GhostObject2(CollisionShape2 cs, Vector2f rotationcenter, Vector2f translation, Complexf rotation,
+			Vector2f scale) {
 		super(cs, rotationcenter, translation, rotation, scale);
 	}
 
@@ -52,8 +48,7 @@ public class GhostObject2 extends
 
 	@Override
 	public Vector2f supportPointRelativeNegative(Vector2f direction) {
-		Vector2f supportRelNeg = supportcalculator
-				.supportPointLocalNegative(direction);
+		Vector2f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
 		supportRelNeg.transform(getRotation());
 		return supportRelNeg;
 	}
@@ -94,8 +89,7 @@ public class GhostObject2 extends
 	}
 
 	@Override
-	public SupportCalculator<Vector2f> createSupportCalculator(
-			CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
+	public SupportCalculator<Vector2f> createSupportCalculator(CollisionShape<Vector2f, Complexf, Matrix1f> cs) {
 		return null;
 	}
 

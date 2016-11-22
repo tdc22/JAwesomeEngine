@@ -4,11 +4,10 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import objects.ShapedObject;
-import objects.ShapedObject2;
-
 import org.lwjgl.opengl.GL11;
 
+import objects.ShapedObject;
+import objects.ShapedObject2;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -26,13 +25,11 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 		maxParticles = 0;
 	}
 
-	private final Vector2f topleft = new Vector2f(0, 0),
-			bottomleft = new Vector2f(0, 1), bottomright = new Vector2f(1, 1),
-			topright = new Vector2f(1, 0);
+	private final Vector2f topleft = new Vector2f(0, 0), bottomleft = new Vector2f(0, 1),
+			bottomright = new Vector2f(1, 1), topright = new Vector2f(1, 0);
 
 	@Override
-	public int addParticle(Vector2f position, Vector2f velocity, Vector2f size,
-			int lifetime) {
+	public int addParticle(Vector2f position, Vector2f velocity, Vector2f size, int lifetime) {
 		return addParticle(new Particle(position, velocity, lifetime, size));
 	}
 
@@ -43,18 +40,18 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 		if (pos != null) {
 			insertpos = pos;
 			pos *= 4;
-			particles.setVertex(pos, new Vector2f(particle.position.x
-					- particle.size.x, particle.position.y - particle.size.y),
-					color, topleft);
-			particles.setVertex(pos + 1, new Vector2f(particle.position.x
-					- particle.size.x, particle.position.y + particle.size.y),
-					color, topright);
-			particles.setVertex(pos + 2, new Vector2f(particle.position.x
-					+ particle.size.x, particle.position.y + particle.size.y),
-					color, bottomright);
-			particles.setVertex(pos + 3, new Vector2f(particle.position.x
-					+ particle.size.x, particle.position.y - particle.size.y),
-					color, bottomleft);
+			particles.setVertex(pos,
+					new Vector2f(particle.position.x - particle.size.x, particle.position.y - particle.size.y), color,
+					topleft);
+			particles.setVertex(pos + 1,
+					new Vector2f(particle.position.x - particle.size.x, particle.position.y + particle.size.y), color,
+					topright);
+			particles.setVertex(pos + 2,
+					new Vector2f(particle.position.x + particle.size.x, particle.position.y + particle.size.y), color,
+					bottomright);
+			particles.setVertex(pos + 3,
+					new Vector2f(particle.position.x + particle.size.x, particle.position.y - particle.size.y), color,
+					bottomleft);
 			int indexpos = insertpos * 6;
 			particles.setIndex(indexpos, pos);
 			particles.setIndex(indexpos + 1, pos + 1);
@@ -63,18 +60,18 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 			particles.setIndex(indexpos + 4, pos + 2);
 			particles.setIndex(indexpos + 5, pos + 3);
 		} else {
-			particles.addVertex(new Vector2f(particle.position.x
-					- particle.size.x, particle.position.y - particle.size.y),
-					color, topleft);
-			particles.addVertex(new Vector2f(particle.position.x
-					- particle.size.x, particle.position.y + particle.size.y),
-					color, topright);
-			particles.addVertex(new Vector2f(particle.position.x
-					+ particle.size.x, particle.position.y + particle.size.y),
-					color, bottomright);
-			particles.addVertex(new Vector2f(particle.position.x
-					+ particle.size.x, particle.position.y - particle.size.y),
-					color, bottomleft);
+			particles.addVertex(
+					new Vector2f(particle.position.x - particle.size.x, particle.position.y - particle.size.y), color,
+					topleft);
+			particles.addVertex(
+					new Vector2f(particle.position.x - particle.size.x, particle.position.y + particle.size.y), color,
+					topright);
+			particles.addVertex(
+					new Vector2f(particle.position.x + particle.size.x, particle.position.y + particle.size.y), color,
+					bottomright);
+			particles.addVertex(
+					new Vector2f(particle.position.x + particle.size.x, particle.position.y - particle.size.y), color,
+					bottomleft);
 			insertpos = maxParticles;
 			pos = maxParticles * 4;
 			particles.addIndices(pos, pos + 1, pos + 2, pos, pos + 2, pos + 3);
@@ -146,8 +143,7 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 		Vector2f position, velocity, size;
 		int lifetime;
 
-		protected Particle(Vector2f position, Vector2f velocity, int lifetime,
-				Vector2f size) {
+		protected Particle(Vector2f position, Vector2f velocity, int lifetime, Vector2f size) {
 			this.position = position;
 			this.velocity = velocity;
 			this.lifetime = lifetime;

@@ -8,11 +8,10 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import matrix.Matrix4f;
-import objects.ViewProjection;
-
 import org.lwjgl.BufferUtils;
 
+import matrix.Matrix4f;
+import objects.ViewProjection;
 import shader.PostProcessingShader;
 import shader.Shader;
 import texture.FramebufferObject;
@@ -33,8 +32,7 @@ public class Layer implements ViewProjection {
 	}
 
 	public void initLayer(int resX, int resY, int samples) {
-		framebufferMultisample = new FramebufferObjectMultisample(this, resX,
-				resY, samples);
+		framebufferMultisample = new FramebufferObjectMultisample(this, resX, resY, samples);
 		framebufferPostProcessing = new FramebufferObject(this, resX, resY, 0);
 	}
 
@@ -116,20 +114,17 @@ public class Layer implements ViewProjection {
 	public void setProjectionMatrix(FloatBuffer buffer) {
 		projectionMatrix = buffer;
 		for (Shader s : shader) {
-			s.setArgumentDirect(StringConstants.MVP_PROJECTION,
-					projectionMatrix);
+			s.setArgumentDirect(StringConstants.MVP_PROJECTION, projectionMatrix);
 		}
 	}
 
 	@Override
-	public void setViewProjectionMatrix(FloatBuffer viewBuffer,
-			FloatBuffer projectionBuffer) {
+	public void setViewProjectionMatrix(FloatBuffer viewBuffer, FloatBuffer projectionBuffer) {
 		viewMatrix = viewBuffer;
 		projectionMatrix = projectionBuffer;
 		for (Shader s : shader) {
 			s.setArgumentDirect(StringConstants.MVP_VIEW, viewBuffer);
-			s.setArgumentDirect(StringConstants.MVP_PROJECTION,
-					projectionMatrix);
+			s.setArgumentDirect(StringConstants.MVP_PROJECTION, projectionMatrix);
 		}
 	}
 
@@ -145,20 +140,17 @@ public class Layer implements ViewProjection {
 	public void setProjectionMatrix(Matrix4f matrix) {
 		projectionMatrix = storeMatrix(matrix);
 		for (Shader s : shader) {
-			s.setArgumentDirect(StringConstants.MVP_PROJECTION,
-					projectionMatrix);
+			s.setArgumentDirect(StringConstants.MVP_PROJECTION, projectionMatrix);
 		}
 	}
 
 	@Override
-	public void setViewProjectionMatrix(Matrix4f viewMatrix,
-			Matrix4f projectionMatrix) {
+	public void setViewProjectionMatrix(Matrix4f viewMatrix, Matrix4f projectionMatrix) {
 		this.viewMatrix = storeMatrix(viewMatrix);
 		this.projectionMatrix = storeMatrix(projectionMatrix);
 		for (Shader s : shader) {
 			s.setArgumentDirect(StringConstants.MVP_VIEW, viewMatrix);
-			s.setArgumentDirect(StringConstants.MVP_PROJECTION,
-					this.projectionMatrix);
+			s.setArgumentDirect(StringConstants.MVP_PROJECTION, this.projectionMatrix);
 		}
 	}
 

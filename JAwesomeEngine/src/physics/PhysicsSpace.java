@@ -1,10 +1,10 @@
 package physics;
 
-import integration.IntegrationSolver;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import broadphase.Broadphase;
+import integration.IntegrationSolver;
 import manifold.ManifoldManager;
 import narrowphase.Narrowphase;
 import narrowphase.RaycastNarrowphase;
@@ -17,20 +17,16 @@ import quaternion.Quaternionf;
 import resolution.CollisionResolution;
 import space.Space3;
 import vector.Vector3f;
-import broadphase.Broadphase;
 
 public class PhysicsSpace extends Space3 {
 	List<GameObject<Vector3f, Quaternionf>> addedobjects;
 
 	public PhysicsSpace(IntegrationSolver integrationsolver,
-			Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> broadphase,
-			Narrowphase<Vector3f> narrowphase,
-			RaycastNarrowphase<Vector3f> raycastnarrowphase,
-			CollisionResolution collisionresolution,
-			PositionalCorrection positionalcorrection,
-			ManifoldManager<Vector3f> manifoldmanager) {
-		super(integrationsolver, broadphase, narrowphase, raycastnarrowphase,
-				collisionresolution, positionalcorrection, manifoldmanager);
+			Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> broadphase, Narrowphase<Vector3f> narrowphase,
+			RaycastNarrowphase<Vector3f> raycastnarrowphase, CollisionResolution collisionresolution,
+			PositionalCorrection positionalcorrection, ManifoldManager<Vector3f> manifoldmanager) {
+		super(integrationsolver, broadphase, narrowphase, raycastnarrowphase, collisionresolution, positionalcorrection,
+				manifoldmanager);
 		addedobjects = new ArrayList<GameObject<Vector3f, Quaternionf>>();
 	}
 
@@ -52,12 +48,10 @@ public class PhysicsSpace extends Space3 {
 		removeRigidBody(body);
 	}
 
-	public void addCompoundObject(CompoundObject3 compoundobject,
-			GameObject<Vector3f, Quaternionf>[] obj) {
+	public void addCompoundObject(CompoundObject3 compoundobject, GameObject<Vector3f, Quaternionf>[] obj) {
 		for (int i = 0; i < obj.length; i++) {
 			GameObject<Vector3f, Quaternionf> dgo = obj[i];
-			CollisionShape<Vector3f, Quaternionf, ?> cs = compoundobject
-					.getCollisionShapes().get(i);
+			CollisionShape<Vector3f, Quaternionf, ?> cs = compoundobject.getCollisionShapes().get(i);
 			dgo.setRotation(cs.getRotation());
 			dgo.setTranslation(cs.getTranslation());
 			dgo.setRotationCenter(cs.getRotationCenter());

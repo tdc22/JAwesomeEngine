@@ -1,5 +1,9 @@
 package depthBufferTest;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import loader.FontLoader;
@@ -9,10 +13,6 @@ import shape.Box;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector4f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class DepthBufferTest extends StandardGame {
 	Debugger debugger;
@@ -22,45 +22,38 @@ public class DepthBufferTest extends StandardGame {
 		float znear = 0.1f;
 		float zfar = 200;
 		PixelFormat pixelformat = new PixelFormat();
-		initDisplay(new GLDisplay(), new DisplayMode(), pixelformat,
-				new VideoSettings(800, 600, 90, znear, zfar),
+		initDisplay(new GLDisplay(), new DisplayMode(), pixelformat, new VideoSettings(800, 600, 90, znear, zfar),
 				new NullSoundEnvironment());
 
-		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile(
-						"res/shaders/defaultshader.vert",
-						"res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
-				font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
 
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 5f, 0f);
 		display.bindMouse();
 
-		Shader red = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader red = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		red.addArgument("color", new Vector4f(1f, 0f, 0f, 1f));
-		Shader green = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader green = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		green.addArgument("color", new Vector4f(0f, 1f, 0f, 1f));
 
-		Shader red2 = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/zbuffershader.vert",
-				"res/shaders/colorshader.frag"));
+		Shader red2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/zbuffershader.vert", "res/shaders/colorshader.frag"));
 		red2.addArgument("color", new Vector4f(1f, 0f, 0f, 1f));
 		red2.addArgument("depthBufferBits", pixelformat.getDepth());
 		red2.addArgument("zNear", znear);
 		red2.addArgument("zFar", zfar);
-		Shader green2 = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/zbuffershader.vert",
-				"res/shaders/colorshader.frag"));
+		Shader green2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/zbuffershader.vert", "res/shaders/colorshader.frag"));
 		green2.addArgument("color", new Vector4f(0f, 1f, 0f, 1f));
 		green2.addArgument("depthBufferBits", pixelformat.getDepth());
 		green2.addArgument("zNear", znear);

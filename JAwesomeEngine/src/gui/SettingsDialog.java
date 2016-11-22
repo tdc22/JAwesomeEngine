@@ -1,7 +1,5 @@
 package gui;
 
-import game.StandardGame;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -18,6 +16,7 @@ import javax.swing.UIManager;
 import display.Display;
 import display.DisplayMode;
 import display.PixelFormat;
+import game.StandardGame;
 
 public class SettingsDialog {
 	JFrame frame;
@@ -31,8 +30,7 @@ public class SettingsDialog {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Dimension dimension = frame.getToolkit().getScreenSize();
-		frame.setLocation(
-				(int) ((dimension.getWidth() - frame.getWidth()) / 2),
+		frame.setLocation((int) ((dimension.getWidth() - frame.getWidth()) / 2),
 				(int) ((dimension.getHeight() - frame.getHeight()) / 2));
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -48,9 +46,8 @@ public class SettingsDialog {
 		try {
 			for (int d = 0; d < Display.getAvailableDisplayModes().length; d++) {
 				DisplayMode current = Display.getAvailableDisplayModes()[d];
-				resolution.addItem((current.getWidth() + " x "
-						+ current.getHeight() + " x " + current
-						.getBitsPerPixel()));
+				resolution.addItem(
+						(current.getWidth() + " x " + current.getHeight() + " x " + current.getBitsPerPixel()));
 			}
 		} catch (LWJGLException e) {
 			e.printStackTrace();
@@ -96,9 +93,8 @@ public class SettingsDialog {
 		int height = Integer.parseInt(res[1]);
 		// int bpp = Integer.parseInt(res[2]);
 
-		VideoSettingsOld settings = new VideoSettingsOld(new PixelFormat(0, 24,
-				4, 4), fullscreen.isSelected(), width, height,
-				vsync.isSelected());
+		VideoSettingsOld settings = new VideoSettingsOld(new PixelFormat(0, 24, 4, 4), fullscreen.isSelected(), width,
+				height, vsync.isSelected());
 		game.initDisplay(settings);
 	}
 }

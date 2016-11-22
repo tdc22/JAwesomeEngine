@@ -1,6 +1,7 @@
 package utils;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+
 import vector.Vector3f;
 
 public class DefaultValues {

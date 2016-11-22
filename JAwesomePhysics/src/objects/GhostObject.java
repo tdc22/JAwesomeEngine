@@ -11,8 +11,7 @@ public abstract class GhostObject<L extends Vector, A1 extends Vector, A2 extend
 		setMass(1);
 	}
 
-	public GhostObject(CollisionShape<L, A2, A3> cs, L rotationcenter,
-			L translation, A2 rotation, L scale) {
+	public GhostObject(CollisionShape<L, A2, A3> cs, L rotationcenter, L translation, A2 rotation, L scale) {
 		super(cs, rotationcenter, translation, rotation, scale);
 		setMass(1);
 	}

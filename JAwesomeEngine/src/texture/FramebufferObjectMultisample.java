@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
 import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
 import static org.lwjgl.opengl.GL30.glDeleteRenderbuffers;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
+
 import game.Layer;
 import objects.Camera;
 import utils.ViewFrustum;
@@ -24,40 +25,37 @@ public class FramebufferObjectMultisample extends FramebufferObject {
 		super(render, width, height);
 	}
 
-	public FramebufferObjectMultisample(Layer render, int width, int height,
-			int samples) {
+	public FramebufferObjectMultisample(Layer render, int width, int height, int samples) {
 		super(render, width, height, samples);
 	}
 
-	public FramebufferObjectMultisample(Layer render, int width, int height,
-			int samples, Camera cam) {
+	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, Camera cam) {
 		super(render, width, height, samples, cam);
 	}
 
-	public FramebufferObjectMultisample(Layer render, int width, int height,
-			int samples, Camera cam, boolean renderColor, boolean renderDepth) {
+	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, Camera cam,
+			boolean renderColor, boolean renderDepth) {
 		super(render, width, height, samples, cam, renderColor, renderDepth);
 	}
 
-	public FramebufferObjectMultisample(Layer render, int width, int height,
-			int samples, Camera cam, boolean renderColor, boolean renderDepth,
-			boolean renderColorToTexture, boolean renderDepthToTexture) {
-		super(render, width, height, samples, cam, renderColor, renderDepth,
-				renderColorToTexture, renderDepthToTexture);
+	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, Camera cam,
+			boolean renderColor, boolean renderDepth, boolean renderColorToTexture, boolean renderDepthToTexture) {
+		super(render, width, height, samples, cam, renderColor, renderDepth, renderColorToTexture,
+				renderDepthToTexture);
 	}
 
-	public FramebufferObjectMultisample(Layer render, int width, int height,
-			int samples, Camera cam, Texture colorbuffer) {
+	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, Camera cam,
+			Texture colorbuffer) {
 		super(render, width, height, samples, cam, colorbuffer);
 	}
 
-	public FramebufferObjectMultisample(Layer render, int width, int height,
-			int samples, Camera cam, ViewFrustum frustum) {
+	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, Camera cam,
+			ViewFrustum frustum) {
 		super(render, width, height, samples, cam, frustum);
 	}
 
-	public FramebufferObjectMultisample(Layer render, int width, int height,
-			int samples, Camera cam, Texture colorbuffer, ViewFrustum frustum) {
+	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, Camera cam,
+			Texture colorbuffer, ViewFrustum frustum) {
 		super(render, width, height, samples, cam, colorbuffer, frustum);
 	}
 
@@ -87,13 +85,11 @@ public class FramebufferObjectMultisample extends FramebufferObject {
 	}
 
 	@Override
-	protected void init(Layer render, int width, int height, int samples,
-			Camera camera, Texture colorbuffer, ViewFrustum frustum,
-			boolean renderColor, boolean renderDepth,
-			boolean renderColorToTexture, boolean renderDepthToTexture) {
-		super.init(render, width, height, samples, camera, null, frustum,
-				renderColor, renderDepth, renderColorToTexture,
-				renderDepthToTexture);
+	protected void init(Layer render, int width, int height, int samples, Camera camera, Texture colorbuffer,
+			ViewFrustum frustum, boolean renderColor, boolean renderDepth, boolean renderColorToTexture,
+			boolean renderDepthToTexture) {
+		super.init(render, width, height, samples, camera, null, frustum, renderColor, renderDepth,
+				renderColorToTexture, renderDepthToTexture);
 
 		unsampledFramebufferID = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, unsampledFramebufferID);

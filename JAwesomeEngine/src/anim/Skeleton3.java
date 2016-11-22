@@ -15,8 +15,7 @@ public class Skeleton3 extends Skeleton<Vector3f, Quaternionf> {
 		nullrot = new Quaternionf();
 	}
 
-	public Skeleton3(Animation<Vector3f, Quaternionf> animation,
-			BaseObject<Vector3f, Quaternionf>[] bodypart) {
+	public Skeleton3(Animation<Vector3f, Quaternionf> animation, BaseObject<Vector3f, Quaternionf>[] bodypart) {
 		super(animation, bodypart);
 		nullvec = new Vector3f();
 		nullrot = new Quaternionf();
@@ -26,33 +25,19 @@ public class Skeleton3 extends Skeleton<Vector3f, Quaternionf> {
 	protected void updateAnimation(float animationTimer) {
 		for (int i = 0; i < bodyparts.size(); i++) {
 			BaseObject<Vector3f, Quaternionf> part = bodyparts.get(i);
-			part.translate(animation.getAnimationTranslationPath(i).getPoint(
-					animationTimer));
-			part.rotate(animation.getAnimationRotationPath(i).getRotation(
-					animationTimer));
+			part.translate(animation.getAnimationTranslationPath(i).getPoint(animationTimer));
+			part.rotate(animation.getAnimationRotationPath(i).getRotation(animationTimer));
 		}
 	}
 
-	public void setDynamicAnimation(
-			Animation<Vector3f, Quaternionf> animationparam,
-			float dynamicAnimationSpeed) {
+	public void setDynamicAnimation(Animation<Vector3f, Quaternionf> animationparam, float dynamicAnimationSpeed) {
 		this.animation = new Animation<Vector3f, Quaternionf>(animationparam);
 		for (int i = 0; i < bodyparts.size(); i++) {
 			BaseObject<Vector3f, Quaternionf> bodypart = bodyparts.get(i);
-			animation
-					.getAnimationTranslationPath(i)
-					.getCurves()
-					.get(0)
-					.setStartPoint(
-							VecMath.subtraction(bodypart.getTranslation(),
-									attachedTo.getTranslation()));
-			animation
-					.getAnimationRotationPath(i)
-					.getCurves()
-					.get(0)
-					.setStartRotation(
-							QuatMath.substraction(bodypart.getRotation(),
-									attachedTo.getRotation()));
+			animation.getAnimationTranslationPath(i).getCurves().get(0)
+					.setStartPoint(VecMath.subtraction(bodypart.getTranslation(), attachedTo.getTranslation()));
+			animation.getAnimationRotationPath(i).getCurves().get(0)
+					.setStartRotation(QuatMath.substraction(bodypart.getRotation(), attachedTo.getRotation()));
 		}
 		animationTimer = 0;
 	}

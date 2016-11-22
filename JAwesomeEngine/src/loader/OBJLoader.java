@@ -40,92 +40,72 @@ public class OBJLoader {
 					String[] linesplit = line.split(" ");
 					String[] firstindices = linesplit[1].split("/");
 					indices[0][0] = Integer.parseInt(firstindices[0]);
-					indices[0][1] = firstindices.length < 2
-							|| firstindices[1].isEmpty() ? 0 : Integer
-							.parseInt(firstindices[1]);
-					indices[0][2] = firstindices.length < 3
-							|| firstindices[2].isEmpty() ? 0 : Integer
-							.parseInt(firstindices[2]);
+					indices[0][1] = firstindices.length < 2 || firstindices[1].isEmpty() ? 0
+							: Integer.parseInt(firstindices[1]);
+					indices[0][2] = firstindices.length < 3 || firstindices[2].isEmpty() ? 0
+							: Integer.parseInt(firstindices[2]);
 					String[] secondindices = linesplit[2].split("/");
 					indices[1][0] = Integer.parseInt(secondindices[0]);
-					indices[1][1] = secondindices.length < 2
-							|| secondindices[1].isEmpty() ? 0 : Integer
-							.parseInt(secondindices[1]);
-					indices[1][2] = secondindices.length < 3
-							|| secondindices[2].isEmpty() ? 0 : Integer
-							.parseInt(secondindices[2]);
+					indices[1][1] = secondindices.length < 2 || secondindices[1].isEmpty() ? 0
+							: Integer.parseInt(secondindices[1]);
+					indices[1][2] = secondindices.length < 3 || secondindices[2].isEmpty() ? 0
+							: Integer.parseInt(secondindices[2]);
 					String[] thirdindices = linesplit[3].split("/");
 					indices[2][0] = Integer.parseInt(thirdindices[0]);
-					indices[2][1] = thirdindices.length < 2
-							|| thirdindices[1].isEmpty() ? 0 : Integer
-							.parseInt(thirdindices[1]);
-					indices[2][2] = thirdindices.length < 3
-							|| thirdindices[2].isEmpty() ? 0 : Integer
-							.parseInt(thirdindices[2]);
+					indices[2][1] = thirdindices.length < 2 || thirdindices[1].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[1]);
+					indices[2][2] = thirdindices.length < 3 || thirdindices[2].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[2]);
 					facevertices.add(indices);
 				} else if (line.split(" ").length == 5) {
 					Integer[][] indices = new Integer[3][3];
 					String[] linesplit = line.split(" ");
 					String[] firstindices = linesplit[1].split("/");
 					indices[0][0] = Integer.parseInt(firstindices[0]);
-					indices[0][1] = firstindices.length < 2
-							|| firstindices[1].isEmpty() ? 0 : Integer
-							.parseInt(firstindices[1]);
-					indices[0][2] = firstindices.length < 3
-							|| firstindices[2].isEmpty() ? 0 : Integer
-							.parseInt(firstindices[2]);
+					indices[0][1] = firstindices.length < 2 || firstindices[1].isEmpty() ? 0
+							: Integer.parseInt(firstindices[1]);
+					indices[0][2] = firstindices.length < 3 || firstindices[2].isEmpty() ? 0
+							: Integer.parseInt(firstindices[2]);
 					String[] secondindices = linesplit[2].split("/");
 					indices[1][0] = Integer.parseInt(secondindices[0]);
-					indices[1][1] = secondindices.length < 2
-							|| secondindices[1].isEmpty() ? 0 : Integer
-							.parseInt(secondindices[1]);
-					indices[1][2] = secondindices.length < 3
-							|| secondindices[2].isEmpty() ? 0 : Integer
-							.parseInt(secondindices[2]);
+					indices[1][1] = secondindices.length < 2 || secondindices[1].isEmpty() ? 0
+							: Integer.parseInt(secondindices[1]);
+					indices[1][2] = secondindices.length < 3 || secondindices[2].isEmpty() ? 0
+							: Integer.parseInt(secondindices[2]);
 					String[] thirdindices = linesplit[3].split("/");
 					indices[2][0] = Integer.parseInt(thirdindices[0]);
-					indices[2][1] = thirdindices.length < 2
-							|| thirdindices[1].isEmpty() ? 0 : Integer
-							.parseInt(thirdindices[1]);
-					indices[2][2] = thirdindices.length < 3
-							|| thirdindices[2].isEmpty() ? 0 : Integer
-							.parseInt(thirdindices[2]);
+					indices[2][1] = thirdindices.length < 2 || thirdindices[1].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[1]);
+					indices[2][2] = thirdindices.length < 3 || thirdindices[2].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[2]);
 					facevertices.add(indices);
 
 					indices = new Integer[3][3];
 					linesplit = line.split(" ");
 					firstindices = linesplit[1].split("/");
 					indices[0][0] = Integer.parseInt(firstindices[0]);
-					indices[0][1] = firstindices.length < 2
-							|| firstindices[1].isEmpty() ? 0 : Integer
-							.parseInt(firstindices[1]);
-					indices[0][2] = firstindices.length < 3
-							|| firstindices[2].isEmpty() ? 0 : Integer
-							.parseInt(firstindices[2]);
+					indices[0][1] = firstindices.length < 2 || firstindices[1].isEmpty() ? 0
+							: Integer.parseInt(firstindices[1]);
+					indices[0][2] = firstindices.length < 3 || firstindices[2].isEmpty() ? 0
+							: Integer.parseInt(firstindices[2]);
 					secondindices = linesplit[3].split("/");
 					indices[1][0] = Integer.parseInt(secondindices[0]);
-					indices[1][1] = secondindices.length < 2
-							|| secondindices[1].isEmpty() ? 0 : Integer
-							.parseInt(secondindices[1]);
-					indices[1][2] = secondindices.length < 3
-							|| secondindices[2].isEmpty() ? 0 : Integer
-							.parseInt(secondindices[2]);
+					indices[1][1] = secondindices.length < 2 || secondindices[1].isEmpty() ? 0
+							: Integer.parseInt(secondindices[1]);
+					indices[1][2] = secondindices.length < 3 || secondindices[2].isEmpty() ? 0
+							: Integer.parseInt(secondindices[2]);
 					thirdindices = linesplit[4].split("/");
 					indices[2][0] = Integer.parseInt(thirdindices[0]);
-					indices[2][1] = thirdindices.length < 2
-							|| thirdindices[1].isEmpty() ? 0 : Integer
-							.parseInt(thirdindices[1]);
-					indices[2][2] = thirdindices.length < 3
-							|| thirdindices[2].isEmpty() ? 0 : Integer
-							.parseInt(thirdindices[2]);
+					indices[2][1] = thirdindices.length < 2 || thirdindices[1].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[1]);
+					indices[2][2] = thirdindices.length < 3 || thirdindices[2].isEmpty() ? 0
+							: Integer.parseInt(thirdindices[2]);
 					facevertices.add(indices);
 				} else {
-					System.err
-							.println("Number of vertices per face must be 3 or 4");
+					System.err.println("Number of vertices per face must be 3 or 4");
 				}
-			} else if (line.startsWith("v ") || line.startsWith("vn ")
-					|| line.startsWith("#") || line.startsWith("mtllib")
-					|| line.startsWith("o ") || line.startsWith("s ")
+			} else if (line.startsWith("v ") || line.startsWith("vn ") || line.startsWith("#")
+					|| line.startsWith("mtllib") || line.startsWith("o ") || line.startsWith("s ")
 					|| line.startsWith("usemtl")) {
 				writer.write(line);
 				writer.newLine();
@@ -146,8 +126,7 @@ public class OBJLoader {
 				faceVertIds[i] = pos;
 			}
 			faces.add(faceVertIds);
-			writer.write("f " + faceVertIds[0] + " " + faceVertIds[1] + " "
-					+ faceVertIds[2]);
+			writer.write("f " + faceVertIds[0] + " " + faceVertIds[1] + " " + faceVertIds[2]);
 			writer.newLine();
 		}
 
@@ -212,9 +191,8 @@ public class OBJLoader {
 					}
 				}
 				String[] lineparts = line.split(" ");
-				writeline = lineparts[0] + " " + lineparts[1] + " " + adj1
-						+ " " + lineparts[2] + " " + adj2 + " " + lineparts[3]
-						+ " " + adj3;
+				writeline = lineparts[0] + " " + lineparts[1] + " " + adj1 + " " + lineparts[2] + " " + adj2 + " "
+						+ lineparts[3] + " " + adj3;
 				writer.write(writeline);
 				facenumber++;
 			} else {
@@ -271,9 +249,7 @@ public class OBJLoader {
 			}
 			if (line.startsWith("vs")) {
 				String[] vertexString = line.split(" ");
-				object.addVertex(
-						vertices.get(Integer.parseInt(vertexString[1])),
-						Color.WHITE, new Vector2f(0, 0),
+				object.addVertex(vertices.get(Integer.parseInt(vertexString[1])), Color.WHITE, new Vector2f(0, 0),
 						normals.get(Integer.parseInt(vertexString[3])));
 			}
 		}
@@ -282,8 +258,7 @@ public class OBJLoader {
 		return object;
 	}
 
-	public static ShapedObject3 loadModel(File f) throws FileNotFoundException,
-			IOException {
+	public static ShapedObject3 loadModel(File f) throws FileNotFoundException, IOException {
 		ShapedObject3 object = new ShapedObject3();
 		if (f.getName().endsWith(".mobj")) {
 			object = loadMOBJ(f);
@@ -292,8 +267,7 @@ public class OBJLoader {
 				f = convertOBJ(f);
 				object = loadMOBJ(f);
 			} else {
-				System.err
-						.println("File extension not recognized. (Use *.obj or *.mobj)");
+				System.err.println("File extension not recognized. (Use *.obj or *.mobj)");
 				return null;
 			}
 		}

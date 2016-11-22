@@ -1,16 +1,20 @@
 package physicsCollisionDetection;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import broadphase.DynamicAABBTree3;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.EulerIntegration;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import loader.FontLoader;
 import loader.InputLoader;
 import loader.ShaderLoader;
@@ -35,11 +39,6 @@ import utils.Debugger;
 import utils.Pair;
 import vector.Vector3f;
 import vector.Vector4f;
-import broadphase.DynamicAABBTree3;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class CollisionDetectionTest extends StandardGame {
 	PhysicsSpace space;
@@ -55,25 +54,22 @@ public class CollisionDetectionTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings(), new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile(
-						"res/shaders/defaultshader.vert",
-						"res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
-		int shaderprogram = ShaderLoader.loadShaderFromFile(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
+		int shaderprogram = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
+				"res/shaders/colorshader.frag");
 		s1 = new Shader(shaderprogram);
 		s2 = new Shader(shaderprogram);
 		s3 = new Shader(shaderprogram);
@@ -94,10 +90,9 @@ public class CollisionDetectionTest extends StandardGame {
 
 		manifolds = new ArrayList<ManifoldVisualization>();
 
-		space = new PhysicsSpace(new EulerIntegration(),
-				new DynamicAABBTree3(), new GJK(new EPA()),
-				new SupportRaycast(), new NullResolution(),
-				new NullCorrection(), new SimpleManifoldManager<Vector3f>());
+		space = new PhysicsSpace(new EulerIntegration(), new DynamicAABBTree3(), new GJK(new EPA()),
+				new SupportRaycast(), new NullResolution(), new NullCorrection(),
+				new SimpleManifoldManager<Vector3f>());
 		space.setCullStaticOverlaps(false);
 
 		b1 = new Box(-1, 0, 0, 1, 1, 1);
@@ -127,13 +122,10 @@ public class CollisionDetectionTest extends StandardGame {
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
-				font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space, defaultshader);
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "R", KeyInput.KEY_PRESSED));
-		giveMeData = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "P", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "R", KeyInput.KEY_PRESSED));
+		giveMeData = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "P", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 		inputs.addEvent(giveMeData);
 	}
@@ -207,8 +199,7 @@ public class CollisionDetectionTest extends StandardGame {
 		s4.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s5.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 
-		Set<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>> overlaps = space
-				.getOverlaps();
+		Set<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>> overlaps = space.getOverlaps();
 		for (Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>> o : overlaps) {
 			if (o.contains(rb1))
 				s1.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
@@ -226,8 +217,7 @@ public class CollisionDetectionTest extends StandardGame {
 			ManifoldVisualization mv = new ManifoldVisualization(cm);
 			defaultshader.addObject(mv);
 			manifolds.add(mv);
-			Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>> o = cm
-					.getObjects();
+			Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>> o = cm.getObjects();
 			if (o.contains(rb1))
 				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 			if (o.contains(rb2))

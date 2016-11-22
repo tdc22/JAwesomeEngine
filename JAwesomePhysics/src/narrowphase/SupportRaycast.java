@@ -13,8 +13,7 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 	}
 
 	@Override
-	public float computeCollisionOnRay(SupportMap<Vector3f> Sa,
-			Ray<Vector3f> ray) {
+	public float computeCollisionOnRay(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

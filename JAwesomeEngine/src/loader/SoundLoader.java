@@ -39,21 +39,19 @@ public class SoundLoader {
 		IntBuffer error = BufferUtils.createIntBuffer(1);
 		long decoder = stb_vorbis_open_memory(vorbis, error, null);
 		if (decoder == NULL)
-			throw new RuntimeException(
-					"Failed to open Ogg Vorbis file. Error: " + error.get(0));
+			throw new RuntimeException("Failed to open Ogg Vorbis file. Error: " + error.get(0));
 
 		stb_vorbis_get_info(decoder, info);
 
 		int lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
 
-		ShortBuffer pcm = BufferUtils.createShortBuffer(info.channels()
-				* lengthSamples);
+		ShortBuffer pcm = BufferUtils.createShortBuffer(info.channels() * lengthSamples);
 
 		stb_vorbis_get_samples_short_interleaved(decoder, info.channels(), pcm);
 		stb_vorbis_close(decoder);
 		int buffer = alGenBuffers();
-		alBufferData(buffer, info.channels() == 2 ? AL10.AL_FORMAT_STEREO16
-				: AL10.AL_FORMAT_MONO16, pcm, info.sample_rate());
+		alBufferData(buffer, info.channels() == 2 ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16, pcm,
+				info.sample_rate());
 
 		return buffer;
 	}
@@ -62,8 +60,7 @@ public class SoundLoader {
 		return loadSound(new File(path));
 	}
 
-	private static ByteBuffer loadSoundToByteBuffer(File file, int bufferSize)
-			throws IOException {
+	private static ByteBuffer loadSoundToByteBuffer(File file, int bufferSize) throws IOException {
 		ByteBuffer buffer;
 
 		Path path = file.toPath();
@@ -74,10 +71,8 @@ public class SoundLoader {
 					fc.read(buffer);
 			}
 		} else {
-			try (InputStream source = Thread.currentThread()
-					.getContextClassLoader()
-					.getResourceAsStream(file.getPath());
-					ReadableByteChannel rbc = Channels.newChannel(source)) {
+			try (InputStream source = Thread.currentThread().getContextClassLoader()
+					.getResourceAsStream(file.getPath()); ReadableByteChannel rbc = Channels.newChannel(source)) {
 				buffer = createByteBuffer(bufferSize);
 
 				while (true) {

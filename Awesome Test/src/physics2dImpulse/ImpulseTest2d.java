@@ -1,5 +1,10 @@
 package physics2dImpulse;
 
+import broadphase.SAP2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import integration.EulerIntegration;
 import loader.ShaderLoader;
@@ -17,11 +22,6 @@ import shader.Shader;
 import shape2d.Quad;
 import sound.NullSoundEnvironment;
 import vector.Vector2f;
-import broadphase.SAP2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ImpulseTest2d extends StandardGame {
 	PhysicsSpace2 space;
@@ -32,21 +32,19 @@ public class ImpulseTest2d extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings(), new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 		// mouse.setGrabbed(false);
 
-		Shader defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader2);
 
-		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(
-				new EPA2()), new SupportRaycast2(), new NullResolution(),
-				new NullCorrection(), new SimpleManifoldManager<Vector2f>());
+		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(new EPA2()), new SupportRaycast2(),
+				new NullResolution(), new NullCorrection(), new SimpleManifoldManager<Vector2f>());
 
 		q = new Quad(400, 200, 25, 25);
 		rb = new RigidBody2(PhysicsShapeCreator.create(q));

@@ -36,10 +36,8 @@ public class PostProcessingShader {
 			FramebufferObject current = p ? to : from;
 			current.bind();
 			current.clear();
-			((Texture) shader.getArgument("u_texture")).setTextureID(p ? tex0
-					: tex1);
-			((Texture) shader.getArgument("u_depthTexture"))
-					.setTextureID(p ? tex0depth : tex1depth);
+			((Texture) shader.getArgument("u_texture")).setTextureID(p ? tex0 : tex1);
+			((Texture) shader.getArgument("u_depthTexture")).setTextureID(p ? tex0depth : tex1depth);
 			shader.renderNoMatrix();
 			current.unbind();
 			p = !p;

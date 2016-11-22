@@ -7,13 +7,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import collisionshape.ConvexShape;
 import math.VecMath;
 import vector.Vector3f;
-import collisionshape.ConvexShape;
 
 public class Quickhull3 {
-	public static ConvexShape computeConvexHull(List<Vector3f> points,
-			int iterations) {
+	public static ConvexShape computeConvexHull(List<Vector3f> points, int iterations) {
 		// source: http://thomasdiewald.com/blog/?p=1888
 
 		// TODO: COMPLETELY REWRITE / COPY FROM CONVEXHULLDEBUGGER DELETE THIS
@@ -28,8 +27,7 @@ public class Quickhull3 {
 		float distance = -1;
 		for (int i = 0; i < EPs.length - 1; i++) {
 			for (int j = i; j < EPs.length; j++) {
-				float dist = (float) VecMath.subtraction(EPs[i], EPs[j])
-						.lengthSquared();
+				float dist = (float) VecMath.subtraction(EPs[i], EPs[j]).lengthSquared();
 				if (dist > distance) {
 					distance = dist;
 					a = i;
@@ -48,8 +46,7 @@ public class Quickhull3 {
 		for (int i = 0; i < EPs.length; i++) {
 			if (i != a && i != b) {
 				Vector3f IA = VecMath.subtraction(EPs[i], A);
-				float dist = (float) VecMath.crossproduct(AB, IA)
-						.lengthSquared();
+				float dist = (float) VecMath.crossproduct(AB, IA).lengthSquared();
 				if (dist > distance) {
 					distance = dist;
 					c = i;
@@ -117,8 +114,7 @@ public class Quickhull3 {
 		// 1. If stack not empty Pop Face from Stack
 		Triangle t;
 		while ((t = faces.poll()) != null) {
-			System.out.println("a " + t.a + "; " + t.b + "; " + t.c + "; "
-					+ t.normal);
+			System.out.println("a " + t.a + "; " + t.b + "; " + t.c + "; " + t.normal);
 			// 2. Get most distant point of the face's point set
 			Vector3f furthestPoint = null;
 			int furthestPointID = -1;
@@ -149,8 +145,7 @@ public class Quickhull3 {
 				List<Vector3f> lightFacesPoints = new ArrayList<Vector3f>();
 				for (int i = faces.size() - 1; i >= 0; i--) {
 					Triangle tri = faces.get(i);
-					Vector3f triP = VecMath.subtraction(furthestPoint,
-							vertices.get(tri.a));
+					Vector3f triP = VecMath.subtraction(furthestPoint, vertices.get(tri.a));
 					if (VecMath.dotproduct(tri.normal, triP) >= 0) {
 						faces.remove(i);
 						System.out.println("Light face vertices added");
@@ -169,8 +164,7 @@ public class Quickhull3 {
 				List<Integer> toRemove = new ArrayList<Integer>();
 				for (int i = 0; i < lightFaceVertices.size(); i++) {
 					int vert = iter.next(); // TODO: check
-					System.out.println("vert + " + i + "; " + vert + "; "
-							+ adjacentsMap);
+					System.out.println("vert + " + i + "; " + vert + "; " + adjacentsMap);
 					boolean foundNonLight = false;
 					for (Integer adjacent : adjacentsMap.get(vert)) {
 						if (!lightFaceVertices.contains(adjacent)) {
@@ -180,10 +174,7 @@ public class Quickhull3 {
 					if (!foundNonLight) {
 						toRemove.add(vert);
 						for (Integer adj : adjacentsMap.get(vert)) {
-							adjacentsMap.put(
-									adj,
-									removeArrayEntry(adjacentsMap.get(adj),
-											vert));
+							adjacentsMap.put(adj, removeArrayEntry(adjacentsMap.get(adj), vert));
 						}
 					}
 				}
@@ -217,8 +208,7 @@ public class Quickhull3 {
 					edge.add(currentVert);
 					Integer[] adjs = adjacentsMap.get(currentVert);
 					for (int j = 0; j < adjs.length; j++) {
-						if (vertsOnEdge.contains(adjs[j])
-								&& adjs[j] != lastVert) {
+						if (vertsOnEdge.contains(adjs[j]) && adjs[j] != lastVert) {
 							lastVert = currentVert;
 							currentVert = adjs[j];
 							break;
@@ -239,18 +229,13 @@ public class Quickhull3 {
 						vertIDa = edge.get(i);
 						vertIDb = edge.get(0);
 					}
-					Triangle stichTriangle = new Triangle(vertIDa, vertIDb,
-							furthestPointID, VecMath.computeNormal(
-									vertices.get(vertIDa),
-									vertices.get(vertIDb), furthestPoint));
+					Triangle stichTriangle = new Triangle(vertIDa, vertIDb, furthestPointID,
+							VecMath.computeNormal(vertices.get(vertIDa), vertices.get(vertIDb), furthestPoint));
 					faces.add(stichTriangle);
 					newLightFaces.add(stichTriangle);
 
 					// Upade adjacents map
-					adjacentsMap
-							.put(vertIDa,
-									addArrayEntry(adjacentsMap.get(i),
-											furthestPointID));
+					adjacentsMap.put(vertIDa, addArrayEntry(adjacentsMap.get(i), furthestPointID));
 					furthestPointNeighbours[i] = vertIDa;
 				}
 				// Update adjacents map for new point
@@ -259,8 +244,7 @@ public class Quickhull3 {
 				// 5. Assign all points of all light-faces to the new created
 				// faces
 				for (Triangle tri : newLightFaces) {
-					listsOfFacePoints
-							.add(getLightPoints(tri, lightFacesPoints));
+					listsOfFacePoints.add(getLightPoints(tri, lightFacesPoints));
 				}
 
 				// 6. Push new created faces on the stack and start at (1))
@@ -332,8 +316,7 @@ public class Quickhull3 {
 		return result;
 	}
 
-	private static List<Vector3f> getLightPoints(Triangle triangle,
-			List<Vector3f> points) {
+	private static List<Vector3f> getLightPoints(Triangle triangle, List<Vector3f> points) {
 		LinkedList<Vector3f> result = new LinkedList<Vector3f>();
 		for (int i = points.size() - 1; i >= 0; i--) {
 			Vector3f p = points.get(i);

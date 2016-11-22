@@ -2,9 +2,9 @@ package objects;
 
 import java.util.List;
 
+import broadphase.Broadphase;
 import quaternion.Rotation;
 import vector.Vector;
-import broadphase.Broadphase;
 
 public interface CompoundObject<L extends Vector, A extends Rotation> {
 	public Broadphase<L, CollisionShape<L, ?, ?>> getCompoundBroadphase();

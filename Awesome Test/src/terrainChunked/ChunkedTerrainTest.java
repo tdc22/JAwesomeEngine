@@ -1,22 +1,21 @@
 package terrainChunked;
 
-import game.StandardGame;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
 import loader.FontLoader;
 import sound.NullSoundEnvironment;
 import terrain.ChunkedTerrain;
 import utils.Debugger;
 import vector.Vector3f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ChunkedTerrainTest extends StandardGame {
 	ChunkedTerrain terrain;
@@ -24,15 +23,14 @@ public class ChunkedTerrainTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings(), new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 3, 0);
 		cam.rotateTo(225, 0);
 
-		debugger = new Debugger(inputs,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		BufferedImage heightmap = null;
 		try {

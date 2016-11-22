@@ -1,12 +1,17 @@
 package physics2dConstraint;
 
-import game.StandardGame;
-import gui.Font;
-import integration.VerletIntegration;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import broadphase.SAP2;
+import constraints.DistanceConstraint2;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import gui.Font;
+import integration.VerletIntegration;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import manifold.MultiPointManifoldManager2;
@@ -26,12 +31,6 @@ import shape2d.Circle;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector2f;
-import broadphase.SAP2;
-import constraints.DistanceConstraint2;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ConstraintTest2d2 extends StandardGame {
 	PhysicsSpace2 space;
@@ -43,36 +42,29 @@ public class ConstraintTest2d2 extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings(), new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		// display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(),
-				new GJK2(new EPA2()), new SupportRaycast2(),
-				new ImpulseResolution(), new ProjectionCorrection(1),
-				new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
+		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(), new GJK2(new EPA2()), new SupportRaycast2(),
+				new ImpulseResolution(), new ProjectionCorrection(1), new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
 		space.setGlobalGravitation(new Vector2f(0, 0));
 
-		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader2);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile(
-						"res/shaders/defaultshader.vert",
-						"res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
-				font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
 		physicsdebug = new PhysicsDebug2(inputs, defaultshader2, font, space);
 
 		bodies = new ArrayList<RigidBody2>();
@@ -94,8 +86,7 @@ public class ConstraintTest2d2 extends StandardGame {
 		space.addRigidBody(rightCircle, rbR);
 		defaultshader2.addObject(rightCircle);
 
-		Constraint2 constraint = new DistanceConstraint2(rbL, rbR,
-				new Vector2f(0, 0), new Vector2f(0, 0), 3);
+		Constraint2 constraint = new DistanceConstraint2(rbL, rbR, new Vector2f(0, 0), new Vector2f(0, 0), 3);
 		space.addConstraint(constraint);
 	}
 
@@ -131,13 +122,9 @@ public class ConstraintTest2d2 extends StandardGame {
 
 		RigidBody2 bodyA = bodies.get(0);
 		RigidBody2 bodyB = bodies.get(1);
-		System.out
-				.println(bodyA.getTranslation().x + "; "
-						+ bodyA.getTranslation().y + "; "
-						+ bodyA.getRotation().angle() + "; "
-						+ bodyB.getTranslation().x + "; "
-						+ bodyB.getTranslation().y + "; "
-						+ bodyB.getRotation().angle());
+		System.out.println(bodyA.getTranslation().x + "; " + bodyA.getTranslation().y + "; "
+				+ bodyA.getRotation().angle() + "; " + bodyB.getTranslation().x + "; " + bodyB.getTranslation().y + "; "
+				+ bodyB.getRotation().angle());
 		steps++;
 		if (steps == 60)
 			System.exit(0);

@@ -18,11 +18,9 @@ public class DirectionRenderer extends ShapedObject3 {
 	public void setDirections(List<Vector3f> dirs) {
 		deleteData();
 
-		addVertex(new Vector3f(0, 0, 0), Color.GRAY, new Vector2f(),
-				new Vector3f(0, 1, 0));
+		addVertex(new Vector3f(0, 0, 0), Color.GRAY, new Vector2f(), new Vector3f(0, 1, 0));
 		for (int d = 0; d < dirs.size(); d++) {
-			addVertex(dirs.get(d), Color.GRAY, new Vector2f(), new Vector3f(0,
-					1, 0));
+			addVertex(dirs.get(d), Color.GRAY, new Vector2f(), new Vector3f(0, 1, 0));
 			addIndex(0);
 			addIndex(d + 1);
 		}

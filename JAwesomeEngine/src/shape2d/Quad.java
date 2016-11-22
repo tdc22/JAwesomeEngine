@@ -26,14 +26,12 @@ public class Quad extends ShapedObject2 implements QuadStructure {
 		init(halfsize.x, halfsize.y, true);
 	}
 
-	public Quad(float x, float y, float halfsizex, float halfsizey,
-			boolean adjacency) {
+	public Quad(float x, float y, float halfsizex, float halfsizey, boolean adjacency) {
 		super(x, y);
 		init(halfsizex, halfsizey, adjacency);
 	}
 
-	public Quad(Vector2f pos, float halfsizex, float halfsizey,
-			boolean adjacency) {
+	public Quad(Vector2f pos, float halfsizex, float halfsizey, boolean adjacency) {
 		super(pos);
 		init(halfsizex, halfsizey, adjacency);
 	}

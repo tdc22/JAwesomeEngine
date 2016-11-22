@@ -1,13 +1,16 @@
 package debug_EPA2d;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
@@ -27,10 +30,6 @@ import shape2d.Quad;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
 import vector.Vector2f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class EPA2dDebugger extends StandardGame {
 	public class Edge {
@@ -100,8 +99,7 @@ public class EPA2dDebugger extends StandardGame {
 			if (d - e.distance < TOLERANCE) {
 				normal = e.normal;
 				depth = (float) d;
-				System.out.println("END Iter: " + iter + "; " + normal + "; "
-						+ depth);
+				System.out.println("END Iter: " + iter + "; " + normal + "; " + depth);
 				return;
 			} else {
 				edges.add(new Edge(e.a, p));
@@ -138,32 +136,27 @@ public class EPA2dDebugger extends StandardGame {
 		return closest;
 	}
 
-	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,
-			Vector2f dir) {
-		return VecMath.subtraction(Sa.supportPoint(dir),
-				Sb.supportPointNegative(dir));
+	private Vector2f support(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb, Vector2f dir) {
+		return VecMath.subtraction(Sa.supportPoint(dir), Sb.supportPointNegative(dir));
 	}
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings(), new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 
-		Shader defaultshader3 = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader3 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader3);
-		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader2d(defaultshader);
 
-		debugger = new Debugger(inputs, defaultshader3, defaultshader,
-				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
+		debugger = new Debugger(inputs, defaultshader3, defaultshader, FontLoader.loadFont("res/fonts/DejaVuSans.ttf"),
+				cam);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
 		defaultshader.addObject(new Circle(0, 0, 1f, 36));
@@ -197,15 +190,13 @@ public class EPA2dDebugger extends StandardGame {
 		GJK2 gjk = new GJK2(new EmptyManifoldGenerator2());
 		boolean b = gjk.isColliding(rb1, rb2);
 
-		System.out.println(gjk.getSimplex().size() + "; " + b + "; "
-				+ s2.getTranslation() + "; " + s2.getRotation());
+		System.out.println(gjk.getSimplex().size() + "; " + b + "; " + s2.getTranslation() + "; " + s2.getRotation());
 
 		// init EPA
 		epaInit(gjk.getSimplex());
 
 		// Input to step EPA
-		InputEvent stepEPA = new InputEvent("Step EPA", new Input(
-				Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
+		InputEvent stepEPA = new InputEvent("Step EPA", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
 		inputs.addEvent(stepEPA);
 		cam2d.scale(new Vector2f(0.2f, 0.2f));
 		cam2d.translateTo(-50, -50);

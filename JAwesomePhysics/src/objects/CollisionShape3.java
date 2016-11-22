@@ -6,20 +6,17 @@ import quaternion.Quaternionf;
 import utils.VectorConstants;
 import vector.Vector3f;
 
-public abstract class CollisionShape3 extends
-		CollisionShape<Vector3f, Quaternionf, Quaternionf> implements
-		InstancedBaseObject3 {
+public abstract class CollisionShape3 extends CollisionShape<Vector3f, Quaternionf, Quaternionf>
+		implements InstancedBaseObject3 {
 
 	public CollisionShape3() {
-		super(new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(
-				1, 1, 1));
+		super(new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1));
 		aabb = new AABB3(new Vector3f(), new Vector3f());
 		invrotation = new Quaternionf();
 	}
 
 	public CollisionShape3(CollisionShape3 cs) {
-		super(cs, new Vector3f(), new Vector3f(), new Quaternionf(),
-				new Vector3f(1, 1, 1));
+		super(cs, new Vector3f(), new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1));
 	}
 
 	@Override
@@ -60,8 +57,7 @@ public abstract class CollisionShape3 extends
 
 	@Override
 	public Vector3f supportPointRelativeNegative(Vector3f direction) {
-		Vector3f supportRelNeg = supportcalculator
-				.supportPointLocalNegative(direction);
+		Vector3f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
 		supportRelNeg.transform(getRotation());
 		return supportRelNeg;
 	}
@@ -151,10 +147,8 @@ public abstract class CollisionShape3 extends
 	@Override
 	public Matrix4f getMatrix() {
 		float[][] mat = rotation.toMatrixf().getArrayf();
-		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, mat[0][2]
-				* scale.x, 0, mat[1][0] * scale.y, mat[1][1] * scale.y,
-				mat[1][2] * scale.y, 0, mat[2][0] * scale.z, mat[2][1]
-						* scale.z, mat[2][2] * scale.z, 0, translation.getXf(),
-				translation.getYf(), translation.getZf(), 1);
+		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, mat[0][2] * scale.x, 0, mat[1][0] * scale.y,
+				mat[1][1] * scale.y, mat[1][2] * scale.y, 0, mat[2][0] * scale.z, mat[2][1] * scale.z,
+				mat[2][2] * scale.z, 0, translation.getXf(), translation.getYf(), translation.getZf(), 1);
 	}
 }

@@ -8,13 +8,11 @@ import quaternion.Quaternionf;
 import shapedata.EllipsoidStructure;
 import vector.Vector3f;
 
-public class EllipsoidShape extends CollisionShape3 implements
-		EllipsoidStructure {
+public class EllipsoidShape extends CollisionShape3 implements EllipsoidStructure {
 	protected class EllipsoidSupport implements SupportCalculator<Vector3f> {
 		private CollisionShape<Vector3f, Quaternionf, Quaternionf> collisionshape;
 
-		public EllipsoidSupport(
-				CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+		public EllipsoidSupport(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 			collisionshape = cs;
 		}
 
@@ -23,8 +21,7 @@ public class EllipsoidShape extends CollisionShape3 implements
 			if (direction.lengthSquared() == 0)
 				direction = new Vector3f(0, 1, 0);
 			direction.normalize();
-			Vector3f v = QuatMath.transform(
-					collisionshape.getInverseRotation(), direction);
+			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
 			v.scale(radiusX, radiusY, radiusZ);
 			return v;
 		}
@@ -34,8 +31,7 @@ public class EllipsoidShape extends CollisionShape3 implements
 			if (direction.lengthSquared() == 0)
 				direction = new Vector3f(0, -1, 0);
 			direction.normalize();
-			Vector3f v = QuatMath.transform(
-					collisionshape.getInverseRotation(), direction);
+			Vector3f v = QuatMath.transform(collisionshape.getInverseRotation(), direction);
 			v.scale(-radiusX, -radiusY, -radiusZ);
 			return v;
 		}
@@ -48,8 +44,7 @@ public class EllipsoidShape extends CollisionShape3 implements
 
 	float radiusX, radiusY, radiusZ;
 
-	public EllipsoidShape(float x, float y, float z, float radiusX,
-			float radiusY, float radiusZ) {
+	public EllipsoidShape(float x, float y, float z, float radiusX, float radiusY, float radiusZ) {
 		super();
 		translate(x, y, z);
 		this.radiusX = radiusX;
@@ -58,8 +53,7 @@ public class EllipsoidShape extends CollisionShape3 implements
 		init();
 	}
 
-	public EllipsoidShape(Vector3f pos, float radiusX, float radiusY,
-			float radiusZ) {
+	public EllipsoidShape(Vector3f pos, float radiusX, float radiusY, float radiusZ) {
 		super();
 		translate(pos);
 		this.radiusX = radiusX;
@@ -69,8 +63,7 @@ public class EllipsoidShape extends CollisionShape3 implements
 	}
 
 	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(
-			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+	public SupportCalculator<Vector3f> createSupportCalculator(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		return new EllipsoidSupport(cs);
 	}
 
@@ -90,10 +83,9 @@ public class EllipsoidShape extends CollisionShape3 implements
 	}
 
 	private void init() {
-		float longest = radiusX > radiusY ? (radiusX > radiusZ ? radiusX
-				: radiusZ) : (radiusY > radiusZ ? radiusY : radiusZ);
-		setAABB(new Vector3f(-longest, -longest, -longest), new Vector3f(
-				longest, longest, longest));
+		float longest = radiusX > radiusY ? (radiusX > radiusZ ? radiusX : radiusZ)
+				: (radiusY > radiusZ ? radiusY : radiusZ);
+		setAABB(new Vector3f(-longest, -longest, -longest), new Vector3f(longest, longest, longest));
 		supportcalculator = createSupportCalculator(this);
 	}
 }

@@ -18,21 +18,13 @@ public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f,
 			if (isLeaf()) {
 				Vector2f trans = object.getTranslation();
 				AABB<Vector2f> objAABB = object.getAABB();
-				aabb.getMin().set(trans.x + objAABB.getMin().x - margin,
-						trans.y + objAABB.getMin().y - margin);
-				aabb.getMax().set(trans.x + objAABB.getMax().x + margin,
-						trans.y + objAABB.getMax().y + margin);
+				aabb.getMin().set(trans.x + objAABB.getMin().x - margin, trans.y + objAABB.getMin().y - margin);
+				aabb.getMax().set(trans.x + objAABB.getMax().x + margin, trans.y + objAABB.getMax().y + margin);
 			} else {
-				aabb.getMin().set(
-						Math.min(leftChild.aabb.getMin().x,
-								rightChild.aabb.getMin().x),
-						Math.min(leftChild.aabb.getMin().y,
-								rightChild.aabb.getMin().y));
-				aabb.getMax().set(
-						Math.max(leftChild.aabb.getMax().x,
-								rightChild.aabb.getMax().x),
-						Math.max(leftChild.aabb.getMax().y,
-								rightChild.aabb.getMax().y));
+				aabb.getMin().set(Math.min(leftChild.aabb.getMin().x, rightChild.aabb.getMin().x),
+						Math.min(leftChild.aabb.getMin().y, rightChild.aabb.getMin().y));
+				aabb.getMax().set(Math.max(leftChild.aabb.getMax().x, rightChild.aabb.getMax().x),
+						Math.max(leftChild.aabb.getMax().y, rightChild.aabb.getMax().y));
 			}
 		}
 	}
@@ -61,10 +53,8 @@ public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f,
 			final AABB<Vector2f> aabb0 = parent.leftChild.aabb;
 			final AABB<Vector2f> aabb1 = parent.rightChild.aabb;
 
-			final float volumeDiff0 = mergedVolume(aabb0, node.aabb)
-					- aabb0.volume();
-			final float volumeDiff1 = mergedVolume(aabb1, node.aabb)
-					- aabb1.volume();
+			final float volumeDiff0 = mergedVolume(aabb0, node.aabb) - aabb0.volume();
+			final float volumeDiff1 = mergedVolume(aabb1, node.aabb) - aabb1.volume();
 
 			if (volumeDiff0 < volumeDiff1) {
 				parent.leftChild = insertNode(node, parent.leftChild);
@@ -90,10 +80,8 @@ public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f,
 		Vector2f trans1 = node1.object.getTranslation();
 		AABB<Vector2f> aabb0 = node0.object.getAABB();
 		AABB<Vector2f> aabb1 = node1.object.getAABB();
-		return IntersectionLibrary.intersects(trans0.x + aabb0.getMin().x,
-				trans0.y + aabb0.getMin().y, trans0.x + aabb0.getMax().x,
-				trans0.y + aabb0.getMax().y, trans1.x + aabb1.getMin().x,
-				trans1.y + aabb1.getMin().y, trans1.x + aabb1.getMax().x,
-				trans1.y + aabb1.getMax().y);
+		return IntersectionLibrary.intersects(trans0.x + aabb0.getMin().x, trans0.y + aabb0.getMin().y,
+				trans0.x + aabb0.getMax().x, trans0.y + aabb0.getMax().y, trans1.x + aabb1.getMin().x,
+				trans1.y + aabb1.getMin().y, trans1.x + aabb1.getMax().x, trans1.y + aabb1.getMax().y);
 	}
 }

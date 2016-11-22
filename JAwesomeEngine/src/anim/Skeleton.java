@@ -8,8 +8,7 @@ import objects.Updateable;
 import quaternion.Rotation;
 import vector.Vector;
 
-public abstract class Skeleton<L extends Vector, A extends Rotation> implements
-		Updateable {
+public abstract class Skeleton<L extends Vector, A extends Rotation> implements Updateable {
 	List<BaseObject<L, A>> bodyparts;
 	BaseObject<L, A> attachedTo;
 	DynamicAnimationTransition<L, A> dynamicAnimationTransition;
@@ -31,8 +30,7 @@ public abstract class Skeleton<L extends Vector, A extends Rotation> implements
 		animationTimer = 0;
 	}
 
-	public abstract void setDynamicAnimation(Animation<L, A> animationparam,
-			float dynamicAnimationSpeed);
+	public abstract void setDynamicAnimation(Animation<L, A> animationparam, float dynamicAnimationSpeed);
 
 	public Animation<L, A> getAnimation() {
 		return animation;
@@ -45,11 +43,8 @@ public abstract class Skeleton<L extends Vector, A extends Rotation> implements
 	@Override
 	public void update(int delta) {
 		if (dynamicAnimationTransition != null) {
-			if (dynamicAnimationTransition.getAnimationTranslationPath(0)
-					.getCurveNum(animationTimer) == 0) {
-				animationTimer += delta
-						* dynamicAnimationTransition
-								.getDynamicTransitionSpeed();
+			if (dynamicAnimationTransition.getAnimationTranslationPath(0).getCurveNum(animationTimer) == 0) {
+				animationTimer += delta * dynamicAnimationTransition.getDynamicTransitionSpeed();
 			} else {
 				animationTimer += delta * dynamicAnimationTransition.getSpeed();
 			}

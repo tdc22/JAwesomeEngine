@@ -1,5 +1,9 @@
 package renderToTexture;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ModelLoader;
@@ -12,10 +16,6 @@ import texture.FramebufferObject;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector3f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class RenderTest extends StandardGame {
 	FramebufferObject rtt;
@@ -23,21 +23,18 @@ public class RenderTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings(), new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
 		cam.rotateTo(0, 0);
 
-		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile(
-						"res/shaders/defaultshader.vert",
-						"res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
@@ -45,12 +42,10 @@ public class RenderTest extends StandardGame {
 
 		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
 
-		rtt = new FramebufferObject(layer3d, 800, 800, 0, new Camera3(
-				new Vector3f(0, 2, 8), 0, 0));
+		rtt = new FramebufferObject(layer3d, 800, 800, 0, new Camera3(new Vector3f(0, 2, 8), 0, 0));
 
-		Shader screenshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/textureshader.vert",
-				"res/shaders/textureshader.frag"));
+		Shader screenshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
 		screenshader.addArgumentName("u_texture");
 		screenshader.addArgument(new Texture(rtt.getColorTextureID()));// rtt.getColorTextureID()));
 		addShader(screenshader);

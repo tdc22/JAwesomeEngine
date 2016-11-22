@@ -1,5 +1,9 @@
 package shadowMapping;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import loader.FontLoader;
 import loader.ModelLoader;
@@ -16,10 +20,6 @@ import texture.FramebufferObject;
 import texture.Texture;
 import utils.Debugger;
 import vector.Vector3f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ShadowTest extends StandardGame {
 	Debugger debugger;
@@ -31,25 +31,21 @@ public class ShadowTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(),
-				new VideoSettings(), new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat(), new VideoSettings(),
+				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
-		Shader defaultshader2 = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		Shader defaultshader2 = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshader2);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile(
-						"res/shaders/defaultshader.vert",
-						"res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
@@ -61,12 +57,10 @@ public class ShadowTest extends StandardGame {
 		defaultshader.addObject(new Cylinder(8, 0, 0, 1, 2, 36));
 
 		lightCam = new Camera3(new Vector3f(0, 10, 0), 0, -80);
-		depthMap = new FramebufferObject(this, 1024, 1024, 0, lightCam, true,
-				true, true, true);
+		depthMap = new FramebufferObject(this, 1024, 1024, 0, lightCam, true, true, true, true);
 
-		shadowshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/shadowmapping.vert",
-				"res/shaders/shadowmapping.frag"));
+		shadowshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/shadowmapping.vert", "res/shaders/shadowmapping.frag"));
 		shadowshader.addArgumentName("shadowMap");
 		shadowshader.addArgument(new Texture(depthMap.getDepthTextureID()));
 		shadowshader.addArgumentName("lightPos");
@@ -77,9 +71,8 @@ public class ShadowTest extends StandardGame {
 		depthMap.updateTexture();
 		shadow = true;
 
-		Shader depthshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/ppDepthshader.vert",
-				"res/shaders/ppDepthshader.frag"));
+		Shader depthshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/ppDepthshader.vert", "res/shaders/ppDepthshader.frag"));
 		depthshader.addArgumentName("texture");
 		depthshader.addArgument(new Texture());
 		depthshader.addArgumentName("depthTexture");

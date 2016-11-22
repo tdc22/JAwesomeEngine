@@ -1,13 +1,16 @@
 package HCS_HW;
 
-import game.StandardGame;
-import gui.Font;
-import gui.Text;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import gui.Font;
+import gui.Text;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import objects.ShapedObject2;
@@ -18,10 +21,6 @@ import sound.NullSoundEnvironment;
 import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector4f;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ScatterplotMatrix extends StandardGame {
 	final int NUM_MARKEN = 10;
@@ -42,10 +41,8 @@ public class ScatterplotMatrix extends StandardGame {
 	public void init() {
 		int sizeX = 4 * GRIDSIZE + OFFSET_X;
 		int sizeY = 4 * GRIDSIZE + OFFSET_Y;
-		initDisplay(new GLDisplay(), new DisplayMode(sizeX, sizeY,
-				"HCS Scatterplot Matrix", true),
-				new PixelFormat().withSamples(0), new VideoSettings(sizeX,
-						sizeY), new NullSoundEnvironment());
+		initDisplay(new GLDisplay(), new DisplayMode(sizeX, sizeY, "HCS Scatterplot Matrix", true),
+				new PixelFormat().withSamples(0), new VideoSettings(sizeX, sizeY), new NullSoundEnvironment());
 
 		List<PlotData> plotdata = new ArrayList<PlotData>();
 		plotdata.add(new PlotData("VW Golf", 220, 110, 5));
@@ -62,18 +59,17 @@ public class ScatterplotMatrix extends StandardGame {
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		int ps = plotdata.size();
 
-		int colorshaderID = ShaderLoader.loadShaderFromFile(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
+		int colorshaderID = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
+				"res/shaders/colorshader.frag");
 
 		Shader whiteshader = new Shader(colorshaderID);
 		whiteshader.addArgumentName("u_color");
 		whiteshader.addArgument(new Vector4f(1f, 1f, 1f, 1f));
-		whiteshader.addObject(new Quad(sizeX / 2f, sizeY / 2f, sizeX / 2f,
-				sizeY / 2f));
+		whiteshader.addObject(new Quad(sizeX / 2f, sizeY / 2f, sizeX / 2f, sizeY / 2f));
 		addShader2d(whiteshader);
 
-		Shader blackshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader blackshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		blackshader.addArgumentName("u_color");
 		blackshader.addArgument(new Vector4f(0f, 0f, 0f, 1f));
 		addShader2d(blackshader);
@@ -99,10 +95,8 @@ public class ScatterplotMatrix extends StandardGame {
 			for (int b = 0; b < 4; b++) {
 				for (int c = 0; c < ps; c++) {
 					PlotData pd = plotdata.get(c);
-					Circle s = new Circle(a * GRIDSIZE
-							+ getValue(pd, a, GRIDSIZE) + OFFSET_X, b
-							* GRIDSIZE + getValue(pd, b, GRIDSIZE) + OFFSET_Y,
-							2f, 12);
+					Circle s = new Circle(a * GRIDSIZE + getValue(pd, a, GRIDSIZE) + OFFSET_X,
+							b * GRIDSIZE + getValue(pd, b, GRIDSIZE) + OFFSET_Y, 2f, 12);
 					s.setColor(Color.BLACK);
 					blackshader.addObject(s);
 				}
@@ -112,16 +106,10 @@ public class ScatterplotMatrix extends StandardGame {
 		ShapedObject2 gridLines = new ShapedObject2();
 		gridLines.setRenderMode(GLConstants.LINES);
 		for (int a = 0; a < 4; a++) {
-			gridLines.addVertex(
-					new Vector2f(a * GRIDSIZE + OFFSET_X, OFFSET_Y),
-					Color.BLACK);
-			gridLines.addVertex(new Vector2f(a * GRIDSIZE + OFFSET_X, 4
-					* GRIDSIZE + OFFSET_Y), Color.BLACK);
-			gridLines.addVertex(
-					new Vector2f(OFFSET_X, a * GRIDSIZE + OFFSET_Y),
-					Color.BLACK);
-			gridLines.addVertex(new Vector2f(4 * GRIDSIZE + OFFSET_X, a
-					* GRIDSIZE + OFFSET_Y), Color.BLACK);
+			gridLines.addVertex(new Vector2f(a * GRIDSIZE + OFFSET_X, OFFSET_Y), Color.BLACK);
+			gridLines.addVertex(new Vector2f(a * GRIDSIZE + OFFSET_X, 4 * GRIDSIZE + OFFSET_Y), Color.BLACK);
+			gridLines.addVertex(new Vector2f(OFFSET_X, a * GRIDSIZE + OFFSET_Y), Color.BLACK);
+			gridLines.addVertex(new Vector2f(4 * GRIDSIZE + OFFSET_X, a * GRIDSIZE + OFFSET_Y), Color.BLACK);
 			gridLines.addIndices(a * 4, a * 4 + 1, a * 4 + 2, a * 4 + 3);
 		}
 		gridLines.prerender();

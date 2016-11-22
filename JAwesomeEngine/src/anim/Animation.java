@@ -3,10 +3,10 @@ package anim;
 import java.util.ArrayList;
 import java.util.List;
 
-import quaternion.Rotation;
-import vector.Vector;
 import curves.SimpleAngularCurvePath;
 import curves.SimpleCurvePath;
+import quaternion.Rotation;
+import vector.Vector;
 
 public class Animation<L extends Vector, A extends Rotation> {
 	List<SimpleCurvePath<L>> animationTranslationPaths;
@@ -32,8 +32,7 @@ public class Animation<L extends Vector, A extends Rotation> {
 
 	public Animation(Animation<L, A> animation) {
 		init(animation.getSpeed(), animation.isLooping());
-		animationTranslationPaths.addAll(animation
-				.getAnimationTranslationPaths());
+		animationTranslationPaths.addAll(animation.getAnimationTranslationPaths());
 		animationRotationPaths.addAll(animation.getAnimationRotationPaths());
 	}
 
@@ -60,8 +59,7 @@ public class Animation<L extends Vector, A extends Rotation> {
 		return loops;
 	}
 
-	public void addAnimationPath(SimpleCurvePath<L> path,
-			SimpleAngularCurvePath<A> angularpath) {
+	public void addAnimationPath(SimpleCurvePath<L> path, SimpleAngularCurvePath<A> angularpath) {
 		animationTranslationPaths.add(path);
 		animationRotationPaths.add(angularpath);
 	}

@@ -10,7 +10,6 @@ public class Ray3 extends Ray<Vector3f> {
 
 	@Override
 	public Vector3f pointOnRay(float lambda) {
-		return new Vector3f(pos.x + lambda * dir.x, pos.y + lambda * dir.y,
-				pos.z + lambda * dir.z);
+		return new Vector3f(pos.x + lambda * dir.x, pos.y + lambda * dir.y, pos.z + lambda * dir.z);
 	}
 }

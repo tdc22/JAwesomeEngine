@@ -80,8 +80,7 @@ public class ALSound extends Sound {
 	@Override
 	public void setSourcePosition(Vector3f position) {
 		AL10.alListener3f(AL_POSITION, position.x, position.y, position.z);
-		alSource3f(sourcehandle, AL_POSITION, position.x, position.y,
-				position.z);
+		alSource3f(sourcehandle, AL_POSITION, position.x, position.y, position.z);
 	}
 
 	@Override
@@ -101,7 +100,6 @@ public class ALSound extends Sound {
 
 	@Override
 	public void setSourcePositionRelative(boolean relative) {
-		alSourcei(sourcehandle, AL_SOURCE_RELATIVE, relative ? AL_TRUE
-				: AL_FALSE);
+		alSourcei(sourcehandle, AL_SOURCE_RELATIVE, relative ? AL_TRUE : AL_FALSE);
 	}
 }

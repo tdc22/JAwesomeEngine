@@ -18,27 +18,17 @@ public class DynamicAABBTree3Generic<ObjectType extends CollisionShape<Vector3f,
 			if (isLeaf()) {
 				Vector3f trans = object.getTranslation();
 				AABB<Vector3f> objAABB = object.getAABB();
-				aabb.getMin().set(trans.x + objAABB.getMin().x - margin,
-						trans.y + objAABB.getMin().y - margin,
+				aabb.getMin().set(trans.x + objAABB.getMin().x - margin, trans.y + objAABB.getMin().y - margin,
 						trans.z + objAABB.getMin().z - margin);
-				aabb.getMax().set(trans.x + objAABB.getMax().x + margin,
-						trans.y + objAABB.getMax().y + margin,
+				aabb.getMax().set(trans.x + objAABB.getMax().x + margin, trans.y + objAABB.getMax().y + margin,
 						trans.z + objAABB.getMax().z + margin);
 			} else {
-				aabb.getMin().set(
-						Math.min(leftChild.aabb.getMin().x,
-								rightChild.aabb.getMin().x),
-						Math.min(leftChild.aabb.getMin().y,
-								rightChild.aabb.getMin().y),
-						Math.min(leftChild.aabb.getMin().z,
-								rightChild.aabb.getMin().z));
-				aabb.getMax().set(
-						Math.max(leftChild.aabb.getMax().x,
-								rightChild.aabb.getMax().x),
-						Math.max(leftChild.aabb.getMax().y,
-								rightChild.aabb.getMax().y),
-						Math.max(leftChild.aabb.getMax().z,
-								rightChild.aabb.getMax().z));
+				aabb.getMin().set(Math.min(leftChild.aabb.getMin().x, rightChild.aabb.getMin().x),
+						Math.min(leftChild.aabb.getMin().y, rightChild.aabb.getMin().y),
+						Math.min(leftChild.aabb.getMin().z, rightChild.aabb.getMin().z));
+				aabb.getMax().set(Math.max(leftChild.aabb.getMax().x, rightChild.aabb.getMax().x),
+						Math.max(leftChild.aabb.getMax().y, rightChild.aabb.getMax().y),
+						Math.max(leftChild.aabb.getMax().z, rightChild.aabb.getMax().z));
 			}
 		}
 	}
@@ -66,10 +56,8 @@ public class DynamicAABBTree3Generic<ObjectType extends CollisionShape<Vector3f,
 		} else {
 			final AABB<Vector3f> aabb0 = parent.leftChild.aabb;
 			final AABB<Vector3f> aabb1 = parent.rightChild.aabb;
-			final float volumeDiff0 = mergedVolume(aabb0, node.aabb)
-					- aabb0.volume();
-			final float volumeDiff1 = mergedVolume(aabb1, node.aabb)
-					- aabb1.volume();
+			final float volumeDiff0 = mergedVolume(aabb0, node.aabb) - aabb0.volume();
+			final float volumeDiff1 = mergedVolume(aabb1, node.aabb) - aabb1.volume();
 
 			if (volumeDiff0 < volumeDiff1) {
 				parent.leftChild = insertNode(node, parent.leftChild);
@@ -97,12 +85,10 @@ public class DynamicAABBTree3Generic<ObjectType extends CollisionShape<Vector3f,
 		Vector3f trans1 = node1.object.getTranslation();
 		AABB<Vector3f> aabb0 = node0.object.getAABB();
 		AABB<Vector3f> aabb1 = node1.object.getAABB();
-		return IntersectionLibrary.intersects(trans0.x + aabb0.getMin().x,
-				trans0.y + aabb0.getMin().y, trans0.z + aabb0.getMin().z,
-				trans0.x + aabb0.getMax().x, trans0.y + aabb0.getMax().y,
-				trans0.z + aabb0.getMax().z, trans1.x + aabb1.getMin().x,
-				trans1.y + aabb1.getMin().y, trans1.z + aabb1.getMin().z,
-				trans1.x + aabb1.getMax().x, trans1.y + aabb1.getMax().y,
+		return IntersectionLibrary.intersects(trans0.x + aabb0.getMin().x, trans0.y + aabb0.getMin().y,
+				trans0.z + aabb0.getMin().z, trans0.x + aabb0.getMax().x, trans0.y + aabb0.getMax().y,
+				trans0.z + aabb0.getMax().z, trans1.x + aabb1.getMin().x, trans1.y + aabb1.getMin().y,
+				trans1.z + aabb1.getMin().z, trans1.x + aabb1.getMax().x, trans1.y + aabb1.getMax().y,
 				trans1.z + aabb1.getMax().z);
 	}
 }

@@ -9,15 +9,13 @@ public interface ViewProjection extends Renderable {
 
 	public void setProjectionMatrix(FloatBuffer buffer);
 
-	public void setViewProjectionMatrix(FloatBuffer viewBuffer,
-			FloatBuffer projectionBuffer);
+	public void setViewProjectionMatrix(FloatBuffer viewBuffer, FloatBuffer projectionBuffer);
 
 	public void setViewMatrix(Matrix4f matrix);
 
 	public void setProjectionMatrix(Matrix4f matrix);
 
-	public void setViewProjectionMatrix(Matrix4f viewMatrix,
-			Matrix4f projectionMatrix);
+	public void setViewProjectionMatrix(Matrix4f viewMatrix, Matrix4f projectionMatrix);
 
 	public FloatBuffer getViewMatrixBuffer();
 

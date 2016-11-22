@@ -1,16 +1,22 @@
 package physicsConvexHull;
 
-import game.StandardGame;
-import gui.Font;
-import input.Input;
-import input.InputEvent;
-import input.KeyInput;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import collisionshape.ConvexShape;
+import convexhull.Quickhull3;
+import convexhull.Quickhull3Old;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
+import game.StandardGame;
+import gui.Font;
+import input.Input;
+import input.InputEvent;
+import input.KeyInput;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
@@ -24,13 +30,6 @@ import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
-import collisionshape.ConvexShape;
-import convexhull.Quickhull3;
-import convexhull.Quickhull3Old;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class ConvexHullTest extends StandardGame {
 	Shader defaultshader;
@@ -43,27 +42,22 @@ public class ConvexHullTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(),
-				new PixelFormat().withSamples(0), new VideoSettings(),
+		initDisplay(new GLDisplay(), new DisplayMode(), new PixelFormat().withSamples(0), new VideoSettings(),
 				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile(
-						"res/shaders/defaultshader.vert",
-						"res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
-				font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
 
 		pointcloud = new ArrayList<Vector3f>();
 		// for (int i = 0; i < 1000; i++) {
@@ -79,24 +73,19 @@ public class ConvexHullTest extends StandardGame {
 		// pointcloud.add(new Vector3f(-0.8538285, 3.822501, 4.7598157));
 		defaultshader.addObject(new PointCloud(pointcloud));
 
-		color = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		color = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
 		color.addArgumentName("u_color");
 		color.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 		addShader(color);
 
-		ConvexShape convexHull = Quickhull3.computeConvexHull(pointcloud,
-				iterations);
-		ch = new ConvexHull(convexHull.getVertices(),
-				convexHull.getAdjacentsMap(), color);
+		ConvexShape convexHull = Quickhull3.computeConvexHull(pointcloud, iterations);
+		ch = new ConvexHull(convexHull.getVertices(), convexHull.getAdjacentsMap(), color);
 		defaultshader.addObject(ch);
-		System.out.println("Point Count: " + pointcloud.size()
-				+ "; Hull Size: " + convexHull.getVertices().size());
+		System.out.println("Point Count: " + pointcloud.size() + "; Hull Size: " + convexHull.getVertices().size());
 
-		step = new InputEvent("Step", new Input(Input.KEYBOARD_EVENT, " ",
-				KeyInput.KEY_PRESSED));
-		multistep = new InputEvent("Multistep", new Input(Input.KEYBOARD_EVENT,
-				"E", KeyInput.KEY_DOWN));
+		step = new InputEvent("Step", new Input(Input.KEYBOARD_EVENT, " ", KeyInput.KEY_PRESSED));
+		multistep = new InputEvent("Multistep", new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_DOWN));
 		inputs.addEvent(step);
 		inputs.addEvent(multistep);
 	}
@@ -127,10 +116,8 @@ public class ConvexHullTest extends StandardGame {
 			iterations++;
 			System.out.println("Iterations: " + iterations);
 			ch.delete();
-			ConvexShape convexHull = Quickhull3Old.computeConvexHull(
-					pointcloud, iterations);
-			ch = new ConvexHull(convexHull.getVertices(),
-					convexHull.getAdjacentsMap(), color);
+			ConvexShape convexHull = Quickhull3Old.computeConvexHull(pointcloud, iterations);
+			ch = new ConvexHull(convexHull.getVertices(), convexHull.getAdjacentsMap(), color);
 			defaultshader.addObject(ch);
 		}
 	}
@@ -139,8 +126,7 @@ public class ConvexHullTest extends StandardGame {
 		public PointCloud(List<Vector3f> points) {
 			setRenderMode(GLConstants.POINTS);
 			for (int i = 0; i < points.size(); i++) {
-				addVertex(points.get(i), Color.GRAY, new Vector2f(0, 0),
-						new Vector3f(0, 1, 0));
+				addVertex(points.get(i), Color.GRAY, new Vector2f(0, 0), new Vector3f(0, 1, 0));
 				addIndex(i);
 			}
 			prerender();
@@ -148,8 +134,7 @@ public class ConvexHullTest extends StandardGame {
 	}
 
 	private class ConvexHull extends ShapedObject3 {
-		public ConvexHull(List<Vector3f> vertices,
-				HashMap<Integer, Integer[]> adjacents, Shader shader) {
+		public ConvexHull(List<Vector3f> vertices, HashMap<Integer, Integer[]> adjacents, Shader shader) {
 			setRenderMode(GLConstants.TRIANGLES);
 
 			// Center (to only show outfacing triangles
@@ -182,12 +167,9 @@ public class ConvexHullTest extends StandardGame {
 								triangle[0] = vertices.get(i);
 								triangle[1] = vertices.get(adjs[b]);
 								triangle[2] = vertices.get(adjs[c]);
-								Vector3f normal = VecMath.computeNormal(
-										triangle[0], triangle[1], triangle[2]);
+								Vector3f normal = VecMath.computeNormal(triangle[0], triangle[1], triangle[2]);
 								if (!contains(triangles, triangle)
-										&& VecMath.dotproduct(VecMath
-												.subtraction(center,
-														triangle[0]), normal) < 0) {
+										&& VecMath.dotproduct(VecMath.subtraction(center, triangle[0]), normal) < 0) {
 									// System.out.println(i + " | " + adjs[b] +
 									// " | " + adjs[c]);
 									addVertex(triangle[0]);
@@ -209,14 +191,11 @@ public class ConvexHullTest extends StandardGame {
 
 		private boolean contains(List<Vector3f[]> triangles, Vector3f[] triangle) {
 			for (Vector3f[] t : triangles) {
-				if (t[0].equals(triangle[0]) && t[1].equals(triangle[1])
-						&& t[2].equals(triangle[2]))
+				if (t[0].equals(triangle[0]) && t[1].equals(triangle[1]) && t[2].equals(triangle[2]))
 					return true;
-				if (t[0].equals(triangle[1]) && t[1].equals(triangle[2])
-						&& t[2].equals(triangle[0]))
+				if (t[0].equals(triangle[1]) && t[1].equals(triangle[2]) && t[2].equals(triangle[0]))
 					return true;
-				if (t[0].equals(triangle[2]) && t[1].equals(triangle[0])
-						&& t[2].equals(triangle[1]))
+				if (t[0].equals(triangle[2]) && t[1].equals(triangle[0]) && t[2].equals(triangle[1]))
 					return true;
 				// if(t[0].equals(triangle[0]) && t[1].equals(triangle[2]) &&
 				// t[2].equals(triangle[1])) return true;

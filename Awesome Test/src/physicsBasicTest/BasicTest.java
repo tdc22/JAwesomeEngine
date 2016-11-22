@@ -1,14 +1,18 @@
 package physicsBasicTest;
 
+import java.awt.Color;
+
+import broadphase.DynamicAABBTree3;
+import display.DisplayMode;
+import display.GLDisplay;
+import display.PixelFormat;
+import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
 import integration.VerletIntegration;
-
-import java.awt.Color;
-
 import loader.FontLoader;
 import loader.ShaderLoader;
 import manifold.SimpleManifoldManager;
@@ -33,11 +37,6 @@ import utils.GameProfiler;
 import utils.Profiler;
 import utils.SimpleGameProfiler;
 import vector.Vector3f;
-import broadphase.DynamicAABBTree3;
-import display.DisplayMode;
-import display.GLDisplay;
-import display.PixelFormat;
-import display.VideoSettings;
 
 public class BasicTest extends StandardGame {
 	PhysicsSpace space;
@@ -53,35 +52,28 @@ public class BasicTest extends StandardGame {
 
 	@Override
 	public void init() {
-		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "TEST", false),
-				new PixelFormat(), new VideoSettings(),
+		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "TEST", false), new PixelFormat(), new VideoSettings(),
 				new NullSoundEnvironment());
 		display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		defaultshader = new Shader(ShaderLoader.loadShaderFromFile(
-				"res/shaders/defaultshader.vert",
-				"res/shaders/defaultshader.frag"));
+		defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile(
-						"res/shaders/defaultshader.vert",
-						"res/shaders/defaultshader.frag"));
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShaderInterface(defaultshaderInterface);
 
-		space = new PhysicsSpace(new VerletIntegration(),
-				new DynamicAABBTree3(), new GJK(new EPA()),
-				new SupportRaycast(), new ImpulseResolution(),
-				new ProjectionCorrection(0.01f),
+		space = new PhysicsSpace(new VerletIntegration(), new DynamicAABBTree3(), new GJK(new EPA()),
+				new SupportRaycast(), new ImpulseResolution(), new ProjectionCorrection(0.01f),
 				new SimpleManifoldManager<Vector3f>());// new
 														// MultiPointManifoldManager());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
-		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
-				font, cam);
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space, defaultshader);
 		GameProfiler gp = new SimpleGameProfiler();
 		setProfiler(gp);
@@ -113,15 +105,12 @@ public class BasicTest extends StandardGame {
 
 		// End walls
 
-		step = new InputEvent("Step", new Input(Input.KEYBOARD_EVENT, " ",
-				KeyInput.KEY_PRESSED));
-		run = new InputEvent("Run", new Input(Input.KEYBOARD_EVENT, "X",
-				KeyInput.KEY_DOWN));
+		step = new InputEvent("Step", new Input(Input.KEYBOARD_EVENT, " ", KeyInput.KEY_PRESSED));
+		run = new InputEvent("Run", new Input(Input.KEYBOARD_EVENT, "X", KeyInput.KEY_DOWN));
 		inputs.addEvent(step);
 		inputs.addEvent(run);
 
-		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(
-				Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
+		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 	}
 

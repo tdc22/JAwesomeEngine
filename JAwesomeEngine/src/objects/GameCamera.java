@@ -18,25 +18,21 @@ public class GameCamera extends Camera3 implements Updateable {
 
 	public GameCamera(InputManager inputs) {
 		super();
-		init(inputs, DefaultValues.DEFAULT_GAMECAMERA_MIN_V_ANGLE,
-				DefaultValues.DEFAULT_GAMECAMERA_MAX_V_ANGLE,
+		init(inputs, DefaultValues.DEFAULT_GAMECAMERA_MIN_V_ANGLE, DefaultValues.DEFAULT_GAMECAMERA_MAX_V_ANGLE,
 				DefaultValues.DEFAULT_GAMECAMERA_SPEED);
 	}
 
 	public GameCamera(InputManager inputs, float speed) {
 		super();
-		init(inputs, DefaultValues.DEFAULT_GAMECAMERA_MIN_V_ANGLE,
-				DefaultValues.DEFAULT_GAMECAMERA_MAX_V_ANGLE, speed);
+		init(inputs, DefaultValues.DEFAULT_GAMECAMERA_MIN_V_ANGLE, DefaultValues.DEFAULT_GAMECAMERA_MAX_V_ANGLE, speed);
 	}
 
 	public GameCamera(InputManager inputs, float minVAngle, float maxVAngle) {
 		super();
-		init(inputs, minVAngle, maxVAngle,
-				DefaultValues.DEFAULT_GAMECAMERA_SPEED);
+		init(inputs, minVAngle, maxVAngle, DefaultValues.DEFAULT_GAMECAMERA_SPEED);
 	}
 
-	public GameCamera(InputManager inputs, float minVAngle, float maxVAngle,
-			float speed) {
+	public GameCamera(InputManager inputs, float minVAngle, float maxVAngle, float speed) {
 		super();
 		init(inputs, minVAngle, maxVAngle, speed);
 	}
@@ -53,8 +49,7 @@ public class GameCamera extends Camera3 implements Updateable {
 		return minVAngle;
 	}
 
-	private void init(InputManager inputs, float minVAngle, float maxVAngle,
-			float speed) {
+	private void init(InputManager inputs, float minVAngle, float maxVAngle, float speed) {
 		this.minVAngle = minVAngle;
 		this.maxVAngle = maxVAngle;
 		this.speed = speed;
@@ -131,18 +126,14 @@ public class GameCamera extends Camera3 implements Updateable {
 	}
 
 	private void setupControls(InputManager inputs) {
-		forwards = new InputEvent("camera_forwards", new Input(
-				Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN), new Input(
-				Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN));
-		backwards = new InputEvent("camera_backwards", new Input(
-				Input.KEYBOARD_EVENT, "Down", KeyInput.KEY_DOWN), new Input(
-				Input.KEYBOARD_EVENT, "S", KeyInput.KEY_DOWN));
-		left = new InputEvent("camera_left", new Input(Input.KEYBOARD_EVENT,
-				"Left", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
-				"A", KeyInput.KEY_DOWN));
-		right = new InputEvent("camera_right", new Input(Input.KEYBOARD_EVENT,
-				"Right", KeyInput.KEY_DOWN), new Input(Input.KEYBOARD_EVENT,
-				"D", KeyInput.KEY_DOWN));
+		forwards = new InputEvent("camera_forwards", new Input(Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN));
+		backwards = new InputEvent("camera_backwards", new Input(Input.KEYBOARD_EVENT, "Down", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "S", KeyInput.KEY_DOWN));
+		left = new InputEvent("camera_left", new Input(Input.KEYBOARD_EVENT, "Left", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "A", KeyInput.KEY_DOWN));
+		right = new InputEvent("camera_right", new Input(Input.KEYBOARD_EVENT, "Right", KeyInput.KEY_DOWN),
+				new Input(Input.KEYBOARD_EVENT, "D", KeyInput.KEY_DOWN));
 
 		inputs.addEvent(forwards);
 		inputs.addEvent(backwards);
@@ -175,13 +166,11 @@ public class GameCamera extends Camera3 implements Updateable {
 				move.translate(-direction.x, -direction.y, -direction.z);
 			}
 			if (left.isActive()) {
-				Vector3f side = VecMath.crossproduct(direction,
-						VectorConstants.UP);
+				Vector3f side = VecMath.crossproduct(direction, VectorConstants.UP);
 				move.translate(-side.x, -side.y, -side.z);
 			}
 			if (right.isActive()) {
-				Vector3f side = VecMath.crossproduct(direction,
-						VectorConstants.UP);
+				Vector3f side = VecMath.crossproduct(direction, VectorConstants.UP);
 				move.translate(side);
 			}
 			if (move.lengthSquared() != 0) {

@@ -21,13 +21,9 @@ public class VerletIntegration implements IntegrationSolver {
 			Vector2f fa = obj.getForceAccumulator();
 			float linearDampingValue = 1 / (1 + obj.getLinearDamping() * delta);
 			obj.setLinearVelocity(
-					(lv.x + delta
-							* (fa.x * obj.getInverseMass() + gravitation.x
-									* obj.getLinearFactor().x))
+					(lv.x + delta * (fa.x * obj.getInverseMass() + gravitation.x * obj.getLinearFactor().x))
 							* linearDampingValue,
-					(lv.y + delta
-							* (fa.y * obj.getInverseMass() + gravitation.y
-									* obj.getLinearFactor().y))
+					(lv.y + delta * (fa.y * obj.getInverseMass() + gravitation.y * obj.getLinearFactor().y))
 							* linearDampingValue);
 		}
 
@@ -35,16 +31,13 @@ public class VerletIntegration implements IntegrationSolver {
 		Vector1f ta = obj.getTorqueAccumulator();
 		Matrix1f ii = obj.getInverseInertia();
 		float angularDampingValue = 1 / (1 + obj.getAngularDamping() * delta);
-		obj.setAngularVelocity((av.x + ii.getf(0, 0) * ta.x * delta)
-				* angularDampingValue);
+		obj.setAngularVelocity((av.x + ii.getf(0, 0) * ta.x * delta) * angularDampingValue);
 
 		obj.clearForces();
 
-		obj.translate((oldlinearvel.x + obj.getLinearVelocity().x) * delta
-				* 0.5f, (oldlinearvel.y + obj.getLinearVelocity().y) * delta
-				* 0.5f);
-		obj.rotate((oldangularvel.x + obj.getAngularVelocity().x) * delta
-				* 0.5f);
+		obj.translate((oldlinearvel.x + obj.getLinearVelocity().x) * delta * 0.5f,
+				(oldlinearvel.y + obj.getLinearVelocity().y) * delta * 0.5f);
+		obj.rotate((oldangularvel.x + obj.getAngularVelocity().x) * delta * 0.5f);
 	}
 
 	@Override
@@ -57,17 +50,11 @@ public class VerletIntegration implements IntegrationSolver {
 			Vector3f fa = obj.getForceAccumulator();
 			float linearDampingValue = 1 / (1 + obj.getLinearDamping() * delta);
 			obj.setLinearVelocity(
-					(lv.x + delta
-							* (fa.x * obj.getInverseMass() + gravitation.x
-									* obj.getLinearFactor().x))
+					(lv.x + delta * (fa.x * obj.getInverseMass() + gravitation.x * obj.getLinearFactor().x))
 							* linearDampingValue,
-					(lv.y + delta
-							* (fa.y * obj.getInverseMass() + gravitation.y
-									* obj.getLinearFactor().y))
+					(lv.y + delta * (fa.y * obj.getInverseMass() + gravitation.y * obj.getLinearFactor().y))
 							* linearDampingValue,
-					(lv.z + delta
-							* (fa.z * obj.getInverseMass() + gravitation.z
-									* obj.getLinearFactor().z))
+					(lv.z + delta * (fa.z * obj.getInverseMass() + gravitation.z * obj.getLinearFactor().z))
 							* linearDampingValue);
 		}
 
@@ -76,19 +63,16 @@ public class VerletIntegration implements IntegrationSolver {
 		Quaternionf ii = obj.getInverseInertia();
 		float angularDampingValue = 1 / (1 + obj.getAngularDamping() * delta);
 		Vector3f transformedTorque = QuatMath.transform(ii, ta);
-		obj.setAngularVelocity((av.x + transformedTorque.x * delta)
-				* angularDampingValue, (av.y + transformedTorque.y * delta)
-				* angularDampingValue, (av.z + transformedTorque.z * delta)
-				* angularDampingValue);
+		obj.setAngularVelocity((av.x + transformedTorque.x * delta) * angularDampingValue,
+				(av.y + transformedTorque.y * delta) * angularDampingValue,
+				(av.z + transformedTorque.z * delta) * angularDampingValue);
 		obj.clearForces();
 
-		obj.translate((oldlinearvel.x + obj.getLinearVelocity().x) * delta
-				* 0.5f, (oldlinearvel.y + obj.getLinearVelocity().y) * delta
-				* 0.5f, (oldlinearvel.z + obj.getLinearVelocity().z) * delta
-				* 0.5f);
-		obj.rotate((oldangularvel.x + obj.getAngularVelocity().x) * delta
-				* 0.5f, (oldangularvel.y + obj.getAngularVelocity().y) * delta
-				* 0.5f, (oldangularvel.z + obj.getAngularVelocity().z) * delta
-				* 0.5f);
+		obj.translate((oldlinearvel.x + obj.getLinearVelocity().x) * delta * 0.5f,
+				(oldlinearvel.y + obj.getLinearVelocity().y) * delta * 0.5f,
+				(oldlinearvel.z + obj.getLinearVelocity().z) * delta * 0.5f);
+		obj.rotate((oldangularvel.x + obj.getAngularVelocity().x) * delta * 0.5f,
+				(oldangularvel.y + obj.getAngularVelocity().y) * delta * 0.5f,
+				(oldangularvel.z + obj.getAngularVelocity().z) * delta * 0.5f);
 	}
 }

@@ -40,8 +40,8 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 	}
 
 	@Override
-	public ContactManifold<Vector3f> computeCollision(SupportMap<Vector3f> Sa,
-			SupportMap<Vector3f> Sb, List<Vector3f> simplex) {
+	public ContactManifold<Vector3f> computeCollision(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
+			List<Vector3f> simplex) {
 		faces.clear();
 
 		Vector3f A = simplex.get(3);
@@ -70,8 +70,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 					Triangle[] adjacents = findAdjacentTriangles(t, faces);
 
 					if (adjacents[0] != null
-							&& VecMath.dotproduct(VecMath.subtraction(p, t.a),
-									adjacents[0].normal) > 0) {
+							&& VecMath.dotproduct(VecMath.subtraction(p, t.a), adjacents[0].normal) > 0) {
 						Vector3f adjD = findTheD(t.a, t.b, adjacents[0]);
 						faces.add(new Triangle(p, t.a, adjD));
 						faces.add(new Triangle(t.b, p, adjD));
@@ -81,8 +80,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 					}
 
 					if (adjacents[1] != null
-							&& VecMath.dotproduct(VecMath.subtraction(p, t.b),
-									adjacents[1].normal) > 0) {
+							&& VecMath.dotproduct(VecMath.subtraction(p, t.b), adjacents[1].normal) > 0) {
 						Vector3f adjD = findTheD(t.b, t.c, adjacents[1]);
 						faces.add(new Triangle(p, t.b, adjD));
 						faces.add(new Triangle(t.c, p, adjD));
@@ -92,8 +90,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 					}
 
 					if (adjacents[2] != null
-							&& VecMath.dotproduct(VecMath.subtraction(p, t.c),
-									adjacents[2].normal) > 0) {
+							&& VecMath.dotproduct(VecMath.subtraction(p, t.c), adjacents[2].normal) > 0) {
 						Vector3f adjD = findTheD(t.c, t.a, adjacents[2]);
 						faces.add(new Triangle(p, t.c, adjD));
 						faces.add(new Triangle(t.a, p, adjD));
@@ -127,10 +124,8 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		tangentB = VecMath.crossproduct(normal, tangentA);
 
 		Vector3f negnormal = VecMath.negate(normal);
-		return new ContactManifold<Vector3f>(depth, normal,
-				Sa.supportPoint(normal), Sb.supportPoint(negnormal),
-				Sa.supportPointRelative(normal),
-				Sb.supportPointRelative(normal), Sa.supportPointLocal(normal),
+		return new ContactManifold<Vector3f>(depth, normal, Sa.supportPoint(normal), Sb.supportPoint(negnormal),
+				Sa.supportPointRelative(normal), Sb.supportPointRelative(normal), Sa.supportPointLocal(normal),
 				Sb.supportPointLocal(negnormal), tangentA, tangentB);
 	}
 
@@ -145,17 +140,14 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		Triangle[] result = new Triangle[3];
 		for (Triangle f : faces) {
 			if (!f.equals(t)) {
-				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b)
-						&& f.c.equals(t.a) || f.c.equals(t.b)
-						&& f.a.equals(t.a))
+				if (f.a.equals(t.b) && f.b.equals(t.a) || f.b.equals(t.b) && f.c.equals(t.a)
+						|| f.c.equals(t.b) && f.a.equals(t.a))
 					result[0] = f;
-				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c)
-						&& f.c.equals(t.b) || f.c.equals(t.c)
-						&& f.a.equals(t.b))
+				if (f.a.equals(t.c) && f.b.equals(t.b) || f.b.equals(t.c) && f.c.equals(t.b)
+						|| f.c.equals(t.c) && f.a.equals(t.b))
 					result[1] = f;
-				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a)
-						&& f.c.equals(t.c) || f.c.equals(t.a)
-						&& f.a.equals(t.c))
+				if (f.a.equals(t.a) && f.b.equals(t.c) || f.b.equals(t.a) && f.c.equals(t.c)
+						|| f.c.equals(t.a) && f.a.equals(t.c))
 					result[2] = f;
 			}
 		}
@@ -195,9 +187,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 	}
 
 	private boolean isOriginInsideTriangleArea(Triangle t) {
-		return (checkPlane(t.a, t.b, t.normal)
-				&& checkPlane(t.b, t.c, t.normal) && checkPlane(t.c, t.a,
-					t.normal));
+		return (checkPlane(t.a, t.b, t.normal) && checkPlane(t.b, t.c, t.normal) && checkPlane(t.c, t.a, t.normal));
 		// if (VecMath.dotproduct(
 		// VecMath.crossproduct(VecMath.subtraction(t.b, t.a), t.normal),
 		// VecMath.negate(t.a)) <= EPSILON) {
@@ -220,14 +210,11 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		float abX = b.x - a.x;
 		float abY = b.y - a.y;
 		float abZ = b.z - a.z;
-		return (((abY * normal.z - abZ * normal.y) * -a.x
-				+ (abZ * normal.x - abX * normal.z) * -a.y + (abX * normal.y - abY
-				* normal.x)
-				* -a.z) <= EPSILON);
+		return (((abY * normal.z - abZ * normal.y) * -a.x + (abZ * normal.x - abX * normal.z) * -a.y
+				+ (abX * normal.y - abY * normal.x) * -a.z) <= EPSILON);
 	}
 
-	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
-			Vector3f dir) {
+	private Vector3f support(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb, Vector3f dir) {
 		Vector3f suppA = Sa.supportPoint(dir);
 		Vector3f suppB = Sb.supportPointNegative(dir);
 		suppB.negate();

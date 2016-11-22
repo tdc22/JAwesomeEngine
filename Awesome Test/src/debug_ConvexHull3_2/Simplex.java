@@ -3,14 +3,13 @@ package debug_ConvexHull3_2;
 import java.awt.Color;
 import java.util.List;
 
+import debug_ConvexHull3_2.ConvexHullDebugger.Triangle;
 import objects.ShapedObject3;
 import utils.GLConstants;
 import vector.Vector3f;
-import debug_ConvexHull3_2.ConvexHullDebugger.Triangle;
 
 public class Simplex extends ShapedObject3 {
-	public Simplex(List<Vector3f> vertices, List<Triangle> triangles,
-			Triangle next) {
+	public Simplex(List<Vector3f> vertices, List<Triangle> triangles, Triangle next) {
 		setRenderMode(GLConstants.TRIANGLES);
 
 		int a = 0;
@@ -19,9 +18,8 @@ public class Simplex extends ShapedObject3 {
 			if (t.equals(next)) {
 				c = Color.BLUE;
 				System.out.println("NEXT!!!!!!");
-				System.out.println(t + "; " + t.a + "; " + t.b + "; " + t.c
-						+ "; " + vertices.get(t.a) + "; " + vertices.get(t.b)
-						+ "; " + vertices.get(t.c));
+				System.out.println(t + "; " + t.a + "; " + t.b + "; " + t.c + "; " + vertices.get(t.a) + "; "
+						+ vertices.get(t.b) + "; " + vertices.get(t.c));
 			} else {
 				c = Color.WHITE;
 			}

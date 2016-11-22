@@ -21,14 +21,12 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 		init(radius, halfheight, slices, true);
 	}
 
-	public Ellipse(float x, float y, float radius, float halfheight,
-			int slices, boolean adjacency) {
+	public Ellipse(float x, float y, float radius, float halfheight, int slices, boolean adjacency) {
 		super(x, y);
 		init(radius, halfheight, slices, adjacency);
 	}
 
-	public Ellipse(Vector2f pos, float radius, float halfheight, int slices,
-			boolean adjacency) {
+	public Ellipse(Vector2f pos, float radius, float halfheight, int slices, boolean adjacency) {
 		super(pos);
 		init(radius, halfheight, slices, adjacency);
 	}
@@ -48,8 +46,7 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 		return radius;
 	}
 
-	private void init(float radius, float halfheight, int slices,
-			boolean adjacency) {
+	private void init(float radius, float halfheight, int slices, boolean adjacency) {
 		shapetype = SHAPE_ELLIPSE;
 		this.radius = radius;
 		this.halfheight = halfheight;
@@ -59,8 +56,7 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 		float anglestep = (float) (2 * Math.PI / (float) slices);
 		addVertex(new Vector2f(0, 0), color, new Vector2f(0.5f, 0.5f));
 		for (int s = 0; s < slices; s++) {
-			Vector2f t = new Vector2f(Math.sin(s * anglestep), Math.cos(s
-					* anglestep));
+			Vector2f t = new Vector2f(Math.sin(s * anglestep), Math.cos(s * anglestep));
 			Vector2f v = new Vector2f(radius * t.x, halfheight * t.y);
 			t.x = (t.x + 1) * 0.5f;
 			t.y = 1 - (t.y + 1) * 0.5f;
