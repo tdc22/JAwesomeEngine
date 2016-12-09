@@ -1,4 +1,4 @@
-package physics2dRaycasting;
+package physics2dRaycast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ import utils.Pair;
 import vector.Vector2f;
 import vector.Vector4f;
 
-public class RaycastingTest2d extends StandardGame {
+public class RaycastTest2d extends StandardGame {
 	PhysicsSpace2 space;
 	Quad q2, q3;
 	Circle c, c1;
@@ -234,10 +234,6 @@ public class RaycastingTest2d extends StandardGame {
 
 			c++;
 		}
-
-		// System.out.println(rb6.getCompoundBroadphase().getObjects().size() +
-		// "; "
-		// + rb6.getCompoundBroadphase().getOverlaps().size());
 
 		cam.update(delta);
 	}

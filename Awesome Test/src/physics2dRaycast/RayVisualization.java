@@ -1,4 +1,4 @@
-package physics2dRaycasting;
+package physics2dRaycast;
 
 import math.VecMath;
 import objects.Ray2;

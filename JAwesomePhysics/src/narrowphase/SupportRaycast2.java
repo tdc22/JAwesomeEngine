@@ -6,25 +6,19 @@ import objects.SupportMap;
 import vector.Vector2f;
 
 public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
-	private final Vector2f v1 = new Vector2f();
-	private Vector2f v2 = new Vector2f();
+	private final Vector2f b = new Vector2f();
+	private Vector2f v = new Vector2f();
 
 	@Override
 	public boolean isColliding(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
-		v1.set(-ray.getDirection().y, ray.getDirection().x);
-		float dot = dotRay(ray.getPosition(), Sa.getSupportCenter(), v1);
-		if (dot > 0) {
-			v2 = Sa.supportPoint(v1);
-			dot = dotRay(ray.getPosition(), v2, v1);
-			return dot <= 0;
-		} else if (dot < 0) {
-			v1.negate();
-			v2 = Sa.supportPoint(v1);
-			dot = dotRay(ray.getPosition(), v2, v1);
-			return dot <= 0;
+		b.set(-ray.getDirection().y, ray.getDirection().x);
+
+		if (dotRay(ray.getPosition(), Sa.getSupportCenter(), b) < 0) {
+			b.negate();
 		}
 
-		return true;
+		v = Sa.supportPoint(b);
+		return dotRay(ray.getPosition(), v, b) <= 0;
 	}
 
 	private float dotRay(Vector2f vecA, Vector2f vecB, Vector2f vecCheck) {
@@ -44,11 +38,11 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 	public Vector2f computeCollision(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
 		Vector2f dir1 = VecMath.negate(ray.getDirection());
 		Vector2f bound1 = Sa.supportPoint(dir1);
-		float dot1 = dotRay(ray.getPosition(), bound1, v1);
+		float dot1 = dotRay(ray.getPosition(), bound1, b);
 		if (Math.abs(dot1) < EPSILON)
 			return bound1;
 
-		Vector2f dir2 = new Vector2f(v1);
+		Vector2f dir2 = new Vector2f(b);
 		Vector2f bound2;
 
 		if (dot1 < 0) {
@@ -59,9 +53,9 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 			dir1 = dir2;
 			dir2 = tmp;
 		} else {
-			bound2 = v2;
+			bound2 = v;
 		}
-		float dot2 = dotRay(ray.getPosition(), bound2, v1);
+		float dot2 = dotRay(ray.getPosition(), bound2, b);
 		if (Math.abs(dot2) < EPSILON)
 			return bound2;
 
@@ -69,7 +63,7 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 		for (int i = 0; i < MAX_ITERATIONS; i++) {
 			Vector2f dir3 = getMiddleVector(dir1, dir2, negativeRayDirection);
 			Vector2f bound3 = Sa.supportPoint(dir3);
-			float dot3 = dotRay(ray.getPosition(), bound3, v1);
+			float dot3 = dotRay(ray.getPosition(), bound3, b);
 
 			if (Math.abs(dot3) < EPSILON) {
 				return bound3;
@@ -119,7 +113,7 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 	private Vector2f rayLineIntersection(Ray<Vector2f> r, Vector2f la, Vector2f lb, float ldx, float ldy) {
 		float v1x = r.getPosition().x - la.x;
 		float v1y = r.getPosition().y - la.y;
-		float t2 = (v1x * v1.x + v1y * v1.y) / (ldx * v1.x + ldy * v1.y);
+		float t2 = (v1x * b.x + v1y * b.y) / (ldx * b.x + ldy * b.y);
 		return new Vector2f(la.x + ldx * t2, la.y + ldy * t2);
 	}
 }

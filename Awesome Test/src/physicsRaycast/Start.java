@@ -1,8 +1,8 @@
-package physics2dRaycasting;
+package physicsRaycast;
 
 public class Start {
 	public static void main(String[] args) {
-		RaycastingTest2d dt = new RaycastingTest2d();
+		RaycastTest dt = new RaycastTest();
 		dt.start();
 	}
 }
