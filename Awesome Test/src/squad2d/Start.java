@@ -1,8 +1,8 @@
-package slerp3d;
+package squad2d;
 
 public class Start {
 	public static void main(String[] args) {
-		Test test = new Test();
+		Test2d test = new Test2d();
 		test.start();
 	}
 }

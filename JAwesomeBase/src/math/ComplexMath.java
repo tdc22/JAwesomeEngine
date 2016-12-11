@@ -119,8 +119,14 @@ public class ComplexMath {
 	}
 
 	public static Complexd slerp(Complex c1, Complex c2, double t) {
-		Complexd result = new Complexd(c2);
+		Complexd result;
 		double dot = dotproduct(c1, c2);
+		if (dot < 0) {
+			dot = -dot;
+			result = negate(c2);
+		} else {
+			result = new Complexd(c2);
+		}
 
 		if (dot < thresholdValue) {
 			double angle = Math.acos(dot);
@@ -136,8 +142,14 @@ public class ComplexMath {
 	}
 
 	public static Complexf slerp(Complexf c1, Complexf c2, float t) {
-		Complexf result = new Complexf(c2);
+		Complexf result;
 		float dot = dotproduct(c1, c2);
+		if (dot < 0) {
+			dot = -dot;
+			result = negate(c2);
+		} else {
+			result = new Complexf(c2);
+		}
 
 		if (dot < thresholdValue) {
 			float angle = (float) Math.acos(dot);
