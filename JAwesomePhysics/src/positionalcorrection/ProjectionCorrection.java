@@ -32,8 +32,10 @@ public class ProjectionCorrection implements PositionalCorrection {
 		Vector3f correction = VecMath.scale(manifold.getCollisionNormal(),
 				(Math.max(manifold.getPenetrationDepth() - slop, 0) / (A.getInverseMass() + B.getInverseMass()))
 						* correctionPercent);
-		A.translate(correction.x * -A.getInverseMass(), correction.y * -A.getInverseMass(), correction.z * -A.getInverseMass());
-		B.translate(correction.x * B.getInverseMass(), correction.y * B.getInverseMass(), correction.z * B.getInverseMass());
+		A.translate(correction.x * -A.getInverseMass(), correction.y * -A.getInverseMass(),
+				correction.z * -A.getInverseMass());
+		B.translate(correction.x * B.getInverseMass(), correction.y * B.getInverseMass(),
+				correction.z * B.getInverseMass());
 	}
 
 	@Override

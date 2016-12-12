@@ -48,7 +48,7 @@ public class Test extends StandardGame {
 		q4.setRenderHints(false, true, false);
 		q5.setRenderHints(false, true, false);
 		q6.setRenderHints(false, true, false);
-		
+
 		c1 = new Quaternionf();
 		c2 = new Quaternionf();
 		c3 = new Quaternionf();

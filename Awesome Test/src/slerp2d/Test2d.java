@@ -39,7 +39,7 @@ public class Test2d extends StandardGame {
 		q4 = new Quad(200, 330, 30, 30);
 		q5 = new Quad(400, 330, 30, 30);
 		q6 = new Quad(600, 330, 30, 30);
-		
+
 		q1.setRenderHints(false, true, false);
 		q2.setRenderHints(false, true, false);
 		q3.setRenderHints(false, true, false);
