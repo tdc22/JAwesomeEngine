@@ -6,16 +6,18 @@ import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
 import loader.ShaderLoader;
+import loader.TextureLoader;
 import math.ComplexMath;
 import quaternion.Complexf;
 import shader.Shader;
 import shape2d.Quad;
 import sound.NullSoundEnvironment;
+import texture.Texture;
 
 public class Test2d extends StandardGame {
-	Quad q1, q2;
-	Complexf c1, c2, c3;
-	float t1 = 0, t2 = 0;
+	Quad q1, q2, q3, q4, q5, q6;
+	Complexf c1, c2, c3, c4;
+	float t = 0;
 
 	@Override
 	public void init() {
@@ -25,22 +27,41 @@ public class Test2d extends StandardGame {
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
-		addShader2d(defaultshader);
+		Shader textureshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
+		textureshader.addArgumentName("u_texture");
+		textureshader.addArgument(new Texture(TextureLoader.loadTexture("res/textures/textureCoordinateTest.png")));
+		addShader2d(textureshader);
 
 		q1 = new Quad(200, 130, 30, 30);
 		q2 = new Quad(400, 130, 30, 30);
+		q3 = new Quad(600, 130, 30, 30);
+		q4 = new Quad(600, 230, 30, 30);
+		q5 = new Quad(600, 330, 30, 30);
+		q6 = new Quad(600, 430, 30, 30);
+
+		q1.setRenderHints(false, true, false);
+		q2.setRenderHints(false, true, false);
+		q3.setRenderHints(false, true, false);
+		q4.setRenderHints(false, true, false);
+		q5.setRenderHints(false, true, false);
+		q6.setRenderHints(false, true, false);
 
 		c1 = new Complexf();
 		c2 = new Complexf();
 		c3 = new Complexf();
+		c4 = new Complexf();
 
-		c2.rotate(90);
+		c2.rotate(-60);
 		c3.rotate(180);
+		c4.rotate(90);
 
-		defaultshader.addObject(q1);
-		defaultshader.addObject(q2);
+		textureshader.addObject(q1);
+		textureshader.addObject(q2);
+		textureshader.addObject(q3);
+		textureshader.addObject(q4);
+		textureshader.addObject(q5);
+		textureshader.addObject(q6);
 	}
 
 	@Override
@@ -61,21 +82,27 @@ public class Test2d extends StandardGame {
 	public void update(int delta) {
 		float d = delta / 1000f;
 
-		t1 += d;
-		if (t1 >= 1)
-			t1 -= 1;
-		q1.rotate(d * 90f);
-		q2.rotateTo(ComplexMath.lerp(c1, c2, t1));
-		q3.rotateTo(ComplexMath.slerp(c1, c2, t1));
+		t += d;
+		if (t >= 1)
+			t -= 1;
+		float t3 = (3 * t) % 1;
 
-		t2 += d;
-		if (t2 >= 1)
-			t2 -= 1;
-		q4.rotate(d * 180f);
-		q5.rotateTo(ComplexMath.lerp(c1, c3, t2));
-		q6.rotateTo(ComplexMath.slerp(c1, c3, t2));
+		System.out.println(t + "; " + t3);
 
-		cam.update(delta);
+		/*
+		 * if(t < 0.66f) { if(t < 0.33f) { q1.rotateTo(ComplexMath.lerp(c1, c2,
+		 * t3)); q2.rotateTo(ComplexMath.slerp(c1, c2, t3)); } else {
+		 * q1.rotateTo(ComplexMath.lerp(c2, c3, t3));
+		 * q2.rotateTo(ComplexMath.slerp(c2, c3, t3)); } } else {
+		 */
+		q1.rotateTo(ComplexMath.lerp(c1, c4, t));
+		q2.rotateTo(ComplexMath.slerp(c1, c4, t));
+		// }
+
+		q3.rotateTo(ComplexMath.squad(c1, c2, c3, c4, t));
+		q4.rotateTo(ComplexMath.squad(c1, c4, c3, c2, t));
+		q5.rotateTo(ComplexMath.squad(c2, c1, c4, c3, t));
+		q6.rotateTo(ComplexMath.squad(c4, c2, c3, c1, t));
 	}
 
 }

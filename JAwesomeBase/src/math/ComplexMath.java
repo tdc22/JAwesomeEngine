@@ -119,54 +119,44 @@ public class ComplexMath {
 	}
 
 	public static Complexd slerp(Complex c1, Complex c2, double t) {
-		Complexd result = new Complexd(c2);
 		double dot = dotproduct(c1, c2);
 		if (dot < 0) {
 			dot = -dot;
 		}
 
 		if (dot < thresholdValue) {
+			Complexd result = new Complexd(c2);
 			double angle = Math.acos(dot);
-			Complex temp = scale(c1, Math.sin(angle * (1 - t)));
-			result.scale(Math.sin(angle * t));
 			double sina = Math.sin(angle);
-			result.set((result.getReal() + temp.getReal()) / sina,
-					(result.getImaginary() + temp.getImaginary()) / sina);
+			double sinat = Math.sin(angle * t);
+			double sinaomt = Math.sin(angle * (1 - t));
+			result.set((c1.getReal() * sinaomt + c2.getReal() * sinat) / sina,
+					(c1.getImaginary() * sinaomt + c2.getImaginary() * sinat) / sina);
 			return result;
 		}
 
-		return lerp(c1, result, t);
+		return lerp(c1, c2, t);
 	}
 
 	public static Complexf slerp(Complexf c1, Complexf c2, float t) {
-		Complexf result = new Complexf(c2);
-		;
 		float dot = dotproduct(c1, c2);
 		if (dot < 0) {
 			dot = -dot;
 		}
 
 		if (dot < thresholdValue) {
+			Complexf result = new Complexf(c2);
 			float angle = (float) Math.acos(dot);
-			Complexf temp = scale(c1, (float) Math.sin(angle * (1 - t)));
-			result.scale((float) Math.sin(angle * t));
 			float sina = (float) Math.sin(angle);
-			result.set((result.getRealf() + temp.getRealf()) / sina,
-					(result.getImaginaryf() + temp.getImaginaryf()) / sina);
+			float sinat = (float) Math.sin(angle * t);
+			float sinaomt = (float) Math.sin(angle * (1 - t));
+			result.set((c1.getRealf() * sinaomt + c2.getRealf() * sinat) / sina,
+					(c1.getImaginaryf() * sinaomt + c2.getImaginaryf() * sinat) / sina);
 			return result;
 		}
 
-		return lerp(c1, result, t);
+		return lerp(c1, c2, t);
 	}
-
-	// public static Complexd slerp(Complex q1, Complex q2, double t) {
-	// DIFFERENT FROM QUATERNIONS
-	// - keine Dotproduct-Abfrage
-	// }
-	//
-	// public static Complexf slerp(Complexf q1, Complexf q2, float t) {
-	//
-	// }
 
 	public static Complexd slerpNoInvert(Complex q1, Complex q2, double t) {
 		double dot = dotproduct(q1, q2);

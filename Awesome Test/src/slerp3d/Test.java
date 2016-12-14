@@ -18,7 +18,7 @@ import vector.Vector3f;
 public class Test extends StandardGame {
 	Box q1, q2, q3, q4, q5, q6;
 	Quaternionf c1, c2, c3;
-	float t1 = 0, t2 = 0;
+	float t = 0;
 
 	@Override
 	public void init() {
@@ -82,19 +82,16 @@ public class Test extends StandardGame {
 	public void update(int delta) {
 		float d = delta / 1000f;
 
-		t1 += d;
-		if (t1 >= 1)
-			t1 -= 1;
+		t += d;
+		if (t >= 1)
+			t -= 1;
 		q1.rotate(0, d * 90f, 0);
-		q2.rotateTo(QuatMath.lerp(c1, c2, t1));
-		q3.rotateTo(QuatMath.slerp(c1, c2, t1));
+		q2.rotateTo(QuatMath.lerp(c1, c2, t));
+		q3.rotateTo(QuatMath.slerp(c1, c2, t));
 
-		t2 += d;
-		if (t2 >= 1)
-			t2 -= 1;
 		q4.rotate(0, d * 180f, 0);
-		q5.rotateTo(QuatMath.lerp(c1, c3, t2));
-		q6.rotateTo(QuatMath.slerp(c1, c3, t2));
+		q5.rotateTo(QuatMath.lerp(c1, c3, t));
+		q6.rotateTo(QuatMath.slerp(c1, c3, t));
 
 		cam.update(delta);
 	}

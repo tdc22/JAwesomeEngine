@@ -17,7 +17,7 @@ import texture.Texture;
 public class Test2d extends StandardGame {
 	Quad q1, q2, q3, q4, q5, q6;
 	Complexf c1, c2, c3;
-	float t1 = 0, t2 = 0;
+	float t = 0;
 
 	@Override
 	public void init() {
@@ -80,19 +80,16 @@ public class Test2d extends StandardGame {
 	public void update(int delta) {
 		float d = delta / 1000f;
 
-		t1 += d;
-		if (t1 >= 1)
-			t1 -= 1;
+		t += d;
+		if (t >= 1)
+			t -= 1;
 		q1.rotate(d * 90f);
-		q2.rotateTo(ComplexMath.lerp(c1, c2, t1));
-		q3.rotateTo(ComplexMath.slerp(c1, c2, t1));
+		q2.rotateTo(ComplexMath.lerp(c1, c2, t));
+		q3.rotateTo(ComplexMath.slerp(c1, c2, t));
 
-		t2 += d;
-		if (t2 >= 1)
-			t2 -= 1;
 		q4.rotate(d * 180f);
-		q5.rotateTo(ComplexMath.lerp(c1, c3, t2));
-		q6.rotateTo(ComplexMath.slerp(c1, c3, t2));
+		q5.rotateTo(ComplexMath.lerp(c1, c3, t));
+		q6.rotateTo(ComplexMath.slerp(c1, c3, t));
 
 		cam.update(delta);
 	}
