@@ -199,7 +199,7 @@ public class TextureLoader {
 			}
 		}
 
-		buffer.flip(); // FOR THE LOVE OF GOD DO NOT FORGET THIS
+		buffer.flip();
 		return buffer;
 	}
 }

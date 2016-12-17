@@ -230,15 +230,18 @@ public class QuatMath {
 		return lerp(q1, q2, t);
 	}
 
+	// q1: start; q2: end; q3, q4: reference rotations for values between q1 and q2
 	public static Quaterniond squad(Quaternion q1, Quaternion q2, Quaternion q3, Quaternion q4, double t) {
 		Quaternion a = slerpNoInvert(q1, q2, t);
 		Quaternion b = slerpNoInvert(q3, q4, t);
+		// 2 * t * (1 - t) -> 0, 0.5, 0
 		return slerpNoInvert(a, b, 2 * t * (1 - t));
 	}
 
 	public static Quaternionf squad(Quaternionf q1, Quaternionf q2, Quaternionf q3, Quaternionf q4, float t) {
 		Quaternionf a = slerpNoInvert(q1, q2, t);
 		Quaternionf b = slerpNoInvert(q3, q4, t);
+		// 2 * t * (1 - t) -> 0, 0.5, 0
 		return slerpNoInvert(a, b, 2 * t * (1 - t));
 	}
 

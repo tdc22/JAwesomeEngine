@@ -15,8 +15,8 @@ import sound.NullSoundEnvironment;
 import texture.Texture;
 
 public class Test2d extends StandardGame {
-	Quad q1, q2, q3, q4, q5, q6;
-	Complexf c1, c2, c3, c4;
+	Quad q1, q2, q3, q4, q5, q6, q7;
+	Complexf c1, c2, c3, c4, c5;
 	float t = 0;
 
 	@Override
@@ -39,6 +39,7 @@ public class Test2d extends StandardGame {
 		q4 = new Quad(600, 230, 30, 30);
 		q5 = new Quad(600, 330, 30, 30);
 		q6 = new Quad(600, 430, 30, 30);
+		q7 = new Quad(700, 130, 30, 30);
 
 		q1.setRenderHints(false, true, false);
 		q2.setRenderHints(false, true, false);
@@ -46,15 +47,17 @@ public class Test2d extends StandardGame {
 		q4.setRenderHints(false, true, false);
 		q5.setRenderHints(false, true, false);
 		q6.setRenderHints(false, true, false);
+		q7.setRenderHints(false, true, false);
 
 		c1 = new Complexf();
 		c2 = new Complexf();
 		c3 = new Complexf();
 		c4 = new Complexf();
+		c5 = new Complexf();
 
-		c2.rotate(-60);
+		c2.rotate(90);
 		c3.rotate(180);
-		c4.rotate(90);
+		c4.rotate(-60);
 
 		textureshader.addObject(q1);
 		textureshader.addObject(q2);
@@ -62,6 +65,7 @@ public class Test2d extends StandardGame {
 		textureshader.addObject(q4);
 		textureshader.addObject(q5);
 		textureshader.addObject(q6);
+		textureshader.addObject(q7);
 	}
 
 	@Override
@@ -85,24 +89,17 @@ public class Test2d extends StandardGame {
 		t += d;
 		if (t >= 1)
 			t -= 1;
-		float t3 = (3 * t) % 1;
 
-		System.out.println(t + "; " + t3);
+		System.out.println(t);
 
-		/*
-		 * if(t < 0.66f) { if(t < 0.33f) { q1.rotateTo(ComplexMath.lerp(c1, c2,
-		 * t3)); q2.rotateTo(ComplexMath.slerp(c1, c2, t3)); } else {
-		 * q1.rotateTo(ComplexMath.lerp(c2, c3, t3));
-		 * q2.rotateTo(ComplexMath.slerp(c2, c3, t3)); } } else {
-		 */
-		q1.rotateTo(ComplexMath.lerp(c1, c4, t));
-		q2.rotateTo(ComplexMath.slerp(c1, c4, t));
-		// }
+		q1.rotateTo(ComplexMath.lerp(c1, c2, t));
+		q2.rotateTo(ComplexMath.slerp(c1, c2, t));
 
-		q3.rotateTo(ComplexMath.squad(c1, c2, c3, c4, t));
-		q4.rotateTo(ComplexMath.squad(c1, c4, c3, c2, t));
-		q5.rotateTo(ComplexMath.squad(c2, c1, c4, c3, t));
+		q3.rotateTo(ComplexMath.squad(c1, c2, c1, c2, t));
+		q4.rotateTo(ComplexMath.squad(c1, c2, c1, c1, t));
+		q5.rotateTo(ComplexMath.squad(c1, c2, c2, c2, t));
 		q6.rotateTo(ComplexMath.squad(c4, c2, c3, c1, t));
+		q7.rotateTo(ComplexMath.squad(c1, c2, c5, c5, t));
 	}
 
 }

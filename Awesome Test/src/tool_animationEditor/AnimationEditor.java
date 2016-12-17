@@ -78,9 +78,6 @@ public class AnimationEditor extends StandardGame {
 	public void init() {
 		initDisplay(new GLDisplay(), new DisplayMode(800, 600, "Animation Editor", true, false),
 				new PixelFormat().withSamples(0), new VideoSettings(), new NullSoundEnvironment());
-		cam.setFlyCam(true);
-		cam.translateTo(0.5f, 0f, 5);
-		cam.rotateTo(0, 0);
 
 		aspect = settings.getResolutionX() / (float) settings.getResolutionY();
 		Vector2f screensize = new Vector2f(aspect * 100, 100);
@@ -107,17 +104,17 @@ public class AnimationEditor extends StandardGame {
 
 		textures = new Texture[6];
 		textures[0] = new Texture(
-				TextureLoader.loadTexture("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/dumb2_head1.png"));
+				TextureLoader.loadTexture("../../2dplatformer/2dPlatformer/res/textures/dumb2_head1.png"));
 		textures[1] = new Texture(
-				TextureLoader.loadTexture("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/dumb2_body1.png"));
+				TextureLoader.loadTexture("../../2dplatformer/2dPlatformer/res/textures/dumb2_body1.png"));
 		textures[2] = new Texture(
-				TextureLoader.loadTexture("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/dumb2_hand1_1.png"));
+				TextureLoader.loadTexture("../../2dplatformer/2dPlatformer/res/textures/dumb2_hand1_1.png"));
 		textures[3] = new Texture(
-				TextureLoader.loadTexture("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/dumb2_hand1_1.png"));
+				TextureLoader.loadTexture("../../2dplatformer/2dPlatformer/res/textures/dumb2_hand1_1.png"));
 		textures[4] = new Texture(
-				TextureLoader.loadTexture("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/dumb2_foot1_1.png"));
+				TextureLoader.loadTexture("../../2dplatformer/2dPlatformer/res/textures/dumb2_foot1_1.png"));
 		textures[5] = new Texture(
-				TextureLoader.loadTexture("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/dumb2_foot1_1.png"));
+				TextureLoader.loadTexture("../../2dplatformer/2dPlatformer/res/textures/dumb2_foot1_1.png"));
 
 		sizes = new Vector2f[6];
 		sizes[0] = new Vector2f(headX * scale, headY * scale);
@@ -130,7 +127,7 @@ public class AnimationEditor extends StandardGame {
 		animationcenter = new AnimationCenter(new Vector2f(66, 50));
 
 		Texture testtexture = new Texture(
-				TextureLoader.loadTexture("/home/oliver/git/2dplatformer/2dPlatformer/res/textures/testtexture.png"));
+				TextureLoader.loadTexture("../../2dplatformer/2dPlatformer/res/textures/testtexture.png"));
 		Shader testtextureshader = new Shader(new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag")));
 		testtextureshader.addArgumentName("u_texture");
@@ -438,7 +435,7 @@ public class AnimationEditor extends StandardGame {
 		String input = null;
 		try {
 			input = FileLoader.readFile(
-					"/home/oliver/git/JAwesomeEngine/Awesome Test/src/tool_animationEditor/AnimationInput.txt");
+					"src/tool_animationEditor/AnimationInput.txt");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
