@@ -1,5 +1,8 @@
 package narrowphase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import math.VecMath;
 import objects.Ray;
 import objects.SupportMap;
@@ -82,7 +85,7 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 
 		// STEP 4: 2D-GJK on ray-plane
 
-		if (Math.abs(ray.getDirection().x) >= 0.57735f)
+		/*if (Math.abs(ray.getDirection().x) >= 0.57735f)
 			b1.set(ray.getDirection().y, -ray.getDirection().x, 0);
 		else
 			b1.set(0, ray.getDirection().z, -ray.getDirection().y);
@@ -113,50 +116,119 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		Vector3f c = null;
 		Vector2f centerOnPlane2 = projectPointOn2dPlane(hitOfPlane, Sa.getSupportCenter(), b1, b2);
 
+		List<Vector2f> simplex = new ArrayList<Vector2f>();
+		Vector3f dir;
+
 		// STEP 4: Check if triangle contains hitOfPlane, otherwise refine
 		// triangle
 		for (int i = 0; i < MAX_ITERATIONS; i++) {
 			Vector3f AB = VecMath.subtraction(b, a);
-			// Vector3f ABn = VecMath.crossproduct(AB, ray.getDirection());
-			// Project AB on plane and check on which side the centerOnPlane
-			// lies
 			Vector2f ABonPlane2 = projectPointOn2dPlane(AB, new Vector3f(), b1, b2);
 			Vector2f ABonPlane2N = new Vector2f(-ABonPlane2.y, ABonPlane2.x);
 			Vector3f dir3;
-			float firstDot = VecMath.dotproduct(ABonPlane2N, centerOnPlane2);
-			boolean firstDotG = firstDot > 0;
-			if (firstDotG) {
+			if (VecMath.dotproduct(ABonPlane2N, centerOnPlane2) > 0) {
 				dir3 = VecMath.crossproduct(ray.getDirection(), AB);
+				ABonPlane2N.negate();
 			} else {
 				dir3 = VecMath.crossproduct(AB, ray.getDirection());
 			}
 			c = Sa.supportPoint(dir3);
 
-			Vector2f BConPlane2 = projectPointOn2dPlane(VecMath.subtraction(c, b), new Vector3f(), b1, b2);
+			Vector2f aProj = projectPointOn2dPlane(a, Sa.getSupportCenter(), b1, b2);
+			Vector2f bProj = projectPointOn2dPlane(b, Sa.getSupportCenter(), b1, b2);
+			Vector2f cProj = projectPointOn2dPlane(c, Sa.getSupportCenter(), b1, b2);
+			
+			Vector2f BConPlane2 = projectPointOn2dPlane(c, b, b1, b2);
 			Vector2f BConPlane2N = new Vector2f(-BConPlane2.y, BConPlane2.x);
-			Vector2f CAonPlane2 = VecMath.addition(ABonPlane2, BConPlane2);
+			Vector2f CAonPlane2 = projectPointOn2dPlane(a, c, b1, b2);
 			Vector2f CAonPlane2N = new Vector2f(-CAonPlane2.y, CAonPlane2.x);
 
-			// TODO: optimize???
-			Vector2f centerA = projectPointOn2dPlane(VecMath.subtraction(a, centerOnPlane), new Vector3f(), b1, b2);
-			Vector2f centerB = projectPointOn2dPlane(VecMath.subtraction(b, centerOnPlane), new Vector3f(), b1, b2);
-			Vector2f centerC = projectPointOn2dPlane(VecMath.subtraction(c, centerOnPlane), new Vector3f(), b1, b2);
-
-			firstDot = VecMath.dotproduct(BConPlane2N, centerA); // centerOnPlane
-																	// - a
-			float secondDot = VecMath.dotproduct(BConPlane2N, centerB);
-			float thirdDot = VecMath.dotproduct(CAonPlane2N, centerC);
-
-			System.out.println(centerA + "; " + centerB + "; " + centerC);
-			System.out.println(firstDot + "; " + secondDot + "; " + thirdDot);
-
-			if (firstDotG) {
-				if (firstDot >= 0 && secondDot >= 0 && thirdDot >= 0)
-					return true;
-			} else {
-				if (firstDot <= 0 && secondDot <= 0 && thirdDot <= 0)
-					return true;
+			if (VecMath.dotproduct(BConPlane2N, centerOnPlane2) > 0) {
+				BConPlane2N.negate();
 			}
+			if (VecMath.dotproduct(CAonPlane2N, centerOnPlane2) < 0) {
+				CAonPlane2N.negate();
+			}
+
+			float aDot = VecMath.dotproduct(VecMath.subtraction(aProj, centerOnPlane2), ABonPlane2N);
+			float bDot = VecMath.dotproduct(VecMath.subtraction(bProj, centerOnPlane2), BConPlane2N);
+			float cDot = VecMath.dotproduct(VecMath.subtraction(cProj, centerOnPlane2), CAonPlane2N);
+			
+			boolean aDotGZ = aDot > 0;
+			boolean bDotGZ = bDot > 0;
+			boolean cDotGZ = cDot > 0;
+			
+			if(aDotGZ && bDotGZ && cDotGZ) {
+				return true;
+			}
+			if(!aDotGZ && !bDotGZ && !cDotGZ) {
+				return true;
+			}
+			
+			// Start iteration
+			simplex.clear();
+			simplex.add(aProj);
+			simplex.add(bProj);
+			simplex.add(cProj);
+			Vector2f direction = new Vector2f();
+			if (GJK2Util.doSimplex(simplex, direction)) {
+				return true;
+			}
+			
+			dir = new Vector3f(direction.x * b1.x + direction.y * b2.x, direction.x * b1.y + direction.y * b2.y, direction.x * b1.z + direction.y * b2.z);
+		}*/
+		
+		if (Math.abs(ray.getDirection().x) >= 0.57735f)
+			b1.set(ray.getDirection().y, -ray.getDirection().x, 0);
+		else
+			b1.set(0, ray.getDirection().z, -ray.getDirection().y);
+
+		if (b1.lengthSquared() > 0)
+			b1.normalize();
+		b2.set(ray.getDirection().getYf() * b1.getZf() - ray.getDirection().getZf() * b1.getYf(),
+				ray.getDirection().getZf() * b1.getXf() - ray.getDirection().getXf() * b1.getZf(),
+				ray.getDirection().getXf() * b1.getYf() - ray.getDirection().getYf() * b1.getXf());
+		
+		// STEP 2: Project support center on plane and adjust base
+		// directions/pick start directions
+		float t0 = dotRay(Sa.getSupportCenter(), ray.getPosition(), ray.getDirection());
+		Vector3f hitOfPlane = VecMath.scale(ray.getDirection(), t0);
+		hitOfPlane.translate(ray.getPosition());
+		// Vector2f centerOnPlane = projectPointOn2dPlane(hitOfPlane,
+		// Sa.getSupportCenter(), b1, b2); // negated!
+		Vector3f centerOnPlane = projectPointOnPlane(hitOfPlane, Sa.getSupportCenter(), ray.getDirection());
+		centerOnPlane = VecMath.subtraction(centerOnPlane, Sa.getSupportCenter());
+
+		// STEP 3: Calculate Support(centerOnPlane) and Support(centerOnPlane x
+		// normal)
+		List<Vector3f> simplex3 = new ArrayList<Vector3f>();
+		List<Vector2f> simplex = new ArrayList<Vector2f>();
+		Vector2f direction;
+		
+		Vector2f centerOnPlane2 = projectPointOn2dPlane(hitOfPlane, Sa.getSupportCenter(), b1, b2);
+		simplex.clear();
+		
+		Vector3f dir = centerOnPlane;
+		Vector3f point = Sa.supportPoint(dir);
+		simplex3.add(point);
+		Vector2f start = projectPointOn2dPlane(point, Sa.getSupportCenter(), b1, b2);
+		start.translate(centerOnPlane2);
+		simplex.add(start);
+		dir = VecMath.negate(dir);
+		for (int i = 0; i < MAX_ITERATIONS; i++) {
+			point = Sa.supportPoint(dir);
+			Vector2f a = projectPointOn2dPlane(point, Sa.getSupportCenter(), b1, b2);
+			a.translate(centerOnPlane2);
+			direction = projectPointOn2dPlane(dir, new Vector3f(), b1, b2);
+			if (VecMath.dotproduct(a, direction) < 0) {
+				return false;
+			}
+			simplex3.add(point);
+			simplex.add(a);
+			if (GJK2Util.doSimplex(simplex, direction)) {
+				return true;
+			}
+			dir.set(direction.x * b1.x + direction.y * b2.x, direction.x * b1.y + direction.y * b2.y, direction.x * b1.z + direction.y * b2.z);
 		}
 
 		return false;
