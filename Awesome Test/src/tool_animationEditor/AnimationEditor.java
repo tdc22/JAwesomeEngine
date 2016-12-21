@@ -434,8 +434,7 @@ public class AnimationEditor extends StandardGame {
 		// try {
 		String input = null;
 		try {
-			input = FileLoader.readFile(
-					"src/tool_animationEditor/AnimationInput.txt");
+			input = FileLoader.readFile("src/tool_animationEditor/AnimationInput.txt");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

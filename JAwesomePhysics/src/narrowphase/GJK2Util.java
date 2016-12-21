@@ -81,7 +81,7 @@ public class GJK2Util {
 		}
 		return false;
 	}
-	
+
 	private static Vector2f edgeDirection(Vector2f edge, Vector2f origin) {
 		Vector2f a = new Vector2f(-edge.y, edge.x);
 		if (VecMath.dotproduct(a, origin) > 0)

@@ -38,7 +38,7 @@ public class Test extends StandardGame {
 		q1 = new Box(0, 0, 0, 1, 1, 1);
 		q2 = new Box(0, 4, 0, 1, 1, 1);
 		q3 = new Box(4, 4, 0, 1, 1, 1);
-		
+
 		q1.setRenderHints(false, true, false);
 		q2.setRenderHints(false, true, false);
 		q3.setRenderHints(false, true, false);
@@ -55,8 +55,8 @@ public class Test extends StandardGame {
 		c4.rotate(90, new Vector3f(1, 0, 0));
 		c4.rotate(90, new Vector3f(0, 1, 0));
 		c4.rotate(90, new Vector3f(1, 0, 0));
-		//c5.rotate(180, new Vector3f(1, 0, 0));
-		//c5.rotate(90, new Vector3f(0, 1, 0));
+		// c5.rotate(180, new Vector3f(1, 0, 0));
+		// c5.rotate(90, new Vector3f(0, 1, 0));
 
 		textureshader.addObject(q1);
 		textureshader.addObject(q2);
