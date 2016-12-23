@@ -262,7 +262,7 @@ public class RaycastTest extends StandardGame {
 			c.setRendered(false);
 		for (Circle c : projections3)
 			c.setRendered(false);
-//		int count = 0;
+		// int count = 0;
 
 		Set<RigidBody<Vector3f, ?, ?, ?>> broadphaseHits = space.raycastAllBroadphase(ray);
 		for (RigidBody<Vector3f, ?, ?, ?> o : broadphaseHits) {
@@ -291,15 +291,17 @@ public class RaycastTest extends StandardGame {
 					ray.getDirection().getZf() * b1.getXf() - ray.getDirection().getXf() * b1.getZf(),
 					ray.getDirection().getXf() * b1.getYf() - ray.getDirection().getYf() * b1.getXf());
 
-			// STEP 2: Project support center on plane and adjust base directions/pick start directions
+			// STEP 2: Project support center on plane and adjust base
+			// directions/pick start directions
 			float t0 = dotRay(Sa.getSupportCenter(), ray.getPosition(), ray.getDirection());
 			Vector3f hitOfPlane = VecMath.scale(ray.getDirection(), t0);
 			hitOfPlane.translate(ray.getPosition());
-			
+
 			Vector3f centerOnPlane = projectPointOnPlane(hitOfPlane, Sa.getSupportCenter(), ray.getDirection());
 			centerOnPlane = VecMath.subtraction(centerOnPlane, Sa.getSupportCenter());
 
-			// STEP 3: Calculate Support(centerOnPlane) and Support(centerOnPlane x normal)
+			// STEP 3: Calculate Support(centerOnPlane) and
+			// Support(centerOnPlane x normal)
 			List<Vector3f> simplex3 = new ArrayList<Vector3f>();
 			List<Vector2f> simplex = new ArrayList<Vector2f>();
 			Vector2f direction;
@@ -332,54 +334,46 @@ public class RaycastTest extends StandardGame {
 				dir.set(direction.x * b1.x + direction.y * b2.x, direction.x * b1.y + direction.y * b2.y,
 						direction.x * b1.z + direction.y * b2.z);
 			}
-			/*System.out.println(simplex.size());
-
-			if (simplex.size() == 3) {
-				Sphere pi = planeintersections.get(count);
-				pi.translateTo(simplex3.get(0));
-				pi.setRendered(true);
-
-				Sphere sf = supportvectors.get(count);
-				sf.translateTo(simplex3.get(1));
-				sf.setRendered(true);
-
-				Sphere cs = firstC.get(count);
-				cs.translateTo(simplex3.get(2));
-				cs.setRendered(true);
-
-				Circle c1 = projections.get(count * 3);
-				c1.translateTo(VecMath.scale(simplex.get(0), 20));
-				c1.translate(400, 300);
-				c1.setRendered(true);
-				Circle c2 = projections.get(count * 3 + 1);
-				c2.translateTo(VecMath.scale(simplex.get(1), 20));
-				c2.translate(400, 300);
-				c2.setRendered(true);
-				Circle c3 = projections.get(count * 3 + 2);
-				c3.translateTo(VecMath.scale(simplex.get(2), 20));
-				c3.translate(400, 300);
-				c3.setRendered(true);
-
-				Circle c4 = projections2.get(count * 3);
-				c4.translateTo(VecMath.scale(VecMath.addition(simplex.get(0), centerOnPlane2), 20));
-				c4.translate(400, 300);
-				c4.setRendered(true);
-				Circle c5 = projections2.get(count * 3 + 1);
-				c5.translateTo(VecMath.scale(VecMath.addition(simplex.get(1), centerOnPlane2), 20));
-				c5.translate(400, 300);
-				c5.setRendered(true);
-				Circle c6 = projections2.get(count * 3 + 2);
-				c6.translateTo(VecMath.scale(VecMath.addition(simplex.get(2), centerOnPlane2), 20));
-				c6.translate(400, 300);
-				c6.setRendered(true);
-
-				Circle c7 = projections3.get(count);
-				c7.translateTo(VecMath.scale(centerOnPlane2, 20));
-				c7.translate(400, 300);
-				c7.setRendered(true);
-			}
-
-			count++;*/
+			/*
+			 * System.out.println(simplex.size());
+			 * 
+			 * if (simplex.size() == 3) { Sphere pi =
+			 * planeintersections.get(count); pi.translateTo(simplex3.get(0));
+			 * pi.setRendered(true);
+			 * 
+			 * Sphere sf = supportvectors.get(count);
+			 * sf.translateTo(simplex3.get(1)); sf.setRendered(true);
+			 * 
+			 * Sphere cs = firstC.get(count); cs.translateTo(simplex3.get(2));
+			 * cs.setRendered(true);
+			 * 
+			 * Circle c1 = projections.get(count * 3);
+			 * c1.translateTo(VecMath.scale(simplex.get(0), 20));
+			 * c1.translate(400, 300); c1.setRendered(true); Circle c2 =
+			 * projections.get(count * 3 + 1);
+			 * c2.translateTo(VecMath.scale(simplex.get(1), 20));
+			 * c2.translate(400, 300); c2.setRendered(true); Circle c3 =
+			 * projections.get(count * 3 + 2);
+			 * c3.translateTo(VecMath.scale(simplex.get(2), 20));
+			 * c3.translate(400, 300); c3.setRendered(true);
+			 * 
+			 * Circle c4 = projections2.get(count * 3);
+			 * c4.translateTo(VecMath.scale(VecMath.addition(simplex.get(0),
+			 * centerOnPlane2), 20)); c4.translate(400, 300);
+			 * c4.setRendered(true); Circle c5 = projections2.get(count * 3 +
+			 * 1); c5.translateTo(VecMath.scale(VecMath.addition(simplex.get(1),
+			 * centerOnPlane2), 20)); c5.translate(400, 300);
+			 * c5.setRendered(true); Circle c6 = projections2.get(count * 3 +
+			 * 2); c6.translateTo(VecMath.scale(VecMath.addition(simplex.get(2),
+			 * centerOnPlane2), 20)); c6.translate(400, 300);
+			 * c6.setRendered(true);
+			 * 
+			 * Circle c7 = projections3.get(count);
+			 * c7.translateTo(VecMath.scale(centerOnPlane2, 20));
+			 * c7.translate(400, 300); c7.setRendered(true); }
+			 * 
+			 * count++;
+			 */
 		}
 
 		Set<Pair<RigidBody<Vector3f, ?, ?, ?>, Vector3f>> hits = space.raycastAll(ray);
@@ -396,11 +390,13 @@ public class RaycastTest extends StandardGame {
 			if (o.equals(rb4))
 				s4.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 
-			/*Sphere hitmarker = hitmarkers.get(count);
-			hitmarker.translateTo(hit.getSecond());
-			hitmarker.setRendered(true);*/
+			/*
+			 * Sphere hitmarker = hitmarkers.get(count);
+			 * hitmarker.translateTo(hit.getSecond());
+			 * hitmarker.setRendered(true);
+			 */
 
-//			count++;
+			// count++;
 		}
 
 		debugger.update(fps, 0, 0);
