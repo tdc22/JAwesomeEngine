@@ -8,10 +8,13 @@ import vector.Vector3f;
 
 public class GJK2Util {
 	public static boolean doSimplex(List<Vector2f> simplex, Vector2f direction) {
+		return doSimplexRegion(simplex, direction) == 0;
+	}
+	
+	public static int doSimplexRegion(List<Vector2f> simplex, Vector2f direction) {
 		int simplexsize = simplex.size();
 		// Line
 		if (simplexsize == 2) {
-
 			Vector2f A = simplex.get(1);
 			Vector2f B = simplex.get(0);
 			Vector2f AB = VecMath.subtraction(B, A);
@@ -20,10 +23,12 @@ public class GJK2Util {
 			if (VecMath.dotproduct(AB, AO) > 0) {
 				// Region 1
 				direction.set(edgeDirection(AB, AO));
+				return 1;
 			} else {
 				// Region 2
 				simplex.remove(1);
 				direction.set(AO);
+				return 2;
 			}
 		}
 		// Triangle
@@ -44,17 +49,20 @@ public class GJK2Util {
 					// Region 1
 					simplex.remove(1);
 					direction.set(edgeDirection(AC, AO));
+					return 3;
 				} else {
 					// *
 					if (VecMath.dotproduct(AB, AO) > 0) {
 						// Region 4
 						simplex.remove(0);
 						direction.set(edgeDirection(AB, AO));
+						return 4;
 					} else {
 						// Region 5
 						simplex.remove(2);
 						simplex.remove(1);
 						direction.set(AO);
+						return 5;
 					}
 				}
 			} else {
@@ -67,26 +75,30 @@ public class GJK2Util {
 						// Region 4
 						simplex.remove(0);
 						direction.set(edgeDirection(AB, AO));
+						return 4;
 					} else {
 						// Region 5
 						simplex.remove(2);
 						simplex.remove(1);
 						direction.set(AO);
+						return 5;
 					}
 				} else {
 					// Center
-					return true;
+					return 0;
 				}
 			}
 		}
-		return false;
+		return 6;
 	}
 
+	private final static Vector2f tempEdge = new Vector2f();
+	
 	private static Vector2f edgeDirection(Vector2f edge, Vector2f origin) {
-		Vector2f a = new Vector2f(-edge.y, edge.x);
-		if (VecMath.dotproduct(a, origin) > 0)
-			return a;
-		a.negate();
-		return a;
+		tempEdge.set(-edge.y, edge.x);
+		if (VecMath.dotproduct(tempEdge, origin) > 0)
+			return tempEdge;
+		tempEdge.negate();
+		return tempEdge;
 	}
 }

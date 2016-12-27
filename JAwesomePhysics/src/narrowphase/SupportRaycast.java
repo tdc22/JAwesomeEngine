@@ -17,6 +17,7 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 	private final static float MAX_ITERATIONS_HIT = 20;
 	private final Vector3f zero = new Vector3f();
 	private final List<Vector2f> simplex = new ArrayList<Vector2f>();
+	private final List<Vector3f> simplex3 = new ArrayList<Vector3f>();
 
 	@Override
 	public boolean isColliding(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
@@ -45,13 +46,16 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		Vector2f direction;
 
 		Vector2f centerOnPlane2 = projectPointOn2dPlane(hitOfPlane, Sa.getSupportCenter(), b1, b2);
+		centerOnPlane2.negate();
 		simplex.clear();
+		simplex3.clear();
 
 		Vector3f dir = centerOnPlane;
 		Vector3f point = Sa.supportPoint(dir);
 		Vector2f start = projectPointOn2dPlane(point, Sa.getSupportCenter(), b1, b2);
 		start.translate(centerOnPlane2);
 		simplex.add(start);
+		simplex3.add(point);
 		dir = VecMath.negate(dir);
 
 		for (int i = 0; i < MAX_ITERATIONS; i++) {
@@ -63,8 +67,23 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 				return false;
 			}
 			simplex.add(a);
-			if (GJK2Util.doSimplex(simplex, direction)) {
+			simplex3.add(point);
+			int region = GJK2Util.doSimplexRegion(simplex, direction);
+			if (region == 0) {
 				return true;
+			}
+			else {
+				switch (region) {
+				case 5:
+					simplex3.remove(2);
+				case 2:
+				case 3:
+					simplex3.remove(1);
+					break;
+				case 4:
+					simplex3.remove(0);
+					break;
+				}
 			}
 			unprojectAndSet(direction, dir);
 		}
@@ -101,11 +120,30 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 
 	@Override
 	public Vector3f computeCollision(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
-		// TODO: WRONG, can't just unproject: either support function or store
+		/*// TODO: WRONG, can't just unproject: either support function or store
 		// directly in part 1
 		unprojectAndSet(simplex.get(0), a);
 		unprojectAndSet(simplex.get(1), b);
 		unprojectAndSet(simplex.get(2), c);
+		
+		// TODO: check in debugger!!!
+		a.set(Sa.supportPoint(a));
+		b.set(Sa.supportPoint(b));
+		c.set(Sa.supportPoint(c));
+		
+		System.out.println("ABC2: ");
+		System.out.println(simplex3.get(0) + "; " + simplex3.get(1)
+				+ "; " + simplex3.get(2));
+		System.out.println(a + "; " + b + "; " + c);*/
+		
+		Vector3f a = simplex3.get(0);
+		Vector3f b = simplex3.get(1);
+		Vector3f c = simplex3.get(2);
+		
+		System.out.println("ABC1: ");
+		System.out.println(simplex3.get(0) + "; " + simplex3.get(1)
+				+ "; " + simplex3.get(2));
+		System.out.println(a + "; " + b + "; " + c);
 
 		for (int i = 0; i < MAX_ITERATIONS_HIT; i++) {
 
@@ -113,5 +151,4 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 
 		return new Vector3f();
 	}
-
 }

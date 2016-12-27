@@ -5,7 +5,7 @@ import objects.SupportMap;
 import vector.Vector3f;
 
 public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
-	private final int MAX_ITERATIONS = 80;
+	private final int MAX_ITERATIONS = 40;
 
 	public GJK(ManifoldGenerator<Vector3f> manifoldgeneration) {
 		super(manifoldgeneration, 4);
@@ -209,6 +209,8 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 		}
 		return false;
 	}
+	
+	private final Vector3f tempEdge = new Vector3f();
 
 	private Vector3f edgeDirection(Vector3f edge, Vector3f origin) {
 		// return VecMath.crossproduct(VecMath.crossproduct(edge, origin),
@@ -216,8 +218,9 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 		float eXoYeYoX = edge.x * origin.y - edge.y * origin.x;
 		float eYoZeZoY = edge.y * origin.z - edge.z * origin.y;
 		float eZoXeXeZ = edge.z * origin.x - edge.x * origin.z;
-		return new Vector3f((eZoXeXeZ) * edge.z - (eXoYeYoX) * edge.y, (eXoYeYoX) * edge.x - (eYoZeZoY) * edge.z,
+		tempEdge.set((eZoXeXeZ) * edge.z - (eXoYeYoX) * edge.y, (eXoYeYoX) * edge.x - (eYoZeZoY) * edge.z,
 				(eYoZeZoY) * edge.y - (eZoXeXeZ) * edge.x);
+		return tempEdge;
 	}
 
 	final Vector3f startdirection = new Vector3f(1, 1, 1);

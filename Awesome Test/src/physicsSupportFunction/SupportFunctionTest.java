@@ -14,12 +14,15 @@ import loader.FontLoader;
 import loader.InputLoader;
 import loader.ShaderLoader;
 import manifold.SimpleManifoldManager;
+import misc.HalfSphere;
+import misc.HalfSphereShape;
 import narrowphase.EmptyManifoldGenerator;
 import narrowphase.GJK;
 import narrowphase.SupportRaycast;
 import objects.RigidBody3;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
+import physicsRaycast.RaycastTest;
 import positionalcorrection.NullCorrection;
 import resolution.NullResolution;
 import shader.Shader;
@@ -37,10 +40,11 @@ public class SupportFunctionTest extends StandardGame {
 	Sphere s1;
 	Cylinder c1;
 	Capsule ca1;
-	SupportObject so1, so2, so3, so4, so5;
-	SupportDifferenceObject support1, support2, support3, support4;
+	HalfSphere hs;
+	SupportObject so1, so2, so3, so4, so5, so6;
+	SupportDifferenceObject support1, support2, support3, support4, support5;
 	// DirectionRenderer dirrenderer;
-	RigidBody3 rb1, rb2, rb3, rb4, rb5;
+	RigidBody3 rb1, rb2, rb3, rb4, rb5, rb6;
 	Debugger debugger;
 	InputEvent toggleMouseBind;
 
@@ -94,6 +98,11 @@ public class SupportFunctionTest extends StandardGame {
 		rb5 = new RigidBody3(PhysicsShapeCreator.create(ca1));
 		space.addRigidBody(ca1, rb5);
 		defaultshader.addObject(ca1);
+		
+		hs = new HalfSphere(0, -10, 0, 1, 36, 36);
+		rb6 = new RigidBody3(new HalfSphereShape(0, -10, 0, 1));
+		space.addRigidBody(hs, rb6);
+		defaultshader.addObject(hs);
 
 		// dirrenderer = new DirectionRenderer();
 		// addObject(dirrenderer);
@@ -103,22 +112,26 @@ public class SupportFunctionTest extends StandardGame {
 		so3 = new SupportObject(s1, rb3);
 		so4 = new SupportObject(c1, rb4);
 		so5 = new SupportObject(ca1, rb5);
+		so6 = new SupportObject(hs, rb6);
 
 		defaultshader.addObject(so1);
 		defaultshader.addObject(so2);
 		defaultshader.addObject(so3);
 		defaultshader.addObject(so4);
 		defaultshader.addObject(so5);
+		defaultshader.addObject(so6);
 
 		support1 = new SupportDifferenceObject(b1, rb1, b2, rb2);
 		support2 = new SupportDifferenceObject(b1, rb1, s1, rb3);
 		support3 = new SupportDifferenceObject(b1, rb1, c1, rb4);
 		support4 = new SupportDifferenceObject(b1, rb1, ca1, rb5);
+		support5 = new SupportDifferenceObject(b1, rb1, hs, rb6);
 
 		defaultshader.addObject(support1);
 		defaultshader.addObject(support2);
 		defaultshader.addObject(support3);
 		defaultshader.addObject(support4);
+		defaultshader.addObject(support5);
 
 		// addObject(new ResultTetrahedron(new ArrayList<Vector3f>() {{add(new
 		// Vector3f(2,5,2)); add(new Vector3f(8,5,2)); add(new Vector3f(2,5,8));
@@ -195,12 +208,14 @@ public class SupportFunctionTest extends StandardGame {
 			so3.updateShape();
 			so4.updateShape();
 			so5.updateShape();
+			so6.updateShape();
 
 			// dirrenderer.setDirections(support1.updateShape());
 			support1.updateShape();
 			support2.updateShape();
 			support3.updateShape();
 			support4.updateShape();
+			support5.updateShape();
 			// support2.updateShape();
 		}
 

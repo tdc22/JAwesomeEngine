@@ -1,4 +1,4 @@
-package miscTests;
+package misc;
 
 import math.QuatMath;
 import matrix.Matrix3f;

@@ -1,4 +1,4 @@
-package miscTests;
+package misc;
 
 import constraints.GaussSeidel;
 import constraints.JacobiMethod;

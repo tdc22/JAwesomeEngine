@@ -15,6 +15,8 @@ import input.KeyInput;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
+import misc.HalfSphere;
+import misc.HalfSphereShape;
 import objects.RigidBody3;
 import objects.ShapedObject3;
 import objects.SupportMap;
@@ -99,14 +101,14 @@ public class GJKDebugger extends StandardGame {
 				// Region 1
 				direction = edgeDirection(AB, AO);
 				// System.out.print(AB.toString() + "; " + AO.toString());
-				// System.out.print("line region 1");
+				System.out.print("line region 1");
 			} else {
 				// Region 2
 				simplex.remove(1);
 				direction = AO;
-				// System.out.print("line region 2");
+				System.out.print("line region 2");
 			}
-			// System.out.println(" " + A + "; " + B + "; " + direction);
+			System.out.println(" " + A + "; " + B + "; " + direction);
 		}
 		// Triangle
 		if (simplexsize == 3) {
@@ -124,20 +126,20 @@ public class GJKDebugger extends StandardGame {
 					// Region 1
 					simplex.remove(1);
 					direction = edgeDirection(AC, AO);
-					// System.out.print("r 1");
+					System.out.print("r 1");
 				} else {
 					// *
 					if (VecMath.dotproduct(AB, AO) > 0) {
 						// Region 4
 						simplex.remove(0);
 						direction = edgeDirection(AB, AO);
-						// System.out.print("r 4");
+						System.out.print("r 4");
 					} else {
 						// Region 5
 						simplex.remove(2);
 						simplex.remove(1);
 						direction = AO;
-						// System.out.print("r 5");
+						System.out.print("r 5");
 					}
 				}
 			} else {
@@ -147,26 +149,26 @@ public class GJKDebugger extends StandardGame {
 						// Region 4
 						simplex.remove(0);
 						direction = edgeDirection(AB, AO);
-						// System.out.print("r 4(2)");
+						System.out.print("r 4(2)");
 					} else {
 						// Region 5
 						simplex.remove(2);
 						simplex.remove(1);
 						direction = AO;
-						// System.out.print("r 5(2)");
+						System.out.print("r 5(2)");
 					}
 				} else {
 					if (VecMath.dotproduct(ABC, AO) >= 0) {
 						// Region 2
 						direction = ABC;
-						// System.out.print("r 2");
+						System.out.print("r 2");
 					} else {
 						// Region 3
 						Vector3f temp = simplex.get(0);
 						simplex.set(0, simplex.get(1));
 						simplex.set(1, temp);
 						direction = VecMath.negate(ABC);
-						// System.out.print("r 3");
+						System.out.print("r 3");
 					}
 				}
 			}
@@ -327,13 +329,13 @@ public class GJKDebugger extends StandardGame {
 		// Box s1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
 		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
 
-		Box b1 = new Box(0.0f, -3.513634f, 0.0f, 0.5f, 0.5f, 0.5f);
-		Quaternionf falsecase = new Quaternionf(0.9998758, -0.011145344, -2.5039499E-5, 0.011145378);
+		Box b1 = new Box(-9.000001f, 11.0f, 0.0f, 0.5f, 0.5f, 0.5f);
+		Quaternionf falsecase = new Quaternionf();
 		b1.setRotation(falsecase);
 		rb1 = new RigidBody3(PhysicsShapeCreator.create(b1));
 
-		Box s1 = new Box(0, -5, 0, 10, 1, 10);
-		rb2 = new RigidBody3(PhysicsShapeCreator.create(s1));
+		Sphere hs = new Sphere(-10, 10, 0, 1, 36, 36);
+		rb2 = new RigidBody3(PhysicsShapeCreator.create(hs));
 
 		newPoint = new Sphere(0, 0, 0, 0.05f, 36, 36);
 		newPoint.setColor(Color.CYAN);
@@ -347,14 +349,14 @@ public class GJKDebugger extends StandardGame {
 		rb1.setRotation(b1.getRotation());
 		rb1.setTranslation(b1.getTranslation());
 
-		rb2.setRotation(s1.getRotation());
-		rb2.setTranslation(s1.getTranslation());
+		rb2.setRotation(hs.getRotation());
+		rb2.setTranslation(hs.getTranslation());
 
 		rb1.updateInverseRotation();
 		rb2.updateInverseRotation();
 
 		// Visualize the support functions
-		support1 = new SupportDifferenceObject(b1, rb1, s1, rb2);
+		support1 = new SupportDifferenceObject(b1, rb1, hs, rb2);
 		defaultshader.addObject(support1);
 
 		initGJK();

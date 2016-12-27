@@ -1,4 +1,4 @@
-package miscTests;
+package misc;
 
 import matrix.Matrix4f;
 import vector.Vector3f;

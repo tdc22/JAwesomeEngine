@@ -20,6 +20,8 @@ import loader.InputLoader;
 import loader.ShaderLoader;
 import manifold.CollisionManifold;
 import manifold.SimpleManifoldManager;
+import misc.HalfSphere;
+import misc.HalfSphereShape;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import narrowphase.SupportRaycast;
@@ -28,6 +30,7 @@ import objects.RigidBody3;
 import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
+import physicsRaycast.RaycastTest;
 import positionalcorrection.NullCorrection;
 import resolution.NullResolution;
 import shader.Shader;
@@ -45,8 +48,9 @@ public class CollisionDetectionTest extends StandardGame {
 	Box b1, b2, b3;
 	Sphere sp1;
 	Cylinder c1;
-	Shader defaultshader, s1, s2, s3, s4, s5;
-	RigidBody3 rb1, rb2, rb3, rb4, rb5;
+	HalfSphere hs;
+	Shader defaultshader, s1, s2, s3, s4, s5, s6;
+	RigidBody3 rb1, rb2, rb3, rb4, rb5, rb6;
 	Debugger debugger;
 	PhysicsDebug physicsdebug;
 	List<ManifoldVisualization> manifolds;
@@ -75,18 +79,21 @@ public class CollisionDetectionTest extends StandardGame {
 		s3 = new Shader(shaderprogram);
 		s4 = new Shader(shaderprogram);
 		s5 = new Shader(shaderprogram);
+		s6 = new Shader(shaderprogram);
 
 		s1.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s2.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s3.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s4.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s5.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
+		s6.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 
 		addShader(s1);
 		addShader(s2);
 		addShader(s3);
 		addShader(s4);
 		addShader(s5);
+		addShader(s6);
 
 		manifolds = new ArrayList<ManifoldVisualization>();
 
@@ -119,6 +126,11 @@ public class CollisionDetectionTest extends StandardGame {
 		rb5 = new RigidBody3(PhysicsShapeCreator.create(c1));
 		space.addRigidBody(c1, rb5);
 		s5.addObject(c1);
+		
+		hs = new HalfSphere(10, -10, 0, 1, 36, 36);
+		rb6 = new RigidBody3(new HalfSphereShape(10, -10, 0, 1));
+		space.addRigidBody(hs, rb6);
+		s6.addObject(hs);
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
@@ -198,6 +210,7 @@ public class CollisionDetectionTest extends StandardGame {
 		s3.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s4.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s5.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
+		s6.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 
 		Set<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>> overlaps = space.getOverlaps();
 		for (Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>> o : overlaps) {
@@ -211,6 +224,8 @@ public class CollisionDetectionTest extends StandardGame {
 				s4.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 			if (o.contains(rb5))
 				s5.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
+			if (o.contains(rb6))
+				s6.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 		}
 
 		for (CollisionManifold<Vector3f> cm : space.getCollisionManifolds()) {
@@ -228,7 +243,11 @@ public class CollisionDetectionTest extends StandardGame {
 				s4.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 			if (o.contains(rb5))
 				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
+			if (o.contains(rb6))
+				s6.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 		}
+		
+		//System.out.println(b1.getTranslation() + "; " + hs.getTranslation());
 
 		debugger.update(fps, 0, 0);
 		cam.update(delta);

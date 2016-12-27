@@ -1,4 +1,4 @@
-package miscTests;
+package misc;
 
 import math.ComplexMath;
 import quaternion.Complexf;
