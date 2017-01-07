@@ -44,22 +44,21 @@ public class HalfSphereShape extends CollisionShape3 {
 			return false;
 		}
 	}
-	
+
 	float radius;
-	
+
 	public HalfSphereShape(float x, float y, float z, float radius) {
 		super();
 		translate(x, y, z);
 		this.radius = radius;
 		init();
 	}
-	
+
 	@Override
-	public SupportCalculator<Vector3f> createSupportCalculator(
-			CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
+	public SupportCalculator<Vector3f> createSupportCalculator(CollisionShape<Vector3f, Quaternionf, Quaternionf> cs) {
 		return new HalfSphereSupport(cs);
 	}
-	
+
 	private void init() {
 		float longest = radius;
 		setAABB(new Vector3f(-longest, -longest, -longest), new Vector3f(longest, longest, longest));

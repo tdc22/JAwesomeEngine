@@ -10,7 +10,7 @@ public class GJK2Util {
 	public static boolean doSimplex(List<Vector2f> simplex, Vector2f direction) {
 		return doSimplexRegion(simplex, direction) == 0;
 	}
-	
+
 	public static int doSimplexRegion(List<Vector2f> simplex, Vector2f direction) {
 		int simplexsize = simplex.size();
 		// Line
@@ -93,7 +93,7 @@ public class GJK2Util {
 	}
 
 	private final static Vector2f tempEdge = new Vector2f();
-	
+
 	private static Vector2f edgeDirection(Vector2f edge, Vector2f origin) {
 		tempEdge.set(-edge.y, edge.x);
 		if (VecMath.dotproduct(tempEdge, origin) > 0)

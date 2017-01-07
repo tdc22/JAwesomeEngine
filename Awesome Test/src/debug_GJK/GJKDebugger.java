@@ -15,8 +15,6 @@ import input.KeyInput;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import math.VecMath;
-import misc.HalfSphere;
-import misc.HalfSphereShape;
 import objects.RigidBody3;
 import objects.ShapedObject3;
 import objects.SupportMap;

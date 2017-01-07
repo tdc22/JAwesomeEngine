@@ -22,7 +22,6 @@ import narrowphase.SupportRaycast;
 import objects.RigidBody3;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
-import physicsRaycast.RaycastTest;
 import positionalcorrection.NullCorrection;
 import resolution.NullResolution;
 import shader.Shader;
@@ -98,7 +97,7 @@ public class SupportFunctionTest extends StandardGame {
 		rb5 = new RigidBody3(PhysicsShapeCreator.create(ca1));
 		space.addRigidBody(ca1, rb5);
 		defaultshader.addObject(ca1);
-		
+
 		hs = new HalfSphere(0, -10, 0, 1, 36, 36);
 		rb6 = new RigidBody3(new HalfSphereShape(0, -10, 0, 1));
 		space.addRigidBody(hs, rb6);

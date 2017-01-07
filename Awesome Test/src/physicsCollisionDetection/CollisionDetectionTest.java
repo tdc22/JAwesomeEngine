@@ -30,7 +30,6 @@ import objects.RigidBody3;
 import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
-import physicsRaycast.RaycastTest;
 import positionalcorrection.NullCorrection;
 import resolution.NullResolution;
 import shader.Shader;
@@ -126,7 +125,7 @@ public class CollisionDetectionTest extends StandardGame {
 		rb5 = new RigidBody3(PhysicsShapeCreator.create(c1));
 		space.addRigidBody(c1, rb5);
 		s5.addObject(c1);
-		
+
 		hs = new HalfSphere(10, -10, 0, 1, 36, 36);
 		rb6 = new RigidBody3(new HalfSphereShape(10, -10, 0, 1));
 		space.addRigidBody(hs, rb6);
@@ -246,8 +245,8 @@ public class CollisionDetectionTest extends StandardGame {
 			if (o.contains(rb6))
 				s6.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 		}
-		
-		//System.out.println(b1.getTranslation() + "; " + hs.getTranslation());
+
+		// System.out.println(b1.getTranslation() + "; " + hs.getTranslation());
 
 		debugger.update(fps, 0, 0);
 		cam.update(delta);

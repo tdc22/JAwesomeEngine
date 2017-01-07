@@ -71,8 +71,7 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 			int region = GJK2Util.doSimplexRegion(simplex, direction);
 			if (region == 0) {
 				return true;
-			}
-			else {
+			} else {
 				switch (region) {
 				case 5:
 					simplex3.remove(2);
@@ -120,29 +119,26 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 
 	@Override
 	public Vector3f computeCollision(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
-		/*// TODO: WRONG, can't just unproject: either support function or store
-		// directly in part 1
-		unprojectAndSet(simplex.get(0), a);
-		unprojectAndSet(simplex.get(1), b);
-		unprojectAndSet(simplex.get(2), c);
-		
-		// TODO: check in debugger!!!
-		a.set(Sa.supportPoint(a));
-		b.set(Sa.supportPoint(b));
-		c.set(Sa.supportPoint(c));
-		
-		System.out.println("ABC2: ");
-		System.out.println(simplex3.get(0) + "; " + simplex3.get(1)
-				+ "; " + simplex3.get(2));
-		System.out.println(a + "; " + b + "; " + c);*/
-		
+		/*
+		 * // TODO: WRONG, can't just unproject: either support function or
+		 * store // directly in part 1 unprojectAndSet(simplex.get(0), a);
+		 * unprojectAndSet(simplex.get(1), b); unprojectAndSet(simplex.get(2),
+		 * c);
+		 * 
+		 * // TODO: check in debugger!!! a.set(Sa.supportPoint(a));
+		 * b.set(Sa.supportPoint(b)); c.set(Sa.supportPoint(c));
+		 * 
+		 * System.out.println("ABC2: "); System.out.println(simplex3.get(0) +
+		 * "; " + simplex3.get(1) + "; " + simplex3.get(2));
+		 * System.out.println(a + "; " + b + "; " + c);
+		 */
+
 		Vector3f a = simplex3.get(0);
 		Vector3f b = simplex3.get(1);
 		Vector3f c = simplex3.get(2);
-		
+
 		System.out.println("ABC1: ");
-		System.out.println(simplex3.get(0) + "; " + simplex3.get(1)
-				+ "; " + simplex3.get(2));
+		System.out.println(simplex3.get(0) + "; " + simplex3.get(1) + "; " + simplex3.get(2));
 		System.out.println(a + "; " + b + "; " + c);
 
 		for (int i = 0; i < MAX_ITERATIONS_HIT; i++) {

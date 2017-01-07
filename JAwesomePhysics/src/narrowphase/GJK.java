@@ -209,7 +209,7 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 		}
 		return false;
 	}
-	
+
 	private final Vector3f tempEdge = new Vector3f();
 
 	private Vector3f edgeDirection(Vector3f edge, Vector3f origin) {
