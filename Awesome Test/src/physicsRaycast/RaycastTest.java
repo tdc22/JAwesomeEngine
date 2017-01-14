@@ -11,7 +11,9 @@ import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
 import gui.Font;
+import input.Input;
 import input.InputEvent;
+import input.KeyInput;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.ShaderLoader;
@@ -157,6 +159,13 @@ public class RaycastTest extends StandardGame {
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
 		physicsdebug = new PhysicsDebug(inputs, font, space, defaultshader);
 
+		increaseIterations = new InputEvent("IncreaseIterations",
+				new Input(Input.KEYBOARD_EVENT, "2", KeyInput.KEY_PRESSED));
+		decreaseIterations = new InputEvent("DecreaseIterations",
+				new Input(Input.KEYBOARD_EVENT, "1", KeyInput.KEY_PRESSED));
+		inputs.addEvent(increaseIterations);
+		inputs.addEvent(decreaseIterations);
+
 		ray = new Ray3(cam.getTranslation(), cam.getDirection());
 
 		hitmarkers = new ArrayList<Sphere>();
@@ -227,7 +236,6 @@ public class RaycastTest extends StandardGame {
 		debugger.begin();
 		physicsdebug.render3d();
 		render3dLayer();
-
 	}
 
 	@Override
@@ -242,7 +250,7 @@ public class RaycastTest extends StandardGame {
 	}
 
 	Vector3f base1, base2;
-	int maxHitDetectionIterations = 5;
+	int maxHitDetectionIterations = 0;
 
 	@Override
 	public void update(int delta) {
@@ -263,6 +271,15 @@ public class RaycastTest extends StandardGame {
 		}
 		if (inputs.isKeyDown("E")) {
 			cam.translate(0, -0.002f * delta, 0);
+		}
+
+		if (increaseIterations.isActive()) {
+			maxHitDetectionIterations++;
+			System.out.println("Increased Iterations to: " + maxHitDetectionIterations);
+		}
+		if (decreaseIterations.isActive() && maxHitDetectionIterations > 0) {
+			maxHitDetectionIterations--;
+			System.out.println("Decreased Iterations to: " + maxHitDetectionIterations);
 		}
 
 		for (Sphere s : planeintersections)
