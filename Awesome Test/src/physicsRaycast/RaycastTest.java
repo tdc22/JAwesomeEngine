@@ -105,9 +105,9 @@ public class RaycastTest extends StandardGame {
 		s4.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s5.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		hitmarkershader.addArgument("u_color", new Vector4f(0f, 1f, 0f, 1f));
-		planeintersectionshader.addArgument("u_color", new Vector4f(0f, 0f, 1f, 1f));
-		supportvectorshader.addArgument("u_color", new Vector4f(1f, 1f, 0f, 1f));
-		cshader.addArgument("u_color", new Vector4f(1f, 0f, 1f, 1f));
+		planeintersectionshader.addArgument("u_color", new Vector4f(0f, 0f, 1f, 1f)); // Blue
+		supportvectorshader.addArgument("u_color", new Vector4f(1f, 1f, 0f, 1f)); // Yellow
+		cshader.addArgument("u_color", new Vector4f(1f, 0f, 1f, 1f)); // Pink
 		circleshader.addArgument("u_color", new Vector4f(0f, 1f, 1f, 1f));
 		circleshader2.addArgument("u_color", new Vector4f(0.6f, 0.6f, 0.6f, 1f));
 		circleshader3.addArgument("u_color", new Vector4f(0, 1, 0, 1f));
@@ -341,34 +341,34 @@ public class RaycastTest extends StandardGame {
 			List<Vector3f> simplex3 = new ArrayList<Vector3f>();
 			Vector2f direction;
 
-			Vector2f centerOnPlane2 = projectPointOn2dPlane(hitOfPlane, Sa.getSupportCenter(), base1, base2);
-			centerOnPlane2.negate();
+			Vector2f hitOnPlane = projectPointOn2dPlane(hitOfPlane, Sa.getSupportCenter(), base1, base2);
+			hitOnPlane.negate();
 			simplex.clear();
 			simplex3.clear();
 
 			Vector3f dir = centerOnPlane;
-			System.out.println("-1: " + dir);
+//			System.out.println("-1: " + dir);
 			Vector3f point = Sa.supportPoint(dir);
 			Vector2f start = projectPointOn2dPlane(point, Sa.getSupportCenter(), base1, base2);
-			start.translate(centerOnPlane2);
+			start.translate(hitOnPlane);
 			simplex.add(start);
 			simplex3.add(point);
 			dir = VecMath.negate(dir);
 			for (int i = 0; i < MAX_ITERATIONS; i++) {
-				System.out.println(i + "; " + dir);
+//				System.out.println(i + "; " + dir);
 				point = Sa.supportPoint(dir);
 				Vector2f a = projectPointOn2dPlane(point, Sa.getSupportCenter(), base1, base2);
-				a.translate(centerOnPlane2);
+				a.translate(hitOnPlane);
 				direction = projectPointOn2dPlane(dir, new Vector3f(), base1, base2);
 				if (VecMath.dotproduct(a, direction) < 0) {
-					System.out.println("Miss");
+//					System.out.println("Miss");
 					break;
 				}
 				simplex.add(a);
 				simplex3.add(point);
 				int region = GJK2Util.doSimplexRegion(simplex, direction);
 				if (region == 0) {
-					System.out.println("Hit");
+//					System.out.println("Hit");
 					break;
 				} else {
 					switch (region) {
@@ -382,7 +382,7 @@ public class RaycastTest extends StandardGame {
 						simplex3.remove(0);
 						break;
 					}
-					System.out.println(region);
+//					System.out.println(region);
 				}
 				dir.set(direction.x * base1.x + direction.y * base2.x, direction.x * base1.y + direction.y * base2.y,
 						direction.x * base1.z + direction.y * base2.z);
@@ -400,9 +400,13 @@ public class RaycastTest extends StandardGame {
 				Vector2f projA = projectPointOn2dPlane(a, Sa.getSupportCenter(), base1, base2);
 				Vector2f projB = projectPointOn2dPlane(b, Sa.getSupportCenter(), base1, base2);
 				Vector2f projC = projectPointOn2dPlane(c, Sa.getSupportCenter(), base1, base2);
+				
+				projA.negate();
+				projB.negate();
+				projC.negate();
 
 				System.out.println("ABC2: ");
-				System.out.println(simplex3.get(0) + "; " + simplex3.get(1) + "; " + simplex3.get(2));
+//				System.out.println(simplex3.get(0) + "; " + simplex3.get(1) + "; " + simplex3.get(2));
 				System.out.println(a + "; " + b + "; " + c);
 
 				for (int i = 0; i < maxHitDetectionIterations; i++) {
@@ -411,15 +415,17 @@ public class RaycastTest extends StandardGame {
 					Vector3f n = VecMath.computeNormal(a, b, c);
 					if (VecMath.dotproduct(n, ray.getDirection()) > 0)
 						n.negate();
-					System.out.println(i + " n: " + n);
+//					System.out.println(i + " n: " + n);
 					Vector3f p = Sa.supportPoint(n);
 
 					if (VecMath.dotproduct(p, n) - VecMath.dotproduct(n, a) < EPSILON) {
 						System.out.println("DONE");
+						break;
 					}
 
 					Vector2f q = projectPointOn2dPlane(p, Sa.getSupportCenter(), base1, base2);
-					Vector2f PO = VecMath.subtraction(centerOnPlane2, q);
+					q.negate();
+					Vector2f PO = VecMath.subtraction(hitOnPlane, q);
 					Vector2f PA = VecMath.subtraction(projA, q);
 					Vector2f PB = VecMath.subtraction(projB, q);
 					if (VecMath.dotproduct(PO, PA) > 0 && VecMath.dotproduct(PO, PB) > 0) {
@@ -445,7 +451,7 @@ public class RaycastTest extends StandardGame {
 				}
 
 				Circle c7 = projections3.get(count);
-				c7.translateTo(VecMath.scale(centerOnPlane2, 20));
+				c7.translateTo(VecMath.scale(hitOnPlane, 20));
 				c7.translate(400, 300);
 				// c7.setRendered(true);
 
@@ -462,9 +468,9 @@ public class RaycastTest extends StandardGame {
 				c3.translate(400, 300);
 				// c3.setRendered(true);
 
-				Sphere s1 = planeintersections.get(count);
-				Sphere s2 = supportvectors.get(count);
-				Sphere s3 = firstC.get(count);
+				Sphere s1 = planeintersections.get(count); // Blue
+				Sphere s2 = supportvectors.get(count); // Yellow
+				Sphere s3 = firstC.get(count); // Pink
 
 				s1.translateTo(a);
 				s2.translateTo(b);
