@@ -137,9 +137,10 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		Vector3f b = simplex3.get(1);
 		Vector3f c = simplex3.get(2);
 
-		System.out.println("ABC1: ");
-		System.out.println(simplex3.get(0) + "; " + simplex3.get(1) + "; " + simplex3.get(2));
-		System.out.println(a + "; " + b + "; " + c);
+		// System.out.println("ABC1: ");
+		// System.out.println(simplex3.get(0) + "; " + simplex3.get(1) + "; " +
+		// simplex3.get(2));
+		// System.out.println(a + "; " + b + "; " + c);
 
 		for (int i = 0; i < MAX_ITERATIONS_HIT; i++) {
 

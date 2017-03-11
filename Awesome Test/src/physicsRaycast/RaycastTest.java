@@ -347,7 +347,7 @@ public class RaycastTest extends StandardGame {
 			simplex3.clear();
 
 			Vector3f dir = centerOnPlane;
-//			System.out.println("-1: " + dir);
+			// System.out.println("-1: " + dir);
 			Vector3f point = Sa.supportPoint(dir);
 			Vector2f start = projectPointOn2dPlane(point, Sa.getSupportCenter(), base1, base2);
 			start.translate(hitOnPlane);
@@ -355,20 +355,20 @@ public class RaycastTest extends StandardGame {
 			simplex3.add(point);
 			dir = VecMath.negate(dir);
 			for (int i = 0; i < MAX_ITERATIONS; i++) {
-//				System.out.println(i + "; " + dir);
+				// System.out.println(i + "; " + dir);
 				point = Sa.supportPoint(dir);
 				Vector2f a = projectPointOn2dPlane(point, Sa.getSupportCenter(), base1, base2);
 				a.translate(hitOnPlane);
 				direction = projectPointOn2dPlane(dir, new Vector3f(), base1, base2);
 				if (VecMath.dotproduct(a, direction) < 0) {
-//					System.out.println("Miss");
+					// System.out.println("Miss");
 					break;
 				}
 				simplex.add(a);
 				simplex3.add(point);
 				int region = GJK2Util.doSimplexRegion(simplex, direction);
 				if (region == 0) {
-//					System.out.println("Hit");
+					// System.out.println("Hit");
 					break;
 				} else {
 					switch (region) {
@@ -382,14 +382,14 @@ public class RaycastTest extends StandardGame {
 						simplex3.remove(0);
 						break;
 					}
-//					System.out.println(region);
+					// System.out.println(region);
 				}
 				dir.set(direction.x * base1.x + direction.y * base2.x, direction.x * base1.y + direction.y * base2.y,
 						direction.x * base1.z + direction.y * base2.z);
 			}
 
 			if (simplex.size() == 3) {
-				System.out.println("------------------------------------");
+				// System.out.println("------------------------------------");
 				// final int MAX_ITERATIONS_HIT = 20;
 				final float EPSILON = 0.001f;
 
@@ -400,23 +400,34 @@ public class RaycastTest extends StandardGame {
 				Vector2f projA = projectPointOn2dPlane(a, Sa.getSupportCenter(), base1, base2);
 				Vector2f projB = projectPointOn2dPlane(b, Sa.getSupportCenter(), base1, base2);
 				Vector2f projC = projectPointOn2dPlane(c, Sa.getSupportCenter(), base1, base2);
-				
+
 				projA.negate();
 				projB.negate();
 				projC.negate();
 
-				System.out.println("ABC2: ");
-//				System.out.println(simplex3.get(0) + "; " + simplex3.get(1) + "; " + simplex3.get(2));
-				System.out.println(a + "; " + b + "; " + c);
+				// System.out.println("ABC2: ");
+				// System.out.println(simplex3.get(0) + "; " + simplex3.get(1) +
+				// "; " + simplex3.get(2));
+				// System.out.println(a + "; " + b + "; " + c);
 
+				Vector2f ni = new Vector2f(-1000, -1000);
+				Vector2f POv = ni, PAv = ni, PBv = ni, PCv = ni;
 				for (int i = 0; i < maxHitDetectionIterations; i++) {
 					// Check in which triangle ((a, b, p), (b, c, p), (c, a, p))
 					// the hitOnPlane lies
 					Vector3f n = VecMath.computeNormal(a, b, c);
-					if (VecMath.dotproduct(n, ray.getDirection()) > 0)
+					if (VecMath.dotproduct(n, ray.getDirection()) > 0) {
+						Vector3f tempC = b;
+						b = c;
+						c = tempC;
+						Vector2f tempProjC = projB;
+						projB = projC;
+						projC = tempProjC;
 						n.negate();
-//					System.out.println(i + " n: " + n);
+					}
+					// System.out.println(i + " n: " + n);
 					Vector3f p = Sa.supportPoint(n);
+					System.out.println(i + " " + n);
 
 					if (VecMath.dotproduct(p, n) - VecMath.dotproduct(n, a) < EPSILON) {
 						System.out.println("DONE");
@@ -424,49 +435,146 @@ public class RaycastTest extends StandardGame {
 					}
 
 					Vector2f q = projectPointOn2dPlane(p, Sa.getSupportCenter(), base1, base2);
+					System.out.println("q: " + q);
 					q.negate();
+
+					Vector2f AB = VecMath.subtraction(projB, projA);
+					Vector2f BC = VecMath.subtraction(projC, projB);
+					Vector2f CA = VecMath.subtraction(projA, projC);
 					Vector2f PO = VecMath.subtraction(hitOnPlane, q);
 					Vector2f PA = VecMath.subtraction(projA, q);
 					Vector2f PB = VecMath.subtraction(projB, q);
-					if (VecMath.dotproduct(PO, PA) > 0 && VecMath.dotproduct(PO, PB) > 0) {
-						c = p;
-						projC = q;
-						System.out.println("region 1");
-					} else {
-						Vector2f PC = VecMath.subtraction(projC, q);
-						if (VecMath.dotproduct(PO, PB) > 0 && VecMath.dotproduct(PO, PC) > 0) {
-							a = p;
-							projA = q;
-							System.out.println("region 2");
+					Vector2f PC = VecMath.subtraction(projC, q); // TODO:
+																	// optimize,
+																	// put in
+																	// else
+					Vector2f PAn = new Vector2f(-PA.y, PA.x);
+					Vector2f PBn = new Vector2f(-PB.y, PB.x);
+					Vector2f PCn = new Vector2f(-PC.y, PC.x);
+					POv = new Vector2f(PO);
+					PAv = new Vector2f(PA);
+					PBv = new Vector2f(PB);
+					PCv = new Vector2f(PC);
+					boolean outsideA = VecMath.dotproduct(AB, PBn) > 0;
+					boolean outsideB = VecMath.dotproduct(BC, PCn) > 0;
+					boolean outsideC = VecMath.dotproduct(CA, PAn) > 0;
+					// a = BLUE
+					// b = YELLOW
+					// c = PINK
+					if (outsideA) {
+						if (outsideB) {
+							System.out.println("Region 1");
+							// Region 1
+							b = p;
+							projB = q;
 						} else {
-							if (VecMath.dotproduct(PO, PC) > 0 && VecMath.dotproduct(PO, PA) > 0) {
-								b = p;
-								projB = q;
-								System.out.println("region 3");
+							if (outsideC) {
+								System.out.println("Region 3");
+								// Region 3
+								a = p;
+								projA = q;
 							} else {
-								System.out.println("ERROR: no region");
+								System.out.println("Region 4");
+								// Region 4
+								Vector2f Cp = VecMath.subtraction(q, projC);
+								Vector2f rp = VecMath.subtraction(q, hitOnPlane);
+								if (VecMath.dotproduct(Cp, new Vector2f(-rp.y, rp.x)) > 0) {
+									b = p;
+									projB = q;
+								} else {
+									a = p;
+									projA = q;
+								}
+							}
+						}
+					} else {
+						if (outsideB) {
+							if (outsideC) {
+								System.out.println("Region 2");
+								// Region 2
+								c = p;
+								projC = q;
+							} else {
+								System.out.println("Region 5");
+								// Region 5
+								Vector2f Ap = VecMath.subtraction(q, projA);
+								Vector2f rp = VecMath.subtraction(q, hitOnPlane);
+								if (VecMath.dotproduct(Ap, new Vector2f(-rp.y, rp.x)) > 0) {
+									c = p;
+									projC = q;
+								} else {
+									b = p;
+									projB = q;
+								}
+							}
+						} else {
+							if (outsideC) {
+								System.out.println("Region 6");
+								// Region 6
+								Vector2f Bp = VecMath.subtraction(q, projB);
+								Vector2f rp = VecMath.subtraction(q, hitOnPlane);
+								if (VecMath.dotproduct(Bp, new Vector2f(-rp.y, rp.x)) > 0) {
+									a = p;
+									projA = q;
+								} else {
+									c = p;
+									projC = q;
+								}
+							} else {
+								System.out.println("Region 7");
+								// Region 7
+								// TODO: check for optimizations
+								if (VecMath.dotproduct(PO, PA) > 0 && VecMath.dotproduct(PO, PB) > 0) {
+									c = p;
+									projC = q;
+									System.out.println("region 7.1");
+								} else {
+									if (VecMath.dotproduct(PO, PB) > 0 && VecMath.dotproduct(PO, PC) > 0) {
+										a = p;
+										projA = q;
+										System.out.println("region 7.2");
+									} else {
+										if (VecMath.dotproduct(PO, PC) > 0 && VecMath.dotproduct(PO, PA) > 0) {
+											b = p;
+											projB = q;
+											System.out.println("region 7.3");
+										} else {
+											System.out.println("ERROR: no region");
+										}
+									}
+								}
 							}
 						}
 					}
+					System.out.println(outsideA + "; " + outsideB + "; " + outsideC);
 				}
 
+				// Maybe centerOnPlane instead of hitOnPlane?
+				System.out.println("COP: " + centerOnPlane);
 				Circle c7 = projections3.get(count);
 				c7.translateTo(VecMath.scale(hitOnPlane, 20));
 				c7.translate(400, 300);
-				// c7.setRendered(true);
+				c7.setRendered(true);
 
 				Circle c1 = projections.get(count * 3);
-				c1.translateTo(VecMath.scale(simplex.get(0), 20));
+				c1.translateTo(VecMath.scale(PAv, 20));
 				c1.translate(400, 300);
-				// c1.setRendered(true);
+				c1.setRendered(true);
 				Circle c2 = projections.get(count * 3 + 1);
-				c2.translateTo(VecMath.scale(simplex.get(1), 20));
+				c2.translateTo(VecMath.scale(PBv, 20));
 				c2.translate(400, 300);
-				// c2.setRendered(true);
+				c2.setRendered(true);
 				Circle c3 = projections.get(count * 3 + 2);
-				c3.translateTo(VecMath.scale(simplex.get(2), 20));
+				c3.translateTo(VecMath.scale(PCv, 20));
 				c3.translate(400, 300);
-				// c3.setRendered(true);
+				c3.setRendered(true);
+
+				System.out.println("PAPBPC " + PAv + "; " + PBv + "; " + PCv);
+
+				Circle c4 = projections2.get(count);
+				c4.translateTo(VecMath.scale(POv, 20));
+				c4.translate(400, 300);
+				c4.setRendered(true);
 
 				Sphere s1 = planeintersections.get(count); // Blue
 				Sphere s2 = supportvectors.get(count); // Yellow
