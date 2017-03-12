@@ -15,9 +15,11 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 
 	private final static float MAX_ITERATIONS = 20;
 	private final static float MAX_ITERATIONS_HIT = 20;
+	private final static float EPSILON = 0.001f;
 	private final Vector3f zero = new Vector3f();
 	private final List<Vector2f> simplex = new ArrayList<Vector2f>();
 	private final List<Vector3f> simplex3 = new ArrayList<Vector3f>();
+	private final Vector2f centerOnPlane2 = new Vector2f();
 
 	@Override
 	public boolean isColliding(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
@@ -45,7 +47,7 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		// normal)
 		Vector2f direction;
 
-		Vector2f centerOnPlane2 = projectPointOn2dPlane(hitOfPlane, Sa.getSupportCenter(), b1, b2);
+		centerOnPlane2.set(projectPointOn2dPlane(hitOfPlane, Sa.getSupportCenter(), b1, b2));
 		centerOnPlane2.negate();
 		simplex.clear();
 		simplex3.clear();
@@ -84,7 +86,8 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 					break;
 				}
 			}
-			unprojectAndSet(direction, dir);
+			dir.set(direction.x * b1.x + direction.y * b2.x, direction.x * b1.y + direction.y * b2.y,
+					direction.x * b1.z + direction.y * b2.z);
 		}
 
 		return false;
@@ -103,49 +106,153 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		return new Vector2f(dotRay(point, origin, base1), dotRay(point, origin, base2));
 	}
 
-	private void unprojectAndSet(Vector2f point, Vector3f set) {
-		set.set(point.x * b1.x + point.y * b2.x, point.x * b1.y + point.y * b2.y, point.x * b1.z + point.y * b2.z);
-	}
-
 	@Override
 	public float computeCollisionOnRay(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	private final Vector3f a = new Vector3f();
-	private final Vector3f b = new Vector3f();
-	private final Vector3f c = new Vector3f();
-
 	@Override
 	public Vector3f computeCollision(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
-		/*
-		 * // TODO: WRONG, can't just unproject: either support function or
-		 * store // directly in part 1 unprojectAndSet(simplex.get(0), a);
-		 * unprojectAndSet(simplex.get(1), b); unprojectAndSet(simplex.get(2),
-		 * c);
-		 * 
-		 * // TODO: check in debugger!!! a.set(Sa.supportPoint(a));
-		 * b.set(Sa.supportPoint(b)); c.set(Sa.supportPoint(c));
-		 * 
-		 * System.out.println("ABC2: "); System.out.println(simplex3.get(0) +
-		 * "; " + simplex3.get(1) + "; " + simplex3.get(2));
-		 * System.out.println(a + "; " + b + "; " + c);
-		 */
-
 		Vector3f a = simplex3.get(0);
 		Vector3f b = simplex3.get(1);
 		Vector3f c = simplex3.get(2);
 
-		// System.out.println("ABC1: ");
-		// System.out.println(simplex3.get(0) + "; " + simplex3.get(1) + "; " +
-		// simplex3.get(2));
-		// System.out.println(a + "; " + b + "; " + c);
+		Vector2f projA = projectPointOn2dPlane(a, Sa.getSupportCenter(), b1, b2);
+		Vector2f projB = projectPointOn2dPlane(b, Sa.getSupportCenter(), b1, b2);
+		Vector2f projC = projectPointOn2dPlane(c, Sa.getSupportCenter(), b1, b2);
 
+		projA.negate();
+		projB.negate();
+		projC.negate();
+		
+		Vector3f n = null;
+		
 		for (int i = 0; i < MAX_ITERATIONS_HIT; i++) {
+			n = VecMath.computeNormal(a, b, c);
+			if (VecMath.dotproduct(n, ray.getDirection()) > 0) {
+				Vector3f tempC = b;
+				b = c;
+				c = tempC;
+				Vector2f tempProjC = projB;
+				projB = projC;
+				projC = tempProjC;
+				n.negate();
+			}
+			Vector3f p = Sa.supportPoint(n);
+			
+			if (VecMath.dotproduct(p, n) - VecMath.dotproduct(n, a) < EPSILON) {
+				break;
+			}
 
+			Vector2f q = projectPointOn2dPlane(p, Sa.getSupportCenter(), b1, b2);
+			q.negate();
+
+			Vector2f AB = VecMath.subtraction(projB, projA);
+			Vector2f BC = VecMath.subtraction(projC, projB);
+			Vector2f CA = VecMath.subtraction(projA, projC);
+			Vector2f PA = VecMath.subtraction(projA, q);
+			Vector2f PB = VecMath.subtraction(projB, q);
+			Vector2f PC = VecMath.subtraction(projC, q); // TODO:
+															// optimize,
+															// put in
+															// else
+			Vector2f PAn = new Vector2f(-PA.y, PA.x);
+			Vector2f PBn = new Vector2f(-PB.y, PB.x);
+			Vector2f PCn = new Vector2f(-PC.y, PC.x);
+			boolean outsideA = VecMath.dotproduct(AB, PBn) > 0;
+			boolean outsideB = VecMath.dotproduct(BC, PCn) > 0;
+			boolean outsideC = VecMath.dotproduct(CA, PAn) > 0;
+			
+			if (outsideA) {
+				if (outsideB) {
+					// Region 1
+					b = p;
+					projB = q;
+				} else {
+					if (outsideC) {
+						// Region 3
+						a = p;
+						projA = q;
+					} else {
+						// Region 4
+						Vector2f Cp = VecMath.subtraction(q, projC);
+						Vector2f rp = new Vector2f(-(q.y - centerOnPlane2.y), q.x - centerOnPlane2.x);
+						if (VecMath.dotproduct(Cp, rp) > 0) {
+							b = p;
+							projB = q;
+						} else {
+							a = p;
+							projA = q;
+						}
+					}
+				}
+			} else {
+				if (outsideB) {
+					if (outsideC) {
+						// Region 2
+						c = p;
+						projC = q;
+					} else {
+						// Region 5
+						Vector2f Ap = VecMath.subtraction(q, projA);
+						Vector2f rp = new Vector2f(-(q.y - centerOnPlane2.y), q.x - centerOnPlane2.x);
+						if (VecMath.dotproduct(Ap, rp) > 0) {
+							c = p;
+							projC = q;
+						} else {
+							b = p;
+							projB = q;
+						}
+					}
+				} else {
+					if (outsideC) {
+						// Region 6
+						Vector2f Bp = VecMath.subtraction(q, projB);
+						Vector2f rp = new Vector2f(-(q.y - centerOnPlane2.y), q.x - centerOnPlane2.x);
+						if (VecMath.dotproduct(Bp, rp) > 0) {
+							a = p;
+							projA = q;
+						} else {
+							c = p;
+							projC = q;
+						}
+					} else {
+						// Region 7
+						// TODO: check for optimizations
+						
+						Vector2f Ap = VecMath.subtraction(q, projA);
+						Vector2f Bp = VecMath.subtraction(q, projB);
+						Vector2f rp = new Vector2f(-(q.y - centerOnPlane2.y), q.x - centerOnPlane2.x);
+						if (VecMath.dotproduct(Ap, rp) > 0 && VecMath.dotproduct(Bp, rp) <= 0) {
+							c = p;
+							projC = q;
+						}
+						else {
+							Vector2f Cp = VecMath.subtraction(q, projC);
+							if (VecMath.dotproduct(Bp, rp) > 0 && VecMath.dotproduct(Cp, rp) <= 0) {
+								a = p;
+								projA = q;
+							}
+							else {
+								if (VecMath.dotproduct(Cp, rp) > 0 && VecMath.dotproduct(Ap, rp) <= 0) {
+									b = p;
+									projB = q;
+								}
+								else {
+									System.out.println("ERROR: no region");
+								}
+							}
+						}
+					}
+				}
+			}
 		}
-
-		return new Vector3f();
+		
+		// Last step: Calculate hitpoint between Ray and Triangle abc
+		// TODO: Potentially wrong normal if iteration limit above is exceeded!
+		
+		float d = VecMath.dotproduct(VecMath.subtraction(a, ray.getPosition()), n) / VecMath.dotproduct(ray.getDirection(), n);
+		return new Vector3f(ray.getPosition().x + ray.getDirection().x * d, ray.getPosition().y + ray.getDirection().y * d, ray.getPosition().z + ray.getDirection().z * d);
 	}
 }
