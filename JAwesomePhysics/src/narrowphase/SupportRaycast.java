@@ -108,12 +108,6 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 
 	@Override
 	public float computeCollisionOnRay(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Vector3f computeCollision(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
 		Vector3f a = simplex3.get(0);
 		Vector3f b = simplex3.get(1);
 		Vector3f c = simplex3.get(2);
@@ -252,7 +246,12 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		// Last step: Calculate hitpoint between Ray and Triangle abc
 		// TODO: Potentially wrong normal if iteration limit above is exceeded!
 		
-		float d = VecMath.dotproduct(VecMath.subtraction(a, ray.getPosition()), n) / VecMath.dotproduct(ray.getDirection(), n);
+		return VecMath.dotproduct(VecMath.subtraction(a, ray.getPosition()), n) / VecMath.dotproduct(ray.getDirection(), n);
+	}
+
+	@Override
+	public Vector3f computeCollision(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
+		float d = computeCollisionOnRay(Sa, ray);
 		return new Vector3f(ray.getPosition().x + ray.getDirection().x * d, ray.getPosition().y + ray.getDirection().y * d, ray.getPosition().z + ray.getDirection().z * d);
 	}
 }
