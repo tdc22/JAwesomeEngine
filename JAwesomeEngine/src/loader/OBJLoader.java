@@ -104,8 +104,8 @@ public class OBJLoader {
 				} else {
 					System.err.println("Number of vertices per face must be 3 or 4");
 				}
-			} else if (line.startsWith("v ") || line.startsWith("vn ") || line.startsWith("#")
-					|| line.startsWith("mtllib") || line.startsWith("o ") || line.startsWith("s ")
+			} else if (line.startsWith("v ") || line.startsWith("vt ") || line.startsWith("vn ") || line.startsWith("#")
+					|| line.startsWith("mtllib") || line.startsWith("o ") //|| line.startsWith("s ")
 					|| line.startsWith("usemtl")) {
 				writer.write(line);
 				writer.newLine();
@@ -217,8 +217,10 @@ public class OBJLoader {
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		String line;
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
+		List<Vector2f> texturecoords = new ArrayList<Vector2f>();
 		List<Vector3f> normals = new ArrayList<Vector3f>();
 		vertices.add(new Vector3f());
+		texturecoords.add(new Vector2f());
 		normals.add(new Vector3f(0, 1, 0));
 		while ((line = reader.readLine()) != null) {
 			if (line.startsWith("v ")) {
@@ -228,7 +230,13 @@ public class OBJLoader {
 				float z = Float.parseFloat(vertexCoords[3]);
 				vertices.add(new Vector3f(x, y, z));
 			}
-			if (line.startsWith("vn")) {
+			if (line.startsWith("vt ")) {
+				String[] textureCoords = line.split(" ");
+				float tx = Float.parseFloat(textureCoords[1]);
+				float ty = Float.parseFloat(textureCoords[2]);
+				texturecoords.add(new Vector2f(tx, ty));
+			}
+			if (line.startsWith("vn ")) {
 				String[] normalCoords = line.split(" ");
 				float nx = Float.parseFloat(normalCoords[1]);
 				float ny = Float.parseFloat(normalCoords[2]);
@@ -247,9 +255,9 @@ public class OBJLoader {
 
 				object.addTriangle(i1, adj1, i2, adj2, i3, adj3);
 			}
-			if (line.startsWith("vs")) {
+			if (line.startsWith("vs ")) {
 				String[] vertexString = line.split(" ");
-				object.addVertex(vertices.get(Integer.parseInt(vertexString[1])), Color.WHITE, new Vector2f(0, 0),
+				object.addVertex(vertices.get(Integer.parseInt(vertexString[1])), Color.WHITE, texturecoords.get(Integer.parseInt(vertexString[2])),
 						normals.get(Integer.parseInt(vertexString[3])));
 			}
 		}
@@ -271,43 +279,7 @@ public class OBJLoader {
 				return null;
 			}
 		}
-
-		/*
-		 * BufferedReader reader = new BufferedReader(new FileReader(f));
-		 * ShapedObject object = new ShapedObject(); //List<Vector3f> normals =
-		 * new ArrayList<Vector3f>(); String line; /*while ((line =
-		 * reader.readLine()) != null) { if (line.startsWith("vn ")) { float x =
-		 * Float.valueOf(line.split(" ")[1]); float y =
-		 * Float.valueOf(line.split(" ")[2]); float z =
-		 * Float.valueOf(line.split(" ")[3]); normals.add(new Vector3f(x, y,
-		 * z)); } } reader = new BufferedReader(new FileReader(f)); int
-		 * normalsize = normals.size()-1; int currentvert = 0;
-		 */
-		/*
-		 * Vector3f nullvector = new Vector3f(0,0,0); while ((line =
-		 * reader.readLine()) != null) { if (line.startsWith("v ")) { float x =
-		 * Float.valueOf(line.split(" ")[1]); float y =
-		 * Float.valueOf(line.split(" ")[2]); float z =
-		 * Float.valueOf(line.split(" ")[3]); object.addVertex(new Vector3f(x,
-		 * y, z), new Color(Color.GREY), new Vector2f(0,0),
-		 * nullvector);//normals.get((int) normalIndices.x)); } else if
-		 * (line.startsWith("f ")) { int index1 =
-		 * (int)Integer.valueOf(line.split(" ")[1].split("/")[0])-1; int index2
-		 * = (int)Integer.valueOf(line.split(" ")[2].split("/")[0])-1; int
-		 * index3 = (int)Integer.valueOf(line.split(" ")[3].split("/")[0])-1;
-		 * Vector3f normal1 = object.getNormal(index1); Vector3f normal2 =
-		 * object.getNormal(index2); Vector3f normal3 =
-		 * object.getNormal(index3); Vector3f newnormal =
-		 * VecMath.computeNormal(object.getVertex(index1),
-		 * object.getVertex(index3), object.getVertex(index2));
-		 * object.setNormal(index1,
-		 * VecMath.vectorNormalize(VecMath.vectorAddition(normal1, newnormal)));
-		 * object.setNormal(index2,
-		 * VecMath.vectorNormalize(VecMath.vectorAddition(normal2, newnormal)));
-		 * object.setNormal(index3,
-		 * VecMath.vectorNormalize(VecMath.vectorAddition(normal3, newnormal)));
-		 * //object.addTriangle(index1, index2, index3); } } reader.close();
-		 */
+		
 		return object;
 	}
 }
