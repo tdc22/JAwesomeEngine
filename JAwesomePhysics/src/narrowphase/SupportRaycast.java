@@ -106,6 +106,17 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		return new Vector2f(dotRay(point, origin, base1), dotRay(point, origin, base2));
 	}
 
+	private final Vector3f n = new Vector3f();
+	private final Vector2f AB = new Vector2f();
+	private final Vector2f BC = new Vector2f();
+	private final Vector2f CA = new Vector2f();
+	private final Vector2f PA = new Vector2f();
+	private final Vector2f PB = new Vector2f();
+	private final Vector2f PC = new Vector2f();
+	private final Vector2f PAn = new Vector2f();
+	private final Vector2f PBn = new Vector2f();
+	private final Vector2f PCn = new Vector2f();
+
 	@Override
 	public float computeCollisionOnRay(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
 		Vector3f a = simplex3.get(0);
@@ -120,10 +131,16 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		projB.negate();
 		projC.negate();
 
-		Vector3f n = null;
-
 		for (int i = 0; i < MAX_ITERATIONS_HIT; i++) {
-			n = VecMath.computeNormal(a, b, c);
+			// n = normal of ABC
+			float dif1x = b.x - a.x;
+			float dif1y = b.y - a.y;
+			float dif1z = b.z - a.z;
+			float dif2x = c.x - a.x;
+			float dif2y = c.y - a.y;
+			float dif2z = c.z - a.z;
+			n.set(dif1y * dif2z - dif1z * dif2y, dif1z * dif2x - dif1x * dif2z, dif1x * dif2y - dif1y * dif2x);
+
 			if (VecMath.dotproduct(n, ray.getDirection()) > 0) {
 				Vector3f tempC = b;
 				b = c;
@@ -142,18 +159,18 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 			Vector2f q = projectPointOn2dPlane(p, Sa.getSupportCenter(), b1, b2);
 			q.negate();
 
-			Vector2f AB = VecMath.subtraction(projB, projA);
-			Vector2f BC = VecMath.subtraction(projC, projB);
-			Vector2f CA = VecMath.subtraction(projA, projC);
-			Vector2f PA = VecMath.subtraction(projA, q);
-			Vector2f PB = VecMath.subtraction(projB, q);
-			Vector2f PC = VecMath.subtraction(projC, q); // TODO:
-															// optimize,
-															// put in
-															// else
-			Vector2f PAn = new Vector2f(-PA.y, PA.x);
-			Vector2f PBn = new Vector2f(-PB.y, PB.x);
-			Vector2f PCn = new Vector2f(-PC.y, PC.x);
+			AB.set(projB.x - projA.x, projB.y - projA.y);
+			BC.set(projC.x - projB.x, projC.y - projB.y);
+			CA.set(projA.x - projC.x, projA.y - projC.y);
+			PA.set(projA.x - q.x, projA.y - q.y);
+			PB.set(projB.x - q.x, projB.y - q.y);
+			PC.set(projC.x - q.x, projC.y - q.y); // TODO:
+													// optimize,
+													// put in
+													// else
+			PAn.set(-PA.y, PA.x);
+			PBn.set(-PB.y, PB.x);
+			PCn.set(-PC.y, PC.x);
 			boolean outsideA = VecMath.dotproduct(AB, PBn) > 0;
 			boolean outsideB = VecMath.dotproduct(BC, PCn) > 0;
 			boolean outsideC = VecMath.dotproduct(CA, PAn) > 0;
@@ -170,9 +187,9 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 						projA = q;
 					} else {
 						// Region 4
-						Vector2f Cp = VecMath.subtraction(q, projC);
-						Vector2f rp = new Vector2f(-(q.y - centerOnPlane2.y), q.x - centerOnPlane2.x);
-						if (VecMath.dotproduct(Cp, rp) > 0) {
+						// (q - projC) dot (n(q - centerOnPlane2)) > 0
+						if (VecMath.dotproduct(q.x - projC.x, q.y - projC.y, -(q.y - centerOnPlane2.y),
+								q.x - centerOnPlane2.x) > 0) {
 							b = p;
 							projB = q;
 						} else {
@@ -189,9 +206,9 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 						projC = q;
 					} else {
 						// Region 5
-						Vector2f Ap = VecMath.subtraction(q, projA);
-						Vector2f rp = new Vector2f(-(q.y - centerOnPlane2.y), q.x - centerOnPlane2.x);
-						if (VecMath.dotproduct(Ap, rp) > 0) {
+						// (q - projA) dot (n(q - centerOnPlane2)) > 0
+						if (VecMath.dotproduct(q.x - projA.x, q.y - projA.y, -(q.y - centerOnPlane2.y),
+								q.x - centerOnPlane2.x) > 0) {
 							c = p;
 							projC = q;
 						} else {
@@ -202,9 +219,9 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 				} else {
 					if (outsideC) {
 						// Region 6
-						Vector2f Bp = VecMath.subtraction(q, projB);
-						Vector2f rp = new Vector2f(-(q.y - centerOnPlane2.y), q.x - centerOnPlane2.x);
-						if (VecMath.dotproduct(Bp, rp) > 0) {
+						// (q - projB) dot (n(q - centerOnPlane2)) > 0
+						if (VecMath.dotproduct(q.x - projB.x, q.y - projB.y, -(q.y - centerOnPlane2.y),
+								q.x - centerOnPlane2.x) > 0) {
 							a = p;
 							projA = q;
 						} else {
@@ -214,20 +231,25 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 					} else {
 						// Region 7
 						// TODO: check for optimizations
-
-						Vector2f Ap = VecMath.subtraction(q, projA);
-						Vector2f Bp = VecMath.subtraction(q, projB);
-						Vector2f rp = new Vector2f(-(q.y - centerOnPlane2.y), q.x - centerOnPlane2.x);
-						if (VecMath.dotproduct(Ap, rp) > 0 && VecMath.dotproduct(Bp, rp) <= 0) {
+						float ApX = q.x - projA.x;
+						float ApY = q.y - projA.y;
+						float BpX = q.x - projB.x;
+						float BpY = q.y - projB.y;
+						float rpX = -(q.y - centerOnPlane2.y);
+						float rpY = q.x - centerOnPlane2.x;
+						if (VecMath.dotproduct(ApX, ApY, rpX, rpY) > 0 && VecMath.dotproduct(BpX, BpY, rpX, rpY) <= 0) {
 							c = p;
 							projC = q;
 						} else {
-							Vector2f Cp = VecMath.subtraction(q, projC);
-							if (VecMath.dotproduct(Bp, rp) > 0 && VecMath.dotproduct(Cp, rp) <= 0) {
+							float CpX = q.x - projC.x;
+							float CpY = q.y - projC.y;
+							if (VecMath.dotproduct(BpX, BpY, rpX, rpY) > 0
+									&& VecMath.dotproduct(CpX, CpY, rpX, rpY) <= 0) {
 								a = p;
 								projA = q;
 							} else {
-								if (VecMath.dotproduct(Cp, rp) > 0 && VecMath.dotproduct(Ap, rp) <= 0) {
+								if (VecMath.dotproduct(CpX, CpY, rpX, rpY) > 0
+										&& VecMath.dotproduct(ApX, ApY, rpX, rpY) <= 0) {
 									b = p;
 									projB = q;
 								} else {
@@ -243,8 +265,9 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		// Last step: Calculate hitpoint between Ray and Triangle abc
 		// TODO: Potentially wrong normal if iteration limit above is exceeded!
 
-		return VecMath.dotproduct(VecMath.subtraction(a, ray.getPosition()), n)
-				/ VecMath.dotproduct(ray.getDirection(), n);
+		// ((a - ray.position) dot n) / (ray.direction dot n)
+		return VecMath.dotproduct((a.x - ray.getPosition().x), (a.y - ray.getPosition().y), (a.z - ray.getPosition().z),
+				n.x, n.y, n.z) / VecMath.dotproduct(ray.getDirection(), n);
 	}
 
 	@Override

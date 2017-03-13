@@ -187,9 +187,6 @@ public class RaycastTest extends StandardGame {
 		space.update(delta);
 		physicsdebug.update();
 
-		ray.setPosition(cam.getTranslation());
-		ray.setDirection(cam.getDirection());
-
 		s1.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s2.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s3.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
@@ -202,6 +199,10 @@ public class RaycastTest extends StandardGame {
 		if (inputs.isKeyDown("E")) {
 			cam.translate(0, -0.002f * delta, 0);
 		}
+		cam.update(delta);
+
+		ray.setPosition(cam.getTranslation());
+		ray.setDirection(cam.getDirection());
 
 		if (increaseIterations.isActive()) {
 			maxHitDetectionIterations++;
@@ -254,6 +255,5 @@ public class RaycastTest extends StandardGame {
 		}
 
 		debugger.update(fps, 0, 0);
-		cam.update(delta);
 	}
 }

@@ -39,4 +39,9 @@ public class NullSoundEnvironment extends SoundEnvironment {
 	public void setListenerOrientation(Vector2f up, Vector2f front) {
 
 	}
+
+	@Override
+	public void setDistanceModel(DistanceModel model) {
+
+	}
 }

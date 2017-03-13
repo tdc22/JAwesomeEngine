@@ -33,8 +33,9 @@ public class ALSound extends Sound {
 		this.bufferhandle = bufferhandle;
 		sourcehandle = alGenSources();
 		alSourcei(sourcehandle, AL_BUFFER, bufferhandle);
-		alSourcei(sourcehandle, AL_SOURCE_RELATIVE, AL_TRUE);
-		alSource3f(sourcehandle, AL_POSITION, 0.0f, 0.0f, 0.0f);
+
+		setSourcePositionRelative(true);
+		setSourcePosition(0, 0, 0);
 	}
 
 	public int getSoundBufferHandle() {
