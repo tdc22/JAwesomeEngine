@@ -29,4 +29,18 @@ public abstract class Sound {
 	public abstract void setSourcePosition(float x, float y, float z);
 
 	public abstract void setSourcePosition(float x, float y);
+
+	public abstract void setSourceVelocity(Vector3f velocity);
+
+	public abstract void setSourceVelocity(Vector2f velocity);
+
+	public abstract void setSourceVelocity(float x, float y, float z);
+
+	public abstract void setSourceVelocity(float x, float y);
+
+	public abstract void setRolloffFactor(float rolloff);
+
+	public abstract void setReferenceDistance(float refdistance);
+
+	public abstract void setMaxDistance(float maxdistance);
 }

@@ -119,9 +119,9 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		projA.negate();
 		projB.negate();
 		projC.negate();
-		
+
 		Vector3f n = null;
-		
+
 		for (int i = 0; i < MAX_ITERATIONS_HIT; i++) {
 			n = VecMath.computeNormal(a, b, c);
 			if (VecMath.dotproduct(n, ray.getDirection()) > 0) {
@@ -134,7 +134,7 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 				n.negate();
 			}
 			Vector3f p = Sa.supportPoint(n);
-			
+
 			if (VecMath.dotproduct(p, n) - VecMath.dotproduct(n, a) < EPSILON) {
 				break;
 			}
@@ -157,7 +157,7 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 			boolean outsideA = VecMath.dotproduct(AB, PBn) > 0;
 			boolean outsideB = VecMath.dotproduct(BC, PCn) > 0;
 			boolean outsideC = VecMath.dotproduct(CA, PAn) > 0;
-			
+
 			if (outsideA) {
 				if (outsideB) {
 					// Region 1
@@ -214,26 +214,23 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 					} else {
 						// Region 7
 						// TODO: check for optimizations
-						
+
 						Vector2f Ap = VecMath.subtraction(q, projA);
 						Vector2f Bp = VecMath.subtraction(q, projB);
 						Vector2f rp = new Vector2f(-(q.y - centerOnPlane2.y), q.x - centerOnPlane2.x);
 						if (VecMath.dotproduct(Ap, rp) > 0 && VecMath.dotproduct(Bp, rp) <= 0) {
 							c = p;
 							projC = q;
-						}
-						else {
+						} else {
 							Vector2f Cp = VecMath.subtraction(q, projC);
 							if (VecMath.dotproduct(Bp, rp) > 0 && VecMath.dotproduct(Cp, rp) <= 0) {
 								a = p;
 								projA = q;
-							}
-							else {
+							} else {
 								if (VecMath.dotproduct(Cp, rp) > 0 && VecMath.dotproduct(Ap, rp) <= 0) {
 									b = p;
 									projB = q;
-								}
-								else {
+								} else {
 									System.out.println("ERROR: no region");
 								}
 							}
@@ -242,16 +239,18 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 				}
 			}
 		}
-		
+
 		// Last step: Calculate hitpoint between Ray and Triangle abc
 		// TODO: Potentially wrong normal if iteration limit above is exceeded!
-		
-		return VecMath.dotproduct(VecMath.subtraction(a, ray.getPosition()), n) / VecMath.dotproduct(ray.getDirection(), n);
+
+		return VecMath.dotproduct(VecMath.subtraction(a, ray.getPosition()), n)
+				/ VecMath.dotproduct(ray.getDirection(), n);
 	}
 
 	@Override
 	public Vector3f computeCollision(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
 		float d = computeCollisionOnRay(Sa, ray);
-		return new Vector3f(ray.getPosition().x + ray.getDirection().x * d, ray.getPosition().y + ray.getDirection().y * d, ray.getPosition().z + ray.getDirection().z * d);
+		return new Vector3f(ray.getPosition().x + ray.getDirection().x * d,
+				ray.getPosition().y + ray.getDirection().y * d, ray.getPosition().z + ray.getDirection().z * d);
 	}
 }

@@ -4,10 +4,14 @@ import static org.lwjgl.openal.AL10.AL_BUFFER;
 import static org.lwjgl.openal.AL10.AL_FALSE;
 import static org.lwjgl.openal.AL10.AL_GAIN;
 import static org.lwjgl.openal.AL10.AL_LOOPING;
+import static org.lwjgl.openal.AL10.AL_MAX_DISTANCE;
 import static org.lwjgl.openal.AL10.AL_PITCH;
 import static org.lwjgl.openal.AL10.AL_POSITION;
+import static org.lwjgl.openal.AL10.AL_REFERENCE_DISTANCE;
+import static org.lwjgl.openal.AL10.AL_ROLLOFF_FACTOR;
 import static org.lwjgl.openal.AL10.AL_SOURCE_RELATIVE;
 import static org.lwjgl.openal.AL10.AL_TRUE;
+import static org.lwjgl.openal.AL10.AL_VELOCITY;
 import static org.lwjgl.openal.AL10.alDeleteBuffers;
 import static org.lwjgl.openal.AL10.alDeleteSources;
 import static org.lwjgl.openal.AL10.alGenSources;
@@ -18,8 +22,6 @@ import static org.lwjgl.openal.AL10.alSourceRewind;
 import static org.lwjgl.openal.AL10.alSourceStop;
 import static org.lwjgl.openal.AL10.alSourcef;
 import static org.lwjgl.openal.AL10.alSourcei;
-
-import org.lwjgl.openal.AL10;
 
 import vector.Vector2f;
 import vector.Vector3f;
@@ -79,7 +81,6 @@ public class ALSound extends Sound {
 
 	@Override
 	public void setSourcePosition(Vector3f position) {
-		AL10.alListener3f(AL_POSITION, position.x, position.y, position.z);
 		alSource3f(sourcehandle, AL_POSITION, position.x, position.y, position.z);
 	}
 
@@ -101,5 +102,40 @@ public class ALSound extends Sound {
 	@Override
 	public void setSourcePositionRelative(boolean relative) {
 		alSourcei(sourcehandle, AL_SOURCE_RELATIVE, relative ? AL_TRUE : AL_FALSE);
+	}
+
+	@Override
+	public void setSourceVelocity(Vector3f velocity) {
+		alSource3f(sourcehandle, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
+	}
+
+	@Override
+	public void setSourceVelocity(Vector2f velocity) {
+		alSource3f(sourcehandle, AL_VELOCITY, velocity.x, velocity.y, 0);
+	}
+
+	@Override
+	public void setSourceVelocity(float x, float y, float z) {
+		alSource3f(sourcehandle, AL_VELOCITY, x, y, z);
+	}
+
+	@Override
+	public void setSourceVelocity(float x, float y) {
+		alSource3f(sourcehandle, AL_VELOCITY, x, y, 0);
+	}
+
+	@Override
+	public void setRolloffFactor(float rolloff) {
+		alSourcef(sourcehandle, AL_ROLLOFF_FACTOR, rolloff);
+	}
+
+	@Override
+	public void setReferenceDistance(float refdistance) {
+		alSourcef(sourcehandle, AL_REFERENCE_DISTANCE, refdistance);
+	}
+
+	@Override
+	public void setMaxDistance(float maxdistance) {
+		alSourcef(sourcehandle, AL_MAX_DISTANCE, maxdistance);
 	}
 }

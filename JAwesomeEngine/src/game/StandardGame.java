@@ -198,6 +198,10 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		return settings;
 	}
 
+	public SoundEnvironment getSoundEnvironment() {
+		return soundEnvironment;
+	}
+
 	public void initDisplay(Display display, DisplayMode displaymode, PixelFormat pixelformat,
 			VideoSettings videosettings, SoundEnvironment soundenvironment) {
 		this.display = display;

@@ -105,7 +105,9 @@ public class OBJLoader {
 					System.err.println("Number of vertices per face must be 3 or 4");
 				}
 			} else if (line.startsWith("v ") || line.startsWith("vt ") || line.startsWith("vn ") || line.startsWith("#")
-					|| line.startsWith("mtllib") || line.startsWith("o ") //|| line.startsWith("s ")
+					|| line.startsWith("mtllib") || line.startsWith("o ") // ||
+																			// line.startsWith("s
+																			// ")
 					|| line.startsWith("usemtl")) {
 				writer.write(line);
 				writer.newLine();
@@ -257,7 +259,8 @@ public class OBJLoader {
 			}
 			if (line.startsWith("vs ")) {
 				String[] vertexString = line.split(" ");
-				object.addVertex(vertices.get(Integer.parseInt(vertexString[1])), Color.WHITE, texturecoords.get(Integer.parseInt(vertexString[2])),
+				object.addVertex(vertices.get(Integer.parseInt(vertexString[1])), Color.WHITE,
+						texturecoords.get(Integer.parseInt(vertexString[2])),
 						normals.get(Integer.parseInt(vertexString[3])));
 			}
 		}
@@ -279,7 +282,7 @@ public class OBJLoader {
 				return null;
 			}
 		}
-		
+
 		return object;
 	}
 }

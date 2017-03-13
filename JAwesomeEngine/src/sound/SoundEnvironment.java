@@ -4,6 +4,12 @@ import vector.Vector2f;
 import vector.Vector3f;
 
 public abstract class SoundEnvironment {
+	public abstract void setDistanceModel(DistanceModel model);
+
+	public enum DistanceModel {
+		InverseDistance, InverseDistanceClamped, LinearDistance, LinearDistanceClamped, ExponentDistance, ExponentDistanceClamped
+	}
+
 	public abstract void setListenerPosition(Vector3f pos);
 
 	public abstract void setListenerPosition(Vector2f pos);

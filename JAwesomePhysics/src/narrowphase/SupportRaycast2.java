@@ -32,7 +32,7 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 
 	private final static float EPSILON = 0.01f;
 	private final static float MAX_ITERATIONS = 20;
-	
+
 	private Vector2f dir1 = new Vector2f();
 	private Vector2f dir2 = new Vector2f();
 
@@ -120,7 +120,7 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 		float t2 = (v1x * b.x + v1y * b.y) / (ldx * b.x + ldy * b.y);
 		return new Vector2f(la.x + ldx * t2, la.y + ldy * t2);
 	}
-	
+
 	private float calculateScaleFactorForRay(Ray<Vector2f> r, Vector2f p) {
 		float rPosPx = p.x - r.getPosition().x;
 		float rPosPy = p.y - r.getPosition().y;

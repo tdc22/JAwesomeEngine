@@ -1,9 +1,16 @@
 package sound;
 
+import static org.lwjgl.openal.AL10.AL_INVERSE_DISTANCE;
+import static org.lwjgl.openal.AL10.AL_INVERSE_DISTANCE_CLAMPED;
 import static org.lwjgl.openal.AL10.AL_ORIENTATION;
 import static org.lwjgl.openal.AL10.AL_POSITION;
+import static org.lwjgl.openal.AL10.alDistanceModel;
 import static org.lwjgl.openal.AL10.alListener3f;
 import static org.lwjgl.openal.AL10.alListenerfv;
+import static org.lwjgl.openal.AL11.AL_EXPONENT_DISTANCE;
+import static org.lwjgl.openal.AL11.AL_EXPONENT_DISTANCE_CLAMPED;
+import static org.lwjgl.openal.AL11.AL_LINEAR_DISTANCE;
+import static org.lwjgl.openal.AL11.AL_LINEAR_DISTANCE_CLAMPED;
 import static org.lwjgl.openal.ALC10.alcCloseDevice;
 import static org.lwjgl.openal.ALC10.alcCreateContext;
 import static org.lwjgl.openal.ALC10.alcDestroyContext;
@@ -33,6 +40,8 @@ public class ALSoundEnvironment extends SoundEnvironment {
 			System.err.println("Failed to make context current.");
 		}
 		AL.createCapabilities(deviceCaps);
+
+		setDistanceModel(DistanceModel.InverseDistance);
 	}
 
 	@Override
@@ -73,7 +82,35 @@ public class ALSoundEnvironment extends SoundEnvironment {
 
 	@Override
 	public void setListenerOrientation(Vector2f up, Vector2f front) {
-		// TODO Auto-generated method stub
+		orientationHelperBuffer.clear();
+		orientationHelperBuffer.put(new float[] { front.x, front.y, 0, up.x, up.y, 0 });
+		orientationHelperBuffer.rewind();
+		alListenerfv(AL_ORIENTATION, orientationHelperBuffer);
+	}
 
+	@Override
+	public void setDistanceModel(DistanceModel model) {
+		int alModel = 0;
+		switch (model) {
+		case InverseDistance:
+			alModel = AL_INVERSE_DISTANCE;
+			break;
+		case InverseDistanceClamped:
+			alModel = AL_INVERSE_DISTANCE_CLAMPED;
+			break;
+		case LinearDistance:
+			alModel = AL_LINEAR_DISTANCE;
+			break;
+		case LinearDistanceClamped:
+			alModel = AL_LINEAR_DISTANCE_CLAMPED;
+			break;
+		case ExponentDistance:
+			alModel = AL_EXPONENT_DISTANCE;
+			break;
+		case ExponentDistanceClamped:
+			alModel = AL_EXPONENT_DISTANCE_CLAMPED;
+			break;
+		}
+		alDistanceModel(alModel);
 	}
 }

@@ -61,7 +61,7 @@ public class RaycastTest extends StandardGame {
 	PhysicsDebug physicsdebug;
 	InputEvent increaseIterations, decreaseIterations;
 	Ray3 ray;
-	
+
 	List<Sphere> hitmarkers;
 	List<Sphere> planeintersections;
 	List<Sphere> supportvectors;
@@ -355,7 +355,7 @@ public class RaycastTest extends StandardGame {
 			simplex.add(start);
 			simplex3.add(point);
 			dir = VecMath.negate(dir);
-			
+
 			for (int i = 0; i < MAX_ITERATIONS; i++) {
 				// System.out.println(i + "; " + dir);
 				point = Sa.supportPoint(dir);
@@ -526,7 +526,7 @@ public class RaycastTest extends StandardGame {
 								System.out.println("Region 7");
 								// Region 7
 								// TODO: check for optimizations
-								
+
 								Vector2f Ap = VecMath.subtraction(q, projA);
 								Vector2f Bp = VecMath.subtraction(q, projB);
 								Vector2f rp = new Vector2f(-(q.y - centerOnPlane2.y), q.x - centerOnPlane2.x);
@@ -534,21 +534,18 @@ public class RaycastTest extends StandardGame {
 									c = p;
 									projC = q;
 									System.out.println("region 7.1");
-								}
-								else {
+								} else {
 									Vector2f Cp = VecMath.subtraction(q, projC);
 									if (VecMath.dotproduct(Bp, rp) > 0 && VecMath.dotproduct(Cp, rp) <= 0) {
 										a = p;
 										projA = q;
 										System.out.println("region 7.2");
-									}
-									else {
+									} else {
 										if (VecMath.dotproduct(Cp, rp) > 0 && VecMath.dotproduct(Ap, rp) <= 0) {
 											b = p;
 											projB = q;
 											System.out.println("region 7.3");
-										}
-										else {
+										} else {
 											System.out.println("ERROR: no region");
 										}
 									}
@@ -564,27 +561,27 @@ public class RaycastTest extends StandardGame {
 				Circle c7 = projections3.get(count);
 				c7.translateTo(VecMath.scale(centerOnPlane2, 20));
 				c7.translate(400, 300);
-//				c7.setRendered(true);
+				// c7.setRendered(true);
 
 				Circle c1 = projections.get(count * 3);
 				c1.translateTo(VecMath.scale(PAv, 20));
 				c1.translate(400, 300);
-//				c1.setRendered(true);
+				// c1.setRendered(true);
 				Circle c2 = projections.get(count * 3 + 1);
 				c2.translateTo(VecMath.scale(PBv, 20));
 				c2.translate(400, 300);
-//				c2.setRendered(true);
+				// c2.setRendered(true);
 				Circle c3 = projections.get(count * 3 + 2);
 				c3.translateTo(VecMath.scale(PCv, 20));
 				c3.translate(400, 300);
-//				c3.setRendered(true);
+				// c3.setRendered(true);
 
 				System.out.println("PAPBPC " + PAv + "; " + PBv + "; " + PCv);
 
 				Circle c4 = projections2.get(count);
 				c4.translateTo(VecMath.scale(POv, 20));
 				c4.translate(400, 300);
-//				c4.setRendered(true);
+				// c4.setRendered(true);
 
 				Sphere s1 = planeintersections.get(count); // Blue
 				Sphere s2 = supportvectors.get(count); // Yellow
@@ -597,10 +594,10 @@ public class RaycastTest extends StandardGame {
 				s1.setRendered(true);
 				s2.setRendered(true);
 				s3.setRendered(true);
-				
+
 				boolean doesHit = space.getRaycastNarrowphase().isColliding(o, ray);
 				System.out.println(doesHit);
-				if(doesHit) {
+				if (doesHit) {
 					Vector3f hitpoint = space.getRaycastNarrowphase().computeCollision(o, ray);
 					Sphere hit = hitmarkers.get(count);
 					hit.translateTo(hitpoint);

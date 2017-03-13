@@ -157,7 +157,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	public Narrowphase<L> getNarrowphase() {
 		return narrowphase;
 	}
-	
+
 	public RaycastNarrowphase<L> getRaycastNarrowphase() {
 		return raycastnarrowphase;
 	}
