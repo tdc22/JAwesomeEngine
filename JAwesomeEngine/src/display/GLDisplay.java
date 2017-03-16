@@ -42,7 +42,7 @@ import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
@@ -51,9 +51,6 @@ import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import java.nio.IntBuffer;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWWindowPosCallback;
@@ -134,7 +131,7 @@ public class GLDisplay extends Display {
 		// glfwWindowHint(GLFW_REFRESH_RATE, ???);
 		glfwWindowHint(GLFW_STEREO, pixelformat.isStereo() ? GL_TRUE : GL_FALSE);
 		glfwWindowHint(GLFW_SRGB_CAPABLE, pixelformat.isSRGB() ? GL_TRUE : GL_FALSE);
-		
+
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -151,7 +148,6 @@ public class GLDisplay extends Display {
 		}
 
 		windowid = glfwCreateWindow(width, height, displaymode.getTitle(), monitor, NULL);
-		glfwSetWindowSize(windowid, width, height);
 		if (windowid == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 
@@ -182,13 +178,6 @@ public class GLDisplay extends Display {
 				}
 			});
 		}
-		
-		// Mac-workaround (creates windows with different size than asked for)
-		IntBuffer w = BufferUtils.createIntBuffer(1);
-		IntBuffer h = BufferUtils.createIntBuffer(1);
-		glfwGetWindowSize(windowid, w, h);
-		width = w.get(0);
-		height = h.get(0);
 
 		GL.createCapabilities();
 	}

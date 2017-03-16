@@ -11,7 +11,6 @@ import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
 import static org.lwjgl.opengl.GL11.GL_POINT_SMOOTH_HINT;
 import static org.lwjgl.opengl.GL11.GL_POLYGON_SMOOTH_HINT;
-import static org.lwjgl.opengl.GL11.GL_SMOOTH;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -24,7 +23,6 @@ import static org.lwjgl.opengl.GL11.glDepthFunc;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glHint;
-import static org.lwjgl.opengl.GL11.glShadeModel;
 
 import java.util.List;
 
@@ -263,7 +261,7 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		glClearDepth(1.0f);
 		glClearStencil(0);
 
-		//glShadeModel(GL_SMOOTH);
+		// glShadeModel(GL_SMOOTH);
 		setDepthTestEnabled(depthTestEnabled);
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_TEXTURE_2D);
