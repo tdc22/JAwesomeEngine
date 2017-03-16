@@ -42,7 +42,7 @@ import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
@@ -148,6 +148,7 @@ public class GLDisplay extends Display {
 		}
 
 		windowid = glfwCreateWindow(width, height, displaymode.getTitle(), monitor, NULL);
+		glfwSetWindowSize(windowid, width, height);
 		if (windowid == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 

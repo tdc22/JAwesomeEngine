@@ -263,7 +263,7 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		glClearDepth(1.0f);
 		glClearStencil(0);
 
-		glShadeModel(GL_SMOOTH);
+		//glShadeModel(GL_SMOOTH);
 		setDepthTestEnabled(depthTestEnabled);
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_TEXTURE_2D);
