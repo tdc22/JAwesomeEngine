@@ -51,6 +51,9 @@ import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWWindowPosCallback;
@@ -179,6 +182,13 @@ public class GLDisplay extends Display {
 				}
 			});
 		}
+		
+		// Mac-workaround (creates windows with different size than asked for)
+		IntBuffer w = BufferUtils.createIntBuffer(1);
+		IntBuffer h = BufferUtils.createIntBuffer(1);
+		glfwGetWindowSize(windowid, w, h);
+		width = w.get(0);
+		height = h.get(0);
 
 		GL.createCapabilities();
 	}
