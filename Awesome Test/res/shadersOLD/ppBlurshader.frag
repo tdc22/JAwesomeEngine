@@ -12,7 +12,7 @@ void main() {
 	vec2 texCoord = gl_TexCoord[0].xy - float(int(gaussRadius/2)) * uShift;
 	vec3 color = vec3(0.0, 0.0, 0.0); 
 	for (int i=0; i<gaussRadius; ++i) { 
-		color += gaussFilter[i] * texture2D(texture, texCoord).xyz;
+		color += gaussFilter[i] * texture(texture, texCoord).xyz;
 		texCoord += uShift;
 	}
 	gl_FragColor = vec4(color,1.0);

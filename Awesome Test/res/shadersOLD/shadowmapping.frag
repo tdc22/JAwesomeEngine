@@ -7,7 +7,7 @@ void main ()
 	
 	shadowCoordinateWdivide.z += 0.0005;
 			
-	float distanceFromLight = texture2D(shadowMap,shadowCoordinateWdivide.st).z;
+	float distanceFromLight = texture(shadowMap,shadowCoordinateWdivide.st).z;
 	
 	float shadow = 1.0;
 	if (shadowCoord.w > 0.0)
