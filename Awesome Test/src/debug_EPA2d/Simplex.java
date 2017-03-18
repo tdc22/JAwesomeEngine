@@ -1,6 +1,7 @@
 package debug_EPA2d;
 
-import java.awt.Color;
+import gui.Color;
+
 import java.util.List;
 
 import debug_EPA2d.EPA2dDebugger.Edge;

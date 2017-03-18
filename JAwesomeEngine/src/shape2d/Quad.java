@@ -1,7 +1,6 @@
 package shape2d;
 
-import java.awt.Color;
-
+import gui.Color;
 import math.VecMath;
 import objects.ShapedObject2;
 import shapedata2d.QuadStructure;
@@ -54,7 +53,7 @@ public class Quad extends ShapedObject2 implements QuadStructure {
 	private void init(float hsx, float hsy, boolean adjacency) {
 		shapetype = SHAPE_QUAD;
 		halfsize = new Vector2f(hsx, hsy);
-		Color color = Color.GRAY;
+		Color color = Color.WHITE;
 
 		addVertex(new Vector2f(-hsx, hsy), color, new Vector2f(0, 0));
 		addVertex(new Vector2f(hsx, hsy), color, new Vector2f(1, 0));

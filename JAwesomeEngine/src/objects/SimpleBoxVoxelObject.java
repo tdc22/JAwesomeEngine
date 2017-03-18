@@ -1,7 +1,6 @@
 package objects;
 
-import java.awt.Color;
-
+import gui.Color;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -40,7 +39,7 @@ public class SimpleBoxVoxelObject extends ShapedObject3 {
 		int[][][] indicesUpDown = new int[data.length + 1][data[0].length + 1][data[0][0].length + 1];
 		int[][][] indicesLeftRight = new int[data.length + 1][data[0].length + 1][data[0][0].length + 1];
 
-		Color color = Color.GRAY;
+		Color color = Color.WHITE;
 		Vector2f a = new Vector2f(0, 0);
 		Vector2f b = new Vector2f(1, 0);
 		Vector2f c = new Vector2f(1, 1);

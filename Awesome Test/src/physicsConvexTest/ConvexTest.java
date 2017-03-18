@@ -1,13 +1,12 @@
 package physicsConvexTest;
 
-import java.awt.Color;
-
 import broadphase.SAP;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.Color;
 import gui.Font;
 import integration.VerletIntegration;
 import loader.FontLoader;

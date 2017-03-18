@@ -1,6 +1,7 @@
 package objects;
 
-import java.awt.Color;
+import gui.Color;
+
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -135,7 +136,7 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 	}
 
 	public void addVertex(Vector2f vertex) {
-		addVertex(vertex, Color.GRAY, vec2, vec2);
+		addVertex(vertex, Color.WHITE, vec2, vec2);
 	}
 
 	public void addVertex(Vector2f vertex, Color c) {
@@ -155,7 +156,7 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 	}
 
 	public void setVertex(int id, Vector2f vertex) {
-		setVertex(id, vertex, Color.GRAY, vec2, vec2);
+		setVertex(id, vertex, Color.WHITE, vec2, vec2);
 	}
 
 	public void setVertex(int id, Vector2f vertex, Color c) {

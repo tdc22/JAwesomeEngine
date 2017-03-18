@@ -1,7 +1,6 @@
 package shape;
 
-import java.awt.Color;
-
+import gui.Color;
 import math.VecMath;
 import objects.ShapedObject3;
 import shapedata.EllipsoidStructure;
@@ -52,6 +51,7 @@ public class Ellipsoid extends ShapedObject3 implements EllipsoidStructure {
 		radiusZ = rz;
 		trisH = tH;
 		trisV = tV;
+		Color c = Color.WHITE;
 
 		float angleStepv = 360 / (float) trisV;
 		float angleSteph = 360 / (float) trisH;
@@ -64,7 +64,7 @@ public class Ellipsoid extends ShapedObject3 implements EllipsoidStructure {
 						radiusZ * (float) Math.sin(Math.toRadians(angleStepv * (a / (float) 2)))
 								* (float) Math.cos(Math.toRadians(angleSteph * b)));
 				Vector3f normal = VecMath.normalize(pos);
-				addVertex(pos, Color.GRAY, new Vector2f(a, b), normal);
+				addVertex(pos, c, new Vector2f(a, b), normal);
 			}
 		}
 		addVertex(VecMath.subtraction(getVertex(0), new Vector3f(0, radiusY * 2, 0)), Color.GRAY,

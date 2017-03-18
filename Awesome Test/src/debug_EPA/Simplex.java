@@ -1,6 +1,7 @@
 package debug_EPA;
 
-import java.awt.Color;
+import gui.Color;
+
 import java.util.List;
 
 import debug_EPA.EPADebugger.Triangle;

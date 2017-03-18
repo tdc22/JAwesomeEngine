@@ -1,7 +1,6 @@
 package shape;
 
-import java.awt.Color;
-
+import gui.Color;
 import math.VecMath;
 import objects.ShapedObject3;
 import shapedata.BoxStructure;
@@ -39,7 +38,7 @@ public class Box extends ShapedObject3 implements BoxStructure {
 	private void init(float hsx, float hsy, float hsz) {
 		shapetype = SHAPE_BOX;
 		halfsize = new Vector3f(hsx, hsy, hsz);
-		Color color = Color.GRAY;
+		Color color = Color.WHITE;
 
 		// Texturecoords
 		Vector2f a = new Vector2f(0, 0);

@@ -1,6 +1,5 @@
 package physics;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import broadphase.DynamicAABBTree3;
 import broadphase.DynamicAABBTree3Generic.Node3;
+import gui.Color;
 import gui.Font;
 import input.Input;
 import input.InputEvent;

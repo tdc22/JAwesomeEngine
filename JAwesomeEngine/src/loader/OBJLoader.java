@@ -1,6 +1,7 @@
 package loader;
 
-import java.awt.Color;
+import gui.Color;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

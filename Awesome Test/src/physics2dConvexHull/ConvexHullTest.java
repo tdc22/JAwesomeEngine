@@ -1,6 +1,5 @@
 package physics2dConvexHull;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +9,7 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.Color;
 import loader.ShaderLoader;
 import objects.ShapedObject2;
 import shader.Shader;

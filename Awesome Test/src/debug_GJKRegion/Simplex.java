@@ -1,6 +1,7 @@
 package debug_GJKRegion;
 
-import java.awt.Color;
+import gui.Color;
+
 import java.util.List;
 
 import objects.ShapedObject3;

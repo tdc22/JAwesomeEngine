@@ -1,7 +1,6 @@
 package shape2d;
 
-import java.awt.Color;
-
+import gui.Color;
 import objects.ShapedObject2;
 import shapedata2d.EllipseStructure;
 import utils.GLConstants;
@@ -51,7 +50,7 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 		this.radius = radius;
 		this.halfheight = halfheight;
 		this.slices = slices;
-		Color color = Color.GRAY;
+		Color color = Color.WHITE;
 
 		float anglestep = (float) (2 * Math.PI / (float) slices);
 		addVertex(new Vector2f(0, 0), color, new Vector2f(0.5f, 0.5f));

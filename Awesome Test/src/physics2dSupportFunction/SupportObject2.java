@@ -1,6 +1,7 @@
 package physics2dSupportFunction;
 
-import java.awt.Color;
+import gui.Color;
+
 import java.util.ArrayList;
 import java.util.List;
 

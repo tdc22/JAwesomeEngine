@@ -1,6 +1,5 @@
 package debug_ConvexHull2;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +12,7 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.Color;
 import gui.Font;
 import gui.Text;
 import input.Input;

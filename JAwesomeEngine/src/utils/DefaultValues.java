@@ -23,8 +23,11 @@ public class DefaultValues {
 	public static final int DEFAULT_PIXELFORMAT_NUM_AUX_BUFFERS = 0;
 	public static final int DEFAULT_PIXELFORMAT_ACCUM_BPP = 0;
 	public static final int DEFAULT_PIXELFORMAT_ACCUM_ALPHA = 0;
+	public static final int DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MAJOR = 3;
+	public static final int DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MINOR = 3;
 	public static final boolean DEFAULT_PIXELFORMAT_STEREO = false;
 	public static final boolean DEFAULT_PIXELFORMAT_SRGB = false;
+	public static final boolean DEFAULT_PIXELFORMAT_FORWARD_COMPATIBLE = true;
 	// VideoSettings values
 	public static final int DEFAULT_VIDEO_RESOLUTION_X = 800;
 	public static final int DEFAULT_VIDEO_RESOLUTION_Y = 600;

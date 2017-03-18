@@ -4,8 +4,8 @@ import static org.lwjgl.opengl.GL11.glMultMatrixf;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslatef;
+import gui.Color;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import math.QuatMath;
@@ -75,7 +75,7 @@ class Chunk extends ShapedObject {
 		int sy = heightmap[0].length;
 		for (int vx = 0; vx < sx; vx++) {
 			for (int vz = 0; vz < sy; vz++) {
-				addVertex(new Vector3f(vx, heightmap[vx][vz], vz), Color.GRAY, new Vector2f(0, 0),
+				addVertex(new Vector3f(vx, heightmap[vx][vz], vz), Color.WHITE, new Vector2f(0, 0),
 						new Vector3f(0, 1, 0));
 			}
 		}

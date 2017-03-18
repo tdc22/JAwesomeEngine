@@ -1,6 +1,7 @@
 package debug_ConvexHull3;
 
-import java.awt.Color;
+import gui.Color;
+
 import java.util.List;
 
 import debug_ConvexHull3.ConvexHullDebugger.Triangle;

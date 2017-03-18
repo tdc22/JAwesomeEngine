@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Color;
 import java.util.HashMap;
 
 public class Font {

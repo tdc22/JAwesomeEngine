@@ -1,7 +1,6 @@
 package physicsCollisionDetection;
 
-import java.awt.Color;
-
+import gui.Color;
 import manifold.CollisionManifold;
 import math.VecMath;
 import objects.ShapedObject3;

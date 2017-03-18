@@ -1,6 +1,5 @@
 package loader;
 
-import java.awt.Color;
 import java.awt.FontFormatException;
 import java.awt.Point;
 import java.awt.Shape;
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
+import gui.Color;
 import gui.Font;
 import gui.FontCharacter;
 import vector.Vector2f;

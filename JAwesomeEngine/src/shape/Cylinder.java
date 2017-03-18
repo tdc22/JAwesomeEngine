@@ -1,7 +1,6 @@
 package shape;
 
-import java.awt.Color;
-
+import gui.Color;
 import math.VecMath;
 import objects.ShapedObject3;
 import shapedata.CylinderStructure;
@@ -45,8 +44,9 @@ public class Cylinder extends ShapedObject3 implements CylinderStructure {
 		shapetype = SHAPE_CYLINDER;
 		radius = r;
 		halfheight = h;
+		Color c = Color.WHITE;
 
-		addVertex(new Vector3f(0, halfheight, 0), Color.GRAY, new Vector2f(0, 0), new Vector3f(0, 1, 0));
+		addVertex(new Vector3f(0, halfheight, 0), c, new Vector2f(0, 0), new Vector3f(0, 1, 0));
 		float angleStep = 360 / (float) slices;
 		Vector3f[] circle = new Vector3f[slices];
 		for (int a = 0; a < slices; a++) {
@@ -56,15 +56,15 @@ public class Cylinder extends ShapedObject3 implements CylinderStructure {
 		for (int a = 0; a < slices; a++) {
 			Vector3f pos = circle[a];
 			Vector3f normal = VecMath.normalize(pos);
-			addVertex(new Vector3f(pos.x, halfheight, pos.z), Color.GRAY, new Vector2f(a, 1), normal);
+			addVertex(new Vector3f(pos.x, halfheight, pos.z), c, new Vector2f(a, 1), normal);
 		}
 		for (int a = 0; a < slices; a++) {
 			Vector3f pos = circle[a];
 			Vector3f normal = VecMath.normalize(pos);
-			addVertex(new Vector3f(pos.x, -halfheight, pos.z), Color.GRAY, new Vector2f(a, 0), normal);
+			addVertex(new Vector3f(pos.x, -halfheight, pos.z), c, new Vector2f(a, 0), normal);
 		}
 
-		addVertex(new Vector3f(0, -halfheight, 0), Color.GRAY, new Vector2f(1, 1), new Vector3f(0, -1, 0));
+		addVertex(new Vector3f(0, -halfheight, 0), c, new Vector2f(1, 1), new Vector3f(0, -1, 0));
 		int size = getVertices().size() - 1;
 
 		// Top

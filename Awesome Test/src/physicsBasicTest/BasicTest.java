@@ -1,13 +1,12 @@
 package physicsBasicTest;
 
-import java.awt.Color;
-
 import broadphase.DynamicAABBTree3;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.Color;
 import gui.Font;
 import input.Input;
 import input.InputEvent;

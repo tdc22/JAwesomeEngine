@@ -1,7 +1,5 @@
 package physicsConvexDecomposition;
 
-import java.awt.Color;
-
 import broadphase.SAP;
 import convexhull.HACD;
 import display.DisplayMode;

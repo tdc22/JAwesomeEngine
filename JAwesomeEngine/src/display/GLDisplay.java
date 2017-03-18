@@ -42,7 +42,7 @@ import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
@@ -51,6 +51,9 @@ import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWWindowPosCallback;
@@ -132,10 +135,10 @@ public class GLDisplay extends Display {
 		glfwWindowHint(GLFW_STEREO, pixelformat.isStereo() ? GL_TRUE : GL_FALSE);
 		glfwWindowHint(GLFW_SRGB_CAPABLE, pixelformat.isSRGB() ? GL_TRUE : GL_FALSE);
 
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, pixelformat.getContextVersionMajor());
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, pixelformat.getContextVersionMinor());
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, pixelformat.isForwardCompatible() ? GL_TRUE : GL_FALSE);
 
 		positionX = displaymode.getPositionX();
 		positionY = displaymode.getPositionY();
@@ -161,6 +164,13 @@ public class GLDisplay extends Display {
 
 		glfwShowWindow(windowid);
 
+		// Mac-workaround (creates windows with different size than asked for)
+		IntBuffer w = BufferUtils.createIntBuffer(1);
+		IntBuffer h = BufferUtils.createIntBuffer(1);
+		glfwGetFramebufferSize(windowid, w, h);
+		width = w.get(0);
+		height = h.get(0);
+		
 		glfwSetWindowPosCallback(windowid, posCallback = new GLFWWindowPosCallback() {
 			@Override
 			public void invoke(long arg0, int x, int y) {
@@ -178,7 +188,7 @@ public class GLDisplay extends Display {
 				}
 			});
 		}
-
+		
 		GL.createCapabilities();
 	}
 

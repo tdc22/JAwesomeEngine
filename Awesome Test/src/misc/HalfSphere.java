@@ -1,7 +1,6 @@
 package misc;
 
-import java.awt.Color;
-
+import gui.Color;
 import math.VecMath;
 import objects.ShapedObject3;
 import vector.Vector2f;

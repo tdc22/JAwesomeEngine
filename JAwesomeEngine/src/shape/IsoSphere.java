@@ -1,6 +1,7 @@
 package shape;
 
-import java.awt.Color;
+import gui.Color;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class IsoSphere extends ShapedObject3 implements SphereStructure {
 		this.radius = radius;
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
 		List<Integer[]> faces = new ArrayList<Integer[]>();
+		Color color = Color.WHITE;
 
 		// vertices.add(VecMath.scale(new Vector3f(0.81649655, 0.0,
 		// -0.57735026), radius));
@@ -141,7 +143,7 @@ public class IsoSphere extends ShapedObject3 implements SphereStructure {
 		}
 
 		for (Vector3f v : vertices)
-			addVertex(v, Color.GRAY, new Vector2f(0, 0), VecMath.normalize(v));
+			addVertex(v, color, new Vector2f(0, 0), VecMath.normalize(v));
 		vertices.clear();
 		// edges.clear();
 

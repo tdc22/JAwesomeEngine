@@ -1,6 +1,7 @@
 package terrain;
 
-import java.awt.Color;
+import gui.Color;
+
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -82,8 +83,8 @@ public class Terrain extends ShapedObject3 {
 		terrainsizey = heightmap.getHeight();
 		for (int x = 0; x < terrainsizex; x++) {
 			for (int y = 0; y < terrainsizey; y++) {
-				float h = new Color(heightmap.getRGB(x, y)).getRed() / 100f;
-				addVertex(new Vector3f(x, h, y), Color.GRAY, new Vector2f(0, 0), new Vector3f(0, 1, 0));
+				float h = new Color(heightmap.getRGB(x, y)).getRed();
+				addVertex(new Vector3f(x, h, y), Color.WHITE, new Vector2f(0, 0), new Vector3f(0, 1, 0));
 			}
 		}
 		init(terrainsizex, terrainsizey);
@@ -95,7 +96,7 @@ public class Terrain extends ShapedObject3 {
 		for (int x = 0; x < terrainsizex; x++) {
 			for (int y = 0; y < terrainsizey; y++) {
 				float h = heightmap[x][y];
-				addVertex(new Vector3f(x, h, y), Color.GRAY, new Vector2f(0, 0), new Vector3f(0, 1, 0));
+				addVertex(new Vector3f(x, h, y), Color.WHITE, new Vector2f(0, 0), new Vector3f(0, 1, 0));
 			}
 		}
 		init(terrainsizex, terrainsizey);

@@ -1,6 +1,5 @@
 package debug_GJKRegion;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,6 +13,7 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.Color;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
