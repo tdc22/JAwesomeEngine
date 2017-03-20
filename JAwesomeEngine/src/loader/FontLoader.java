@@ -8,6 +8,7 @@ import java.awt.font.GlyphVector;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,17 +16,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
+
+import gui.BitmapFont;
 import gui.Color;
 import gui.Font;
 import gui.FontCharacter;
+import gui.OutlineFont;
+import texture.Texture;
 import vector.Vector2f;
 
 public class FontLoader {
-	public static double _B(int n, int m, double t) {
+	private static double _B(int n, int m, double t) {
 		return _bernstein(n, m, t);
 	}
 
-	static double _bernstein(int n, int m, double t) {
+	private static double _bernstein(int n, int m, double t) {
 		assert n > 0 && m >= 0 : "_bernstein : invalid arg value for n,m : must be n > 0 and m >= 0";
 		double b = Math.pow(t, m) * Math.pow(1 - t, n - m);
 		if (m != 0) {
@@ -35,7 +41,7 @@ public class FontLoader {
 		}
 	}
 
-	public static double _C(int n, int m) {
+	private static double _C(int n, int m) {
 		return _combine(n, m);
 	}
 
@@ -45,7 +51,7 @@ public class FontLoader {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <P extends Point2D> P[] _computeBezierCurve(P[] p, int amount) {
+	private static <P extends Point2D> P[] _computeBezierCurve(P[] p, int amount) {
 		assert amount > 2 : "not a valid value, amount must be greater than 2";
 		Vector<Point2D> curve = new Vector<Point2D>();
 		for (double t = 0.; t <= 1.; t += 1. / (amount - 1)) {
@@ -72,7 +78,7 @@ public class FontLoader {
 		}
 	}
 
-	public static double _factorialN(int n) {
+	private static double _factorialN(int n) {
 		if (n > 99) {
 			return _stirlingFactor(n);
 		} else {
@@ -88,40 +94,52 @@ public class FontLoader {
 		return Math.pow(n / Math.E, n) * Math.sqrt(2.0 * Math.PI * n);
 	}
 
-	public static Font loadFont(File file, char... characters) {
-		InputStream is = null;
-		try {
-			is = new FileInputStream(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+	private static char[] checkCharacters(char[] characters) {
+		if (characters.length == 0) {
+			characters = new char[96];
+			for (int i = 0; i < 94; i++) {
+				characters[i] = (char) (i + 33);
+			}
+			characters[94] = (char) (10); // Line Break
+			characters[95] = (char) (32); // Space
 		}
-		java.awt.Font font = null;
+		return characters;
+	}
+
+	public static Font loadFont(File file, char... characters) {
+		if (file.getName().toLowerCase().endsWith(".ttf")) {
+			InputStream is = null;
+			try {
+				is = new FileInputStream(file);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			java.awt.Font font = null;
+			try {
+				font = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, is);
+			} catch (FontFormatException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return loadFont(font, characters);
+		}
 		try {
-			font = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, is);
-		} catch (FontFormatException e) {
-			e.printStackTrace();
+			return loadFont(ImageIO.read(file), characters);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return loadFont(font, characters);
+		return null;
 	}
 
 	// from http://lwjgl.org/forum/index.php?topic=3028.0
 	public static Font loadFont(java.awt.Font f, char... characters) {
 		// Font -> createGlyphVector -> getGlyphVisualBounds -> getPathIterator
-		Font font = new Font();
-
+		Font font = new OutlineFont();
+		characters = checkCharacters(characters);
 		int l = characters.length;
-		if (l == 0) {
-			char[] chars = new char[96];
-			for (int i = 0; i < 94; i++) {
-				chars[i] = (char) (i + 33);
-			}
-			chars[94] = (char) (10); // Line Break
-			chars[95] = (char) (32); // Space
-			characters = chars;
-			l = characters.length;
-		}
+		Color color = Color.WHITE;
 		GlyphVector glyphvector = f.createGlyphVector(new FontRenderContext(null, true, true), characters);
 		for (int i = 0; i < l; i++) {
 			Character c = characters[i];
@@ -133,7 +151,6 @@ public class FontLoader {
 
 			character.setMargin((float) bounds.getWidth(), (float) bounds.getHeight());
 			Point2D.Float current = new Point2D.Float();
-			Color color = Color.WHITE;
 			Vector2f texcoords = new Vector2f(0, 0);
 			int index = 0;
 
@@ -201,8 +218,42 @@ public class FontLoader {
 		return font;
 	}
 
+	public static BitmapFont loadFont(BufferedImage bitmap, char... characters) {
+		BitmapFont font = new BitmapFont(new Texture(TextureLoader.loadTexture(bitmap, false)));
+		characters = checkCharacters(characters);
+		int l = characters.length;
+		Color color = Color.WHITE;
+
+		Vector2f tl = new Vector2f(0, 0);
+		Vector2f bl = new Vector2f(0, 1);
+		Vector2f br = new Vector2f(1, 1);
+		Vector2f tr = new Vector2f(1, 0);
+
+		for (int i = 0; i < l; i++) {
+			Character c = characters[i];
+			FontCharacter character = new FontCharacter();
+
+			int gridSize = 16;
+			int asciiCode = (int) characters[i];
+			final float cellSize = 1.0f / gridSize;
+			float cellX = ((int) asciiCode % gridSize) * cellSize;
+			float cellY = ((int) asciiCode / gridSize) * cellSize;
+
+			character.addVertex(tl, color, new Vector2f(cellX, cellY));
+			character.addVertex(bl, color, new Vector2f(cellX, cellY + cellSize));
+			character.addVertex(br, color, new Vector2f(cellX + cellSize, cellY + cellSize));
+			character.addVertex(tr, color, new Vector2f(cellX + cellSize, cellY));
+
+			int i4 = 4 * i;
+			character.addQuad(i4, i4 + 1, i4 + 2, i4 + 3);
+
+			character.prerender();
+			font.addCharacter(c, character);
+		}
+		return font;
+	}
+
 	public static Font loadFont(String path, char... characters) {
 		return loadFont(new File(path), characters);
 	}
-
 }

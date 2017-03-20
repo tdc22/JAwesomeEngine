@@ -4,10 +4,10 @@ import static org.lwjgl.opengl.GL11.glMultMatrixf;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslatef;
-import gui.Color;
 
 import java.awt.image.BufferedImage;
 
+import gui.Color;
 import math.QuatMath;
 import math.VecMath;
 import objects.RenderedObject;

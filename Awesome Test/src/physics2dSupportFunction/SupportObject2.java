@@ -1,10 +1,9 @@
 package physics2dSupportFunction;
 
-import gui.Color;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import gui.Color;
 import objects.CollisionShape;
 import objects.ShapedObject2;
 import utils.GLConstants;

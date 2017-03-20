@@ -1,10 +1,9 @@
 package terrain;
 
-import gui.Color;
-
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import gui.Color;
 import math.VecMath;
 import objects.ShapedObject3;
 import vector.Vector2f;

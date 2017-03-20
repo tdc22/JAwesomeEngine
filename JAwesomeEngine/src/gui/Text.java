@@ -1,5 +1,6 @@
 package gui;
 
+import gui.Font.FontType;
 import loader.FontLoader;
 import math.VecMath;
 import objects.ShapedObject2;
@@ -42,8 +43,14 @@ public class Text extends ShapedObject2 {
 	}
 
 	private void init(String text, float x, float y, Font f, float size, float characterMargin, float spaceSize) {
-		setRenderMode(GLConstants.LINES);
 		setFont(f);
+		if (f.getFontType() == FontType.BitmapFont) {
+			setRenderMode(GLConstants.TRIANGLES);
+			setRenderHints(false, true, false);
+		} else {
+			setRenderMode(GLConstants.LINES);
+			setRenderHints(true, false, false);
+		}
 		setSpaceSize(spaceSize);
 		setFontsize(size);
 		setCharacterMargin(characterMargin);
@@ -56,7 +63,11 @@ public class Text extends ShapedObject2 {
 	}
 
 	public void setFont(Font f) {
-		font = new Font(f);
+		if (f.getFontType() == FontType.BitmapFont) {
+			font = new BitmapFont(f, ((BitmapFont) f).getBitmap());
+		} else {
+			font = new OutlineFont(f);
+		}
 	}
 
 	public void setFont(String fontname) {
@@ -84,8 +95,9 @@ public class Text extends ShapedObject2 {
 		for (int i = 0; i < chars.length; i++) {
 			char c = chars[i];
 			FontCharacter character = font.getCharacter(c);
-			for (Vector2f v : character.getVertices()) {
-				this.addVertex(VecMath.addition(currPos, v));
+			for (int v = 0; v < character.getVertices().size(); v++) {
+				this.addVertex(VecMath.addition(currPos, character.getVertices().get(v)), character.getColor(v),
+						character.getTextureCoordinate(v));
 			}
 			for (Integer index : character.getIndices()) {
 				this.addIndex(indexCount + index);

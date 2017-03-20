@@ -1,10 +1,9 @@
 package physicsSupportFunction;
 
-import gui.Color;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import gui.Color;
 import objects.ShapedObject3;
 import utils.GLConstants;
 import vector.Vector2f;

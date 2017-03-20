@@ -1,14 +1,13 @@
 package gui;
 
 import objects.ShapedObject2;
-import utils.GLConstants;
 import vector.Vector2f;
 
 public class FontCharacter extends ShapedObject2 {
 	Vector2f margin;
 
 	public FontCharacter() {
-		setRenderMode(GLConstants.LINES);
+		margin = new Vector2f();
 	}
 
 	public Vector2f getMargin() {
@@ -16,7 +15,7 @@ public class FontCharacter extends ShapedObject2 {
 	}
 
 	public void setMargin(float marginx, float marginy) {
-		margin = new Vector2f(marginx, marginy);
+		margin.set(marginx, marginy);
 	}
 
 	public void setMargin(Vector2f marg) {

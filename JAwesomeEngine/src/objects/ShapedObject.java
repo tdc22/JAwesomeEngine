@@ -16,7 +16,6 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
-import gui.Color;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -25,6 +24,7 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
+import gui.Color;
 import quaternion.Rotation;
 import utils.GLConstants;
 import vector.Vector;

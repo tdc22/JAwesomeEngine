@@ -1,10 +1,9 @@
 package debug_EPA2d;
 
-import gui.Color;
-
 import java.util.List;
 
 import debug_EPA2d.EPA2dDebugger.Edge;
+import gui.Color;
 import objects.ShapedObject2;
 import utils.GLConstants;
 import vector.Vector2f;

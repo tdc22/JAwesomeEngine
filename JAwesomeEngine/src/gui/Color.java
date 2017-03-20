@@ -2,31 +2,31 @@ package gui;
 
 public class Color {
 	float r, g, b;
-	
+
 	public Color(float r, float g, float b) {
 		this.r = r;
 		this.g = g;
 		this.b = b;
 	}
-	
+
 	public Color(int sRGB) {
 		r = ((sRGB >> 16) & 0xFF) / 255f;
 		g = ((sRGB >> 8) & 0xFF) / 255f;
 		b = (sRGB & 0xFF) / 255f;
 	}
-	
+
 	public float getRed() {
 		return r;
 	}
-	
+
 	public float getGreen() {
 		return g;
 	}
-	
+
 	public float getBlue() {
 		return b;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(64);
@@ -39,7 +39,7 @@ public class Color {
 		sb.append(']');
 		return sb.toString();
 	}
-	
+
 	public final static Color WHITE = new Color(1, 1, 1);
 	public final static Color GRAY = new Color(0.5f, 0.5f, 0.5f);
 	public final static Color BLACK = new Color(0, 0, 0);

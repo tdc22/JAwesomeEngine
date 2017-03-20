@@ -1,10 +1,9 @@
 package physicsSupportFunction;
 
-import gui.Color;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import gui.Color;
 import math.VecMath;
 import matrix.Matrix4f;
 import objects.CollisionShape;

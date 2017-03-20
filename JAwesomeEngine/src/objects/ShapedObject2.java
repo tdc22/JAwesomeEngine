@@ -1,11 +1,10 @@
 package objects;
 
-import gui.Color;
-
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+import gui.Color;
 import matrix.Matrix4f;
 import quaternion.Complexf;
 import utils.GLConstants;

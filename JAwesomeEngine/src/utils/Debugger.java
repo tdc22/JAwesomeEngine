@@ -13,6 +13,7 @@ import static org.lwjgl.opengl.GL11.GL_STACK_UNDERFLOW;
 import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL30.GL_INVALID_FRAMEBUFFER_OPERATION;
+
 import gui.Color;
 import gui.Font;
 import gui.Text;

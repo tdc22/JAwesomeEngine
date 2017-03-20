@@ -1,10 +1,9 @@
 package debug_ConvexHull3;
 
-import gui.Color;
-
 import java.util.List;
 
 import debug_ConvexHull3.ConvexHullDebugger.Triangle;
+import gui.Color;
 import objects.ShapedObject3;
 import utils.GLConstants;
 import vector.Vector3f;

@@ -27,6 +27,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
@@ -42,7 +43,7 @@ import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
@@ -170,7 +171,7 @@ public class GLDisplay extends Display {
 		glfwGetFramebufferSize(windowid, w, h);
 		width = w.get(0);
 		height = h.get(0);
-		
+
 		glfwSetWindowPosCallback(windowid, posCallback = new GLFWWindowPosCallback() {
 			@Override
 			public void invoke(long arg0, int x, int y) {
@@ -188,7 +189,7 @@ public class GLDisplay extends Display {
 				}
 			});
 		}
-		
+
 		GL.createCapabilities();
 	}
 

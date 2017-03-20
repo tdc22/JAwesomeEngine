@@ -3,44 +3,55 @@ package display;
 import utils.DefaultValues;
 
 public class PixelFormat {
-	private int bpp, alpha, depth, stencil, samples, num_aux_buffers, accum_bpp, accum_alpha, context_version_major, context_version_minor;
+	private int bpp, alpha, depth, stencil, samples, num_aux_buffers, accum_bpp, accum_alpha, context_version_major,
+			context_version_minor;
 	private boolean stereo, sRGB, forwardCompatible;
 
 	public PixelFormat() {
 		init(DefaultValues.DEFAULT_PIXELFORMAT_BPP, DefaultValues.DEFAULT_PIXELFORMAT_ALPHA,
 				DefaultValues.DEFAULT_PIXELFORMAT_DEPTH, DefaultValues.DEFAULT_PIXELFORMAT_STENCIL,
 				DefaultValues.DEFAULT_PIXELFORMAT_SAMPLES, DefaultValues.DEFAULT_PIXELFORMAT_NUM_AUX_BUFFERS,
-				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_BPP, DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_ALPHA, DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MAJOR, DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MINOR,
-				DefaultValues.DEFAULT_PIXELFORMAT_STEREO, DefaultValues.DEFAULT_PIXELFORMAT_SRGB, DefaultValues.DEFAULT_PIXELFORMAT_FORWARD_COMPATIBLE);
+				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_BPP, DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_ALPHA,
+				DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MAJOR,
+				DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MINOR, DefaultValues.DEFAULT_PIXELFORMAT_STEREO,
+				DefaultValues.DEFAULT_PIXELFORMAT_SRGB, DefaultValues.DEFAULT_PIXELFORMAT_FORWARD_COMPATIBLE);
 	}
 
 	public PixelFormat(int bpp, int alpha, int depth, int stencil, int samples) {
 		init(bpp, alpha, depth, stencil, samples, DefaultValues.DEFAULT_PIXELFORMAT_NUM_AUX_BUFFERS,
-				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_BPP, DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_ALPHA, DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MAJOR, DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MINOR,
-				DefaultValues.DEFAULT_PIXELFORMAT_STEREO, DefaultValues.DEFAULT_PIXELFORMAT_SRGB, DefaultValues.DEFAULT_PIXELFORMAT_FORWARD_COMPATIBLE);
+				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_BPP, DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_ALPHA,
+				DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MAJOR,
+				DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MINOR, DefaultValues.DEFAULT_PIXELFORMAT_STEREO,
+				DefaultValues.DEFAULT_PIXELFORMAT_SRGB, DefaultValues.DEFAULT_PIXELFORMAT_FORWARD_COMPATIBLE);
 	}
 
 	public PixelFormat(int bpp, int alpha, int depth, int stencil, int samples, boolean stereo, boolean sRGB) {
 		init(bpp, alpha, depth, stencil, samples, DefaultValues.DEFAULT_PIXELFORMAT_NUM_AUX_BUFFERS,
-				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_BPP, DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_ALPHA, DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MAJOR, DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MINOR, stereo,
-				sRGB, DefaultValues.DEFAULT_PIXELFORMAT_FORWARD_COMPATIBLE);
+				DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_BPP, DefaultValues.DEFAULT_PIXELFORMAT_ACCUM_ALPHA,
+				DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MAJOR,
+				DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MINOR, stereo, sRGB,
+				DefaultValues.DEFAULT_PIXELFORMAT_FORWARD_COMPATIBLE);
 	}
 
 	public PixelFormat(int bpp, int alpha, int depth, int stencil, int samples, int num_aux_buffers, int accum_bpp,
 			int accum_alpha, boolean stereo, boolean sRGB) {
-		init(bpp, alpha, depth, stencil, samples, num_aux_buffers, accum_bpp, accum_alpha, DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MAJOR, DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MINOR, stereo, sRGB, DefaultValues.DEFAULT_PIXELFORMAT_FORWARD_COMPATIBLE);
+		init(bpp, alpha, depth, stencil, samples, num_aux_buffers, accum_bpp, accum_alpha,
+				DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MAJOR,
+				DefaultValues.DEFAULT_PIXELFORMAT_CONTEXT_VERSION_MINOR, stereo, sRGB,
+				DefaultValues.DEFAULT_PIXELFORMAT_FORWARD_COMPATIBLE);
 	}
-	
+
 	public PixelFormat(int bpp, int alpha, int depth, int stencil, int samples, int num_aux_buffers, int accum_bpp,
-			int accum_alpha, int context_version_major, int context_version_minor, boolean stereo, boolean sRGB, boolean forwardCompatible) {
-		init(bpp, alpha, depth, stencil, samples, num_aux_buffers, accum_bpp, accum_alpha, context_version_major, context_version_minor,
-				stereo, sRGB, forwardCompatible);
+			int accum_alpha, int context_version_major, int context_version_minor, boolean stereo, boolean sRGB,
+			boolean forwardCompatible) {
+		init(bpp, alpha, depth, stencil, samples, num_aux_buffers, accum_bpp, accum_alpha, context_version_major,
+				context_version_minor, stereo, sRGB, forwardCompatible);
 	}
 
 	public PixelFormat(PixelFormat pf) {
 		init(pf.getBitsPerPixel(), pf.getAlpha(), pf.getDepth(), pf.getStencil(), pf.getSamples(), pf.getAuxBuffers(),
-				pf.getAccumulationBitsPerPixel(), pf.getAccumulationAlpha(), pf.getContextVersionMajor(), pf.getContextVersionMinor(),
-				pf.isStereo(), pf.isSRGB(), pf.isForwardCompatible());
+				pf.getAccumulationBitsPerPixel(), pf.getAccumulationAlpha(), pf.getContextVersionMajor(),
+				pf.getContextVersionMinor(), pf.isStereo(), pf.isSRGB(), pf.isForwardCompatible());
 	}
 
 	public int getAccumulationAlpha() {
@@ -74,17 +85,18 @@ public class PixelFormat {
 	public int getStencil() {
 		return stencil;
 	}
-	
+
 	public int getContextVersionMajor() {
 		return context_version_major;
 	}
-	
+
 	public int getContextVersionMinor() {
 		return context_version_minor;
 	}
 
 	private void init(int bpp, int alpha, int depth, int stencil, int samples, int num_aux_buffers, int accum_bpp,
-			int accum_alpha, int context_version_major, int context_version_minor, boolean stereo, boolean sRGB, boolean forwardCompatible) {
+			int accum_alpha, int context_version_major, int context_version_minor, boolean stereo, boolean sRGB,
+			boolean forwardCompatible) {
 		this.bpp = bpp;
 		this.alpha = alpha;
 		this.depth = depth;
@@ -107,7 +119,7 @@ public class PixelFormat {
 	public boolean isStereo() {
 		return stereo;
 	}
-	
+
 	public boolean isForwardCompatible() {
 		return forwardCompatible;
 	}
@@ -197,17 +209,18 @@ public class PixelFormat {
 		pf.stereo = stereo;
 		return pf;
 	}
-	
+
 	public PixelFormat withContextVersion(final int context_version_major, final int context_version_minor) {
 		if (context_version_major < 0 || context_version_minor < 0)
-			throw new IllegalArgumentException("Invalid context version number specified: " + context_version_major + "." + context_version_minor);
+			throw new IllegalArgumentException(
+					"Invalid context version number specified: " + context_version_major + "." + context_version_minor);
 
 		final PixelFormat pf = new PixelFormat(this);
 		pf.context_version_major = context_version_major;
 		pf.context_version_minor = context_version_minor;
 		return pf;
 	}
-	
+
 	public PixelFormat withForwardCompatibility(final boolean forwardCompatible) {
 		final PixelFormat pf = new PixelFormat(this);
 		pf.forwardCompatible = forwardCompatible;

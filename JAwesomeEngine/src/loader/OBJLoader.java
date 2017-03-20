@@ -1,7 +1,5 @@
 package loader;
 
-import gui.Color;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import gui.Color;
 import objects.ShapedObject3;
 import vector.Vector2f;
 import vector.Vector3f;

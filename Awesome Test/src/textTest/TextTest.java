@@ -6,6 +6,7 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.BitmapFont;
 import gui.Font;
 import gui.Text;
 import loader.FontLoader;
@@ -31,7 +32,17 @@ public class TextTest extends StandardGame {
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		defaultshader.addObject(new Text("Hello this is a test!\nYou can make line breaks.", 100, 100, font, 40));
-		defaultshader.addObject(new Text("This font is rendered in polygons.", 100, 200, font, 10));
+		defaultshader.addObject(new Text("This font is rendered in lines.", 100, 200, font, 10));
+
+		BitmapFont font2 = (BitmapFont) FontLoader.loadFont("res/fonts/DejaVuSans24.png");
+		Shader textureshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
+		textureshader.addArgumentName("u_texture");
+		textureshader.addArgument(font2.getBitmap());
+		addShader2d(textureshader);
+
+		textureshader.addObject(new Text("Hello this is a test!\nYou can make line breaks.", 100, 300, font2, 40));
+		textureshader.addObject(new Text("This font is rendered in bitmaps.", 100, 400, font2, 10));
 	}
 
 	@Override

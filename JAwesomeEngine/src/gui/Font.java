@@ -2,7 +2,7 @@ package gui;
 
 import java.util.HashMap;
 
-public class Font {
+public abstract class Font {
 	HashMap<Character, FontCharacter> characters;
 
 	public Font() {
@@ -34,4 +34,10 @@ public class Font {
 	public void setSpaceSize(float size) {
 		getCharacter(' ').setMargin(size, size);
 	}
+
+	public enum FontType {
+		OutlineFont, BitmapFont
+	};
+
+	public abstract FontType getFontType();
 }

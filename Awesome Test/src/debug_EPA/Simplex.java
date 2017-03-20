@@ -1,10 +1,9 @@
 package debug_EPA;
 
-import gui.Color;
-
 import java.util.List;
 
 import debug_EPA.EPADebugger.Triangle;
+import gui.Color;
 import math.VecMath;
 import objects.ShapedObject3;
 import utils.GLConstants;
