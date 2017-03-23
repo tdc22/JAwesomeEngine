@@ -219,13 +219,13 @@ public class FontLoader {
 	}
 
 	public static BitmapFont loadFont(BufferedImage bitmap, char... characters) {
-		BitmapFont font = new BitmapFont(new Texture(TextureLoader.loadTexture(bitmap, false)));
+		BitmapFont font = new BitmapFont(new Texture(TextureLoader.loadTexture(bitmap, true)));
 		characters = checkCharacters(characters);
 		int l = characters.length;
 		Color color = Color.WHITE;
 
 		Vector2f tl = new Vector2f(0, 0);
-		Vector2f bl = new Vector2f(0, 1);
+		Vector2f bl = new Vector2f(0, 1); // TODO: size
 		Vector2f br = new Vector2f(1, 1);
 		Vector2f tr = new Vector2f(1, 0);
 
@@ -237,15 +237,15 @@ public class FontLoader {
 			int asciiCode = (int) characters[i];
 			final float cellSize = 1.0f / gridSize;
 			float cellX = ((int) asciiCode % gridSize) * cellSize;
-			float cellY = ((int) asciiCode / gridSize) * cellSize;
+			float cellY = 1 - ((int) asciiCode / gridSize) * cellSize;
 
 			character.addVertex(tl, color, new Vector2f(cellX, cellY));
-			character.addVertex(bl, color, new Vector2f(cellX, cellY + cellSize));
-			character.addVertex(br, color, new Vector2f(cellX + cellSize, cellY + cellSize));
+			character.addVertex(bl, color, new Vector2f(cellX, cellY - cellSize));
+			character.addVertex(br, color, new Vector2f(cellX + cellSize, cellY - cellSize));
 			character.addVertex(tr, color, new Vector2f(cellX + cellSize, cellY));
 
-			int i4 = 4 * i;
-			character.addQuad(i4, i4 + 1, i4 + 2, i4 + 3);
+			character.addQuad(0, 1, 2, 3);
+			character.setMargin(0.2f, 0);
 
 			character.prerender();
 			font.addCharacter(c, character);

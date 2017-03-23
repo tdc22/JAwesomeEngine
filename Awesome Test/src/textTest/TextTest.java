@@ -41,8 +41,9 @@ public class TextTest extends StandardGame {
 		textureshader.addArgument(font2.getBitmap());
 		addShader2d(textureshader);
 
-		textureshader.addObject(new Text("Hello this is a test!\nYou can make line breaks.", 100, 300, font2, 40));
-		textureshader.addObject(new Text("This font is rendered in bitmaps.", 100, 400, font2, 10));
+		textureshader
+				.addObject(new Text("Hello this is a test!\nYou can make line breaks.", 100, 300, font2, 40, 0.3f, 0f));
+		textureshader.addObject(new Text("This font is rendered in bitmaps.", 100, 400, font2, 18, 0.3f, 0f));
 	}
 
 	@Override
