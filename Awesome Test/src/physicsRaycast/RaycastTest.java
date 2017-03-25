@@ -180,7 +180,6 @@ public class RaycastTest extends StandardGame {
 	}
 
 	Vector3f base1, base2;
-	int maxHitDetectionIterations = 0;
 
 	@Override
 	public void update(int delta) {
@@ -203,15 +202,6 @@ public class RaycastTest extends StandardGame {
 
 		ray.setPosition(cam.getTranslation());
 		ray.setDirection(cam.getDirection());
-
-		if (increaseIterations.isActive()) {
-			maxHitDetectionIterations++;
-			System.out.println("Increased Iterations to: " + maxHitDetectionIterations);
-		}
-		if (decreaseIterations.isActive() && maxHitDetectionIterations > 0) {
-			maxHitDetectionIterations--;
-			System.out.println("Decreased Iterations to: " + maxHitDetectionIterations);
-		}
 
 		for (Sphere s : hitmarkers)
 			s.setRendered(false);

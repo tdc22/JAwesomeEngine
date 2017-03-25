@@ -32,4 +32,16 @@ public abstract class Ray<L extends Vector> {
 	}
 
 	public abstract L pointOnRay(float lambda);
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(128);
+		sb.append("Ray[");
+		sb.append(pos.toString());
+		sb.append(", ");
+		sb.append(dir.toString());
+		sb.append("]");
+		return sb.toString();
+	}
+
 }

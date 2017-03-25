@@ -344,6 +344,23 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		return result;
 	}
 
+	public Pair<RigidBody<L, ?, ?, ?>, Float> raycastLambda(Ray<L> ray) {
+		Pair<RigidBody<L, ?, ?, ?>, Float> result = new Pair<RigidBody<L, ?, ?, ?>, Float>(null, null);
+		float distance = Float.MAX_VALUE;
+
+		Set<RigidBody<L, ?, ?, ?>> raycastOverlaps = raycastAllBroadphase(ray);
+		for (RigidBody<L, ?, ?, ?> body : raycastOverlaps) {
+			if (raycastnarrowphase.isColliding(body, ray)) {
+				float lambda = raycastnarrowphase.computeCollisionOnRay(body, ray);
+				if (lambda < distance) {
+					result.set(body, lambda);
+				}
+			}
+		}
+
+		return result;
+	}
+
 	public Set<Pair<RigidBody<L, ?, ?, ?>, L>> raycastAll(Ray<L> ray) {
 		Set<Pair<RigidBody<L, ?, ?, ?>, L>> result = new HashSet<Pair<RigidBody<L, ?, ?, ?>, L>>();
 
@@ -361,6 +378,31 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 					if (raycastnarrowphase.isColliding(compoundbody, ray)) {
 						result.add(new Pair<RigidBody<L, ?, ?, ?>, L>(body,
 								raycastnarrowphase.computeCollision(compoundbody, ray)));
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public Set<Pair<RigidBody<L, ?, ?, ?>, Float>> raycastAllLambdas(Ray<L> ray) {
+		Set<Pair<RigidBody<L, ?, ?, ?>, Float>> result = new HashSet<Pair<RigidBody<L, ?, ?, ?>, Float>>();
+
+		Set<RigidBody<L, ?, ?, ?>> raycastOverlaps = raycastAllBroadphase(ray);
+		for (RigidBody<L, ?, ?, ?> body : raycastOverlaps) {
+			if (!body.isCompound()) {
+				if (raycastnarrowphase.isColliding(body, ray)) {
+					result.add(new Pair<RigidBody<L, ?, ?, ?>, Float>(body,
+							raycastnarrowphase.computeCollisionOnRay(body, ray)));
+				}
+			} else {
+				Set<CollisionShape<L, ?, ?>> compoundRaycastOverlaps = body.getCompound().getCompoundBroadphase()
+						.raycastAll(ray);
+				for (CollisionShape<L, ?, ?> compoundbody : compoundRaycastOverlaps) {
+					if (raycastnarrowphase.isColliding(compoundbody, ray)) {
+						result.add(new Pair<RigidBody<L, ?, ?, ?>, Float>(body,
+								raycastnarrowphase.computeCollisionOnRay(compoundbody, ray)));
 					}
 				}
 			}

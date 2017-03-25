@@ -121,7 +121,7 @@ public class Tutorial extends StandardGame {
 		setRendered(true, false, true);
 
 		Cylinder player = new Cylinder(PLAYER_START_POSITION, PLAYER_RADIUS, PLAYER_HEIGHT / 2f, 50);
-		player.setRenderHints(false, false, true);
+		player.setRenderHints(false, false, false);
 
 		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN),
 				new Input(Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN));
@@ -278,7 +278,8 @@ public class Tutorial extends StandardGame {
 		groundchecker.setTranslation(VecMath.subtraction(playerbody.getTranslation(),
 				new Vector3f(0, PLAYER_HEIGHT / 2f + GROUNDCHECKER_HEIGHT / 2f + TINY_SPACE, 0)));
 
-		goal.rotate(0.05f * delta, 0.05f * delta, 0.05f * delta);
+		float goalrotationangle = 0.05f * delta;
+		goal.rotate(goalrotationangle, goalrotationangle, goalrotationangle);
 
 		debugger.update(fps, 0, 0);
 		space.update(delta);
