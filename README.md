@@ -7,20 +7,20 @@ The engine is split up into three parts:
 * *JAwesomeBase*: the small base package with everything needed by the Game- and Physics-engine like e.g. vector and matrix calculation classes
 * *JAwesomePhysics*: a physics engine that can detect and resolve collisions
 
-##Features
+## Features
 A list of most current, wip and planned features can be found here: [Featureslist](https://docs.google.com/document/d/15QltT290VhC6iJiMpwFT2kjq1JI1Age-wUBiEWgNOl8/)
 
-##Getting Started
-###Setup
+## Getting Started
+### Setup
 [Setup](https://github.com/tdc22/JAwesomeEngine/wiki/Setup)
 
-###Tutorials
+### Tutorials
 [Tutorial](/Tutorial.md)
 
-##License
+## License
 The whole engine is under the [zlib-license](http://opensource.org/licenses/Zlib). (see [LICENSE](/LICENSE))
 
-##Credits
+## Credits
 The code was entirely written by me. Some parts are inspired by tutorials or various other sources.  
 Me: Oliver Schall (aka tdc)  
 Special thanks: Florian (aka Symorphy), Markus (aka SCBTF)
