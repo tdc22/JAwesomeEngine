@@ -3,6 +3,7 @@ package narrowphase;
 import java.util.ArrayList;
 import java.util.List;
 
+import manifold.RaycastResult;
 import math.VecMath;
 import objects.Ray;
 import objects.SupportMap;
@@ -52,14 +53,13 @@ public class GinoRaycast2 implements RaycastNarrowphase<Vector2f> {
 		return false;
 	}
 
-	@Override
-	public float computeCollisionOnRay(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
+	private float computeCollisionOnRay(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public Vector2f computeCollision(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
+	public RaycastResult<Vector2f> computeCollision(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
 		// TODO Auto-generated method stub
 		return null;
 	}

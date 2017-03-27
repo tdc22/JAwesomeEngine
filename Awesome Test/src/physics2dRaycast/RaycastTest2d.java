@@ -11,11 +11,14 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.Color;
 import integration.EulerIntegration;
 import loader.InputLoader;
 import loader.ShaderLoader;
+import manifold.RaycastResult;
 import manifold.SimpleManifoldManager;
 import math.ComplexMath;
+import math.VecMath;
 import matrix.Matrix1f;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
@@ -35,7 +38,7 @@ import shape2d.Circle;
 import shape2d.Ellipse;
 import shape2d.Quad;
 import sound.NullSoundEnvironment;
-import utils.Pair;
+import utils.GLConstants;
 import vector.Vector2f;
 import vector.Vector4f;
 
@@ -44,12 +47,13 @@ public class RaycastTest2d extends StandardGame {
 	Quad q2, q3;
 	Circle c, c1;
 	Ellipse e1;
-	Shader defaultshader, s1, s2, s3, s4, s5, s6, hitmarkershader;
+	Shader defaultshader, s1, s2, s3, s4, s5, s6;
 	RigidBody2 rb1, rb2, rb3, rb4, rb5;
 	CompoundObject2 rb6;
 	Ray2 ray;
 	RayVisualization rayVis;
 	List<Circle> hitmarkers;
+	List<Line> hitnormals;
 
 	final Vector2f up = new Vector2f(0, -1);
 
@@ -69,7 +73,8 @@ public class RaycastTest2d extends StandardGame {
 		s4 = new Shader(shaderprogram);
 		s5 = new Shader(shaderprogram);
 		s6 = new Shader(shaderprogram);
-		hitmarkershader = new Shader(shaderprogram);
+		Shader hitmarkershader = new Shader(shaderprogram);
+		Shader hitnormalshader = new Shader(shaderprogram);
 
 		s1.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s2.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
@@ -78,6 +83,7 @@ public class RaycastTest2d extends StandardGame {
 		s5.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s6.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		hitmarkershader.addArgument("u_color", new Vector4f(0f, 1f, 0f, 1f));
+		hitnormalshader.addArgument("u_color", new Vector4f(0f, 0f, 1f, 1f));
 
 		addShader2d(s1);
 		addShader2d(s2);
@@ -86,6 +92,7 @@ public class RaycastTest2d extends StandardGame {
 		addShader2d(s5);
 		addShader2d(s6);
 		addShader2d(hitmarkershader);
+		addShader2d(hitnormalshader);
 
 		defaultshader = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
@@ -138,6 +145,13 @@ public class RaycastTest2d extends StandardGame {
 			Circle hitmarker = new Circle(-100, -100, 3, 36);
 			hitmarkershader.addObject(hitmarker);
 			hitmarkers.add(hitmarker);
+		}
+
+		hitnormals = new ArrayList<Line>();
+		for (int i = 0; i < 6; i++) {
+			Line hitnormal = new Line();
+			hitnormalshader.addObject(hitnormal);
+			hitnormals.add(hitnormal);
 		}
 
 		inputs = InputLoader.load(inputs, "res/inputs.txt");
@@ -209,12 +223,14 @@ public class RaycastTest2d extends StandardGame {
 				s6.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 		}
 
-		Set<Pair<RigidBody<Vector2f, ?, ?, ?>, Vector2f>> hits = space.raycastAll(ray);
+		Set<RaycastResult<Vector2f>> hits = space.raycastAll(ray);
 		for (Circle c : hitmarkers)
 			c.setRendered(false);
+		for (Line l : hitnormals)
+			l.setRendered(false);
 		int c = 0;
-		for (Pair<RigidBody<Vector2f, ?, ?, ?>, Vector2f> hit : hits) {
-			RigidBody<Vector2f, ?, ?, ?> o = hit.getFirst();
+		for (RaycastResult<Vector2f> hit : hits) {
+			RigidBody<Vector2f, ?, ?, ?> o = hit.getHitObject();
 			if (o.equals(rb1))
 				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 			if (o.equals(rb2))
@@ -229,12 +245,34 @@ public class RaycastTest2d extends StandardGame {
 				s6.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 
 			Circle hitmarker = hitmarkers.get(c);
-			hitmarker.translateTo(hit.getSecond());
+			hitmarker.translateTo(hit.getHitPosition());
 			hitmarker.setRendered(true);
+
+			Line hitnormal = hitnormals.get(c);
+			hitnormal.update(hit.getHitPosition(),
+					VecMath.addition(hit.getHitPosition(), VecMath.scale(hit.getHitNormal(), 30)));
+			hitnormal.setRendered(true);
 
 			c++;
 		}
 
 		cam.update(delta);
+	}
+
+	private class Line extends ShapedObject2 {
+		Color c;
+
+		public Line() {
+			setRenderMode(GLConstants.LINES);
+			c = Color.CYAN;
+		}
+
+		public void update(Vector2f start, Vector2f end) {
+			delete();
+			addVertex(start, c);
+			addVertex(end, c);
+			addIndices(0, 1);
+			prerender();
+		}
 	}
 }

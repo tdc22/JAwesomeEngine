@@ -1,5 +1,6 @@
 package narrowphase;
 
+import manifold.RaycastHitResult;
 import math.VecMath;
 import objects.Ray;
 import objects.SupportMap;
@@ -25,9 +26,8 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 		return vecCheck.x * (vecA.x - vecB.x) + vecCheck.y * (vecA.y - vecB.y);
 	}
 
-	@Override
-	public float computeCollisionOnRay(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
-		return calculateScaleFactorForRay(ray, computeCollision(Sa, ray));
+	private float computeCollisionOnRay(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
+		return calculateScaleFactorForRay(ray, computeCollisionHit(Sa, ray));
 	}
 
 	private final static float EPSILON = 0.01f;
@@ -36,14 +36,18 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 	private Vector2f dir1 = new Vector2f();
 	private Vector2f dir2 = new Vector2f();
 
-	@Override
-	public Vector2f computeCollision(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
+	private final Vector2f normal = new Vector2f();
+
+	public Vector2f computeCollisionHit(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
 		dir1.set(ray.getDirection());
 		dir1.negate();
 		Vector2f bound1 = Sa.supportPoint(dir1);
 		float dot1 = dotRay(ray.getPosition(), bound1, b);
-		if (Math.abs(dot1) < EPSILON)
+		if (Math.abs(dot1) < EPSILON) {
+			normal.set(bound1);
+			normal.normalize();
 			return bound1;
+		}
 
 		dir2.set(b);
 		Vector2f bound2;
@@ -59,8 +63,11 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 			bound2 = v;
 		}
 		float dot2 = dotRay(ray.getPosition(), bound2, b);
-		if (Math.abs(dot2) < EPSILON)
+		if (Math.abs(dot2) < EPSILON) {
+			normal.set(bound2);
+			normal.normalize();
 			return bound2;
+		}
 
 		for (int i = 0; i < MAX_ITERATIONS; i++) {
 			Vector2f dir3 = getMiddleVector(dir1, dir2, ray.getDirection());
@@ -68,6 +75,8 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 			float dot3 = dotRay(ray.getPosition(), bound3, b);
 
 			if (Math.abs(dot3) < EPSILON) {
+				normal.set(bound3);
+				normal.normalize();
 				return bound3;
 			}
 
@@ -75,7 +84,12 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 				float dx = bound1.x - bound2.x;
 				float dy = bound1.y - bound2.y;
 				float dL = (float) Math.sqrt(dx * dx + dy * dy);
-				if (Math.abs((-dy / dL) * (bound3.x - bound2.x) + (dx / dL) * (bound3.y - bound2.y)) < EPSILON) {
+				float dxn = -dy / dL;
+				float dyn = dx / dL;
+				if (Math.abs(dxn * (bound3.x - bound2.x) + dyn * (bound3.y - bound2.y)) < EPSILON) {
+					normal.set(dxn, dyn);
+					if (VecMath.dotproduct(ray.getDirection(), normal) > 0)
+						normal.negate();
 					return rayLineIntersection(ray, bound3, dx, dy);
 				}
 				dir1 = dir3;
@@ -85,7 +99,12 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 				float dx = bound1.x - bound2.x;
 				float dy = bound1.y - bound2.y;
 				float dL = (float) Math.sqrt(dx * dx + dy * dy);
-				if (Math.abs((-dy / dL) * (bound3.x - bound2.x) + (dx / dL) * (bound3.y - bound2.y)) < EPSILON) {
+				float dxn = -dy / dL;
+				float dyn = dx / dL;
+				if (Math.abs(dxn * (bound3.x - bound2.x) + dyn * (bound3.y - bound2.y)) < EPSILON) {
+					normal.set(dxn, dyn);
+					if (VecMath.dotproduct(ray.getDirection(), normal) > 0)
+						normal.negate();
 					return rayLineIntersection(ray, bound1, dx, dy);
 				}
 				dir2 = dir3;
@@ -94,7 +113,10 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 			}
 		}
 
-		return (Math.abs(dot1) < Math.abs(dot2)) ? bound1 : bound2;
+		Vector2f result = (Math.abs(dot1) < Math.abs(dot2)) ? bound1 : bound2;
+		normal.set(result);
+		normal.normalize();
+		return result;
 	}
 
 	private Vector2f getMiddleVector(Vector2f a, Vector2f b, Vector2f negdir) {
@@ -124,7 +146,12 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 	private float calculateScaleFactorForRay(Ray<Vector2f> r, Vector2f p) {
 		float rPosPx = p.x - r.getPosition().x;
 		float rPosPy = p.y - r.getPosition().y;
-		System.out.println(r.getDirection().length());
 		return (float) (Math.sqrt(rPosPx * rPosPx + rPosPy * rPosPy) / r.getDirection().length());
+	}
+
+	@Override
+	public RaycastHitResult<Vector2f> computeCollision(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
+		float d = computeCollisionOnRay(Sa, ray);
+		return new RaycastHitResult<Vector2f>(d, ray.pointOnRay(d), new Vector2f(normal));
 	}
 }

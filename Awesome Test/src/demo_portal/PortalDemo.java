@@ -1,5 +1,7 @@
 package demo_portal;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import broadphase.DynamicAABBTree3;
@@ -9,6 +11,7 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.Color;
 import input.Input;
 import input.InputEvent;
 import input.KeyInput;
@@ -18,18 +21,20 @@ import loader.FontLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
 import manifold.MultiPointManifoldManager;
+import manifold.RaycastResult;
 import math.QuatMath;
 import math.VecMath;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import narrowphase.SupportRaycast;
 import objects.Ray3;
-import objects.RigidBody;
 import objects.RigidBody3;
 import objects.ShapedObject2;
+import objects.ShapedObject3;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import positionalcorrection.ProjectionCorrection;
+import quaternion.Quaternionf;
 import resolution.SimpleLinearImpulseResolution;
 import shader.Shader;
 import shape.Box;
@@ -39,7 +44,6 @@ import sound.NullSoundEnvironment;
 import texture.Texture;
 import utils.Debugger;
 import utils.GLConstants;
-import utils.Pair;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
@@ -61,7 +65,12 @@ public class PortalDemo extends StandardGame {
 	final float GROUNDCHECKER_HEIGHT = 0.05f;
 	final float TINY_SPACE = 0.001f;
 
-	Sphere portal1, portal2, raytest;
+	final float PORTAL_HEIGHT = 0.001f;
+
+	Cylinder portal1, portal2;
+
+	List<Sphere> hitmarkers;
+	List<Line> hitnormals;
 
 	@Override
 	public void init() {
@@ -123,9 +132,10 @@ public class PortalDemo extends StandardGame {
 		inputs.addEvent(shootleft);
 		inputs.addEvent(shootright);
 
-		portal1 = new Sphere(0, -10, 0, 1, 32, 32);
-		portal2 = new Sphere(0, -10, 0, 1, 32, 32);
-		raytest = new Sphere(0, -10, 0, 0.2f, 32, 32);
+		portal1 = new Cylinder(0, -10, 0, 1, PORTAL_HEIGHT, 32);
+		portal2 = new Cylinder(0, -10, 0, 1, PORTAL_HEIGHT, 32);
+		portal1.scale(1, 1, 2);
+		portal2.scale(1, 1, 2);
 
 		Shader portalShader1 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
@@ -133,7 +143,6 @@ public class PortalDemo extends StandardGame {
 		portalShader1.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 		addShader(portalShader1);
 		portalShader1.addObject(portal1);
-		portalShader1.addObject(raytest);
 
 		Shader portalShader2 = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
@@ -181,6 +190,29 @@ public class PortalDemo extends StandardGame {
 		crosshair.addIndices(0, 1, 2, 3);
 		crosshair.prerender();
 		crosshairshader.addObject(crosshair);
+
+		int shaderprogram = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
+				"res/shaders/colorshader.frag");
+		Shader hitmarkershader = new Shader(shaderprogram);
+		Shader hitnormalshader = new Shader(shaderprogram);
+		hitmarkershader.addArgument("u_color", new Vector4f(0f, 1f, 0f, 1f));
+		hitnormalshader.addArgument("u_color", new Vector4f(0f, 0f, 1f, 1f));
+		addShader(hitmarkershader);
+		addShader(hitnormalshader);
+
+		hitmarkers = new ArrayList<Sphere>();
+		for (int i = 0; i < 6; i++) {
+			Sphere hitmarker = new Sphere(-100, -100, -100, 0.1f, 36, 36);
+			hitmarkershader.addObject(hitmarker);
+			hitmarkers.add(hitmarker);
+		}
+
+		hitnormals = new ArrayList<Line>();
+		for (int i = 0; i < 6; i++) {
+			Line hitnormal = new Line();
+			hitnormalshader.addObject(hitnormal);
+			hitnormals.add(hitnormal);
+		}
 	}
 
 	private void initLevel(Shader levelshader) {
@@ -275,7 +307,7 @@ public class PortalDemo extends StandardGame {
 		if (inputs.isMouseMoved()) {
 			mousedx = -inputs.getMouseX() * mousesensitivity;
 			float mousedy = -inputs.getMouseY() * mousesensitivity;
-			cam.rotate(mousedx, mousedy);
+			// cam.rotate(mousedx, mousedy);
 			playerbody.rotate(0, mousedx, 0);
 		}
 
@@ -307,21 +339,37 @@ public class PortalDemo extends StandardGame {
 
 		debugger.update(fps, 0, 0);
 		space.update(delta);
+		cam.update(delta);
 		onground = space.hasCollision(groundchecker);
 
 		Vector3f offset = QuatMath.transform(playerbody.getRotation(), new Vector3f(0, 0, -1));
 		offset.setY(PLAYER_HEIGHT * 0.375f);
-		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
+		// cam.translateTo(VecMath.addition(playerbody.getTranslation(),
+		// offset));
 
 		if (shootleft.isActive()) {
-			Vector3f hit = determinePortalPosition();
-			if (hit != null)
-				portal1.translateTo(hit);
+			determinePortalPosition(portal1);
 		}
 		if (shootright.isActive()) {
-			Vector3f hit = determinePortalPosition();
-			if (hit != null)
-				portal2.translateTo(hit);
+			determinePortalPosition(portal2);
+		}
+
+		shootray.setPosition(cam.getTranslation());
+		shootray.setDirection(cam.getDirection());
+		int count = 0;
+		Set<RaycastResult<Vector3f>> hits = space.raycastAll(shootray);
+		for (RaycastResult<Vector3f> hit : hits) {
+			if (!hit.getHitObject().equals(playerbody)) {
+				Sphere hitsphere = hitmarkers.get(count);
+				hitsphere.translateTo(hit.getHitPosition());
+				hitsphere.setRendered(true);
+
+				Line hitnormal = hitnormals.get(count);
+				hitnormal.update(hit.getHitPosition(), VecMath.addition(hit.getHitPosition(), hit.getHitNormal()));
+				hitnormal.setRendered(true);
+
+				count++;
+			}
 		}
 
 		/*
@@ -338,17 +386,59 @@ public class PortalDemo extends StandardGame {
 	}
 
 	final Ray3 shootray = new Ray3(new Vector3f(), new Vector3f());
+	final Vector3f portalreference = new Vector3f(0, 0, 1);
 
-	private Vector3f determinePortalPosition() {
+	private void determinePortalPosition(ShapedObject3 portal) {
 		shootray.setPosition(cam.getTranslation());
 		shootray.setDirection(cam.getDirection());
-		Set<Pair<RigidBody<Vector3f, ?, ?, ?>, Float>> hits = space.raycastAllLambdas(shootray);
+		Set<RaycastResult<Vector3f>> hits = space.raycastAll(shootray);
 		float currentclosest = Float.MAX_VALUE;
-		for (Pair<RigidBody<Vector3f, ?, ?, ?>, Float> hit : hits) {
-			if (!hit.getFirst().equals(playerbody) && hit.getSecond() > 0 && hit.getSecond() < currentclosest) {
-				currentclosest = hit.getSecond();
+		RaycastResult<Vector3f> closest = null;
+		for (RaycastResult<Vector3f> hit : hits) {
+			if (!hit.getHitObject().equals(playerbody) && hit.getHitDistance() > 0
+					&& hit.getHitDistance() < currentclosest) {
+				currentclosest = hit.getHitDistance();
+				closest = hit;
 			}
 		}
-		return shootray.pointOnRay(currentclosest);
+
+		if (closest != null) {
+			portal.translateTo(closest.getHitPosition());
+			portal.rotateTo(playerbody.getRotation());
+			Vector3f hitnormal = closest.getHitNormal();
+			hitnormal.normalize();
+
+			/*
+			 * Quaternion q; vector a = crossproduct(v1, v2) q.xyz = a; q.w =
+			 * sqrt((v1.Length ^ 2) * (v2.Length ^ 2)) + dotproduct(v1, v2)
+			 */
+			portalreference.set(QuatMath.transform(portal.getRotation(), new Vector3f(1, 0, 0)));
+			Vector3f a = VecMath.crossproduct(portalreference, hitnormal);
+			System.out.println(hitnormal);
+			if (a.lengthSquared() > 0) {
+				// a.normalize();
+				Quaternionf q = new Quaternionf();
+				q.set(a.x, a.z, a.y, 1 + VecMath.dotproduct(portalreference, hitnormal));
+				q.normalize();
+				portal.rotate(q);
+			}
+		}
+	}
+
+	private class Line extends ShapedObject3 {
+		Color c;
+
+		public Line() {
+			setRenderMode(GLConstants.LINES);
+			c = Color.CYAN;
+		}
+
+		public void update(Vector3f start, Vector3f end) {
+			delete();
+			addVertex(start, c);
+			addVertex(end, c);
+			addIndices(0, 1);
+			prerender();
+		}
 	}
 }

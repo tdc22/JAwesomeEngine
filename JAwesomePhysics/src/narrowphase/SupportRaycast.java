@@ -3,6 +3,7 @@ package narrowphase;
 import java.util.ArrayList;
 import java.util.List;
 
+import manifold.RaycastHitResult;
 import math.VecMath;
 import objects.Ray;
 import objects.SupportMap;
@@ -117,8 +118,7 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 	private final Vector2f PBn = new Vector2f();
 	private final Vector2f PCn = new Vector2f();
 
-	@Override
-	public float computeCollisionOnRay(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
+	private float computeCollisionOnRay(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
 		Vector3f a = simplex3.get(0);
 		Vector3f b = simplex3.get(1);
 		Vector3f c = simplex3.get(2);
@@ -271,9 +271,9 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 	}
 
 	@Override
-	public Vector3f computeCollision(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
+	public RaycastHitResult<Vector3f> computeCollision(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
 		float d = computeCollisionOnRay(Sa, ray);
-		return new Vector3f(ray.getPosition().x + ray.getDirection().x * d,
-				ray.getPosition().y + ray.getDirection().y * d, ray.getPosition().z + ray.getDirection().z * d);
+		n.normalize();
+		return new RaycastHitResult<Vector3f>(d, ray.pointOnRay(d), new Vector3f(n));
 	}
 }

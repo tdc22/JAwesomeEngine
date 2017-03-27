@@ -10,6 +10,7 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.Color;
 import gui.Font;
 import input.Input;
 import input.InputEvent;
@@ -17,7 +18,9 @@ import input.KeyInput;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.ShaderLoader;
+import manifold.RaycastResult;
 import manifold.SimpleManifoldManager;
+import math.VecMath;
 import misc.HalfSphere;
 import misc.HalfSphereShape;
 import narrowphase.EPA;
@@ -27,6 +30,7 @@ import objects.Ray3;
 import objects.RigidBody;
 import objects.RigidBody3;
 import objects.ShapedObject2;
+import objects.ShapedObject3;
 import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
@@ -39,7 +43,6 @@ import shape.Sphere;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
 import utils.GLConstants;
-import utils.Pair;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
@@ -50,13 +53,14 @@ public class RaycastTest extends StandardGame {
 	Sphere sp1;
 	Cylinder c1;
 	HalfSphere hs;
-	Shader defaultshader, s1, s2, s3, s4, s5, hitmarkershader;
+	Shader defaultshader, s1, s2, s3, s4, s5;
 	RigidBody3 rb1, rb2, rb3, rb4, rb5;
 	Debugger debugger;
 	PhysicsDebug physicsdebug;
 	InputEvent increaseIterations, decreaseIterations;
 	Ray3 ray;
 	List<Sphere> hitmarkers;
+	List<Line> hitnormals;
 
 	@Override
 	public void init() {
@@ -81,7 +85,8 @@ public class RaycastTest extends StandardGame {
 		s3 = new Shader(shaderprogram);
 		s4 = new Shader(shaderprogram);
 		s5 = new Shader(shaderprogram);
-		hitmarkershader = new Shader(shaderprogram);
+		Shader hitmarkershader = new Shader(shaderprogram);
+		Shader hitnormalshader = new Shader(shaderprogram);
 
 		s1.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s2.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
@@ -89,6 +94,7 @@ public class RaycastTest extends StandardGame {
 		s4.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s5.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		hitmarkershader.addArgument("u_color", new Vector4f(0f, 1f, 0f, 1f));
+		hitnormalshader.addArgument("u_color", new Vector4f(0f, 0f, 1f, 1f));
 
 		addShader(s1);
 		addShader(s2);
@@ -96,6 +102,7 @@ public class RaycastTest extends StandardGame {
 		addShader(s4);
 		addShader(s5);
 		addShader(hitmarkershader);
+		addShader(hitnormalshader);
 
 		space = new PhysicsSpace(new EulerIntegration(), new DynamicAABBTree3(), new GJK(new EPA()),
 				new SupportRaycast(), new NullResolution(), new NullCorrection(),
@@ -145,6 +152,13 @@ public class RaycastTest extends StandardGame {
 			Sphere hitmarker = new Sphere(-100, -100, -100, 0.1f, 36, 36);
 			hitmarkershader.addObject(hitmarker);
 			hitmarkers.add(hitmarker);
+		}
+
+		hitnormals = new ArrayList<Line>();
+		for (int i = 0; i < 6; i++) {
+			Line hitnormal = new Line();
+			hitnormalshader.addObject(hitnormal);
+			hitnormals.add(hitnormal);
 		}
 
 		ShapedObject2 crosshair = new ShapedObject2();
@@ -205,6 +219,8 @@ public class RaycastTest extends StandardGame {
 
 		for (Sphere s : hitmarkers)
 			s.setRendered(false);
+		for (Line l : hitnormals)
+			l.setRendered(false);
 		int count = 0;
 
 		// Just raycast in broadphase
@@ -223,9 +239,9 @@ public class RaycastTest extends StandardGame {
 		}
 
 		// Raycast broad- and narrowphase
-		Set<Pair<RigidBody<Vector3f, ?, ?, ?>, Vector3f>> hits = space.raycastAll(ray);
-		for (Pair<RigidBody<Vector3f, ?, ?, ?>, Vector3f> hit : hits) {
-			RigidBody<Vector3f, ?, ?, ?> o = hit.getFirst();
+		Set<RaycastResult<Vector3f>> hits = space.raycastAll(ray);
+		for (RaycastResult<Vector3f> hit : hits) {
+			RigidBody<Vector3f, ?, ?, ?> o = hit.getHitObject();
 			if (o.equals(rb1))
 				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 			if (o.equals(rb2))
@@ -238,12 +254,33 @@ public class RaycastTest extends StandardGame {
 				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 
 			Sphere hitsphere = hitmarkers.get(count);
-			hitsphere.translateTo(hit.getSecond());
+			hitsphere.translateTo(hit.getHitPosition());
 			hitsphere.setRendered(true);
+
+			Line hitnormal = hitnormals.get(count);
+			hitnormal.update(hit.getHitPosition(), VecMath.addition(hit.getHitPosition(), hit.getHitNormal()));
+			hitnormal.setRendered(true);
 
 			count++;
 		}
 
 		debugger.update(fps, 0, 0);
+	}
+
+	private class Line extends ShapedObject3 {
+		Color c;
+
+		public Line() {
+			setRenderMode(GLConstants.LINES);
+			c = Color.CYAN;
+		}
+
+		public void update(Vector3f start, Vector3f end) {
+			delete();
+			addVertex(start, c);
+			addVertex(end, c);
+			addIndices(0, 1);
+			prerender();
+		}
 	}
 }
