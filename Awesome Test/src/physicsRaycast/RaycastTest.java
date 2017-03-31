@@ -119,7 +119,7 @@ public class RaycastTest extends StandardGame {
 		space.addRigidBody(b2, rb2);
 		s2.addObject(b2);
 
-		sp1 = new Sphere(-10, 10, 0, 1, 36, 36);
+		sp1 = new Sphere(-10, 10, 0, 2, 36, 36);
 		rb3 = new RigidBody3(PhysicsShapeCreator.create(sp1));
 		space.addRigidBody(sp1, rb3);
 		s3.addObject(sp1);

@@ -17,6 +17,8 @@ import input.KeyInput;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.ShaderLoader;
+import manifold.RaycastHitResult;
+import manifold.RaycastResult;
 import manifold.SimpleManifoldManager;
 import math.VecMath;
 import misc.HalfSphere;
@@ -43,7 +45,6 @@ import shape2d.Circle;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
 import utils.GLConstants;
-import utils.Pair;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
@@ -140,7 +141,7 @@ public class RaycastTest extends StandardGame {
 		space.addRigidBody(b2, rb2);
 		s2.addObject(b2);
 
-		sp1 = new Sphere(-10, 10, 0, 1, 36, 36);
+		sp1 = new Sphere(-10, 10, 0, 2, 36, 36);
 		rb3 = new RigidBody3(PhysicsShapeCreator.create(sp1));
 		space.addRigidBody(sp1, rb3);
 		s3.addObject(sp1);
@@ -598,9 +599,9 @@ public class RaycastTest extends StandardGame {
 				boolean doesHit = space.getRaycastNarrowphase().isColliding(o, ray);
 				System.out.println(doesHit);
 				if (doesHit) {
-					Vector3f hitpoint = space.getRaycastNarrowphase().computeCollision(o, ray);
+					RaycastHitResult<Vector3f> hitpoint = space.getRaycastNarrowphase().computeCollision(o, ray);
 					Sphere hit = hitmarkers.get(count);
-					hit.translateTo(hitpoint);
+					hit.translateTo(hitpoint.getHitPosition());
 					hit.setRendered(true);
 				}
 
@@ -649,9 +650,9 @@ public class RaycastTest extends StandardGame {
 			 */
 		}
 
-		Set<Pair<RigidBody<Vector3f, ?, ?, ?>, Vector3f>> hits = space.raycastAll(ray);
-		for (Pair<RigidBody<Vector3f, ?, ?, ?>, Vector3f> hit : hits) {
-			RigidBody<Vector3f, ?, ?, ?> o = hit.getFirst();
+		Set<RaycastResult<Vector3f>> hits = space.raycastAll(ray);
+		for (RaycastResult<Vector3f> hit : hits) {
+			RigidBody<Vector3f, ?, ?, ?> o = hit.getHitObject();
 			if (o.equals(rb1))
 				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 			if (o.equals(rb2))

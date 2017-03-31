@@ -216,67 +216,31 @@ public class PortalDemo extends StandardGame {
 	}
 
 	private void initLevel(Shader levelshader) {
-		Box ground = new Box(0, -1, 0, 8, 1, 8);
-		ground.setRenderHints(false, true, false);
-		levelshader.addObject(ground);
-		RigidBody3 g = new RigidBody3(PhysicsShapeCreator.create(ground));
-		space.addRigidBody(ground, g);
+		addBox(levelshader, 0, -1, 0, 8, 1, 8); // ground
+		addBox(levelshader, 0, 12, 0, 8, 0, 8); // roof
+		addBox(levelshader, 8, 6, 0, 0, 6, 8); // wall1
+		addBox(levelshader, -8, 6, 0, 0, 6, 8); // wall2
+		addBox(levelshader, 0, 6, 8, 8, 6, 0); // wall3
+		addBox(levelshader, 0, 6, -8, 8, 6, 0); // wall4
+		addBox(levelshader, -6, 2, 6, 2, 2, 2);
+		addBox(levelshader, -7, -1, -9, 4, 4, 4).rotate(45, 0, 0);
+		addBox(levelshader, 6, 2.5f, -6.5f, 2, 2.5f, 1.5f);
+		addBox(levelshader, 6.5f, -0.7f, 0, 1.5f, 3, 7).rotate(25, 0, 0);
 
-		Box roof = new Box(0, 12, 0, 8, 0, 8);
-		roof.setRenderHints(false, true, false);
-		levelshader.addObject(roof);
-		RigidBody3 r = new RigidBody3(PhysicsShapeCreator.create(roof));
-		space.addRigidBody(roof, r);
+		Sphere testsphere = new Sphere(0, 2, 0, 2, 36, 36);
+		testsphere.setRenderHints(false, true, false);
+		levelshader.addObject(testsphere);
+		RigidBody3 s = new RigidBody3(PhysicsShapeCreator.create(testsphere));
+		space.addRigidBody(testsphere, s);
+	}
 
-		Box wall1 = new Box(8, 6, 0, 0, 6, 8);
-		wall1.setRenderHints(false, true, false);
-		levelshader.addObject(wall1);
-		RigidBody3 w1 = new RigidBody3(PhysicsShapeCreator.create(wall1));
-		space.addRigidBody(wall1, w1);
-
-		Box wall2 = new Box(-8, 6, 0, 0, 6, 8);
-		wall2.setRenderHints(false, true, false);
-		levelshader.addObject(wall2);
-		RigidBody3 w2 = new RigidBody3(PhysicsShapeCreator.create(wall2));
-		space.addRigidBody(wall2, w2);
-
-		Box wall3 = new Box(0, 6, 8, 8, 6, 0);
-		wall3.setRenderHints(false, true, false);
-		levelshader.addObject(wall3);
-		RigidBody3 w3 = new RigidBody3(PhysicsShapeCreator.create(wall3));
-		space.addRigidBody(wall3, w3);
-
-		Box wall4 = new Box(0, 6, -8, 8, 6, 0);
-		wall4.setRenderHints(false, true, false);
-		levelshader.addObject(wall4);
-		RigidBody3 w4 = new RigidBody3(PhysicsShapeCreator.create(wall4));
-		space.addRigidBody(wall4, w4);
-
-		Box box1 = new Box(-6, 2, 6, 2, 2, 2);
-		box1.setRenderHints(false, true, false);
-		levelshader.addObject(box1);
-		RigidBody3 b1 = new RigidBody3(PhysicsShapeCreator.create(box1));
-		space.addRigidBody(box1, b1);
-
-		Box box2 = new Box(-7, -1, -9, 4, 4, 4);
-		box2.rotate(45, 0, 0);
-		box2.setRenderHints(false, true, false);
-		levelshader.addObject(box2);
-		RigidBody3 b2 = new RigidBody3(PhysicsShapeCreator.create(box2));
-		space.addRigidBody(box2, b2);
-
-		Box box3 = new Box(6, 2.5f, -6.5f, 2, 2.5f, 1.5f);
-		box3.setRenderHints(false, true, false);
-		levelshader.addObject(box3);
-		RigidBody3 b3 = new RigidBody3(PhysicsShapeCreator.create(box3));
-		space.addRigidBody(box3, b3);
-
-		Box box4 = new Box(6.5f, -0.7f, 0, 1.5f, 3, 7);
-		box4.rotate(25, 0, 0);
-		box4.setRenderHints(false, true, false);
-		levelshader.addObject(box4);
-		RigidBody3 b4 = new RigidBody3(PhysicsShapeCreator.create(box4));
-		space.addRigidBody(box4, b4);
+	private Box addBox(Shader shader, float x, float y, float z, float width, float height, float depth) {
+		Box box = new Box(x, y, z, width, height, depth);
+		box.setRenderHints(false, true, false);
+		shader.addObject(box);
+		RigidBody3 b = new RigidBody3(PhysicsShapeCreator.create(box));
+		space.addRigidBody(box, b);
+		return box;
 	}
 
 	@Override
@@ -307,7 +271,7 @@ public class PortalDemo extends StandardGame {
 		if (inputs.isMouseMoved()) {
 			mousedx = -inputs.getMouseX() * mousesensitivity;
 			float mousedy = -inputs.getMouseY() * mousesensitivity;
-			// cam.rotate(mousedx, mousedy);
+			cam.rotate(mousedx, mousedy);
 			playerbody.rotate(0, mousedx, 0);
 		}
 
@@ -339,13 +303,12 @@ public class PortalDemo extends StandardGame {
 
 		debugger.update(fps, 0, 0);
 		space.update(delta);
-		cam.update(delta);
+		// cam.update(delta);
 		onground = space.hasCollision(groundchecker);
 
 		Vector3f offset = QuatMath.transform(playerbody.getRotation(), new Vector3f(0, 0, -1));
 		offset.setY(PLAYER_HEIGHT * 0.375f);
-		// cam.translateTo(VecMath.addition(playerbody.getTranslation(),
-		// offset));
+		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
 
 		if (shootleft.isActive()) {
 			determinePortalPosition(portal1);
@@ -386,7 +349,8 @@ public class PortalDemo extends StandardGame {
 	}
 
 	final Ray3 shootray = new Ray3(new Vector3f(), new Vector3f());
-	final Vector3f portalreference = new Vector3f(0, 0, 1);
+	final Vector3f portalside = new Vector3f(1, 0, 0);
+	final Vector3f portalfront = new Vector3f(1, 0, 1);
 
 	private void determinePortalPosition(ShapedObject3 portal) {
 		shootray.setPosition(cam.getTranslation());
@@ -404,25 +368,81 @@ public class PortalDemo extends StandardGame {
 
 		if (closest != null) {
 			portal.translateTo(closest.getHitPosition());
-			portal.rotateTo(playerbody.getRotation());
+			// portal.rotateTo(playerbody.getRotation());
 			Vector3f hitnormal = closest.getHitNormal();
-			hitnormal.normalize();
 
 			/*
 			 * Quaternion q; vector a = crossproduct(v1, v2) q.xyz = a; q.w =
 			 * sqrt((v1.Length ^ 2) * (v2.Length ^ 2)) + dotproduct(v1, v2)
 			 */
-			portalreference.set(QuatMath.transform(portal.getRotation(), new Vector3f(1, 0, 0)));
-			Vector3f a = VecMath.crossproduct(portalreference, hitnormal);
-			System.out.println(hitnormal);
+
+			Quaternionf q = new Quaternionf();
+			portal.rotateTo(q);
+			Vector3f a = VecMath.crossproduct(up, hitnormal);
 			if (a.lengthSquared() > 0) {
-				// a.normalize();
-				Quaternionf q = new Quaternionf();
-				q.set(a.x, a.z, a.y, 1 + VecMath.dotproduct(portalreference, hitnormal));
+				Vector3f b = VecMath.crossproduct(hitnormal, a);
+				// q.rotate(90*VecMath.dotproduct(a, portalside), new
+				// Vector3f(0, 0, 1));
+				// q.rotate(90*VecMath.dotproduct(hitnormal, portalfront), new
+				// Vector3f(1, 0, 0));
+
+				float anglex = 0;
+				float anglez = 0;
+				if (hitnormal.x > 0) {
+					anglez = angleBetweenVectors(hitnormal, new Vector3f(0, 0, 1));
+					if (hitnormal.z > 0) {
+						anglex = angleBetweenVectors(hitnormal, up);
+					} else {
+						anglex = angleBetweenVectors(hitnormal, up);
+					}
+				} else {
+					anglez = -angleBetweenVectors(hitnormal, new Vector3f(0, 0, 1));
+					if (hitnormal.z > 0) {
+						anglex = angleBetweenVectors(hitnormal, up);
+					} else {
+						anglex = angleBetweenVectors(hitnormal, up);
+					}
+				}
+				System.out.println(hitnormal + "; " + anglex + "; " + anglez);
+				// portal.rotate(90, 0, 0);
+				portal.rotate(0, anglez, 0);
+				portal.rotate(anglex, 0, 0);
+				// portal.rotate(rotationBetweenTwoVectors(QuatMath.transform(q,
+				// portalfront), hitnormal));
+				// System.out.println(90*VecMath.dotproduct(hitnormal,
+				// portalside) + "; " + 90*VecMath.dotproduct(hitnormal,
+				// portalfront));
 				q.normalize();
-				portal.rotate(q);
+				// portal.rotate(q);
+			} else {
+				portal.rotateTo(playerbody.getRotation());
 			}
+
+			// portalreference.set(QuatMath.transform(portal.getRotation(), new
+			// Vector3f(1, 0, 0)));
+			/*
+			 * Vector3f a = VecMath.crossproduct(portalreference, new
+			 * Vector3f(1, 0, 0)); System.out.println(hitnormal); if
+			 * (a.lengthSquared() > 0) { // a.normalize(); Quaternionf q = new
+			 * Quaternionf(); q.set(a.x, a.y, a.z, 1 +
+			 * VecMath.dotproduct(portalreference, hitnormal)); q.normalize();
+			 * portal.rotate(q); }
+			 */
 		}
+	}
+
+	private Quaternionf rotationBetweenTwoVectors(Vector3f from, Vector3f to) {
+		Quaternionf q = new Quaternionf();
+		Vector3f a = VecMath.crossproduct(from, to);
+		if (a.lengthSquared() > 0) {
+			q.set(a.x, a.y, a.z, 1 + VecMath.dotproduct(from, to));
+			q.normalize();
+		}
+		return q;
+	}
+
+	private float angleBetweenVectors(Vector3f a, Vector3f b) {
+		return (float) Math.toDegrees(Math.acos(VecMath.dotproduct(a, b)));
 	}
 
 	private class Line extends ShapedObject3 {

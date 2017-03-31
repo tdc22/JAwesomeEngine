@@ -237,24 +237,26 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 						float BpY = q.y - projB.y;
 						float rpX = -(q.y - centerOnPlane2.y);
 						float rpY = q.x - centerOnPlane2.x;
-						if (VecMath.dotproduct(ApX, ApY, rpX, rpY) > 0 && VecMath.dotproduct(BpX, BpY, rpX, rpY) <= 0) {
+						float dotARp = VecMath.dotproduct(ApX, ApY, rpX, rpY);
+						float dotBRp = VecMath.dotproduct(BpX, BpY, rpX, rpY);
+						if ((dotARp >= 0 && dotBRp < 0) || (dotARp > 0 && dotBRp <= 0)) {
 							c = p;
 							projC = q;
 						} else {
 							float CpX = q.x - projC.x;
 							float CpY = q.y - projC.y;
-							if (VecMath.dotproduct(BpX, BpY, rpX, rpY) > 0
-									&& VecMath.dotproduct(CpX, CpY, rpX, rpY) <= 0) {
+							float dotCRp = VecMath.dotproduct(CpX, CpY, rpX, rpY);
+							if ((dotBRp >= 0 && dotCRp < 0) || (dotBRp > 0 && dotCRp <= 0)) {
 								a = p;
 								projA = q;
 							} else {
-								if (VecMath.dotproduct(CpX, CpY, rpX, rpY) > 0
-										&& VecMath.dotproduct(ApX, ApY, rpX, rpY) <= 0) {
-									b = p;
-									projB = q;
-								} else {
-									System.out.println("ERROR: no region");
-								}
+								// if ((dotCRp >= 0 && dotARp < 0) || ((dotCRp >
+								// 0 && dotARp <= 0))) {
+								b = p;
+								projB = q;
+								// } else {
+								// System.out.println("ERROR: no region");
+								// }
 							}
 						}
 					}

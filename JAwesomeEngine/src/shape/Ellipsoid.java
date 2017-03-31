@@ -64,11 +64,11 @@ public class Ellipsoid extends ShapedObject3 implements EllipsoidStructure {
 						radiusZ * (float) Math.sin(Math.toRadians(angleStepv * (a / (float) 2)))
 								* (float) Math.cos(Math.toRadians(angleSteph * b)));
 				Vector3f normal = VecMath.normalize(pos);
-				addVertex(pos, c, new Vector2f(a, b), normal);
+				addVertex(pos, c, new Vector2f(1 - b / (float) trisH, 1 - a / (float) trisV), normal);
 			}
 		}
-		addVertex(VecMath.subtraction(getVertex(0), new Vector3f(0, radiusY * 2, 0)), Color.GRAY,
-				new Vector2f(trisV, trisH), new Vector3f(0, -1, 0));
+		addVertex(VecMath.subtraction(getVertex(0), new Vector3f(0, radiusY * 2, 0)), Color.GRAY, new Vector2f(0, 0),
+				new Vector3f(0, -1, 0));
 
 		int lv = trisV;
 		int lh = trisH;
