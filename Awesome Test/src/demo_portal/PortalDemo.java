@@ -24,6 +24,7 @@ import math.VecMath;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import narrowphase.SupportRaycast;
+import objects.Camera3;
 import objects.Ray3;
 import objects.RigidBody3;
 import objects.ShapedObject2;
@@ -37,7 +38,9 @@ import shader.Shader;
 import shape.Box;
 import shape.Cylinder;
 import shape.Sphere;
+import shape2d.Quad;
 import sound.NullSoundEnvironment;
+import texture.FramebufferObject;
 import texture.Texture;
 import utils.Debugger;
 import utils.GLConstants;
@@ -65,6 +68,10 @@ public class PortalDemo extends StandardGame {
 	final float PORTAL_HEIGHT = 0.001f;
 
 	Cylinder portal1, portal2;
+	Camera3 portal1cam, portal2cam;
+	FramebufferObject portal1FB, portal2FB;
+
+	Sphere portalTestCamSphere1, portalTestCamSphere2;
 
 	@Override
 	public void init() {
@@ -76,11 +83,16 @@ public class PortalDemo extends StandardGame {
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		int defaultshaderID = ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert",
+				"res/shaders/defaultshader.frag");
+		int colorshaderID = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
+				"res/shaders/colorshader.frag");
+		int textureshaderID = ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert",
+				"res/shaders/textureshader.frag");
+
+		Shader defaultshader = new Shader(defaultshaderID);
 		addShader(defaultshader);
-		Shader defaultshaderInterface = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		Shader defaultshaderInterface = new Shader(defaultshaderID);
 		addShaderInterface(defaultshaderInterface);
 
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface,
@@ -92,8 +104,7 @@ public class PortalDemo extends StandardGame {
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/grid.png"));
-		Shader textureshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/textureshader.vert", "res/shaders/textureshader.frag"));
+		Shader textureshader = new Shader(textureshaderID);
 		textureshader.addArgumentName("u_texture");
 		textureshader.addArgument(texture);
 		addShader(textureshader);
@@ -126,24 +137,27 @@ public class PortalDemo extends StandardGame {
 		inputs.addEvent(shootleft);
 		inputs.addEvent(shootright);
 
-		portal1 = new Cylinder(0, 9, 0, 1, PORTAL_HEIGHT, 32);
-		portal2 = new Cylinder(0, 9, 0, 1, PORTAL_HEIGHT, 32);
+		portal1 = new Cylinder(0, -10, 0, 1, PORTAL_HEIGHT, 32);
+		portal2 = new Cylinder(0, -10, 0, 1, PORTAL_HEIGHT, 32);
 		portal1.scale(1, 1, 2);
 		portal2.scale(1, 1, 2);
 
-		Shader portalShader1 = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		portalTestCamSphere1 = new Sphere(0, -10, 0, 0.2f, 36, 36);
+		portalTestCamSphere2 = new Sphere(0, -10, 0, 0.2f, 36, 36);
+
+		Shader portalShader1 = new Shader(colorshaderID);
 		portalShader1.addArgumentName("u_color");
 		portalShader1.addArgument(new Vector4f(1f, 0f, 0f, 1f));
 		addShader(portalShader1);
 		portalShader1.addObject(portal1);
+		portalShader1.addObject(portalTestCamSphere1);
 
-		Shader portalShader2 = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader portalShader2 = new Shader(colorshaderID);
 		portalShader2.addArgumentName("u_color");
 		portalShader2.addArgument(new Vector4f(0f, 1f, 0f, 1f));
 		addShader(portalShader2);
 		portalShader2.addObject(portal2);
+		portalShader2.addObject(portalTestCamSphere2);
 
 		playerbody = new RigidBody3(PhysicsShapeCreator.create(player));
 		playerbody.setMass(1f);
@@ -159,15 +173,13 @@ public class PortalDemo extends StandardGame {
 		groundchecker.setRestitution(0);
 		space.addRigidBody(groundchecker);
 
-		Shader playershader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader playershader = new Shader(colorshaderID);
 		playershader.addArgumentName("u_color");
 		playershader.addArgument(new Vector4f(0f, 0f, 1f, 1f));
 		addShader(playershader);
 		playershader.addObject(player);
 
-		Shader crosshairshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
+		Shader crosshairshader = new Shader(colorshaderID);
 		crosshairshader.addArgumentName("u_color");
 		crosshairshader.addArgument(new Vector4f(0f, 0f, 0f, 1f));
 		addShaderInterface(crosshairshader);
@@ -185,14 +197,24 @@ public class PortalDemo extends StandardGame {
 		crosshair.prerender();
 		crosshairshader.addObject(crosshair);
 
-		int shaderprogram = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert",
-				"res/shaders/colorshader.frag");
-		Shader hitmarkershader = new Shader(shaderprogram);
-		Shader hitnormalshader = new Shader(shaderprogram);
-		hitmarkershader.addArgument("u_color", new Vector4f(0f, 1f, 0f, 1f));
-		hitnormalshader.addArgument("u_color", new Vector4f(0f, 0f, 1f, 1f));
-		addShader(hitmarkershader);
-		addShader(hitnormalshader);
+		portal1cam = new Camera3();
+		portal2cam = new Camera3();
+		portal1FB = new FramebufferObject(layer3d, 800, 800, 0, portal1cam);
+		portal2FB = new FramebufferObject(layer3d, 800, 800, 0, portal2cam);
+
+		Shader portal1texturetest = new Shader(textureshaderID);
+		Shader portal2texturetest = new Shader(textureshaderID);
+		portal1texturetest.addArgument("u_texture", new Texture(portal1FB.getColorTextureID()));
+		portal2texturetest.addArgument("u_texture", new Texture(portal2FB.getColorTextureID()));
+		addShaderInterface(portal1texturetest);
+		addShaderInterface(portal2texturetest);
+
+		Quad q1 = new Quad(100, 200, 100, 100);
+		Quad q2 = new Quad(100, 400, 100, 100);
+		q1.setRenderHints(false, true, false);
+		q2.setRenderHints(false, true, false);
+		portal1texturetest.addObject(q1);
+		portal2texturetest.addObject(q2);
 	}
 
 	private void initLevel(Shader levelshader) {
@@ -300,6 +322,21 @@ public class PortalDemo extends StandardGame {
 		if (shootright.isActive()) {
 			determinePortalPosition(portal2);
 		}
+
+		adjustPortalCamera(portal1cam, portal1.getTranslation(), portal2.getTranslation(), playerbody.getTranslation());
+		adjustPortalCamera(portal2cam, portal2.getTranslation(), portal1.getTranslation(), playerbody.getTranslation());
+		portal1FB.updateTexture();
+		portal2FB.updateTexture();
+		portalTestCamSphere1.translateTo(portal1cam.getTranslation());
+		portalTestCamSphere2.translateTo(portal2cam.getTranslation());
+	}
+
+	private void adjustPortalCamera(Camera3 camToMove, Vector3f portalPosition, Vector3f otherPortalPosition,
+			Vector3f playerPosition) {
+		camToMove.translateTo(portalPosition.x + (playerPosition.x - otherPortalPosition.x),
+				portalPosition.y + (playerPosition.y - otherPortalPosition.y),
+				portalPosition.z + (playerPosition.z - otherPortalPosition.z));
+		camToMove.rotateTo(cam.getRotation());
 	}
 
 	final Ray3 shootray = new Ray3(new Vector3f(), new Vector3f());

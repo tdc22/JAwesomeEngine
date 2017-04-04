@@ -47,7 +47,7 @@ public class Quad extends ShapedObject2 implements QuadStructure {
 
 	@Override
 	public Vector2f getSize() {
-		return VecMath.scale(halfsize, 0.5f);
+		return VecMath.scale(halfsize, 2);
 	}
 
 	private void init(float hsx, float hsy, boolean adjacency) {

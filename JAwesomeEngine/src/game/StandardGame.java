@@ -23,6 +23,7 @@ import static org.lwjgl.opengl.GL11.glDepthFunc;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glHint;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.util.List;
 
@@ -330,6 +331,10 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 			update(delta);
 			profiler.updateRender3d();
 			display.clear();
+			if (!useFBO) {
+				// reset viewport after update
+				glViewport(0, 0, settings.getResolutionX(), settings.getResolutionY());
+			}
 			if (layer3d.isActive()) {
 				layer3d.setViewMatrix(cam.getMatrixBuffer());
 				start3d();
