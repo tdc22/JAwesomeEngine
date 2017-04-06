@@ -11,6 +11,7 @@ import shader.Shader;
 import shape.Box;
 import shape.Cylinder;
 import shape.Ellipsoid;
+import shape.Plane;
 import shape.Sphere;
 import sound.NullSoundEnvironment;
 import texture.Texture;
@@ -49,6 +50,10 @@ public class TextureCoordinateTest extends StandardGame {
 		Cylinder cy = new Cylinder(8, 0, 0, 1, 2, 36);
 		cy.setRenderHints(false, true, false);
 		textureshader.addObject(cy);
+
+		Plane p = new Plane(11, 0, 0, 1, 1, true);
+		p.setRenderHints(false, true, false);
+		textureshader.addObject(p);
 	}
 
 	@Override

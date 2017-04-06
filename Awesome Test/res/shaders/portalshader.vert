@@ -7,8 +7,6 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 
-uniform sampler2D u_texture;
-
 out vec2 pass_TexCoord;
 
 void main(void) {

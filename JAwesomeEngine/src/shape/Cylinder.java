@@ -44,6 +44,7 @@ public class Cylinder extends ShapedObject3 implements CylinderStructure {
 		shapetype = SHAPE_CYLINDER;
 		radius = r;
 		halfheight = h;
+		this.slices = slices;
 		Color c = Color.WHITE;
 
 		addVertex(new Vector3f(0, halfheight, 0), c, new Vector2f(0, 0), new Vector3f(0, 1, 0));

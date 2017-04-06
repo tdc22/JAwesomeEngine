@@ -13,6 +13,7 @@ import shape.Capsule;
 import shape.Cylinder;
 import shape.Ellipsoid;
 import shape.IsoSphere;
+import shape.Plane;
 import shape.Sphere;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
@@ -46,6 +47,7 @@ public class GeometryTest extends StandardGame {
 		defaultshader.addObject(new Cylinder(8, 0, 0, 1, 2, 36));
 		defaultshader.addObject(new Capsule(11, 0, 0, 1, 1, 36, 36));
 		defaultshader.addObject(new IsoSphere(14, 0, 0, 1, 0));
+		defaultshader.addObject(new Plane(17, 0, 0, 1, 1, true));
 		// addObject(new IsoSphere(14, 0, 0, 1, 1));
 		// addObject(new IsoSphere(17, 0, 0, 1, 2));
 		// addObject(new IsoSphere(20, 0, 0, 1, 3));

@@ -8,6 +8,7 @@ import collisionshape.CapsuleShape;
 import collisionshape.ConvexShape;
 import collisionshape.CylinderShape;
 import collisionshape.EllipsoidShape;
+import collisionshape.PlaneShape;
 import collisionshape2d.ConvexShape2;
 import collisionshape2d.EllipseShape;
 import collisionshape2d.QuadShape;
@@ -19,6 +20,7 @@ import shapedata.BoxStructure;
 import shapedata.CapsuleStructure;
 import shapedata.CylinderStructure;
 import shapedata.EllipsoidStructure;
+import shapedata.PlaneStructure;
 import shapedata2d.EllipseStructure;
 import shapedata2d.QuadStructure;
 import vector.Vector2f;
@@ -47,6 +49,10 @@ public class PhysicsShapeCreator {
 
 	public static QuadShape create(QuadStructure quad) {
 		return new QuadShape(quad.getTranslation(), quad.getHalfSize());
+	}
+
+	public static PlaneShape create(PlaneStructure plane) {
+		return new PlaneShape(plane.getTranslation(), plane.getHalfSize());
 	}
 
 	public static ConvexShape createHull(ShapedObject3 shapedobject) {

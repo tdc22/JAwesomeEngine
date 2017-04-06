@@ -17,7 +17,8 @@ public interface ObjectData {
 	public static final int SHAPE_CYLINDER = 3;
 	public static final int SHAPE_CAPSULE = 4;
 	public static final int SHAPE_ELLIPSOID = 5;
-	public static final int SHAPE_TERRAIN = 6;
+	public static final int SHAPE_PLANE = 6;
+	public static final int SHAPE_TERRAIN = 7;
 
 	/**
 	 * Gets the type of the shape in an integer. Use SHAPE constants for
