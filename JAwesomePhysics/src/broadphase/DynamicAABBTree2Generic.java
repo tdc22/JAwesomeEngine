@@ -41,6 +41,7 @@ public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f,
 			root.setLeaf(object);
 			root.updateAABB(margin);
 		}
+		objects.add(object);
 	}
 
 	protected Node insertNode(Node node, Node parent) {

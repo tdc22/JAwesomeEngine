@@ -11,6 +11,7 @@ import narrowphase.RaycastNarrowphase;
 import objects.CollisionShape;
 import objects.CompoundObject3;
 import objects.GameObject;
+import objects.GhostObject;
 import objects.RigidBody;
 import positionalcorrection.PositionalCorrection;
 import quaternion.Quaternionf;
@@ -46,6 +47,18 @@ public class PhysicsSpace extends Space3 {
 			RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
 		addedobjects.remove(obj);
 		removeRigidBody(body);
+	}
+
+	public void addGhostObject(GameObject<Vector3f, Quaternionf> obj,
+			GhostObject<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
+		body.setRotation(obj.getRotation());
+		body.setTranslation(obj.getTranslation());
+		addGhostObject(body);
+	}
+
+	public void removeGhostObject(GameObject<Vector3f, Quaternionf> obj,
+			GhostObject<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
+		removeGhostObject(body);
 	}
 
 	public void addCompoundObject(CompoundObject3 compoundobject, GameObject<Vector3f, Quaternionf>[] obj) {
