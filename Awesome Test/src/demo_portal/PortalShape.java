@@ -9,8 +9,8 @@ import vector.Vector3f;
 public class PortalShape extends ShapedObject3 implements CylinderStructure {
 	float radius;
 
-	public PortalShape(float x, float y, float z, float radius, float height, int slices) {
-		super(x, y, z);
+	public PortalShape(Vector3f pos, float radius, float height, int slices) {
+		super(pos);
 		init(radius, slices);
 		scale(1, 1, height);
 	}

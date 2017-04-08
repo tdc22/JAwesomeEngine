@@ -51,6 +51,7 @@ import texture.Texture;
 import utils.Debugger;
 import utils.GLConstants;
 import utils.Pair;
+import utils.VectorConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
@@ -64,6 +65,7 @@ public class PortalDemo extends StandardGame {
 	float playerspeed = 6; // turn up the speed to ~10 to have fun ;)
 	float mousesensitivity = 0.2f;
 	boolean onground = false;
+	ShapedObject3 playerclone;
 
 	final float PLAYER_RADIUS = 0.7f;
 	final float PLAYER_HEIGHT = 1.7f;
@@ -71,9 +73,13 @@ public class PortalDemo extends StandardGame {
 	final float GROUNDCHECKER_RADIUS = PLAYER_RADIUS - 0.1f;
 	final float GROUNDCHECKER_HEIGHT = 0.1f;
 	final float TINY_SPACE = 0.001f;
+	final float RESPAWN_HEIGHT = -20;
+	final float CAMERA_HEIGHT_OFFSET = PLAYER_HEIGHT * 0.375f;
 
 	final float PORTAL_BOARDER_WIDTH = 0.02f;
 	final float PORTAL_TELEPORTATION_OFFSET = 1f;
+
+	final Vector3f HIDDEN_SPAWN = new Vector3f(0, -10, 0);
 
 	PortalShape portal1, portal2;
 	Vector3f portal1Normal, portal2Normal;
@@ -125,7 +131,8 @@ public class PortalDemo extends StandardGame {
 		initLevel(textureshader);
 
 		Cylinder player = new Cylinder(PLAYER_START_POSITION, PLAYER_RADIUS, PLAYER_HEIGHT / 2f, 50);
-		player.setRenderHints(false, false, true);
+		playerclone = new Cylinder(HIDDEN_SPAWN, PLAYER_RADIUS, PLAYER_HEIGHT / 2f, 50);
+		player.setRenderHints(false, false, false);
 
 		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN),
 				new Input(Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN));
@@ -148,12 +155,12 @@ public class PortalDemo extends StandardGame {
 		inputs.addEvent(shootleft);
 		inputs.addEvent(shootright);
 
-		portal1 = new PortalShape(0, -10, 0, 1, 2, 32);
-		portal2 = new PortalShape(0, -10, 0, 1, 2, 32);
+		portal1 = new PortalShape(HIDDEN_SPAWN, 1, 2, 32);
+		portal2 = new PortalShape(HIDDEN_SPAWN, 1, 2, 32);
 		portal1.setRenderHints(false, true, false);
 		portal2.setRenderHints(false, true, false);
-		portalTestCamSphere1 = new Sphere(0, -10, 0, 0.2f, 36, 36);
-		portalTestCamSphere2 = new Sphere(0, -10, 0, 0.2f, 36, 36);
+		portalTestCamSphere1 = new Sphere(HIDDEN_SPAWN, 0.2f, 36, 36);
+		portalTestCamSphere2 = new Sphere(HIDDEN_SPAWN, 0.2f, 36, 36);
 
 		portal1cam = new Camera3();
 		portal2cam = new Camera3();
@@ -201,6 +208,7 @@ public class PortalDemo extends StandardGame {
 		playershader.addArgument(new Vector4f(0f, 0f, 1f, 1f));
 		addShader(playershader);
 		playershader.addObject(player);
+		playershader.addObject(playerclone);
 
 		Shader crosshairshader = new Shader(colorshaderID);
 		crosshairshader.addArgumentName("u_color");
@@ -376,10 +384,12 @@ public class PortalDemo extends StandardGame {
 		debugger.update(fps, 0, 0);
 		space.update(delta);
 		// cam.update(delta);
+		if (playerbody.getTranslation().y < RESPAWN_HEIGHT)
+			playerbody.translateTo(PLAYER_START_POSITION);
 		onground = space.hasCollision(groundchecker);
 
 		Vector3f offset = QuatMath.transform(playerbody.getRotation(), new Vector3f(0, 0, -1));
-		offset.setY(PLAYER_HEIGHT * 0.375f);
+		offset.setY(CAMERA_HEIGHT_OFFSET);
 		cam.translateTo(VecMath.addition(playerbody.getTranslation(), offset));
 
 		if (shootleft.isActive()) {
@@ -396,53 +406,77 @@ public class PortalDemo extends StandardGame {
 		portalTestCamSphere1.translateTo(portal1cam.getTranslation());
 		portalTestCamSphere2.translateTo(portal2cam.getTranslation());
 
-		System.out.println(
-				space.hasCollision(portal1checker, playerbody) + "; " + space.hasCollision(portal2checker, playerbody)
-						+ "; " + wasCollidingPortal1 + "; " + wasCollidingPortal2);
+		// System.out.println(
+		// space.hasCollision(portal1checker, playerbody) + "; " +
+		// space.hasCollision(portal2checker, playerbody)
+		// + "; " + wasCollidingPortal1 + "; " + wasCollidingPortal2);
+		boolean isCollidingPortal1 = space.hasCollision(portal1checker, playerbody);
+		boolean isCollidingPortal2 = space.hasCollision(portal2checker, playerbody);
+
 		if (wasCollidingPortal1) {
-			if (!space.hasCollision(portal1checker, playerbody)) {
+			if (!isCollidingPortal1) {
 				space.removeCollisionFilter(portalHitFilter1);
+				playerclone.translateTo(HIDDEN_SPAWN);
 				wasCollidingPortal1 = false;
 			} else {
-				if (VecMath.dotproduct(portal1.getTranslation().x - playerbody.getTranslation().x,
-						portal1.getTranslation().y - playerbody.getTranslation().y,
-						portal1.getTranslation().z - playerbody.getTranslation().z, portal1Normal.x, portal1Normal.y,
-						portal1Normal.z) < 0) {
-					playerbody.translateTo(portal2.getTranslation());
-					// TODO: remove offset
-					playerbody.translate(portal2Normal.x * PORTAL_TELEPORTATION_OFFSET,
-							portal2Normal.y * PORTAL_TELEPORTATION_OFFSET,
-							portal2Normal.z * PORTAL_TELEPORTATION_OFFSET);
-				}
+				adjustPlayerClonePosition(portal1, portal2);
+				checkCameraPassPortal1();
 			}
 		} else {
-			if (space.hasCollision(portal1checker, playerbody)) {
+			if (isCollidingPortal1) {
 				space.addCollisionFilter(portalHitFilter1);
+				adjustPlayerClonePosition(portal1, portal2);
 				wasCollidingPortal1 = true;
+				checkCameraPassPortal1();
 			}
 		}
 		if (wasCollidingPortal2) {
-			if (!space.hasCollision(portal2checker, playerbody)) {
+			if (!isCollidingPortal2) {
 				space.removeCollisionFilter(portalHitFilter2);
+				playerclone.translateTo(HIDDEN_SPAWN);
 				wasCollidingPortal2 = false;
 			} else {
-				if (VecMath.dotproduct(portal2.getTranslation().x - playerbody.getTranslation().x,
-						portal2.getTranslation().y - playerbody.getTranslation().y,
-						portal2.getTranslation().z - playerbody.getTranslation().z, portal2Normal.x, portal2Normal.y,
-						portal2Normal.z) < 0) {
-					playerbody.translateTo(portal1.getTranslation());
-					// TODO: remove offset
-					playerbody.translate(portal1Normal.x * PORTAL_TELEPORTATION_OFFSET,
-							portal1Normal.y * PORTAL_TELEPORTATION_OFFSET,
-							portal1Normal.z * PORTAL_TELEPORTATION_OFFSET);
-				}
+				adjustPlayerClonePosition(portal2, portal1);
+				checkCameraPassPortal2();
 			}
 		} else {
-			if (space.hasCollision(portal2checker, playerbody)) {
+			if (isCollidingPortal2) {
 				space.addCollisionFilter(portalHitFilter2);
+				adjustPlayerClonePosition(portal2, portal1);
 				wasCollidingPortal2 = true;
+				checkCameraPassPortal2();
 			}
 		}
+	}
+
+	private void checkCameraPassPortal1() {
+		if (VecMath.dotproduct(portal1.getTranslation().x - cam.getTranslation().x,
+				portal1.getTranslation().y - cam.getTranslation().y,
+				portal1.getTranslation().z - cam.getTranslation().z, portal1Normal.x, portal1Normal.y,
+				portal1Normal.z) > 0) {
+			playerbody.translateTo(portal2.getTranslation());
+			playerbody.translate(0, -CAMERA_HEIGHT_OFFSET, 0);
+			System.out.println("Portal 1");
+			rotatePlayerAfterGoingThroughPortal(portal1Normal, portal2Normal);
+		}
+	}
+
+	private void checkCameraPassPortal2() {
+		if (VecMath.dotproduct(portal2.getTranslation().x - cam.getTranslation().x,
+				portal2.getTranslation().y - cam.getTranslation().y,
+				portal2.getTranslation().z - cam.getTranslation().z, portal2Normal.x, portal2Normal.y,
+				portal2Normal.z) > 0) {
+			playerbody.translateTo(portal1.getTranslation());
+			playerbody.translate(0, -CAMERA_HEIGHT_OFFSET, 0);
+			System.out.println("Portal 2");
+			rotatePlayerAfterGoingThroughPortal(portal2Normal, portal1Normal);
+		}
+	}
+
+	private void adjustPlayerClonePosition(PortalShape p1, PortalShape p2) {
+		playerclone.translateTo(p2.getTranslation().x + (p1.getTranslation().x - playerbody.getTranslation().x),
+				p2.getTranslation().y + (p1.getTranslation().y - playerbody.getTranslation().y),
+				p2.getTranslation().z + (p1.getTranslation().z - playerbody.getTranslation().z));
 	}
 
 	private void adjustPortalCamera(Camera3 camToMove, Vector3f portalPosition, Vector3f otherPortalPosition,
@@ -467,7 +501,8 @@ public class PortalDemo extends StandardGame {
 		RaycastResult<Vector3f> closest = null;
 		for (RaycastResult<Vector3f> hit : hits) {
 			if (!hit.getHitObject().equals(playerbody) && !hit.getHitObject().equals(portal1body)
-					&& !hit.getHitObject().equals(portal2body) && hit.getHitDistance() > 0
+					&& !hit.getHitObject().equals(portal1checker) && !hit.getHitObject().equals(portal2body)
+					&& !hit.getHitObject().equals(portal2checker) && hit.getHitDistance() > 0
 					&& hit.getHitDistance() < currentclosest) {
 				currentclosest = hit.getHitDistance();
 				closest = hit;
@@ -489,12 +524,10 @@ public class PortalDemo extends StandardGame {
 				portal2Normal.set(hitnormal);
 			}
 
-			Quaternionf q = new Quaternionf();
-			portal.rotateTo(q);
 			Vector3f a = VecMath.crossproduct(up, hitnormal);
 			if (a.lengthSquared() > 0) {
 				Quaternionf rot = calculatePortalRotation(hitnormal);
-				portal.rotate(rot);
+				portal.rotateTo(rot);
 			} else {
 				portal.rotateTo(playerbody.getRotation());
 			}
@@ -504,25 +537,52 @@ public class PortalDemo extends StandardGame {
 		}
 	}
 
+	final Vector3f projXZ = new Vector3f();
+	final Vector3f portalReferenceUp = new Vector3f(0, 0, 1);
+	final Vector2f up2 = new Vector2f(0, 1);
+	final Vector2f projY = new Vector2f();
+
 	private Quaternionf calculatePortalRotation(Vector3f to) {
 		Quaternionf q = new Quaternionf();
 
 		// for H project "to" onto x/z
 		// reference is front (0, 0, 1)
-		Vector3f a = new Vector3f(to.x, 0, to.z);
-		a.normalize();
-		float dot = VecMath.dotproduct(new Vector3f(0, 0, 1), a);
+		projXZ.set(to.x, 0, to.z);
+		projXZ.normalize();
+		float dot = VecMath.dotproduct(portalReferenceUp, projXZ);
 		float angleH = (float) Math.toDegrees(Math.acos(dot));
 		if (to.x < 0)
 			angleH = -angleH;
-		q.rotate(angleH, new Vector3f(0, 1, 0));
+		q.rotate(angleH, up);
 
 		// for V project "to" onto y
 		// reference is up (0, 1, 0)
-		dot = VecMath.dotproduct(new Vector2f(0, 1), new Vector2f(0, to.y));
+		projY.y = to.y;
+		dot = VecMath.dotproduct(up2, projY);
 		float angleV = (float) Math.toDegrees(Math.acos(dot));
-		q.rotate(angleV, new Vector3f(1, 0, 0));
+		q.rotate(angleV, VectorConstants.AXIS_X);
 
 		return q;
+	}
+
+	final Vector2f projectFromXZ = new Vector2f();
+	final Vector2f projectToXZ = new Vector2f();
+
+	private void rotatePlayerAfterGoingThroughPortal(Vector3f fromPortalNormal, Vector3f toPortalNormal) {
+		projectFromXZ.set(fromPortalNormal.x, fromPortalNormal.z);
+		if (projectFromXZ.lengthSquared() > 0) {
+			projectFromXZ.normalize();
+			projectToXZ.set(toPortalNormal.x, toPortalNormal.z);
+			projectToXZ.normalize();
+			float dot = VecMath.dotproduct(projectFromXZ.x, projectFromXZ.y, projectToXZ.x, projectToXZ.y);
+			float angleV = 180 - (float) Math.toDegrees(Math.acos(dot));
+
+			Vector3f a = VecMath.crossproduct(projectFromXZ.x, 0, projectFromXZ.y, 0, 1, 0);
+			if (VecMath.dotproduct(a.x, a.z, toPortalNormal.x, toPortalNormal.z) < 0)
+				angleV = -angleV;
+
+			cam.rotate(angleV, 0);
+			playerbody.rotate(0, angleV, 0);
+		}
 	}
 }
