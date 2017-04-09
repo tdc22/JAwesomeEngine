@@ -59,8 +59,8 @@ import org.lwjgl.BufferUtils;
 
 import game.Layer;
 import objects.Camera;
+import objects.ViewFrustum;
 import utils.DefaultValues;
-import utils.ViewFrustum;
 
 public class FramebufferObject {
 	Layer render;

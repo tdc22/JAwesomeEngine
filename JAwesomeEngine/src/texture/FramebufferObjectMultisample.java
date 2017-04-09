@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 
 import game.Layer;
 import objects.Camera;
-import utils.ViewFrustum;
+import objects.ViewFrustum;
 
 public class FramebufferObjectMultisample extends FramebufferObject {
 	int unsampledFramebufferID;

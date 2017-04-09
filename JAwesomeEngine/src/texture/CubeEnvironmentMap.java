@@ -27,9 +27,9 @@ import java.nio.FloatBuffer;
 
 import game.Layer;
 import objects.Camera3;
+import objects.ViewFrustum;
 import objects.ViewProjection;
 import utils.DefaultValues;
-import utils.ViewFrustum;
 import vector.Vector3f;
 
 public class CubeEnvironmentMap {
