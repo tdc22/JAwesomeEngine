@@ -17,6 +17,8 @@ public class ModelLoader {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		} else if (path.endsWith(".dae")) {
+			// TODO
 		} else {
 			System.out.println("Could not load model: " + path);
 		}

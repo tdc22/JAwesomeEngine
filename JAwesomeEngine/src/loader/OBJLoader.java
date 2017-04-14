@@ -3,7 +3,6 @@ package loader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -210,9 +209,6 @@ public class OBJLoader {
 		return f3;
 	}
 
-	/*
-	 * Converts a given *.obj-File to a *.mobj-File.
-	 */
 	public static ShapedObject3 loadMOBJ(File f) throws IOException {
 		ShapedObject3 object = new ShapedObject3();
 
@@ -269,8 +265,9 @@ public class OBJLoader {
 		return object;
 	}
 
-	public static ShapedObject3 loadModel(File f) throws FileNotFoundException, IOException {
-		ShapedObject3 object = new ShapedObject3();
+	public static ShapedObject3 loadModel(File f) throws IOException {
+		ShapedObject3 object;
+
 		if (f.getName().endsWith(".mobj")) {
 			object = loadMOBJ(f);
 		} else {
