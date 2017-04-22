@@ -1,14 +1,11 @@
 package modelLoader;
 
-import java.io.File;
-import java.io.IOException;
-
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
-import loader.ColladaLoader;
+import loader.ModelLoader;
 import loader.ShaderLoader;
 import shader.Shader;
 import sound.NullSoundEnvironment;
@@ -29,12 +26,7 @@ public class ModelTest extends StandardGame {
 		addShader(defaultshader);
 
 		// defaultshader.addObject(ModelLoader.load("res/models/bunny.obj"));
-		try {
-			defaultshader.addObject(ColladaLoader.loadGeometry(new File("res/models/model.dae")));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		defaultshader.addObject(ModelLoader.load("res/models/model.dae"));
 		System.out.println("Done!");
 	}
 

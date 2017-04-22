@@ -1,16 +1,9 @@
 package anim;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import curves.SimpleAngularCurvePath;
-import curves.SimpleCurvePath;
 import quaternion.Rotation;
 import vector.Vector;
 
-public class Animation<L extends Vector, A extends Rotation> {
-	List<SimpleCurvePath<L>> animationTranslationPaths;
-	List<SimpleAngularCurvePath<A>> animationRotationPaths;
+public abstract class Animation<L extends Vector, A extends Rotation> {
 	boolean loops;
 	float speed;
 
@@ -32,15 +25,11 @@ public class Animation<L extends Vector, A extends Rotation> {
 
 	public Animation(Animation<L, A> animation) {
 		init(animation.getSpeed(), animation.isLooping());
-		animationTranslationPaths.addAll(animation.getAnimationTranslationPaths());
-		animationRotationPaths.addAll(animation.getAnimationRotationPaths());
 	}
 
 	private void init(float animationspeed, boolean loops) {
 		this.speed = animationspeed;
 		this.loops = loops;
-		animationTranslationPaths = new ArrayList<SimpleCurvePath<L>>();
-		animationRotationPaths = new ArrayList<SimpleAngularCurvePath<A>>();
 	}
 
 	public void setSpeed(float speed) {
@@ -57,34 +46,5 @@ public class Animation<L extends Vector, A extends Rotation> {
 
 	public boolean isLooping() {
 		return loops;
-	}
-
-	public void addAnimationPath(SimpleCurvePath<L> path, SimpleAngularCurvePath<A> angularpath) {
-		animationTranslationPaths.add(path);
-		animationRotationPaths.add(angularpath);
-	}
-
-	public void addAnimationTranslationPath(SimpleCurvePath<L> path) {
-		animationTranslationPaths.add(path);
-	}
-
-	public void addAnimationRotationPath(SimpleAngularCurvePath<A> angularpath) {
-		animationRotationPaths.add(angularpath);
-	}
-
-	public SimpleCurvePath<L> getAnimationTranslationPath(int id) {
-		return animationTranslationPaths.get(id);
-	}
-
-	public SimpleAngularCurvePath<A> getAnimationRotationPath(int id) {
-		return animationRotationPaths.get(id);
-	}
-
-	public List<SimpleCurvePath<L>> getAnimationTranslationPaths() {
-		return animationTranslationPaths;
-	}
-
-	public List<SimpleAngularCurvePath<A>> getAnimationRotationPaths() {
-		return animationRotationPaths;
 	}
 }

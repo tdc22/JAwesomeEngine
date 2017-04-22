@@ -9,18 +9,18 @@ import objects.BaseObject2;
 import quaternion.Complexf;
 import vector.Vector2f;
 
-public class Skeleton2 extends Skeleton<Vector2f, Complexf> {
+public class CurveSkeleton2 extends CurveSkeleton<Vector2f, Complexf> {
 	boolean mirroredX = false;
 	boolean mirroredY = false;
 	boolean invertRotation = false;
 
-	public Skeleton2(Animation<Vector2f, Complexf> animation) {
+	public CurveSkeleton2(CurveAnimation<Vector2f, Complexf> animation) {
 		super(animation, new BaseObject2[0]);
 		nullvec = new Vector2f();
 		nullrot = new Complexf();
 	}
 
-	public Skeleton2(Animation<Vector2f, Complexf> animation, BaseObject<Vector2f, Complexf>[] bodypart) {
+	public CurveSkeleton2(CurveAnimation<Vector2f, Complexf> animation, BaseObject<Vector2f, Complexf>[] bodypart) {
 		super(animation, bodypart);
 		nullvec = new Vector2f();
 		nullrot = new Complexf();
@@ -28,7 +28,7 @@ public class Skeleton2 extends Skeleton<Vector2f, Complexf> {
 
 	@Override
 	protected void updateAnimation(float animationTimer) {
-		Animation<Vector2f, Complexf> currentAnimation = (dynamicAnimationTransition != null)
+		CurveAnimation<Vector2f, Complexf> currentAnimation = (dynamicAnimationTransition != null)
 				? dynamicAnimationTransition : animation;
 		for (int i = 0; i < bodyparts.size(); i++) {
 			BaseObject<Vector2f, Complexf> part = bodyparts.get(i);
@@ -46,8 +46,8 @@ public class Skeleton2 extends Skeleton<Vector2f, Complexf> {
 	}
 
 	// TODO: Optimize!
-	public void setDynamicAnimation(Animation<Vector2f, Complexf> animationparam, float dynamicAnimationSpeed) {
-		dynamicAnimationTransition = new DynamicAnimationTransition<Vector2f, Complexf>(animationparam,
+	public void setDynamicAnimation(CurveAnimation<Vector2f, Complexf> animationparam, float dynamicAnimationSpeed) {
+		dynamicAnimationTransition = new DynamicCurveAnimationTransition<Vector2f, Complexf>(animationparam,
 				dynamicAnimationSpeed);
 		for (int i = 0; i < bodyparts.size(); i++) {
 			Vector2f trans = animation.getAnimationTranslationPath(i).getPoint(animationTimer);

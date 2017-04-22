@@ -7,15 +7,16 @@ import objects.BaseObject3;
 import quaternion.Quaternionf;
 import vector.Vector3f;
 
-public class Skeleton3 extends Skeleton<Vector3f, Quaternionf> {
+public class CurveSkeleton3 extends CurveSkeleton<Vector3f, Quaternionf> {
 
-	public Skeleton3(Animation<Vector3f, Quaternionf> animation) {
+	public CurveSkeleton3(CurveAnimation<Vector3f, Quaternionf> animation) {
 		super(animation, new BaseObject3[0]);
 		nullvec = new Vector3f();
 		nullrot = new Quaternionf();
 	}
 
-	public Skeleton3(Animation<Vector3f, Quaternionf> animation, BaseObject<Vector3f, Quaternionf>[] bodypart) {
+	public CurveSkeleton3(CurveAnimation<Vector3f, Quaternionf> animation,
+			BaseObject<Vector3f, Quaternionf>[] bodypart) {
 		super(animation, bodypart);
 		nullvec = new Vector3f();
 		nullrot = new Quaternionf();
@@ -30,8 +31,8 @@ public class Skeleton3 extends Skeleton<Vector3f, Quaternionf> {
 		}
 	}
 
-	public void setDynamicAnimation(Animation<Vector3f, Quaternionf> animationparam, float dynamicAnimationSpeed) {
-		this.animation = new Animation<Vector3f, Quaternionf>(animationparam);
+	public void setDynamicAnimation(CurveAnimation<Vector3f, Quaternionf> animationparam, float dynamicAnimationSpeed) {
+		this.animation = new CurveAnimation<Vector3f, Quaternionf>(animationparam);
 		for (int i = 0; i < bodyparts.size(); i++) {
 			BaseObject<Vector3f, Quaternionf> bodypart = bodyparts.get(i);
 			animation.getAnimationTranslationPath(i).getCurves().get(0)
