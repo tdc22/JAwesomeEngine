@@ -372,7 +372,7 @@ public class Profiler implements Updateable {
 			}
 
 			if (getIndexCount() == numvalues) {
-				Vector2f vert = vertices.get(0);
+				Vector2f vert = vertices.data.get(0);
 				if (vert.y >= maxvalue) {
 					maxvalue = findNextMax();
 					scaleMid.setText(maxvalue / 2000f + " ms");

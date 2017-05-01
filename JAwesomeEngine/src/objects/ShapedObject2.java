@@ -1,9 +1,5 @@
 package objects;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-
 import gui.Color;
 import matrix.Matrix4f;
 import quaternion.Complexf;
@@ -30,20 +26,23 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 	}
 
 	private void init() {
-		vertices = new ArrayList<Vector2f>();
-		normals = new ArrayList<Vector2f>();
+		vertices = new ObjectDataAttributesVectorf<Vector2f>(VERTEX_POSITION, 4, new float[] { 0, 1 }, true);
+		normals = new ObjectDataAttributesVectorf<Vector2f>(NORMAL_POSITION, 4, new float[] { 0, 0 }, true);
+
+		dataattributes.add(vertices);
+		dataattributes.add(normals);
 
 		rendermode = GLConstants.TRIANGLE_ADJACENCY;
 	}
 
 	public void computeNormals() {
 		// int indicesnumber = indices.size();
-		int vertexnumber = vertices.size();
+		int vertexnumber = vertices.data.size();
 		for (int n = 0; n < vertexnumber; n++) {
-			if (n < normals.size())
-				normals.set(n, new Vector2f(0, 0));
+			if (n < normals.data.size())
+				normals.data.set(n, new Vector2f(0, 0));
 			else
-				normals.add(new Vector2f(0, 0));
+				normals.data.add(new Vector2f(0, 0));
 		}
 		// int ci = 0;
 		// for (int i = 0; i < indicesnumber / 3; i++) {
@@ -172,21 +171,6 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 
 	public void setVertex(int id, Vector2f vertex, Vector3f c, Vector2f texturecoord) {
 		setVertex(id, vertex, c, texturecoord, vec2);
-	}
-
-	@Override
-	protected void fillBuffers(int allVertices, IntBuffer indexData, FloatBuffer vertexData, FloatBuffer colorData,
-			FloatBuffer textureData, FloatBuffer normalData) {
-		for (int v = 0; v < allVertices; v++) {
-			Vector2f vertex = vertices.get(v);
-			vertexData.put(new float[] { vertex.x, vertex.y, 0, 1 });
-			Vector3f vertcolor = colors.get(v);
-			colorData.put(new float[] { vertcolor.x, vertcolor.y, vertcolor.z });
-			Vector2f tex = texturecoords.get(v);
-			textureData.put(new float[] { tex.x, tex.y });
-			Vector2f normal = normals.get(v);
-			normalData.put(new float[] { normal.x, normal.y, 0, 0 });
-		}
 	}
 
 	@Override

@@ -15,7 +15,6 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glReadPixels;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
@@ -130,7 +129,6 @@ public class FramebufferObject {
 	}
 
 	public void begin() {
-		glDisable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// System.out.println(useCam + "; " + useFrustum);
@@ -160,8 +158,6 @@ public class FramebufferObject {
 		} else if (useFrustum) {
 			render.setProjectionMatrix(projectionTemp);
 		}
-
-		glEnable(GL_TEXTURE_2D);
 	}
 
 	public void bind() {

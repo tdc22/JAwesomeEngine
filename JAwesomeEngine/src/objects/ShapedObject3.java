@@ -1,9 +1,5 @@
 package objects;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-
 import gui.Color;
 import math.VecMath;
 import matrix.Matrix4f;
@@ -33,26 +29,29 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 	}
 
 	private void init() {
-		vertices = new ArrayList<Vector3f>();
-		normals = new ArrayList<Vector3f>();
+		vertices = new ObjectDataAttributesVectorf<Vector3f>(VERTEX_POSITION, 4, new float[] { 1 }, true);
+		normals = new ObjectDataAttributesVectorf<Vector3f>(NORMAL_POSITION, 4, new float[] { 0 }, true);
+
+		dataattributes.add(vertices);
+		dataattributes.add(normals);
 
 		rendermode = GLConstants.TRIANGLE_ADJACENCY;
 	}
 
 	public void computeNormals() {
-		int indicesnumber = indices.size();
-		int vertexnumber = vertices.size();
+		int indicesnumber = indices.data.size();
+		int vertexnumber = vertices.data.size();
 		for (int n = 0; n < vertexnumber; n++) {
-			if (n < normals.size())
-				normals.set(n, new Vector3f(0, 0, 0));
+			if (n < normals.data.size())
+				normals.data.set(n, new Vector3f(0, 0, 0));
 			else
-				normals.add(new Vector3f(0, 0, 0));
+				normals.data.add(new Vector3f(0, 0, 0));
 		}
 		int ci = 0;
 		for (int i = 0; i < indicesnumber / 3; i++) {
-			int index1 = indices.get(ci);
-			int index2 = indices.get(ci + 1);
-			int index3 = indices.get(ci + 2);
+			int index1 = indices.data.get(ci);
+			int index2 = indices.data.get(ci + 1);
+			int index3 = indices.data.get(ci + 2);
 			Vector3f normal1 = getNormal(index1);
 			Vector3f normal2 = getNormal(index2);
 			Vector3f normal3 = getNormal(index3);
@@ -175,21 +174,6 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 
 	public void setVertex(int id, Vector3f vertex, Vector3f c, Vector2f texturecoord) {
 		setVertex(id, vertex, c, texturecoord, vec3);
-	}
-
-	@Override
-	protected void fillBuffers(int allVertices, IntBuffer indexData, FloatBuffer vertexData, FloatBuffer colorData,
-			FloatBuffer textureData, FloatBuffer normalData) {
-		for (int v = 0; v < allVertices; v++) {
-			Vector3f vertex = vertices.get(v);
-			vertexData.put(new float[] { vertex.x, vertex.y, vertex.z, 1 });
-			Vector3f vertcolor = colors.get(v);
-			colorData.put(new float[] { vertcolor.x, vertcolor.y, vertcolor.z });
-			Vector2f tex = texturecoords.get(v);
-			textureData.put(new float[] { tex.x, tex.y });
-			Vector3f normal = normals.get(v);
-			normalData.put(new float[] { normal.x, normal.y, normal.z, 0 });
-		}
 	}
 
 	@Override

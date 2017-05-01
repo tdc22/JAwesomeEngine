@@ -8,7 +8,6 @@ import static org.lwjgl.opengl.GL11.GL_LEQUAL;
 import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH_HINT;
 import static org.lwjgl.opengl.GL11.GL_NICEST;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
 import static org.lwjgl.opengl.GL11.GL_POINT_SMOOTH_HINT;
 import static org.lwjgl.opengl.GL11.GL_POLYGON_SMOOTH_HINT;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
@@ -265,7 +264,6 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		// glShadeModel(GL_SMOOTH);
 		setDepthTestEnabled(depthTestEnabled);
 		glDepthFunc(GL_LEQUAL);
-		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		if (settings.isBackfaceCulling()) {
@@ -278,7 +276,6 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	}
 
 	public void setDepthTestEnabled(boolean depthTestEnabled) {

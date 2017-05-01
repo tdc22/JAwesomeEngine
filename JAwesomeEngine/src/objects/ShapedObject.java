@@ -1,28 +1,16 @@
 package objects;
 
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.lwjgl.BufferUtils;
 
 import gui.Color;
 import quaternion.Rotation;
@@ -37,31 +25,19 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	protected static final int TEXTURE_POSITION = 2;
 	protected static final int NORMAL_POSITION = 3;
 
-	protected List<Integer> indices;
-	protected List<L> vertices;
-	protected List<L> normals;
-	protected List<Vector3f> colors;
-	protected List<Vector2f> texturecoords;
-
 	protected int vaoHandle;
-	protected int vboIndexHandle;
-	protected int vboVertexHandle;
-	protected int vboColorHandle;
-	protected int vboTextureCoordHandle;
-	protected int vboNormalHandle;
+
+	protected ObjectDataAttributesInteger indices;
+	protected ObjectDataAttributesVectorf<L> vertices, normals;
+	protected ObjectDataAttributesVectorf<Vector3f> colors;
+	protected ObjectDataAttributesVectorf<Vector2f> texturecoords;
+
+	protected List<ObjectDataAttributes<?, ?>> dataattributes;
 
 	protected int rendermode;
 	protected int renderedIndexCount = 0;
 
 	boolean render = true;
-	boolean renderColor = true;
-	boolean renderTexCoords = false;
-	boolean renderNormals = false;
-
-	protected int vertexsize = 4;
-	protected int polysize = 3;
-	protected int colorsize = 3;
-	protected int texsize = 2;
 
 	public ShapedObject(L rotcenter, L translation, A rotation, L scale) {
 		super(rotcenter, translation, rotation, scale);
@@ -69,19 +45,23 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	}
 
 	private void init() {
-		indices = new ArrayList<Integer>();
-		colors = new ArrayList<Vector3f>();
-		texturecoords = new ArrayList<Vector2f>();
+		indices = new ObjectDataAttributesInteger(-1, 0, true, true);
+		colors = new ObjectDataAttributesVectorf<Vector3f>(COLOR_POSITION, 3, new float[] {}, true);
+		texturecoords = new ObjectDataAttributesVectorf<Vector2f>(TEXTURE_POSITION, 2, new float[] {}, false);
+
+		dataattributes = new ArrayList<ObjectDataAttributes<?, ?>>();
+		dataattributes.add(colors);
+		dataattributes.add(texturecoords);
 	}
 
-	public void copy(ShapedObject<L, A> original) {
-		indices.addAll(original.getIndices());
-		vertices.addAll(original.getVertices());
-		normals.addAll(original.getNormals());
-		colors.addAll(original.getColors());
-		texturecoords.addAll(original.getTextureCoordinates());
-		prerender();
-	}
+	// public void copy(ShapedObject<L, A> original) {
+	// indices.addAll(original.getIndices());
+	// vertices.addAll(original.getVertices());
+	// normals.addAll(original.getNormals());
+	// colors.addAll(original.getColors());
+	// texturecoords.addAll(original.getTextureCoordinates());
+	// prerender();
+	// }
 
 	// public void copyDirect(ShapedObject original) {
 	// vaoHandle = original.getVAOHandle();
@@ -97,23 +77,23 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	}
 
 	public int getVBOIndexHandle() {
-		return vboIndexHandle;
+		return indices.getHandle();
 	}
 
 	public int getVBOVertexHandle() {
-		return vboVertexHandle;
+		return vertices.getHandle();
 	}
 
 	public int getVBOColorHandle() {
-		return vboColorHandle;
+		return colors.getHandle();
 	}
 
 	public int getVBOTextureCoordinateHandle() {
-		return vboTextureCoordHandle;
+		return texturecoords.getHandle();
 	}
 
 	public int getVBONormalHandle() {
-		return vboNormalHandle;
+		return normals.getHandle();
 	}
 
 	public int getRenderedIndexCount() {
@@ -125,23 +105,23 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	}
 
 	public void setVBOIndexHandle(int vboIndexHandle) {
-		this.vboIndexHandle = vboIndexHandle;
+		this.indices.handle = vboIndexHandle;
 	}
 
 	public void setVBOVertexHandle(int vboVertexHandle) {
-		this.vboVertexHandle = vboVertexHandle;
+		this.vertices.handle = vboVertexHandle;
 	}
 
 	public void setVBOColorHandle(int vboColorHandle) {
-		this.vboColorHandle = vboColorHandle;
+		this.colors.handle = vboColorHandle;
 	}
 
 	public void setVBOTextureCoordinateHandle(int vboTextureCoordHandle) {
-		this.vboTextureCoordHandle = vboTextureCoordHandle;
+		this.texturecoords.handle = vboTextureCoordHandle;
 	}
 
 	public void setVBONormalHandle(int vboNormalHandle) {
-		this.vboNormalHandle = vboNormalHandle;
+		this.normals.handle = vboNormalHandle;
 	}
 
 	public void setRenderedIndexCount(int renderedIndexCount) {
@@ -149,11 +129,11 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	}
 
 	public void addIndex(int index) {
-		indices.add(index);
+		indices.data.add(index);
 	}
 
 	public void removeIndex(int id) {
-		indices.remove(id);
+		indices.data.remove(id);
 	}
 
 	public void addIndices(int... indices) {
@@ -168,17 +148,17 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	public abstract void addVertex(L vertex, Color c, Vector2f texturecoord);
 
 	public void addVertex(L vertex, Color c, Vector2f texturecoord, L normal) {
-		vertices.add(vertex);
-		colors.add(new Vector3f(c.getRed(), c.getGreen(), c.getBlue()));
-		texturecoords.add(texturecoord);
-		normals.add(normal);
+		vertices.data.add(vertex);
+		colors.data.add(new Vector3f(c.getRed(), c.getGreen(), c.getBlue()));
+		texturecoords.data.add(texturecoord);
+		normals.data.add(normal);
 	}
 
 	public void addVertex(L vertex, Vector3f c, Vector2f texturecoord, L normal) {
-		vertices.add(vertex);
-		colors.add(c);
-		texturecoords.add(texturecoord);
-		normals.add(normal);
+		vertices.data.add(vertex);
+		colors.data.add(c);
+		texturecoords.data.add(texturecoord);
+		normals.data.add(normal);
 	}
 
 	public abstract void setVertex(int id, L vertex);
@@ -188,24 +168,24 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	public abstract void setVertex(int id, L vertex, Color c, Vector2f texturecoord);
 
 	public void setVertex(int id, L vertex, Color c, Vector2f texturecoord, L normal) {
-		vertices.set(id, vertex);
-		colors.set(id, new Vector3f(c.getRed(), c.getGreen(), c.getBlue()));
-		texturecoords.set(id, texturecoord);
-		normals.set(id, normal);
+		vertices.data.set(id, vertex);
+		colors.data.set(id, new Vector3f(c.getRed(), c.getGreen(), c.getBlue()));
+		texturecoords.data.set(id, texturecoord);
+		normals.data.set(id, normal);
 	}
 
 	public void setVertex(int id, L vertex, Vector3f c, Vector2f texturecoord, L normal) {
-		vertices.set(id, vertex);
-		colors.set(id, c);
-		texturecoords.set(id, texturecoord);
-		normals.set(id, normal);
+		vertices.data.set(id, vertex);
+		colors.data.set(id, c);
+		texturecoords.data.set(id, texturecoord);
+		normals.data.set(id, normal);
 	}
 
 	public void removeVertex(int id) {
-		vertices.remove(id);
-		colors.remove(id);
-		texturecoords.remove(id);
-		normals.remove(id);
+		vertices.data.remove(id);
+		colors.data.remove(id);
+		texturecoords.data.remove(id);
+		normals.data.remove(id);
 	}
 
 	public abstract void computeNormals();
@@ -219,161 +199,118 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	}
 
 	public void deleteData() {
-		indices.clear();
-		vertices.clear();
-		colors.clear();
-		normals.clear();
-		texturecoords.clear();
+		indices.deleteData();
+		vertices.deleteData();
+		colors.deleteData();
+		texturecoords.deleteData();
+		normals.deleteData();
 	}
 
 	public void deleteGPUData() {
 		if (vaoHandle != 0)
 			glDeleteVertexArrays(vaoHandle);
-		if (vboIndexHandle != 0)
-			glDeleteBuffers(vboIndexHandle);
-		if (vboVertexHandle != 0)
-			glDeleteBuffers(vboVertexHandle);
-		if (vboColorHandle != 0)
-			glDeleteBuffers(vboColorHandle);
-		if (vboTextureCoordHandle != 0)
-			glDeleteBuffers(vboTextureCoordHandle);
-		if (vboNormalHandle != 0)
-			glDeleteBuffers(vboNormalHandle);
+		indices.deleteGPUData();
+		vertices.deleteGPUData();
+		colors.deleteGPUData();
+		texturecoords.deleteGPUData();
+		normals.deleteGPUData();
 	}
 
 	public Integer getIndex(int indexid) {
-		return indices.get(indexid);
+		return indices.data.get(indexid);
 	}
 
 	public int getIndexCount() {
-		return indices.size();
+		return indices.data.size();
 	}
 
 	public List<Integer> getIndices() {
-		return indices;
+		return indices.data;
 	}
 
 	public L getNormal(int normalid) {
-		return normals.get(normalid);
+		return normals.data.get(normalid);
 	}
 
 	public L getVertex(int vertexid) {
-		return vertices.get(vertexid);
+		return vertices.data.get(vertexid);
 	}
 
 	public Vector2f getTextureCoordinate(int texcoordid) {
-		return texturecoords.get(texcoordid);
+		return texturecoords.data.get(texcoordid);
 	}
 
 	public Vector3f getColor(int colorid) {
-		return colors.get(colorid);
+		return colors.data.get(colorid);
 	}
 
 	public int getVertexCount() {
-		return vertices.size();
+		return vertices.data.size();
 	}
 
 	public List<L> getVertices() {
-		return vertices;
+		return vertices.data;
 	}
 
 	public List<Vector2f> getTextureCoordinates() {
-		return texturecoords;
+		return texturecoords.data;
 	}
 
 	public List<Vector3f> getColors() {
-		return colors;
+		return colors.data;
 	}
 
 	public List<L> getNormals() {
-		return normals;
+		return normals.data;
 	}
 
 	public void invertAllTriangles() {
 		List<Integer> newIndices = new ArrayList<Integer>();
 		if (rendermode == GLConstants.TRIANGLE_ADJACENCY) {
-			for (int i = 0; i < indices.size(); i += 6) {
-				newIndices.add(indices.get(i + 4));
-				newIndices.add(indices.get(i + 5));
-				newIndices.add(indices.get(i + 2));
-				newIndices.add(indices.get(i + 3));
-				newIndices.add(indices.get(i));
-				newIndices.add(indices.get(i + 1));
+			for (int i = 0; i < indices.data.size(); i += 6) {
+				newIndices.add(indices.data.get(i + 4));
+				newIndices.add(indices.data.get(i + 5));
+				newIndices.add(indices.data.get(i + 2));
+				newIndices.add(indices.data.get(i + 3));
+				newIndices.add(indices.data.get(i));
+				newIndices.add(indices.data.get(i + 1));
 			}
 		} else {
-			for (int i = 0; i < indices.size(); i += 3) {
-				newIndices.add(indices.get(i));
-				newIndices.add(indices.get(i + 2));
-				newIndices.add(indices.get(i + 1));
+			for (int i = 0; i < indices.data.size(); i += 3) {
+				newIndices.add(indices.data.get(i));
+				newIndices.add(indices.data.get(i + 2));
+				newIndices.add(indices.data.get(i + 1));
 			}
 		}
-		indices.clear();
-		indices = newIndices;
+		indices.data.clear();
+		indices.data = newIndices;
 		prerender();
 	}
-
-	protected abstract void fillBuffers(int allVertices, IntBuffer indexData, FloatBuffer vertexData,
-			FloatBuffer colorData, FloatBuffer textureData, FloatBuffer normalData);
 
 	public void prerender() {
 		deleteGPUData();
 
-		renderedIndexCount = indices.size();
-		int allVertices = vertices.size();
+		renderedIndexCount = indices.data.size();
 
-		IntBuffer indexData = BufferUtils.createIntBuffer(renderedIndexCount * polysize);
-		FloatBuffer vertexData = BufferUtils.createFloatBuffer(allVertices * vertexsize);
-		FloatBuffer colorData = BufferUtils.createFloatBuffer(allVertices * colorsize);
-		FloatBuffer textureData = BufferUtils.createFloatBuffer(allVertices * texsize);
-		FloatBuffer normalData = BufferUtils.createFloatBuffer(allVertices * vertexsize);
-
-		fillBuffers(allVertices, indexData, vertexData, colorData, textureData, normalData);
-		for (int i = 0; i < renderedIndexCount; i++) {
-			indexData.put(indices.get(i));
+		indices.updateData();
+		for (ObjectDataAttributes<?, ?> dataattribute : dataattributes) {
+			dataattribute.updateData();
 		}
-		indexData.flip();
-		vertexData.flip();
-		colorData.flip();
-		textureData.flip();
-		normalData.flip();
 
 		vaoHandle = glGenVertexArrays();
 		glBindVertexArray(vaoHandle);
 
-		vboVertexHandle = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vboVertexHandle);
-		glBufferData(GL_ARRAY_BUFFER, vertexData, GL_STATIC_DRAW);
-		glVertexAttribPointer(VERTEX_POSITION, vertexsize, GL_FLOAT, false, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		vboColorHandle = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vboColorHandle);
-		glBufferData(GL_ARRAY_BUFFER, colorData, GL_STATIC_DRAW);
-		glVertexAttribPointer(COLOR_POSITION, colorsize, GL_FLOAT, false, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		vboTextureCoordHandle = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vboTextureCoordHandle);
-		glBufferData(GL_ARRAY_BUFFER, textureData, GL_STATIC_DRAW);
-		glVertexAttribPointer(TEXTURE_POSITION, texsize, GL_FLOAT, false, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		vboNormalHandle = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vboNormalHandle);
-		glBufferData(GL_ARRAY_BUFFER, normalData, GL_STATIC_DRAW);
-		glVertexAttribPointer(NORMAL_POSITION, vertexsize, GL_FLOAT, false, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		for (ObjectDataAttributes<?, ?> dataattribute : dataattributes) {
+			dataattribute.pushBuffer();
+		}
 
 		glEnableVertexAttribArray(VERTEX_POSITION);
 
 		glBindVertexArray(0);
 
-		vboIndexHandle = glGenBuffers();
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndexHandle);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData, GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		indices.pushBuffer();
 
-		setRenderHints(renderColor, renderTexCoords, renderNormals);
+		setRenderHints(colors.isActive(), texturecoords.isActive(), normals.isActive());
 	}
 
 	@Override
@@ -381,7 +318,7 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 		if (render) {
 			glBindVertexArray(vaoHandle);
 
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndexHandle);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices.handle);
 
 			glDrawElements(rendermode, renderedIndexCount, GL_UNSIGNED_INT, 0);
 
@@ -396,54 +333,38 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	}
 
 	public void setColor(Vector3f color) {
-		for (int c = 0; c < colors.size(); c++) {
-			colors.set(c, color);
+		for (int c = 0; c < colors.data.size(); c++) {
+			colors.data.set(c, color);
 		}
 		this.prerender();
 	}
 
 	public void setIndices(List<Integer> inds) {
-		indices = inds;
+		indices.data = inds;
 	}
 
 	public void setIndex(int indexid, int value) {
-		indices.set(indexid, value);
+		indices.data.set(indexid, value);
 	}
 
 	public void setNormal(int normalid, L normal) {
-		normals.set(normalid, normal);
+		normals.data.set(normalid, normal);
 	}
 
 	public void setColor(int colorid, Vector3f color) {
-		colors.set(colorid, color);
+		colors.data.set(colorid, color);
 	}
 
 	public void setTextureCoordinate(int texcoordid, Vector2f texturecoord) {
-		texturecoords.set(texcoordid, texturecoord);
+		texturecoords.data.set(texcoordid, texturecoord);
 	}
 
 	public void setRenderHints(boolean rendercolors, boolean rendertexturecoords, boolean rendernormals) {
-		renderColor = rendercolors;
-		renderTexCoords = rendertexturecoords;
-		renderNormals = rendernormals;
-
 		glBindVertexArray(vaoHandle);
 
-		if (renderColor) {
-			glEnableVertexAttribArray(COLOR_POSITION);
-		} else {
-			glDisableVertexAttribArray(COLOR_POSITION);
-		}
-		if (renderTexCoords) {
-			glEnableVertexAttribArray(TEXTURE_POSITION);
-		} else {
-			glDisableVertexAttribArray(TEXTURE_POSITION);
-		}
-		if (renderNormals) {
-			glEnableVertexAttribArray(NORMAL_POSITION);
-		} else {
-			glDisableVertexAttribArray(NORMAL_POSITION);
-		}
+		colors.setActive(rendercolors);
+		texturecoords.setActive(rendertexturecoords);
+		normals.setActive(rendernormals);
 
 		glBindVertexArray(0);
 	}
@@ -461,19 +382,19 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	}
 
 	public void setVertices(List<L> verts) {
-		vertices = verts;
+		vertices.data = verts;
 	}
 
 	public void setColors(List<Vector3f> colors) {
-		this.colors = colors;
+		this.colors.data = colors;
 	}
 
 	public void setNormals(List<L> normals) {
-		this.normals = normals;
+		this.normals.data = normals;
 	}
 
 	public void setTextureCoordinates(List<Vector2f> texcoords) {
-		texturecoords = texcoords;
+		texturecoords.data = texcoords;
 	}
 
 	public void addQuad(int index1, int index2, int index3, int index4) {

@@ -215,4 +215,6 @@ public abstract class Matrix4 extends Matrix {
 	 * @see Matrix4#translateTo(Vector2)
 	 */
 	public abstract void translateTo(Vector3 v);
+
+	public abstract void transform(Matrix4 m);
 }
