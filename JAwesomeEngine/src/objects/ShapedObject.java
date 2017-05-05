@@ -72,6 +72,15 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	// vboNormalHandle = original.getVBONormalHandle();
 	// }
 	//
+
+	public List<ObjectDataAttributes<?, ?>> getDataAttributes() {
+		return dataattributes;
+	}
+
+	public void addDataAttribute(ObjectDataAttributes<?, ?> dataattribute) {
+		dataattributes.add(dataattribute);
+	}
+
 	public int getVAOHandle() {
 		return vaoHandle;
 	}

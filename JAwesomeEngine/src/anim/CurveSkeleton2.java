@@ -29,7 +29,7 @@ public class CurveSkeleton2 extends CurveSkeleton<Vector2f, Complexf> {
 	@Override
 	protected void updateAnimation(float animationTimer) {
 		CurveAnimation<Vector2f, Complexf> currentAnimation = (dynamicAnimationTransition != null)
-				? dynamicAnimationTransition : animation;
+				? dynamicAnimationTransition.getAnimation() : animation;
 		for (int i = 0; i < bodyparts.size(); i++) {
 			BaseObject<Vector2f, Complexf> part = bodyparts.get(i);
 			Vector2f trans = currentAnimation.getAnimationTranslationPath(i).getPoint(animationTimer);
@@ -52,9 +52,9 @@ public class CurveSkeleton2 extends CurveSkeleton<Vector2f, Complexf> {
 		for (int i = 0; i < bodyparts.size(); i++) {
 			Vector2f trans = animation.getAnimationTranslationPath(i).getPoint(animationTimer);
 			SimpleCurvePath<Vector2f> translationpath = new SimpleCurvePath<Vector2f>(
-					dynamicAnimationTransition.getAnimationTranslationPath(i));
+					dynamicAnimationTransition.getAnimation().getAnimationTranslationPath(i));
 			SimpleAngularCurvePath<Complexf> rotationpath = new SimpleAngularCurvePath<Complexf>(
-					dynamicAnimationTransition.getAnimationRotationPath(i));
+					dynamicAnimationTransition.getAnimation().getAnimationRotationPath(i));
 			BezierCurve2 oldcurve = (BezierCurve2) translationpath.getCurves().get(0);
 			SquadCurve2 oldrotcurve = (SquadCurve2) rotationpath.getCurves().get(0);
 			translationpath.getCurves().set(0,
@@ -63,8 +63,8 @@ public class CurveSkeleton2 extends CurveSkeleton<Vector2f, Complexf> {
 			Complexf newSquadrotation = animation.getAnimationRotationPath(i).getRotation(animationTimer);
 			rotationpath.getCurves().set(0,
 					new SquadCurve2(newSquadrotation, newSquadrotation, oldrotcurve.getR2(), oldrotcurve.getR3()));
-			dynamicAnimationTransition.getAnimationTranslationPaths().set(i, translationpath);
-			dynamicAnimationTransition.getAnimationRotationPaths().set(i, rotationpath);
+			dynamicAnimationTransition.getAnimation().getAnimationTranslationPaths().set(i, translationpath);
+			dynamicAnimationTransition.getAnimation().getAnimationRotationPaths().set(i, rotationpath);
 		}
 		animation = animationparam;
 		animationTimer = 0;

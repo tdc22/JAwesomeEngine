@@ -9,7 +9,8 @@ import vector.Vector;
 
 public abstract class CurveSkeleton<L extends Vector, A extends Rotation> extends Skeleton<L, A, CurveAnimation<L, A>> {
 	List<BaseObject<L, A>> bodyparts;
-	DynamicCurveAnimationTransition<L, A> dynamicAnimationTransition;
+	L nullvec;
+	A nullrot;
 
 	public CurveSkeleton(CurveAnimation<L, A> animation, BaseObject<L, A>[] bodypart) {
 		super(animation);
@@ -21,26 +22,7 @@ public abstract class CurveSkeleton<L extends Vector, A extends Rotation> extend
 
 	@Override
 	public void update(int delta) {
-		if (dynamicAnimationTransition != null) {
-			if (dynamicAnimationTransition.getAnimationTranslationPath(0).getCurveNum(animationTimer) == 0) {
-				animationTimer += delta * dynamicAnimationTransition.getDynamicTransitionSpeed();
-			} else {
-				animationTimer += delta * dynamicAnimationTransition.getSpeed();
-			}
-		} else {
-			animationTimer += delta * animation.getSpeed();
-		}
-
-		if (animationTimer > 1) {
-			if (animation.loops) {
-				if (dynamicAnimationTransition != null) {
-					dynamicAnimationTransition = null;
-				}
-				animationTimer %= 1;
-			} else {
-				animationTimer = 1;
-			}
-		}
+		updateAnimationTimer(delta);
 
 		if (attachedTo != null) {
 			for (BaseObject<L, A> part : bodyparts) {
@@ -59,9 +41,5 @@ public abstract class CurveSkeleton<L extends Vector, A extends Rotation> extend
 
 	public void addBodyPart(BaseObject<L, A> bodypart) {
 		bodyparts.add(bodypart);
-	}
-
-	public DynamicCurveAnimationTransition<L, A> getDynamicAnimation() {
-		return dynamicAnimationTransition;
 	}
 }

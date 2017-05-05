@@ -23,7 +23,7 @@ public class ObjectDataAttributesInteger extends ObjectDataAttributes<Integer, I
 			buffertype = GL_ELEMENT_ARRAY_BUFFER;
 		}
 	}
-	
+
 	public boolean isIndex() {
 		return index;
 	}

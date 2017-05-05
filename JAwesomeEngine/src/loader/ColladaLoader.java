@@ -17,6 +17,11 @@ import vector.Vector3f;
 import vector.Vector4f;
 
 public class ColladaLoader {
+	private static boolean inSource;
+	private static boolean inSourceTechnique;
+	private static boolean inSourceTechniqueAccessor;
+	private static String sourcename;
+	private static int stride;
 
 	public static ShapedObject3 loadDAE(File f) throws IOException {
 		ShapedObject3 object = new ShapedObject3();
@@ -24,19 +29,19 @@ public class ColladaLoader {
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		String line;
 
+		inSource = false;
+		inSourceTechnique = false;
+		inSourceTechniqueAccessor = false;
+		sourcename = "";
+		stride = 0;
 		HashMap<String, List<Vector>> sources = new HashMap<String, List<Vector>>();
 		boolean inGeometries = false;
-		boolean inSource = false;
-		boolean inSourceTechnique = false;
-		boolean inSourceTechniqueAccessor = false;
 		boolean inVertices = false;
 		boolean inPolylist = false;
 		List<Float> values = new ArrayList<Float>();
 		List<Vector> vectorValues = new ArrayList<Vector>();
 		String vertexPositionChild = null;
-		int stride = 0;
 		HashMap<String, Integer> valueType = new HashMap<String, Integer>();
-		String sourcename = "";
 		String vertexSourceName = "";
 		String normalSourceName = "";
 		String texcoordSourceName = "";
@@ -50,75 +55,12 @@ public class ColladaLoader {
 		List<Vector3f> colors = new ArrayList<Vector3f>();
 
 		while ((line = reader.readLine()) != null) {
-			if (line.contains("</library_geometries")) {
-				inGeometries = false;
+			if (line.contains("<library_geometries")) {
+				values.clear();
+				inGeometries = true;
 			}
 			if (inGeometries) {
-				if (line.contains("<source")) {
-					inSource = true;
-					sourcename = line.split("id=\"")[1].split("\"")[0];
-				}
-				if (inSource) {
-					if (line.contains("<float_array")) {
-						for (String value : line.split(">")[1].split("<")[0].split(" ")) {
-							values.add(Float.parseFloat(value));
-						}
-					}
-					if (line.contains("<technique_common")) {
-						inSourceTechnique = true;
-					}
-					if (inSourceTechnique) {
-						if (line.contains("<accessor")) {
-							inSourceTechniqueAccessor = true;
-						}
-						if (inSourceTechniqueAccessor) {
-							if (line.contains("stride=\"")) {
-								stride = Integer.parseInt(line.split("stride=\"")[1].split("\"")[0]);
-								switch (stride) {
-								case 1:
-									for (int i = 0; i < values.size(); i++)
-										vectorValues.add(new Vector1f(values.get(i)));
-									break;
-								case 2:
-									for (int i = 0; i < values.size() / 2; i++) {
-										int i2 = i * 2;
-										vectorValues.add(new Vector2f(values.get(i2), values.get(i2 + 1)));
-									}
-									break;
-								case 3:
-									for (int i = 0; i < values.size() / 3; i++) {
-										int i3 = i * 3;
-										vectorValues.add(
-												new Vector3f(values.get(i3), values.get(i3 + 1), values.get(i3 + 2)));
-									}
-									break;
-								case 4:
-									for (int i = 0; i < values.size() / 4; i++) {
-										int i4 = i * 4;
-										vectorValues.add(new Vector4f(values.get(i4), values.get(i4 + 1),
-												values.get(i4 + 2), values.get(i4 + 3)));
-									}
-									break;
-								default:
-									System.err.println("Stride count has to be between 1 and 4.");
-								}
-							}
-							if (line.contains("</accessor")) {
-								inSourceTechniqueAccessor = false;
-							}
-						}
-						if (line.contains("</technique_common")) {
-							inSourceTechnique = false;
-						}
-					}
-					if (line.contains("</source")) {
-						sources.put(sourcename, vectorValues);
-						vectorValues = new ArrayList<Vector>();
-						valueType.put(sourcename, new Integer(stride)); // TODO:
-																		// check
-						inSource = false;
-					}
-				}
+				parseSource(line, values, vectorValues, sources, valueType);
 				if (line.contains("<vertices")) {
 					inVertices = true;
 				}
@@ -224,9 +166,8 @@ public class ColladaLoader {
 					}
 				}
 			}
-			if (line.contains("<library_geometries")) {
-				values.clear();
-				inGeometries = true;
+			if (line.contains("</library_geometries")) {
+				inGeometries = false;
 			}
 		}
 		reader.close();
@@ -255,11 +196,177 @@ public class ColladaLoader {
 		object.setNormals(normals);
 		object.setTextureCoordinates(texturecoords);
 		object.setColors(colors);
-		// TODO ?
+		// TODO Adjacency variant?
 		object.setRenderMode(GLConstants.TRIANGLES);
 		object.prerender();
 
 		return object;
+	}
+
+	public void loadAnimation(File f) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(f));
+		String line;
+
+		inSource = false;
+		inSourceTechnique = false;
+		inSourceTechniqueAccessor = false;
+		sourcename = "";
+		stride = 0;
+		boolean inControllers = false;
+		boolean inVertexWeights = false;
+		HashMap<String, List<Vector>> sources = new HashMap<String, List<Vector>>();
+		List<Float> values = new ArrayList<Float>();
+		List<Vector> vectorValues = new ArrayList<Vector>();
+		HashMap<String, Integer> valueType = new HashMap<String, Integer>();
+		String jointSourceName = "";
+		String weightSourceName = "";
+		List<Integer> jointCount = new ArrayList<Integer>();
+
+		List<Integer> joints = new ArrayList<Integer>();
+		List<Integer> weights = new ArrayList<Integer>();
+
+		while ((line = reader.readLine()) != null) {
+			if (line.contains("<library_controllers")) {
+				inControllers = true;
+			}
+			if (inControllers) {
+				parseSource(line, values, vectorValues, sources, valueType);
+				if (line.contains("<vertex_weights")) {
+					inVertexWeights = true;
+				}
+				if (inVertexWeights) {
+					if (line.contains("<input")) {
+						String semantic = line.split("semantic=\"")[1].split("\"")[0];
+						String semanticSource = line.split("source=\"")[1].split("\"")[0].replace("#", "");
+						if (semantic.equals("JOINT"))
+							jointSourceName = semanticSource;
+						if (semantic.equals("WEIGHT"))
+							weightSourceName = semanticSource;
+					}
+					if (line.contains("<vcount")) {
+						for (String value : line.split(">")[1].split("<")[0].split(" ")) {
+							jointCount.add(Integer.parseInt(value));
+						}
+					}
+					if (line.contains("<v>")) {
+						int attributesPerVertex = 0;
+						HashMap<Integer, String> attributeName = new HashMap<Integer, String>();
+						int vertexPos = -1;
+						int normalPos = -1;
+						List<Vector> vertexSource = null;
+						List<Vector> normalSource = null;
+						if (!jointSourceName.isEmpty()) {
+							attributeName.put(attributesPerVertex, jointSourceName);
+							vertexPos = attributesPerVertex;
+							vertexSource = sources.get(jointSourceName);
+							attributesPerVertex++;
+						}
+						if (!weightSourceName.isEmpty()) {
+							attributeName.put(attributesPerVertex, weightSourceName);
+							normalPos = attributesPerVertex;
+							normalSource = sources.get(weightSourceName);
+							attributesPerVertex++;
+						}
+
+						int a = 0;
+						int index = 0;
+						for (String value : line.split(">")[1].split("<")[0].split(" ")) {
+							int val = Integer.parseInt(value);
+
+							if (a == vertexPos)
+								vertices.add((Vector3f) vertexSource.get(val));
+							else if (a == normalPos)
+								normals.add((Vector3f) normalSource.get(val));
+
+							a++;
+							if (a == attributesPerVertex) {
+								a = 0;
+								indices.add(index);
+								index++;
+							}
+						}
+					}
+				}
+				if (line.contains("</vertex_weights")) {
+					jointSourceName = "";
+					weightSourceName = "";
+					jointCount.clear();
+					inVertexWeights = false;
+				}
+			}
+			if (line.contains("</library_controllers")) {
+				inControllers = false;
+			}
+		}
+		reader.close();
+	}
+
+	private static void parseSource(String line, List<Float> values, List<Vector> vectorValues,
+			HashMap<String, List<Vector>> sources, HashMap<String, Integer> valueType) {
+		if (line.contains("<source")) {
+			inSource = true;
+			sourcename = line.split("id=\"")[1].split("\"")[0];
+		}
+		if (inSource) {
+			if (line.contains("<float_array")) {
+				for (String value : line.split(">")[1].split("<")[0].split(" ")) {
+					values.add(Float.parseFloat(value));
+				}
+			}
+			if (line.contains("<technique_common")) {
+				inSourceTechnique = true;
+			}
+			if (inSourceTechnique) {
+				if (line.contains("<accessor")) {
+					inSourceTechniqueAccessor = true;
+				}
+				if (inSourceTechniqueAccessor) {
+					if (line.contains("stride=\"")) {
+						stride = Integer.parseInt(line.split("stride=\"")[1].split("\"")[0]);
+						switch (stride) {
+						case 1:
+							for (int i = 0; i < values.size(); i++)
+								vectorValues.add(new Vector1f(values.get(i)));
+							break;
+						case 2:
+							for (int i = 0; i < values.size() / 2; i++) {
+								int i2 = i * 2;
+								vectorValues.add(new Vector2f(values.get(i2), values.get(i2 + 1)));
+							}
+							break;
+						case 3:
+							for (int i = 0; i < values.size() / 3; i++) {
+								int i3 = i * 3;
+								vectorValues.add(new Vector3f(values.get(i3), values.get(i3 + 1), values.get(i3 + 2)));
+							}
+							break;
+						case 4:
+							for (int i = 0; i < values.size() / 4; i++) {
+								int i4 = i * 4;
+								vectorValues.add(new Vector4f(values.get(i4), values.get(i4 + 1), values.get(i4 + 2),
+										values.get(i4 + 3)));
+							}
+							break;
+						default:
+							System.err.println("Stride count has to be between 1 and 4.");
+						}
+					}
+					if (line.contains("</accessor")) {
+						inSourceTechniqueAccessor = false;
+					}
+				}
+				if (line.contains("</technique_common")) {
+					inSourceTechnique = false;
+				}
+			}
+			if (line.contains("</source")) {
+				sources.put(sourcename, new ArrayList<Vector>(vectorValues));
+				vectorValues.clear();
+				valueType.put(sourcename, new Integer(stride)); // TODO:
+																// check
+				inSource = false;
+			}
+		}
 	}
 
 	public static ShapedObject3 loadModel(File f) throws IOException {

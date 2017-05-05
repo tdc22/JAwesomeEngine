@@ -10,8 +10,7 @@ public abstract class Skeleton<L extends Vector, A extends Rotation, Anim extend
 	BaseObject<L, A> attachedTo;
 	Anim animation;
 	float animationTimer = 0;
-	L nullvec;
-	A nullrot;
+	DynamicAnimationTransition<L, A, Anim> dynamicAnimationTransition;
 
 	public Skeleton(Anim animation) {
 		setAnimation(animation);
@@ -36,12 +35,39 @@ public abstract class Skeleton<L extends Vector, A extends Rotation, Anim extend
 		return attachedTo;
 	}
 
+	public DynamicAnimationTransition<L, A, Anim> getDynamicAnimationTransition() {
+		return dynamicAnimationTransition;
+	}
+
 	public void setAnimationTimer(float timer) {
 		animationTimer = timer;
 	}
 
 	public float getAnimationTimer() {
 		return animationTimer;
+	}
+
+	protected void updateAnimationTimer(int delta) {
+		if (dynamicAnimationTransition != null) {
+			if (dynamicAnimationTransition.isInDynamicTransition(animationTimer)) {
+				animationTimer += delta * dynamicAnimationTransition.getDynamicTransitionSpeed();
+			} else {
+				animationTimer += delta * dynamicAnimationTransition.getAnimation().getSpeed();
+			}
+		} else {
+			animationTimer += delta * animation.getSpeed();
+		}
+
+		if (animationTimer > 1) {
+			if (animation.loops) {
+				if (dynamicAnimationTransition != null) {
+					dynamicAnimationTransition = null;
+				}
+				animationTimer %= 1;
+			} else {
+				animationTimer = 1;
+			}
+		}
 	}
 
 	protected abstract void updateAnimation(float animationTimer);

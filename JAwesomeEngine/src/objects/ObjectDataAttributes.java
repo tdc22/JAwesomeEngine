@@ -54,7 +54,7 @@ public abstract class ObjectDataAttributes<datatype extends Object, buf extends 
 			glDisableVertexAttribArray(position);
 		}
 	}
-	
+
 	public int getPosition() {
 		return position;
 	}
@@ -62,7 +62,7 @@ public abstract class ObjectDataAttributes<datatype extends Object, buf extends 
 	public int getHandle() {
 		return handle;
 	}
-	
+
 	public int getDatasize() {
 		return datasize;
 	}

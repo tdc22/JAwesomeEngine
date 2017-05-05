@@ -3,7 +3,8 @@ package anim;
 import quaternion.Rotation;
 import vector.Vector;
 
-public class DynamicCurveAnimationTransition<L extends Vector, A extends Rotation> extends CurveAnimation<L, A> {
+public class DynamicCurveAnimationTransition<L extends Vector, A extends Rotation> extends CurveAnimation<L, A>
+		implements DynamicAnimationTransition<L, A, CurveAnimation<L, A>> {
 	float dynamicTransitionSpeed;
 
 	public DynamicCurveAnimationTransition(float transitionspeed) {
@@ -37,5 +38,15 @@ public class DynamicCurveAnimationTransition<L extends Vector, A extends Rotatio
 
 	public void setDynamicTransitionSpeed(float speed) {
 		dynamicTransitionSpeed = speed;
+	}
+
+	@Override
+	public CurveAnimation<L, A> getAnimation() {
+		return this;
+	}
+
+	@Override
+	public boolean isInDynamicTransition(float animationTimer) {
+		return getAnimation().getAnimationTranslationPath(0).getCurveNum(animationTimer) == 0;
 	}
 }
