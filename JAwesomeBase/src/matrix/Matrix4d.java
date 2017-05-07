@@ -924,6 +924,90 @@ public class Matrix4d extends Matrix4 {
 		matrix[3][3] = m33;
 	}
 
+	@Override
+	public void translate(double x, double y) {
+		matrix[3][0] += x;
+		matrix[3][1] += y;
+	}
+
+	@Override
+	public void translate(float x, float y) {
+		matrix[3][0] += x;
+		matrix[3][1] += y;
+	}
+
+	@Override
+	public void translate(double x, double y, double z) {
+		matrix[3][0] += x;
+		matrix[3][1] += y;
+		matrix[3][2] += z;
+	}
+
+	@Override
+	public void translate(float x, float y, float z) {
+		matrix[3][0] += x;
+		matrix[3][1] += y;
+		matrix[3][2] += z;
+	}
+
+	@Override
+	public void translateRelative(double x, double y) {
+		matrix[3][0] += matrix[0][0] * x + matrix[1][0] * y;
+		matrix[3][1] += matrix[0][1] * x + matrix[1][1] * y;
+		matrix[3][2] += matrix[0][2] * x + matrix[1][2] * y;
+		matrix[3][3] += matrix[0][3] * x + matrix[1][3] * y;
+	}
+
+	@Override
+	public void translateRelative(float x, float y) {
+		matrix[3][0] += matrix[0][0] * x + matrix[1][0] * y;
+		matrix[3][1] += matrix[0][1] * x + matrix[1][1] * y;
+		matrix[3][2] += matrix[0][2] * x + matrix[1][2] * y;
+		matrix[3][3] += matrix[0][3] * x + matrix[1][3] * y;
+	}
+
+	@Override
+	public void translateRelative(double x, double y, double z) {
+		matrix[3][0] += matrix[0][0] * x + matrix[1][0] * y + matrix[2][0] * z;
+		matrix[3][1] += matrix[0][1] * x + matrix[1][1] * y + matrix[2][1] * z;
+		matrix[3][2] += matrix[0][2] * x + matrix[1][2] * y + matrix[2][2] * z;
+		matrix[3][3] += matrix[0][3] * x + matrix[1][3] * y + matrix[2][3] * z;
+	}
+
+	@Override
+	public void translateRelative(float x, float y, float z) {
+		matrix[3][0] += matrix[0][0] * x + matrix[1][0] * y + matrix[2][0] * z;
+		matrix[3][1] += matrix[0][1] * x + matrix[1][1] * y + matrix[2][1] * z;
+		matrix[3][2] += matrix[0][2] * x + matrix[1][2] * y + matrix[2][2] * z;
+		matrix[3][3] += matrix[0][3] * x + matrix[1][3] * y + matrix[2][3] * z;
+	}
+
+	@Override
+	public void translateTo(double x, double y) {
+		matrix[3][0] = x;
+		matrix[3][1] = y;
+	}
+
+	@Override
+	public void translateTo(float x, float y) {
+		matrix[3][0] = x;
+		matrix[3][1] = y;
+	}
+
+	@Override
+	public void translateTo(double x, double y, double z) {
+		matrix[3][0] = x;
+		matrix[3][1] = y;
+		matrix[3][2] = z;
+	}
+
+	@Override
+	public void translateTo(float x, float y, float z) {
+		matrix[3][0] = x;
+		matrix[3][1] = y;
+		matrix[3][2] = z;
+	}
+
 	// @Override
 	// public void normalizeRotation() {
 	//
