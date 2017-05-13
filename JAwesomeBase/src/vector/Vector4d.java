@@ -322,4 +322,29 @@ public class Vector4d extends Vector4 {
 		w += trans.getW();
 	}
 
+	@Override
+	public void set(int i, double value) {
+		if (i == 0) {
+			x = value;
+		} else if (i == 1) {
+			y = value;
+		} else if (i == 2) {
+			z = value;
+		} else if (i == 3) {
+			w = value;
+		}
+	}
+
+	@Override
+	public void set(int i, float value) {
+		if (i == 0) {
+			x = value;
+		} else if (i == 1) {
+			y = value;
+		} else if (i == 2) {
+			z = value;
+		} else if (i == 3) {
+			w = value;
+		}
+	}
 }

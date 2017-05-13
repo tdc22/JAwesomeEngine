@@ -4,7 +4,7 @@ import java.util.List;
 
 import matrix.Matrix4f;
 
-public abstract class BoneJoint {
+public class BoneJoint {
 	int index;
 	List<BoneJoint> children;
 
@@ -19,11 +19,11 @@ public abstract class BoneJoint {
 	public void addChild(BoneJoint child) {
 		children.add(child);
 	}
-	
+
 	public void setAnimatedTransform(Matrix4f animatedTransform) {
 		this.animatedTransform = animatedTransform;
 	}
-	
+
 	public int getIndex() {
 		return index;
 	}

@@ -279,4 +279,26 @@ public class Vector3d extends Vector3 {
 		y += trans.getY();
 		z += trans.getZ();
 	}
+
+	@Override
+	public void set(int i, double value) {
+		if (i == 0) {
+			x = value;
+		} else if (i == 1) {
+			y = value;
+		} else if (i == 2) {
+			z = value;
+		}
+	}
+
+	@Override
+	public void set(int i, float value) {
+		if (i == 0) {
+			x = value;
+		} else if (i == 1) {
+			y = value;
+		} else if (i == 2) {
+			z = value;
+		}
+	}
 }

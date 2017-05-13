@@ -7,25 +7,50 @@ import utils.Pair;
 import vector.Vector;
 
 public class BoneAnimation<L extends Vector, A extends Rotation> extends Animation<L, A> {
-	// each Bone has different number of keyframes at different timestamps!!
 	List<BoneAnimationKeyframe<L, A>> keyframes;
-	
+
+	public BoneAnimation() {
+		super();
+	}
+
+	public BoneAnimation(float animationspeed) {
+		super(animationspeed);
+	}
+
+	public BoneAnimation(boolean loops) {
+		super(loops);
+	}
+
+	public BoneAnimation(float animationspeed, boolean loops) {
+		super(animationspeed, loops);
+	}
+
+	public BoneAnimation(BoneAnimation<L, A> animation) {
+		super();
+		keyframes.addAll(animation.getKeyframes());
+	}
+
 	public void addKeyframe(BoneAnimationKeyframe<L, A> keyframe) {
 		boolean inserted = false;
-		for(int i = keyframes.size() - 1; i >= 0; i--) {
-			if(keyframes.get(i).timestamp < keyframe.timestamp) {
+		for (int i = keyframes.size() - 1; i >= 0; i--) {
+			if (keyframes.get(i).timestamp < keyframe.timestamp) {
 				keyframes.add(i + 1, keyframe);
 				inserted = true;
 				break;
 			}
 		}
-		if(!inserted) {
+		if (!inserted) {
 			keyframes.add(0, keyframe);
 		}
 	}
-	
-	private final Pair<BoneAnimationKeyframe<L, A>, BoneAnimationKeyframe<L, A>> currentKeyframes = new Pair<BoneAnimationKeyframe<L, A>, BoneAnimationKeyframe<L, A>>(null, null);
-	
+
+	public List<BoneAnimationKeyframe<L, A>> getKeyframes() {
+		return keyframes;
+	}
+
+	private final Pair<BoneAnimationKeyframe<L, A>, BoneAnimationKeyframe<L, A>> currentKeyframes = new Pair<BoneAnimationKeyframe<L, A>, BoneAnimationKeyframe<L, A>>(
+			null, null);
+
 	public Pair<BoneAnimationKeyframe<L, A>, BoneAnimationKeyframe<L, A>> getCurrentKeyframes(float animationTime) {
 		BoneAnimationKeyframe<L, A> previousFrame = keyframes.get(0);
 		BoneAnimationKeyframe<L, A> nextFrame = previousFrame;

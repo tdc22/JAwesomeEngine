@@ -217,4 +217,22 @@ public class Vector2d extends Vector2 {
 		x += trans.getX();
 		y += trans.getY();
 	}
+
+	@Override
+	public void set(int i, double value) {
+		if (i == 0) {
+			x = value;
+		} else if (i == 1) {
+			y = value;
+		}
+	}
+
+	@Override
+	public void set(int i, float value) {
+		if (i == 0) {
+			x = value;
+		} else if (i == 1) {
+			y = value;
+		}
+	}
 }

@@ -923,7 +923,7 @@ public class Matrix4f extends Matrix4 {
 		matrix[3][2] = m32;
 		matrix[3][3] = m33;
 	}
-	
+
 	@Override
 	public void translate(double x, double y) {
 		matrix[3][0] += x;

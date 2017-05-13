@@ -217,4 +217,22 @@ public class Vector2f extends Vector2 {
 		x += trans.getXf();
 		y += trans.getYf();
 	}
+
+	@Override
+	public void set(int i, double value) {
+		if (i == 0) {
+			x = (float) value;
+		} else if (i == 1) {
+			y = (float) value;
+		}
+	}
+
+	@Override
+	public void set(int i, float value) {
+		if (i == 0) {
+			x = value;
+		} else if (i == 1) {
+			y = value;
+		}
+	}
 }

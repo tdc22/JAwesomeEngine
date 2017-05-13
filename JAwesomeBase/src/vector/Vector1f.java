@@ -152,4 +152,18 @@ public class Vector1f extends Vector1 {
 	public void translate(Vector1 trans) {
 		x += trans.getXf();
 	}
+
+	@Override
+	public void set(int i, double value) {
+		if (i == 0) {
+			x = (float) value;
+		}
+	}
+
+	@Override
+	public void set(int i, float value) {
+		if (i == 0) {
+			x = value;
+		}
+	}
 }

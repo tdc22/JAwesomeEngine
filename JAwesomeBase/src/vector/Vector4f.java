@@ -326,4 +326,29 @@ public class Vector4f extends Vector4 {
 		w += trans.getWf();
 	}
 
+	@Override
+	public void set(int i, double value) {
+		if (i == 0) {
+			x = (float) value;
+		} else if (i == 1) {
+			y = (float) value;
+		} else if (i == 2) {
+			z = (float) value;
+		} else if (i == 3) {
+			w = (float) value;
+		}
+	}
+
+	@Override
+	public void set(int i, float value) {
+		if (i == 0) {
+			x = value;
+		} else if (i == 1) {
+			y = value;
+		} else if (i == 2) {
+			z = value;
+		} else if (i == 3) {
+			w = value;
+		}
+	}
 }

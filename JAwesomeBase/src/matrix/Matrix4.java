@@ -185,13 +185,13 @@ public abstract class Matrix4 extends Matrix {
 	 * @see Matrix4#translate(Vector2)
 	 */
 	public abstract void translate(Vector3 v);
-	
+
 	public abstract void translate(double x, double y);
-	
+
 	public abstract void translate(float x, float y);
-	
+
 	public abstract void translate(double x, double y, double z);
-	
+
 	public abstract void translate(float x, float y, float z);
 
 	/**
@@ -208,13 +208,13 @@ public abstract class Matrix4 extends Matrix {
 	public abstract void translateRelative(Vector3 v);
 
 	public abstract void translateRelative(double x, double y);
-	
+
 	public abstract void translateRelative(float x, float y);
-	
+
 	public abstract void translateRelative(double x, double y, double z);
-	
+
 	public abstract void translateRelative(float x, float y, float z);
-	
+
 	// public abstract void normalizeRotation();
 	//
 	// public abstract void normalizeRotation2();
@@ -231,13 +231,13 @@ public abstract class Matrix4 extends Matrix {
 	 * @see Matrix4#translateTo(Vector2)
 	 */
 	public abstract void translateTo(Vector3 v);
-	
+
 	public abstract void translateTo(double x, double y);
-	
+
 	public abstract void translateTo(float x, float y);
-	
+
 	public abstract void translateTo(double x, double y, double z);
-	
+
 	public abstract void translateTo(float x, float y, float z);
 
 	public abstract void transform(Matrix4 m);
