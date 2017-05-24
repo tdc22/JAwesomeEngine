@@ -1,18 +1,27 @@
 package animationSkeletal;
 
+import anim.BoneAnimationSkeleton3;
 import display.DisplayMode;
 import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.Font;
+import loader.AnimationLoader;
+import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
+import loader.TextureLoader;
+import objects.ShapedObject3;
 import shader.Shader;
 import sound.NullSoundEnvironment;
-import vector.Vector4f;
+import texture.Texture;
+import utils.Debugger;
 
 public class SkeletalTest extends StandardGame {
 	Shader shader;
+	BoneAnimationSkeleton3 animationskeleton;
+	Debugger debugger;
 
 	@Override
 	public void init() {
@@ -23,17 +32,37 @@ public class SkeletalTest extends StandardGame {
 		cam.translateTo(0, 0, 5);
 		cam.rotateTo(0, 0);
 
-		shader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag"));
-		shader.addArgumentName("u_color");
-		shader.addArgument(new Vector4f(1f, 0f, 0f, 1f));
-		addShader(shader);
+		Shader defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShader(defaultshader);
+		Shader defaultshaderInterface = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		addShaderInterface(defaultshaderInterface);
 
-		shader.addObject(ModelLoader.load("res/models/model.dae"));
+		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
+		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
+
+		Texture texture = new Texture(TextureLoader.loadTexture("res/textures/tmModelTexture.png"));
+		Shader textureshader = new Shader(ShaderLoader.loadShaderFromFile("res/shaders/animationshader.vert",
+				"res/shaders/animationshader.frag"));
+		textureshader.addArgumentName("u_texture");
+		textureshader.addArgument(texture);
+		addShader(textureshader);
+
+		ShapedObject3 model = ModelLoader.load("res/models/tmModel.dae");
+		model.setRenderHints(false, true, false);
+		textureshader.addObject(model);
+		animationskeleton = AnimationLoader.load("res/models/tmModel.dae");
+
+		textureshader.addArgumentName("u_jointTransforms");
+		textureshader.addArgument(animationskeleton.getJointMatrices());
+
+		System.out.println(animationskeleton.getAnimation().getKeyframes());
 	}
 
 	@Override
 	public void render() {
+		debugger.begin();
 		render3dLayer();
 	}
 
@@ -44,11 +73,14 @@ public class SkeletalTest extends StandardGame {
 
 	@Override
 	public void renderInterface() {
-
+		debugger.end();
+		renderInterfaceLayer();
 	}
 
 	@Override
 	public void update(int delta) {
+		debugger.update(fps, 0, 0);
 		cam.update(delta);
+		animationskeleton.update(delta);
 	}
 }

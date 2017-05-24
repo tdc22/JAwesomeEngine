@@ -23,7 +23,6 @@ public class ModelLoader {
 		} else {
 			System.out.println("Could not load model: " + path);
 		}
-		model.prerender();
 		return model;
 	}
 }

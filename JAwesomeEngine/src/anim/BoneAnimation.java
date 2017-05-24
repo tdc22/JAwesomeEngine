@@ -1,36 +1,43 @@
 package anim;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import quaternion.Rotation;
 import utils.Pair;
 import vector.Vector;
 
-public class BoneAnimation<L extends Vector, A extends Rotation> extends Animation<L, A> {
-	List<BoneAnimationKeyframe<L, A>> keyframes;
+public class BoneAnimation<L extends Vector, A extends Rotation, B extends BoneAnimationKeyframe<L, A>>
+		extends Animation<L, A> {
+	List<B> keyframes;
 
 	public BoneAnimation() {
 		super();
+		keyframes = new ArrayList<B>();
 	}
 
 	public BoneAnimation(float animationspeed) {
 		super(animationspeed);
+		keyframes = new ArrayList<B>();
 	}
 
 	public BoneAnimation(boolean loops) {
 		super(loops);
+		keyframes = new ArrayList<B>();
 	}
 
 	public BoneAnimation(float animationspeed, boolean loops) {
 		super(animationspeed, loops);
+		keyframes = new ArrayList<B>();
 	}
 
-	public BoneAnimation(BoneAnimation<L, A> animation) {
+	public BoneAnimation(BoneAnimation<L, A, B> animation) {
 		super();
+		keyframes = new ArrayList<B>();
 		keyframes.addAll(animation.getKeyframes());
 	}
 
-	public void addKeyframe(BoneAnimationKeyframe<L, A> keyframe) {
+	public void addKeyframe(B keyframe) {
 		boolean inserted = false;
 		for (int i = keyframes.size() - 1; i >= 0; i--) {
 			if (keyframes.get(i).timestamp < keyframe.timestamp) {
@@ -44,16 +51,15 @@ public class BoneAnimation<L extends Vector, A extends Rotation> extends Animati
 		}
 	}
 
-	public List<BoneAnimationKeyframe<L, A>> getKeyframes() {
+	public List<B> getKeyframes() {
 		return keyframes;
 	}
 
-	private final Pair<BoneAnimationKeyframe<L, A>, BoneAnimationKeyframe<L, A>> currentKeyframes = new Pair<BoneAnimationKeyframe<L, A>, BoneAnimationKeyframe<L, A>>(
-			null, null);
+	private final Pair<B, B> currentKeyframes = new Pair<B, B>(null, null);
 
-	public Pair<BoneAnimationKeyframe<L, A>, BoneAnimationKeyframe<L, A>> getCurrentKeyframes(float animationTime) {
-		BoneAnimationKeyframe<L, A> previousFrame = keyframes.get(0);
-		BoneAnimationKeyframe<L, A> nextFrame = previousFrame;
+	public Pair<B, B> getCurrentKeyframes(float animationTime) {
+		B previousFrame = keyframes.get(0);
+		B nextFrame = previousFrame;
 		for (int i = 1; i < keyframes.size(); i++) {
 			nextFrame = keyframes.get(i);
 			if (nextFrame.getTimestamp() >= animationTime) {
@@ -63,5 +69,12 @@ public class BoneAnimation<L extends Vector, A extends Rotation> extends Animati
 		}
 		currentKeyframes.set(previousFrame, nextFrame);
 		return currentKeyframes;
+	}
+
+	public void normalizeTimestamps() {
+		float lastKeyframeTime = keyframes.get(keyframes.size() - 1).getTimestamp();
+		for (B keyframe : keyframes) {
+			keyframe.setTimestamp(keyframe.getTimestamp() / lastKeyframeTime);
+		}
 	}
 }

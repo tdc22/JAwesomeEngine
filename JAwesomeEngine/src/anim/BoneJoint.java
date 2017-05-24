@@ -1,5 +1,6 @@
 package anim;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import matrix.Matrix4f;
@@ -12,6 +13,7 @@ public class BoneJoint {
 
 	public BoneJoint(int index, Matrix4f localBindTransform) {
 		this.index = index;
+		children = new ArrayList<BoneJoint>();
 		this.localBindTransform = localBindTransform;
 		inverseBindTransform = new Matrix4f();
 	}

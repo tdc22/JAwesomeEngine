@@ -154,10 +154,22 @@ public class Shader implements ViewProjection {
 			uniformtypes.add(8);
 			uniformarguments.add(argument);
 			System.out.println("Argument type is Matrix4f (FloatBuffer)");
+		} else if (argument instanceof Matrix4f[]) {
+			uniformtypes.add(8);
+			Matrix4f[] matrices = (Matrix4f[]) argument;
+			FloatBuffer buf = BufferUtils.createFloatBuffer(16 * matrices.length);
+			for (int i = 0; i < matrices.length; i++) {
+				matrices[i].store(buf);
+			}
+			buf.flip();
+			uniformarguments.add(buf);
+			System.out.println("Argument type is Matrix4f array");
 		} else if (argument instanceof Texture) {
 			uniformtypes.add(9);
 			uniformarguments.add(argument);
 			System.out.println("Argument type is Texture");
+		} else {
+			System.err.println("Argument type is invalid!");
 		}
 	}
 

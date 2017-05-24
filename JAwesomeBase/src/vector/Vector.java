@@ -31,9 +31,9 @@ public abstract class Vector {
 	 */
 	public abstract float getf(int i);
 
-	public abstract void set(int i, double value);
+	public abstract void setValue(int i, double value);
 
-	public abstract void set(int i, float value);
+	public abstract void setValue(int i, float value);
 
 	/**
 	 * Inverts all elements of the vector. (e.g. 1/x)

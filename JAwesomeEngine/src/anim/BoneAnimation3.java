@@ -3,7 +3,7 @@ package anim;
 import quaternion.Quaternionf;
 import vector.Vector3f;
 
-public class BoneAnimation3 extends BoneAnimation<Vector3f, Quaternionf> {
+public class BoneAnimation3 extends BoneAnimation<Vector3f, Quaternionf, BoneAnimationKeyframe3> {
 	public BoneAnimation3() {
 		super();
 	}

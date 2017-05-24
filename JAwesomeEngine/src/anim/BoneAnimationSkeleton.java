@@ -10,8 +10,8 @@ import utils.Pair;
 import vector.Vector;
 import vector.Vector4f;
 
-public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation>
-		extends Skeleton<L, A, BoneAnimation<L, A>> {
+public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation, B extends BoneAnimationKeyframe<L, A>>
+		extends Skeleton<L, A, BoneAnimation<L, A, B>> {
 	ShapedObject<L, A> shape;
 
 	protected static final int JOINT_INDICES_POSITION = 4;
@@ -25,21 +25,23 @@ public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation
 
 	protected Matrix4f[] bonematrices;
 
-	public BoneAnimationSkeleton(BoneAnimation<L, A> animation, ShapedObject<L, A> shape, BoneJoint rootJoint,
+	public BoneAnimationSkeleton(BoneAnimation<L, A, B> animation, ShapedObject<L, A> shape, BoneJoint rootJoint,
 			int jointCount) {
 		super(animation);
 		this.shape = shape;
 		this.rootJoint = rootJoint;
 		this.jointCount = jointCount;
 
-		jointindices = new ObjectDataAttributesVectori(JOINT_INDICES_POSITION, 4, new int[] { 0, 0, 0 }, true);
-		jointweights = new ObjectDataAttributesVectorf<Vector4f>(JOINT_WEIGHTS_POSITION, 4, new float[] { 0, 0, 0 },
-				true);
+		jointindices = new ObjectDataAttributesVectori(JOINT_INDICES_POSITION, 4, new int[] {}, true);
+		jointweights = new ObjectDataAttributesVectorf<Vector4f>(JOINT_WEIGHTS_POSITION, 4, new float[] {}, true);
 
 		shape.addDataAttribute(jointindices);
 		shape.addDataAttribute(jointweights);
 
 		bonematrices = new Matrix4f[jointCount];
+		for (int i = 0; i < jointCount; i++) {
+			bonematrices[i] = new Matrix4f();
+		}
 		rootJoint.calculateInverseBindTransform(new Matrix4f());
 	}
 
@@ -50,23 +52,21 @@ public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation
 	}
 
 	@Override
-	public void setDynamicAnimation(BoneAnimation<L, A> animationparam, float dynamicAnimationSpeed) {
+	public void setDynamicAnimation(BoneAnimation<L, A, B> animationparam, float dynamicAnimationSpeed) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	protected void updateAnimation(float animationTimer) {
-		Pair<BoneAnimationKeyframe<L, A>, BoneAnimationKeyframe<L, A>> currentKeyframes = animation
-				.getCurrentKeyframes(animationTimer);
+		Pair<B, B> currentKeyframes = animation.getCurrentKeyframes(animationTimer);
 		float progression = (animationTimer - currentKeyframes.getFirst().getTimestamp())
 				/ (currentKeyframes.getSecond().getTimestamp() - currentKeyframes.getFirst().getTimestamp());
 		interpolate(currentKeyframes.getFirst(), currentKeyframes.getSecond(), progression);
 		applyPoseToJoints(rootJoint, new Matrix4f());
 	}
 
-	protected abstract void interpolate(BoneAnimationKeyframe<L, A> prevKeyframe,
-			BoneAnimationKeyframe<L, A> nextKeyframe, float progression);
+	protected abstract void interpolate(B prevKeyframe, B nextKeyframe, float progression);
 
 	// private void addJointsToArray(BoneJoint parentJoint, Matrix4f[]
 	// jointMatrices) {

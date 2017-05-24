@@ -11,12 +11,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import anim.BoneAnimation3;
+import anim.BoneAnimationKeyframe3;
 import anim.BoneAnimationSkeleton3;
 import anim.BoneJoint;
+import math.QuatMath;
+import math.VecMath;
 import matrix.Matrix;
 import matrix.Matrix4f;
 import objects.ShapedObject3;
+import quaternion.Quaternionf;
 import utils.GLConstants;
+import utils.Pair;
 import vector.Vector;
 import vector.Vector1f;
 import vector.Vector2f;
@@ -210,7 +215,7 @@ public class ColladaLoader {
 		return object;
 	}
 
-	public BoneAnimationSkeleton3 loadAnimation(File f) throws IOException {
+	public static BoneAnimationSkeleton3 loadAnimationDAE(File f) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		String line;
 
@@ -238,14 +243,23 @@ public class ColladaLoader {
 		String invBindMatrixSourceName = "";
 		String jointSourceName = "";
 		String weightSourceName = "";
+		String inputSourceName = "";
+		String outputSourceName = "";
+		String interpolationSourceName = "";
 		List<Integer> jointCount = new ArrayList<Integer>();
 		HashMap<String, Integer> jointNames = new HashMap<String, Integer>();
 		LinkedList<Integer> nodestack = new LinkedList<Integer>();
+		List<Vector> timestamps = null;
+		List<Matrix> poses = null;
+		List<String> targets = new ArrayList<String>();
+		HashMap<String, Matrix4f> targetPose = new HashMap<String, Matrix4f>();
+		HashMap<String, BoneAnimationKeyframe3> targetKeyframe = new HashMap<String, BoneAnimationKeyframe3>();
 
 		List<Integer[]> jointIds = new ArrayList<Integer[]>();
 		List<Vector4f> weights = new ArrayList<Vector4f>();
 		List<BoneJoint> joints = new ArrayList<BoneJoint>();
 		BoneJoint rootjoint = null;
+		BoneAnimation3 animation = new BoneAnimation3();
 
 		while ((line = reader.readLine()) != null) {
 			if (line.contains("<library_controllers")) {
@@ -265,24 +279,28 @@ public class ColladaLoader {
 							jointJointSourceName = semanticSource;
 						if (semantic.equals("INV_BIND_MATRIX"))
 							invBindMatrixSourceName = semanticSource;
-
-						if (!jointJointSourceName.isEmpty() && !invBindMatrixSourceName.isEmpty()) {
-							List<String> allJointNames = nameSources.get(jointJointSourceName);
-							List<Matrix> invBindMatrices = matrixSources.get(invBindMatrixSourceName);
-							for (int i = 0; i < invBindMatrices.size(); i++) {
-								Matrix4f mat = (Matrix4f) invBindMatrices;
-								mat.invert(); // TODO: check
-								joints.add(new BoneJoint(i, mat));
-
-								jointNames.put(allJointNames.get(i), i);
-							}
-
-							jointJointSourceName = "";
-							invBindMatrixSourceName = "";
-						}
 					}
 				}
 				if (line.contains("</joints")) {
+					System.out.println("joint end" + "; " + jointJointSourceName + "; " + invBindMatrixSourceName);
+					if (!jointJointSourceName.isEmpty() && !invBindMatrixSourceName.isEmpty()) {
+						List<String> allJointNames = nameSources.get(jointJointSourceName);
+						List<Matrix> invBindMatrices = matrixSources.get(invBindMatrixSourceName);
+						for (String s : allJointNames)
+							System.out.println(s);
+						for (int i = 0; i < invBindMatrices.size(); i++) {
+							Matrix4f mat = (Matrix4f) invBindMatrices.get(i);
+							mat.invert(); // TODO: check
+							joints.add(new BoneJoint(i, mat));
+
+							jointNames.put(allJointNames.get(i), i);
+							System.out.println("name: " + i + "; " + allJointNames.get(i));
+						}
+
+						jointJointSourceName = "";
+						invBindMatrixSourceName = "";
+					}
+
 					inJoints = false;
 				}
 				if (line.contains("<vertex_weights")) {
@@ -330,49 +348,78 @@ public class ColladaLoader {
 							Integer[] currJoints = new Integer[jointcount];
 							Float[] currWeights = new Float[jointcount];
 							for (int i = 0; i < jointcount; i++) {
-								String value = valuestrings[s];
-								int val = Integer.parseInt(value);
+								for (int j = 0; j < attributesPerJoint; j++) {
+									String value = valuestrings[s];
+									int val = Integer.parseInt(value);
+									System.out.println(value + "; " + val + "; " + a + "; " + weightPos + "; " + v
+											+ "; " + jointcount);
 
-								if (a == jointPos)
-									currJoints[i] = val;// vertices.add((Vector3f)
-														// jointSource.get(val));
-								else if (a == weightPos)
-									currWeights[i] = ((Vector1f) weightSource.get(val)).x;// normals.add((Vector3f)
-																							// weightSource.get(val));
+									if (a == jointPos)
+										currJoints[i] = val;
+									else if (a == weightPos)
+										currWeights[i] = ((Vector1f) weightSource.get(val)).x;
 
-								a++;
-								if (a == attributesPerJoint) {
-									a = 0;
+									a++;
+									if (a == attributesPerJoint) {
+										a = 0;
+									}
+									s++;
 								}
-								s++;
+							}
+
+							for (Float w : currWeights) {
+								System.out.println(w);
 							}
 
 							float totalWeight = 0;
 							if (jointcount > 4) {
 								Integer[] newJointIds = new Integer[4];
 								Float[] newWeights = new Float[4];
-								HashSet<Float> addedWeights = new HashSet<Float>();
+								HashSet<Integer> addedWeights = new HashSet<Integer>();
+								System.out.println("--------------");
 								for (int i = 0; i < 4; i++) {
 									float biggest = 0;
+									int currID = -1;
+									float currWeight = -1;
 									for (int j = 0; j < jointcount; j++) {
 										Float w = currWeights[j];
-										if (w > biggest && !addedWeights.contains(w)) {
+										if (w > biggest && !addedWeights.contains(j)) {
+											currID = j;
 											newJointIds[i] = currJoints[j];
-											newWeights[i] = w;
-											totalWeight += w;
-											addedWeights.add(w);
+											currWeight = w;
+											System.out.println("Added: " + i + "; " + w);
 										}
 									}
+									newWeights[i] = currWeight;
+									totalWeight += currWeight;
+									addedWeights.add(currID);
 								}
 								currJoints = newJointIds;
 								currWeights = newWeights;
 							} else {
+								if (jointcount < 4) {
+									Integer[] newJointIds = new Integer[4];
+									for (int i = 0; i < 4; i++) {
+										if (i < jointcount) {
+											newJointIds[i] = currJoints[i];
+										} else {
+											newJointIds[i] = 0;
+										}
+									}
+									currJoints = newJointIds;
+								}
 								for (Float w : currWeights) {
 									totalWeight += w;
 								}
 							}
 
-							if (totalWeight != 1.0f) {
+							System.out.println(currWeights.length);
+							for (Float w : currWeights) {
+								System.out.println(w);
+							}
+
+							System.out.println("norma: " + weights.size() + " " + totalWeight);
+							if (totalWeight != 1.0f && totalWeight > 0) {
 								for (int i = 0; i < currWeights.length; i++) {
 									currWeights[i] = currWeights[i] / totalWeight;
 								}
@@ -381,7 +428,7 @@ public class ColladaLoader {
 							jointIds.add(currJoints);
 							Vector4f weight = new Vector4f();
 							for (int i = 0; i < currWeights.length; i++) {
-								weight.set(i, currWeights[i]);
+								weight.setValue(i, currWeights[i]);
 							}
 							weights.add(weight);
 
@@ -407,7 +454,7 @@ public class ColladaLoader {
 					int nodeID = -1;
 					if (line.contains("type=\"JOINT\"")) {
 						String nid = line.split("id=\"")[1].split("\"")[0];
-						;
+						System.out.println(nid + "; " + jointNames);
 						nodeID = jointNames.get(nid);
 					}
 					if (nodestack.size() > 0) {
@@ -442,6 +489,8 @@ public class ColladaLoader {
 				inAnimations = true;
 			}
 			if (inAnimations) {
+				parseSource(line, values, namevalues, vectorValues, matrixValues, stringValues, sources, matrixSources,
+						nameSources, valueType);
 				if (line.contains("<sampler")) {
 					inSampler = true;
 				}
@@ -449,11 +498,64 @@ public class ColladaLoader {
 					if (line.contains("<input")) {
 						String semantic = line.split("semantic=\"")[1].split("\"")[0];
 						String semanticSource = line.split("source=\"")[1].split("\"")[0].replace("#", "");
-						// TODO
+						if (semantic.equals("INPUT"))
+							inputSourceName = semanticSource;
+						if (semantic.equals("OUTPUT"))
+							outputSourceName = semanticSource;
+						if (semantic.equals("INTERPOLATION"))
+							interpolationSourceName = semanticSource;
 					}
 				}
 				if (line.contains("</sampler")) {
+					System.out.println("samplerend " + inputSourceName + "; " + outputSourceName);
+					if (!inputSourceName.isEmpty() && !outputSourceName.isEmpty()) {
+						timestamps = sources.get(inputSourceName);
+						poses = matrixSources.get(outputSourceName);
+
+						for (String s : sources.keySet())
+							System.out.println(s);
+						System.out.println(
+								"H " + timestamps + "; " + poses + "; " + sources.size() + "; " + poses.size());
+
+						inputSourceName = "";
+						outputSourceName = "";
+					}
+
 					inSampler = false;
+				}
+				if (line.contains("<channel")) {
+					System.out.println("channel " + timestamps);
+					String target = line.split("target=\"")[1].split("\"")[0];
+					target = target.split("/")[0];
+
+					for (int i = 0; i < timestamps.size(); i++) {
+						float timestamp = timestamps.get(i).getf(0);
+						BoneAnimationKeyframe3 keyframe = null;
+						if (animation.getKeyframes().size() == 0
+								|| animation.getKeyframes().get(0).getTimestamp() > timestamp
+								|| animation.getKeyframes().get(animation.getKeyframes().size() - 1)
+										.getTimestamp() < timestamp) {
+							keyframe = new BoneAnimationKeyframe3(timestamp, joints.size());
+							animation.addKeyframe(keyframe);
+						} else {
+							Pair<BoneAnimationKeyframe3, BoneAnimationKeyframe3> currentKeyframes = animation
+									.getCurrentKeyframes(timestamp);
+							// TODO: delta?
+							System.out.println("timestamp: " + i + "; " + timestamp);
+							if (currentKeyframes.getFirst().getTimestamp() == timestamp) {
+								keyframe = currentKeyframes.getFirst();
+							} else if (currentKeyframes.getSecond().getTimestamp() == timestamp) {
+								keyframe = currentKeyframes.getSecond();
+							} else {
+								keyframe = new BoneAnimationKeyframe3(timestamp, joints.size());
+								animation.addKeyframe(keyframe);
+							}
+						}
+						System.out.println(jointNames + "; " + jointNames.size());
+						targets.add(target);
+						targetPose.put(target, (Matrix4f) poses.get(i));
+						targetKeyframe.put(target, keyframe);
+					}
 				}
 			}
 			if (line.contains("</library_animations")) {
@@ -462,20 +564,122 @@ public class ColladaLoader {
 		}
 		reader.close();
 
-		BoneAnimationSkeleton3 animation = new BoneAnimationSkeleton3(new BoneAnimation3(), rootjoint, joints.size());
-		animation.getJointIndicesDataAttributes().data = jointIds;
-		animation.getJointWeightsDataAttributes().data = weights;
-		// TODO: update active?
-		animation.getShape().prerender();
+		System.out.println("final jointcount: " + joints.size());
+		for (BoneAnimationKeyframe3 keyframe : animation.getKeyframes()) {
+			keyframe.initializeKeyframeData(joints.size());
+		}
+		for (String target : targets) {
+			int jointID = jointNames.get(target);
+			Matrix4f pose = targetPose.get(target);
+			BoneAnimationKeyframe3 keyframe = targetKeyframe.get(target);
+			keyframe.getTranslations()[jointID] = (Vector3f) pose.getTranslation();
+			keyframe.getRotations()[jointID] = pose.getSubMatrix().toQuaternionf();
+		}
 
-		return animation;
+		// fill empty keyframe slots
+		for (int i = 0; i < joints.size(); i++) {
+			BoneAnimationKeyframe3 lastkeyframeTrans = null;
+			BoneAnimationKeyframe3 lastkeyframeRot = null;
+			System.out.println("Keycount " + animation.getKeyframes().size());
+			for (int j = 0; j < animation.getKeyframes().size(); j++) {
+				BoneAnimationKeyframe3 keyframe = animation.getKeyframes().get(j);
+				if (keyframe.getTranslations()[i] == null) {
+					if (j == 0 || lastkeyframeTrans == null) {
+						keyframe.getTranslations()[i] = getNextKeyframe(animation.getKeyframes(),
+								keyframe.getTimestamp(), i).getTranslations()[i];
+					} else if (j == animation.getKeyframes().size()) {
+						keyframe.getTranslations()[i] = lastkeyframeTrans.getTranslations()[i];
+					} else {
+						BoneAnimationKeyframe3 nextkeyframe = getNextKeyframe(animation.getKeyframes(),
+								keyframe.getTimestamp(), i);
+						System.out.println(keyframe + "; " + lastkeyframeTrans + "; " + nextkeyframe);
+						float factor = (keyframe.getTimestamp() - lastkeyframeTrans.getTimestamp())
+								/ (nextkeyframe.getTimestamp() - lastkeyframeTrans.getTimestamp());
+						Vector3f translation = new Vector3f(lastkeyframeTrans.getTranslations()[i]);
+						translation.scale(factor);
+						translation.translate(VecMath.scale(nextkeyframe.getTranslations()[i], 1 - factor));
+						keyframe.getTranslations()[i] = translation;
+					}
+				} else {
+					lastkeyframeTrans = keyframe;
+				}
+				if (keyframe.getRotations()[i] == null) {
+					if (j == 0 || lastkeyframeRot == null) {
+						keyframe.getRotations()[i] = getNextKeyframe(animation.getKeyframes(), keyframe.getTimestamp(),
+								i).getRotations()[i];
+					} else if (j == animation.getKeyframes().size()) {
+						keyframe.getRotations()[i] = lastkeyframeRot.getRotations()[i];
+					} else {
+						BoneAnimationKeyframe3 nextkeyframe = getNextKeyframe(animation.getKeyframes(),
+								keyframe.getTimestamp(), i);
+						float factor = (keyframe.getTimestamp() - lastkeyframeRot.getTimestamp())
+								/ (nextkeyframe.getTimestamp() - lastkeyframeRot.getTimestamp());
+						Quaternionf rotation = QuatMath.slerp(lastkeyframeRot.getRotations()[i],
+								nextkeyframe.getRotations()[i], factor);
+						keyframe.getRotations()[i] = rotation;
+					}
+				} else {
+					lastkeyframeRot = keyframe;
+				}
+				System.out.println("Bone " + i + "; Keyframe " + j);
+				System.out.println(keyframe.getTranslations()[i]);
+				System.out.println(keyframe.getRotations()[i]);
+			}
+		}
+
+		animation.normalizeTimestamps();
+
+		BoneAnimationSkeleton3 animationSkeleton = new BoneAnimationSkeleton3(new BoneAnimation3(), rootjoint,
+				joints.size());
+		animationSkeleton.getJointIndicesDataAttributes().data = jointIds;
+		animationSkeleton.getJointWeightsDataAttributes().data = weights;
+
+		for (int i = 0; i < jointIds.size(); i++) {
+			Integer[] ids = jointIds.get(i);
+			System.out.print(i + ": ");
+			for (int j = 0; j < ids.length; j++) {
+				System.out.print(ids[j] + "; ");
+			}
+			System.out.println("Weights: " + weights.get(i));
+		}
+
+		System.out.println("FINAL");
+		System.out.println(animationSkeleton.getJointIndicesDataAttributes().isActive() + "; "
+				+ animationSkeleton.getJointWeightsDataAttributes().isActive());
+		System.out.println(animationSkeleton.getJointIndicesDataAttributes().data.size() + "; "
+				+ animationSkeleton.getJointWeightsDataAttributes().data.size());
+		for (Integer[] v : animationSkeleton.getJointIndicesDataAttributes().data) {
+			for (Integer i : v)
+				System.out.print(i + " ");
+			System.out.println();
+		}
+
+		// TODO: update active?
+		animationSkeleton.getJointIndicesDataAttributes().updateActive();
+		animationSkeleton.getJointWeightsDataAttributes().updateActive();
+		animationSkeleton.getShape().prerender();
+		animationSkeleton.setAnimation(animation);
+
+		return animationSkeleton;
 	}
+
+	private static BoneAnimationKeyframe3 getNextKeyframe(List<BoneAnimationKeyframe3> keyframes, float timestamp,
+			int jointId) {
+		for (int i = 0; i < keyframes.size(); i++) {
+			BoneAnimationKeyframe3 keyframe = keyframes.get(i);
+			if (keyframe.getTimestamp() > timestamp && keyframe.getTranslations()[jointId] != null) {
+				return keyframe;
+			}
+		}
+		return null;
+	}
+
+	private static boolean stringvalues;
 
 	private static void parseSource(String line, List<Float> values, List<String> namevalues, List<Vector> vectorValues,
 			List<Matrix> matrixValues, List<String> stringValues, HashMap<String, List<Vector>> sources,
 			HashMap<String, List<Matrix>> matrixSources, HashMap<String, List<String>> nameSources,
 			HashMap<String, Integer> valueType) {
-		boolean stringvalues = false;
 		if (line.contains("<source")) {
 			inSource = true;
 			sourcename = line.split("id=\"")[1].split("\"")[0];
@@ -485,6 +689,7 @@ public class ColladaLoader {
 				for (String value : line.split(">")[1].split("<")[0].split(" ")) {
 					values.add(Float.parseFloat(value));
 				}
+				stringvalues = false;
 			}
 			if (line.contains("<Name_array")) {
 				for (String value : line.split(">")[1].split("<")[0].split(" ")) {
@@ -505,6 +710,7 @@ public class ColladaLoader {
 						if (stringvalues) {
 							for (int i = 0; i < namevalues.size(); i++)
 								stringValues.add(namevalues.get(i));
+							namevalues.clear();
 						} else {
 							switch (stride) {
 							case 1:
@@ -532,6 +738,11 @@ public class ColladaLoader {
 								}
 								break;
 							case 16:
+								System.out.println("BINGO! " + values.size() + "; " + values.size() / 16 + "; "
+										+ values.size() / 16f);
+								for (Float f : values)
+									System.out.print(f + " ");
+								System.out.println();
 								for (int i = 0; i < values.size() / 16; i++) {
 									int i16 = i * 16;
 									matrixValues.add(new Matrix4f(values.get(i16), values.get(i16 + 1),
@@ -544,8 +755,9 @@ public class ColladaLoader {
 								}
 								break;
 							default:
-								System.err.println("Stride count has to be between 1 and 4.");
+								System.err.println("Stride count has to be between 1 and 4 or 16 for matrices.");
 							}
+							values.clear();
 						}
 					}
 					if (line.contains("</accessor")) {
@@ -563,6 +775,7 @@ public class ColladaLoader {
 					valueType.put(sourcename, new Integer(stride)); // TODO:
 																	// check
 				} else if (matrixValues.size() > 0) {
+					System.out.println("matrixsource " + sourcename + "; " + matrixValues + "; " + matrixValues.size());
 					matrixSources.put(sourcename, new ArrayList<Matrix>(matrixValues));
 					matrixValues.clear();
 				} else {
@@ -579,6 +792,19 @@ public class ColladaLoader {
 
 		if (f.getName().endsWith(".dae")) {
 			object = loadDAE(f);
+		} else {
+			System.err.println("File extension not recognized. (Use *.dae)");
+			return null;
+		}
+
+		return object;
+	}
+
+	public static BoneAnimationSkeleton3 loadAnimation(File f) throws IOException {
+		BoneAnimationSkeleton3 object;
+
+		if (f.getName().endsWith(".dae")) {
+			object = loadAnimationDAE(f);
 		} else {
 			System.err.println("File extension not recognized. (Use *.dae)");
 			return null;

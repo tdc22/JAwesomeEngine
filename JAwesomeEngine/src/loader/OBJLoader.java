@@ -261,6 +261,7 @@ public class OBJLoader {
 			}
 		}
 		reader.close();
+		object.prerender();
 
 		return object;
 	}

@@ -38,6 +38,7 @@ public class ObjectDataAttributesVectori extends ObjectDataAttributes<Integer[],
 	protected void glPushBuffer() {
 		glBufferData(GL_ARRAY_BUFFER, bufData, GL_STATIC_DRAW);
 		glVertexAttribIPointer(position, datasize, GL_INT, 0, 0);
+		// glVertexAttribPointer(position, datasize, GL_INT, false, 0, 0);
 	}
 
 }

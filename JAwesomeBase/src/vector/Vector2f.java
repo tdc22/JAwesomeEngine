@@ -219,7 +219,7 @@ public class Vector2f extends Vector2 {
 	}
 
 	@Override
-	public void set(int i, double value) {
+	public void setValue(int i, double value) {
 		if (i == 0) {
 			x = (float) value;
 		} else if (i == 1) {
@@ -228,7 +228,7 @@ public class Vector2f extends Vector2 {
 	}
 
 	@Override
-	public void set(int i, float value) {
+	public void setValue(int i, float value) {
 		if (i == 0) {
 			x = value;
 		} else if (i == 1) {

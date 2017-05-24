@@ -154,14 +154,14 @@ public class Vector1d extends Vector1 {
 	}
 
 	@Override
-	public void set(int i, double value) {
+	public void setValue(int i, double value) {
 		if (i == 0) {
 			x = value;
 		}
 	}
 
 	@Override
-	public void set(int i, float value) {
+	public void setValue(int i, float value) {
 		if (i == 0) {
 			x = value;
 		}
