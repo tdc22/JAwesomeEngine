@@ -215,7 +215,7 @@ public class ColladaLoader {
 		return object;
 	}
 
-	public static BoneAnimationSkeleton3 loadAnimationDAE(File f) throws IOException {
+	public static BoneAnimationSkeleton3 loadAnimationDAE(File f, ShapedObject3 skin) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(f));
 		String line;
 
@@ -629,7 +629,7 @@ public class ColladaLoader {
 
 		animation.normalizeTimestamps();
 
-		BoneAnimationSkeleton3 animationSkeleton = new BoneAnimationSkeleton3(new BoneAnimation3(), rootjoint,
+		BoneAnimationSkeleton3 animationSkeleton = new BoneAnimationSkeleton3(new BoneAnimation3(), skin, rootjoint,
 				joints.size());
 		animationSkeleton.getJointIndicesDataAttributes().data = jointIds;
 		animationSkeleton.getJointWeightsDataAttributes().data = weights;
@@ -655,9 +655,10 @@ public class ColladaLoader {
 		}
 
 		// TODO: update active?
-		animationSkeleton.getJointIndicesDataAttributes().updateActive();
-		animationSkeleton.getJointWeightsDataAttributes().updateActive();
+		// animationSkeleton.getJointIndicesDataAttributes().updateActive();
+		// animationSkeleton.getJointWeightsDataAttributes().updateActive();
 		animationSkeleton.getShape().prerender();
+		animationSkeleton.getShape().updateRenderHints();
 		animationSkeleton.setAnimation(animation);
 
 		return animationSkeleton;
@@ -800,11 +801,11 @@ public class ColladaLoader {
 		return object;
 	}
 
-	public static BoneAnimationSkeleton3 loadAnimation(File f) throws IOException {
+	public static BoneAnimationSkeleton3 loadAnimation(File f, ShapedObject3 skin) throws IOException {
 		BoneAnimationSkeleton3 object;
 
 		if (f.getName().endsWith(".dae")) {
-			object = loadAnimationDAE(f);
+			object = loadAnimationDAE(f, skin);
 		} else {
 			System.err.println("File extension not recognized. (Use *.dae)");
 			return null;

@@ -27,7 +27,7 @@ void main(void) {
 		
 		totalLocalPos += posePosition * 10;
 	}
-	pass_stuff = vec4(in_JointIndices.a, in_JointIndices.g, in_JointIndices.b, 1);
+	pass_stuff = vec4(in_JointWeights.r, in_JointWeights.g, in_JointWeights.b, 1);
 
 	gl_Position = projection * view * model * totalLocalPos;
 	pass_TexCoord = in_TextureCoord;

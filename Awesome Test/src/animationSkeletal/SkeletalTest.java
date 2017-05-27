@@ -50,9 +50,9 @@ public class SkeletalTest extends StandardGame {
 		addShader(textureshader);
 
 		ShapedObject3 model = ModelLoader.load("res/models/tmModel.dae");
-		model.setRenderHints(false, true, false);
-		textureshader.addObject(model);
-		animationskeleton = AnimationLoader.load("res/models/tmModel.dae");
+		animationskeleton = AnimationLoader.load("res/models/tmModel.dae", model);
+		animationskeleton.getShape().setRenderHints(false, true, false);
+		textureshader.addObject(animationskeleton.getShape());
 
 		textureshader.addArgumentName("u_jointTransforms");
 		textureshader.addArgument(animationskeleton.getJointMatrices());

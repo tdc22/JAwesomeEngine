@@ -378,6 +378,16 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 		glBindVertexArray(0);
 	}
 
+	public void updateRenderHints() {
+		glBindVertexArray(vaoHandle);
+
+		for (ObjectDataAttributes<?, ?> dataattribute : dataattributes) {
+			dataattribute.updateActive();
+		}
+
+		glBindVertexArray(0);
+	}
+
 	public void setRendered(boolean render) {
 		this.render = render;
 	}
