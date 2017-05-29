@@ -628,11 +628,31 @@ public class ColladaLoader {
 		}
 
 		animation.normalizeTimestamps();
+		
+		// map jointIDs to vertices
+		HashMap<Vector3f, Integer> skinVertices = new HashMap<Vector3f, Integer>();
+		List<Integer[]> finalJointIDs = new ArrayList<Integer[]>();
+		List<Vector4f> finalWeights = new ArrayList<Vector4f>();
+		int currIndex = 0;
+		for(Vector3f v : skin.getVertices()) {
+			Integer index = skinVertices.get(v);
+			if(index != null) {
+				finalJointIDs.add(jointIds.get(index));
+				finalWeights.add(weights.get(index));
+			}
+			else {
+				skinVertices.put(v, currIndex);
+				finalJointIDs.add(jointIds.get(currIndex));
+				finalWeights.add(weights.get(currIndex));
+				currIndex++;
+			}
+		}
 
 		BoneAnimationSkeleton3 animationSkeleton = new BoneAnimationSkeleton3(new BoneAnimation3(), skin, rootjoint,
 				joints.size());
-		animationSkeleton.getJointIndicesDataAttributes().data = jointIds;
-		animationSkeleton.getJointWeightsDataAttributes().data = weights;
+		animationSkeleton.getJointIndicesDataAttributes().data = finalJointIDs;
+		animationSkeleton.getJointWeightsDataAttributes().data = finalWeights;
+		System.out.println("loaded: " + jointIds.size() + "; " + weights.size());
 
 		for (int i = 0; i < jointIds.size(); i++) {
 			Integer[] ids = jointIds.get(i);
