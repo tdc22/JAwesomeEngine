@@ -62,25 +62,36 @@ public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation
 		Pair<B, B> currentKeyframes = animation.getCurrentKeyframes(animationTimer);
 		float progression = (animationTimer - currentKeyframes.getFirst().getTimestamp())
 				/ (currentKeyframes.getSecond().getTimestamp() - currentKeyframes.getFirst().getTimestamp());
+		System.out.println("Animationtimer: " + animationTimer);
 		interpolate(currentKeyframes.getFirst(), currentKeyframes.getSecond(), progression);
 		applyPoseToJoints(rootJoint, new Matrix4f());
 	}
 
 	protected abstract void interpolate(B prevKeyframe, B nextKeyframe, float progression);
 
-	// private void addJointsToArray(BoneJoint parentJoint, Matrix4f[]
-	// jointMatrices) {
-	// jointMatrices[parentJoint.index] = parentJoint.getAnimatedTransform();
-	// for (BoneJoint childJoint : parentJoint.children)
-	// addJointsToArray(childJoint, jointMatrices);
-	// }
-
 	public int getJointCount() {
 		return jointCount;
 	}
 
-	public Matrix4f[] getJointMatrices() {
+	public BoneJoint getRootJoint() {
+		return rootJoint;
+	}
+
+	public Matrix4f[] getBoneMatrices() {
 		return bonematrices;
+	}
+
+	public Matrix4f[] getJointTransforms() {
+		Matrix4f[] jointMatrices = new Matrix4f[jointCount];
+		addJointsToArray(rootJoint, jointMatrices);
+		return jointMatrices;
+	}
+
+	private void addJointsToArray(BoneJoint headJoint, Matrix4f[] jointMatrices) {
+		jointMatrices[headJoint.index] = headJoint.getAnimationTransform();
+		for (BoneJoint childJoint : headJoint.children) {
+			addJointsToArray(childJoint, jointMatrices);
+		}
 	}
 
 	public ObjectDataAttributesVectori getJointIndicesDataAttributes() {
@@ -96,12 +107,21 @@ public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation
 	}
 
 	private void applyPoseToJoints(BoneJoint joint, Matrix4f parentTransform) {
+		/*
+		 * Matrix4f currentLocalTransform = bonematrices[joint.getIndex()];
+		 * Matrix4f currentTransform = VecMath.transformMatrix(parentTransform,
+		 * currentLocalTransform); for (BoneJoint childJoint : joint.children) {
+		 * applyPoseToJoints(childJoint, currentTransform); }
+		 * currentTransform.transform(joint.getInverseBindTransform());
+		 * joint.setAnimationTransform(currentTransform);
+		 */
 		Matrix4f currentLocalTransform = bonematrices[joint.getIndex()];
 		Matrix4f currentTransform = VecMath.transformMatrix(parentTransform, currentLocalTransform);
+		System.out.println(joint.getIndex() + "; IBT " + joint.getInverseBindTransform());
 		for (BoneJoint childJoint : joint.children) {
 			applyPoseToJoints(childJoint, currentTransform);
 		}
-		currentTransform.transform(joint.getInverseBindTransform());
-		joint.setAnimatedTransform(currentTransform);
+		currentTransform = VecMath.transformMatrix(currentTransform, joint.getInverseBindTransform());
+		joint.setAnimationTransform(currentTransform);
 	}
 }

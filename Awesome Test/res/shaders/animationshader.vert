@@ -18,15 +18,14 @@ out vec4 pass_stuff;
 out vec2 pass_TexCoord;
 
 void main(void) {
-	vec4 totalLocalPos = in_Position;
-
+	vec4 totalLocalPos = vec4(0.0);
 	for(int i = 0; i < 4; i++) {
 		mat4 jointTransform = u_jointTransforms[in_JointIndices[i]];
 		vec4 posePosition = jointTransform * vec4(in_Position.xyz, 1.0);
 		totalLocalPos += posePosition * in_JointWeights[i];
-		
-		totalLocalPos += posePosition * 10;
 	}
+	totalLocalPos.w = 1.0;
+	
 	pass_stuff = vec4(in_JointWeights.r, in_JointWeights.g, in_JointWeights.b, 1);
 
 	gl_Position = projection * view * model * totalLocalPos;

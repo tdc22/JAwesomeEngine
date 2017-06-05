@@ -26,10 +26,15 @@ public class BoneAnimationSkeleton3 extends BoneAnimationSkeleton<Vector3f, Quat
 			Vector3f start = prevKeyframe.translations[i];
 			Vector3f end = nextKeyframe.translations[i];
 			Matrix4f mat = bonematrices[i];
+			System.out.println(i + "; " + progression + "; " + prevKeyframe + "; " + nextKeyframe + "; "
+					+ prevKeyframe.getTimestamp() + "; " + nextKeyframe.getTimestamp());
+			System.out.println("Start: " + start + "; " + prevKeyframe.rotations[i]);
+			System.out.println("End: " + end + "; " + nextKeyframe.rotations[i]);
 			mat.translateTo(start.x + (end.x - start.x) * progression, start.y + (end.y - start.y) * progression,
 					start.z + (end.z - start.z) * progression);
 			mat.setSubMatrix(
 					QuatMath.slerp(prevKeyframe.rotations[i], nextKeyframe.rotations[i], progression).toMatrixf());
+			System.out.println("Result: " + mat);
 		}
 	}
 

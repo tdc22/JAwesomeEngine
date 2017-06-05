@@ -25,8 +25,8 @@ public class ModelTest extends StandardGame {
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 
-		// defaultshader.addObject(ModelLoader.load("res/models/bunny.obj"));
-		defaultshader.addObject(ModelLoader.load("res/models/model.dae"));
+		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
+		defaultshader.addObject(ModelLoader.load("res/models/tmModel.dae"));
 		System.out.println("Done!");
 	}
 

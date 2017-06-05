@@ -146,6 +146,8 @@ public class ColladaLoader {
 							attributesPerVertex++;
 						}
 
+						System.out.println("vertices: " + vertexSource.size());
+
 						int a = 0;
 						int index = 0;
 						for (String value : line.split(">")[1].split("<")[0].split(" ")) {
@@ -159,6 +161,12 @@ public class ColladaLoader {
 								texturecoords.add((Vector2f) texCoordSource.get(val));
 							else if (a == colorPos)
 								colors.add((Vector3f) colorSource.get(val));
+
+							System.out.println("Val: " + a + "; " + val);
+							if (a == vertexPos)
+								System.out.println(vertexSource.get(val));
+							else if (a == normalPos)
+								System.out.println(normalSource.get(val));
 
 							a++;
 							if (a == attributesPerVertex) {
@@ -245,15 +253,14 @@ public class ColladaLoader {
 		String weightSourceName = "";
 		String inputSourceName = "";
 		String outputSourceName = "";
-		String interpolationSourceName = "";
 		List<Integer> jointCount = new ArrayList<Integer>();
 		HashMap<String, Integer> jointNames = new HashMap<String, Integer>();
 		LinkedList<Integer> nodestack = new LinkedList<Integer>();
 		List<Vector> timestamps = null;
 		List<Matrix> poses = null;
 		List<String> targets = new ArrayList<String>();
-		HashMap<String, Matrix4f> targetPose = new HashMap<String, Matrix4f>();
-		HashMap<String, BoneAnimationKeyframe3> targetKeyframe = new HashMap<String, BoneAnimationKeyframe3>();
+		HashMap<String, List<Matrix4f>> targetPose = new HashMap<String, List<Matrix4f>>();
+		HashMap<String, List<BoneAnimationKeyframe3>> targetKeyframe = new HashMap<String, List<BoneAnimationKeyframe3>>();
 
 		List<Integer[]> jointIds = new ArrayList<Integer[]>();
 		List<Vector4f> weights = new ArrayList<Vector4f>();
@@ -289,9 +296,11 @@ public class ColladaLoader {
 						for (String s : allJointNames)
 							System.out.println(s);
 						for (int i = 0; i < invBindMatrices.size(); i++) {
-							Matrix4f mat = (Matrix4f) invBindMatrices.get(i);
-							mat.invert(); // TODO: check
-							joints.add(new BoneJoint(i, mat));
+							// Matrix4f mat = (Matrix4f) invBindMatrices.get(i);
+							Matrix4f localBindTransform = new Matrix4f();
+							// mat.invert(); // TODO: check
+							// mat.setIdentity(); // TODO
+							joints.add(new BoneJoint(i, localBindTransform));
 
 							jointNames.put(allJointNames.get(i), i);
 							System.out.println("name: " + i + "; " + allJointNames.get(i));
@@ -340,9 +349,24 @@ public class ColladaLoader {
 							attributesPerJoint++;
 						}
 
+						System.out.println("JointSource:");
+						for (String s : jointSource)
+							System.out.println(s);
+						System.out.println("WeightSource:");
+						for (Vector v : weightSource)
+							System.out.println(v);
+						System.out.println("EndSource");
+
 						int a = 0;
 						int v = 0;
 						String[] valuestrings = line.split(">")[1].split("<")[0].split(" ");
+
+						System.out.println("ValStrings");
+						for (String s : valuestrings) {
+							System.out.println(s);
+						}
+						System.out.println("EndValStrings");
+
 						for (int s = 0; s < valuestrings.length;) {
 							int jointcount = jointCount.get(v);
 							Integer[] currJoints = new Integer[jointcount];
@@ -351,8 +375,6 @@ public class ColladaLoader {
 								for (int j = 0; j < attributesPerJoint; j++) {
 									String value = valuestrings[s];
 									int val = Integer.parseInt(value);
-									System.out.println(value + "; " + val + "; " + a + "; " + weightPos + "; " + v
-											+ "; " + jointcount);
 
 									if (a == jointPos)
 										currJoints[i] = val;
@@ -367,16 +389,11 @@ public class ColladaLoader {
 								}
 							}
 
-							for (Float w : currWeights) {
-								System.out.println(w);
-							}
-
 							float totalWeight = 0;
 							if (jointcount > 4) {
 								Integer[] newJointIds = new Integer[4];
 								Float[] newWeights = new Float[4];
 								HashSet<Integer> addedWeights = new HashSet<Integer>();
-								System.out.println("--------------");
 								for (int i = 0; i < 4; i++) {
 									float biggest = 0;
 									int currID = -1;
@@ -387,7 +404,6 @@ public class ColladaLoader {
 											currID = j;
 											newJointIds[i] = currJoints[j];
 											currWeight = w;
-											System.out.println("Added: " + i + "; " + w);
 										}
 									}
 									newWeights[i] = currWeight;
@@ -413,23 +429,38 @@ public class ColladaLoader {
 								}
 							}
 
-							System.out.println(currWeights.length);
-							for (Float w : currWeights) {
-								System.out.println(w);
-							}
-
-							System.out.println("norma: " + weights.size() + " " + totalWeight);
 							if (totalWeight != 1.0f && totalWeight > 0) {
 								for (int i = 0; i < currWeights.length; i++) {
 									currWeights[i] = currWeights[i] / totalWeight;
 								}
 							}
 
+							// SORT WEIGHTS BY VALUE
+							// TODO: remove (?) probably just relevant for
+							// debugging
+							System.out.println(currJoints.length + "; " + currWeights.length);
+							int finalNumberOfJoints = Math.min(jointcount, 4);
+							for (int i = 0; i < finalNumberOfJoints; i++) {
+								for (int j = i + 1; j < finalNumberOfJoints; j++) {
+									if (currWeights[j] > currWeights[i]) {
+										float w = currWeights[j];
+										currWeights[j] = currWeights[i];
+										currWeights[i] = w;
+										int jid = currJoints[j];
+										currJoints[j] = currJoints[i];
+										currJoints[i] = jid;
+									}
+								}
+							}
+							// END SORT
+
 							jointIds.add(currJoints);
 							Vector4f weight = new Vector4f();
 							for (int i = 0; i < currWeights.length; i++) {
 								weight.setValue(i, currWeights[i]);
 							}
+
+							System.out.println("Weight: " + weight);
 							weights.add(weight);
 
 							v++;
@@ -467,16 +498,15 @@ public class ColladaLoader {
 					}
 					nodestack.push(nodeID);
 				}
-				// if (line.contains("<matrix")) {
-				// String[] entries =
-				// line.split("<matrix")[1].split(">")[1].split("<")[0].split("
-				// ");
-				// Matrix4f nodematrix = new Matrix4f();
-				// for(int i = 0; i < 16; i++) {
-				// nodematrix.set(i % 4, i / 4, Float.parseFloat(entries[i]));
-				// }
-				// joints.get(nodestack.peek()).
-				// }
+				if (line.contains("<matrix")) {
+					String[] entries = line.split("<matrix")[1].split(">")[1].split("<")[0].split(" ");
+					Matrix4f nodematrix = new Matrix4f();
+					for (int i = 0; i < 16; i++) {
+						nodematrix.set(i % 4, i / 4, Float.parseFloat(entries[i]));
+					}
+					joints.get(nodestack.peek()).setLocalBindTransform(nodematrix);
+					;
+				}
 				if (line.contains("</node")) {
 					nodestack.pop();
 				}
@@ -502,8 +532,8 @@ public class ColladaLoader {
 							inputSourceName = semanticSource;
 						if (semantic.equals("OUTPUT"))
 							outputSourceName = semanticSource;
-						if (semantic.equals("INTERPOLATION"))
-							interpolationSourceName = semanticSource;
+						// if (semantic.equals("INTERPOLATION"))
+						// interpolationSourceName = semanticSource;
 					}
 				}
 				if (line.contains("</sampler")) {
@@ -514,8 +544,7 @@ public class ColladaLoader {
 
 						for (String s : sources.keySet())
 							System.out.println(s);
-						System.out.println(
-								"H " + timestamps + "; " + poses + "; " + sources.size() + "; " + poses.size());
+						System.out.println("H " + timestamps + "; " + poses + "; " + sources.size());
 
 						inputSourceName = "";
 						outputSourceName = "";
@@ -527,6 +556,11 @@ public class ColladaLoader {
 					System.out.println("channel " + timestamps);
 					String target = line.split("target=\"")[1].split("\"")[0];
 					target = target.split("/")[0];
+
+					System.out.println("poses: ");
+					for (Matrix m : poses) {
+						System.out.println(m);
+					}
 
 					for (int i = 0; i < timestamps.size(); i++) {
 						float timestamp = timestamps.get(i).getf(0);
@@ -552,9 +586,14 @@ public class ColladaLoader {
 							}
 						}
 						System.out.println(jointNames + "; " + jointNames.size());
-						targets.add(target);
-						targetPose.put(target, (Matrix4f) poses.get(i));
-						targetKeyframe.put(target, keyframe);
+						System.out.println("targetpose " + i + "; " + poses.get(i));
+						if (!targets.contains(target)) {
+							targets.add(target);
+							targetPose.put(target, new ArrayList<Matrix4f>());
+							targetKeyframe.put(target, new ArrayList<BoneAnimationKeyframe3>());
+						}
+						targetPose.get(target).add((Matrix4f) poses.get(i));
+						targetKeyframe.get(target).add(keyframe);
 					}
 				}
 			}
@@ -568,12 +607,25 @@ public class ColladaLoader {
 		for (BoneAnimationKeyframe3 keyframe : animation.getKeyframes()) {
 			keyframe.initializeKeyframeData(joints.size());
 		}
-		for (String target : targets) {
-			int jointID = jointNames.get(target);
-			Matrix4f pose = targetPose.get(target);
-			BoneAnimationKeyframe3 keyframe = targetKeyframe.get(target);
-			keyframe.getTranslations()[jointID] = (Vector3f) pose.getTranslation();
-			keyframe.getRotations()[jointID] = pose.getSubMatrix().toQuaternionf();
+		for (String target : targets) { // TODO: same targets multiple times in
+										// list!!! (done?)
+			List<Matrix4f> targetPoses = targetPose.get(target);
+			List<BoneAnimationKeyframe3> targetKeyframes = targetKeyframe.get(target);
+			for (int i = 0; i < targetPoses.size(); i++) {
+				int jointID = jointNames.get(target);
+				Matrix4f pose = targetPoses.get(i);
+				BoneAnimationKeyframe3 keyframe = targetKeyframes.get(i);
+				System.out.println("Jointid " + jointID);
+				System.out.println("Target " + target);
+				System.out.println("Stamp: " + keyframe.getTimestamp());
+				System.out.println(pose);
+				keyframe.getTranslations()[jointID] = (Vector3f) pose.getTranslation();
+				System.out.println("ADD ROTATION " + keyframe.getRotations()[jointID] + "; "
+						+ pose.getSubMatrix().toQuaternionf());
+				keyframe.getRotations()[jointID] = pose.getSubMatrix().toQuaternionf();
+				System.out.println("ADD ROTATIONF " + keyframe.getRotations()[jointID]);
+				System.out.println(keyframe.getTranslations()[jointID] + "; " + keyframe.getRotations()[jointID]);
+			}
 		}
 
 		// fill empty keyframe slots
@@ -628,19 +680,26 @@ public class ColladaLoader {
 		}
 
 		animation.normalizeTimestamps();
-		
+
+		System.out.println("Before mapping to vertices: ");
+		System.out.println("Weights: ");
+		for (int i = 0; i < weights.size(); i++) {
+			System.out.println(weights.get(i));
+		}
+		System.out.println("EndWeights");
+		System.out.println("End mapping.");
+
 		// map jointIDs to vertices
 		HashMap<Vector3f, Integer> skinVertices = new HashMap<Vector3f, Integer>();
 		List<Integer[]> finalJointIDs = new ArrayList<Integer[]>();
 		List<Vector4f> finalWeights = new ArrayList<Vector4f>();
 		int currIndex = 0;
-		for(Vector3f v : skin.getVertices()) {
+		for (Vector3f v : skin.getVertices()) {
 			Integer index = skinVertices.get(v);
-			if(index != null) {
+			if (index != null) {
 				finalJointIDs.add(jointIds.get(index));
 				finalWeights.add(weights.get(index));
-			}
-			else {
+			} else {
 				skinVertices.put(v, currIndex);
 				finalJointIDs.add(jointIds.get(currIndex));
 				finalWeights.add(weights.get(currIndex));
@@ -652,27 +711,12 @@ public class ColladaLoader {
 				joints.size());
 		animationSkeleton.getJointIndicesDataAttributes().data = finalJointIDs;
 		animationSkeleton.getJointWeightsDataAttributes().data = finalWeights;
-		System.out.println("loaded: " + jointIds.size() + "; " + weights.size());
 
-		for (int i = 0; i < jointIds.size(); i++) {
-			Integer[] ids = jointIds.get(i);
-			System.out.print(i + ": ");
-			for (int j = 0; j < ids.length; j++) {
-				System.out.print(ids[j] + "; ");
-			}
-			System.out.println("Weights: " + weights.get(i));
+		System.out.println("Weights: ");
+		for (int i = 0; i < finalWeights.size(); i++) {
+			System.out.println(finalWeights.get(i));
 		}
-
-		System.out.println("FINAL");
-		System.out.println(animationSkeleton.getJointIndicesDataAttributes().isActive() + "; "
-				+ animationSkeleton.getJointWeightsDataAttributes().isActive());
-		System.out.println(animationSkeleton.getJointIndicesDataAttributes().data.size() + "; "
-				+ animationSkeleton.getJointWeightsDataAttributes().data.size());
-		for (Integer[] v : animationSkeleton.getJointIndicesDataAttributes().data) {
-			for (Integer i : v)
-				System.out.print(i + " ");
-			System.out.println();
-		}
+		System.out.println("EndWeights");
 
 		// TODO: update active?
 		// animationSkeleton.getJointIndicesDataAttributes().updateActive();
@@ -766,12 +810,14 @@ public class ColladaLoader {
 								System.out.println();
 								for (int i = 0; i < values.size() / 16; i++) {
 									int i16 = i * 16;
-									matrixValues.add(new Matrix4f(values.get(i16), values.get(i16 + 1),
-											values.get(i16 + 2), values.get(i16 + 3), values.get(i16 + 4),
-											values.get(i16 + 5), values.get(i16 + 6), values.get(i16 + 7),
-											values.get(i16 + 8), values.get(i16 + 9), values.get(i16 + 10),
-											values.get(i16 + 11), values.get(i16 + 12), values.get(i16 + 13),
-											values.get(i16 + 14), values.get(i16 + 15)));
+									Matrix4f m = new Matrix4f(values.get(i16), values.get(i16 + 1), values.get(i16 + 2),
+											values.get(i16 + 3), values.get(i16 + 4), values.get(i16 + 5),
+											values.get(i16 + 6), values.get(i16 + 7), values.get(i16 + 8),
+											values.get(i16 + 9), values.get(i16 + 10), values.get(i16 + 11),
+											values.get(i16 + 12), values.get(i16 + 13), values.get(i16 + 14),
+											values.get(i16 + 15));
+									m.transpose();
+									matrixValues.add(m);
 									// TODO: transpose???
 								}
 								break;
