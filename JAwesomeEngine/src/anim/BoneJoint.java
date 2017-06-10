@@ -25,6 +25,7 @@ public class BoneJoint {
 
 	public void setLocalBindTransform(Matrix4f localBindTransform) {
 		this.localBindTransform = localBindTransform;
+		System.out.println("InitJointLBT: " + index + "; " + localBindTransform);
 	}
 
 	public void setAnimationTransform(Matrix4f animatedTransform) {
@@ -60,10 +61,12 @@ public class BoneJoint {
 		 * child.calculateInverseBindTransform(inverseBindTransform); }
 		 * inverseBindTransform.invert();
 		 */
-		Matrix4f bindTransform = VecMath.transformMatrix(parentBindTransform, localBindTransform);
+		Matrix4f bindTransform = VecMath.transformMatrix(localBindTransform, parentBindTransform);
 		inverseBindTransform = new Matrix4f(bindTransform);
 		inverseBindTransform.invert();
-		System.out.println("InverseBind: " + this.index + "; " + inverseBindTransform);
+		System.out.println("InverseBindTransform: " + this.index + "; ");
+		System.out.println(inverseBindTransform);
+		System.out.println();
 		for (BoneJoint child : children) {
 			child.calculateInverseBindTransform(bindTransform);
 		}

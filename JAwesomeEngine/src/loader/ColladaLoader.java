@@ -504,8 +504,8 @@ public class ColladaLoader {
 					for (int i = 0; i < 16; i++) {
 						nodematrix.set(i % 4, i / 4, Float.parseFloat(entries[i]));
 					}
+					System.out.println("loaded LBT " + nodestack.peek() + "; " + nodematrix);
 					joints.get(nodestack.peek()).setLocalBindTransform(nodematrix);
-					;
 				}
 				if (line.contains("</node")) {
 					nodestack.pop();
@@ -614,11 +614,17 @@ public class ColladaLoader {
 			for (int i = 0; i < targetPoses.size(); i++) {
 				int jointID = jointNames.get(target);
 				Matrix4f pose = targetPoses.get(i);
+				if (rootjoint.getIndex() == jointID) {
+					Matrix4f correction = new Matrix4f();
+					correction.rotate(-90, new Vector3f(1, 0, 0));
+					pose.transform(correction);
+				}
 				BoneAnimationKeyframe3 keyframe = targetKeyframes.get(i);
 				System.out.println("Jointid " + jointID);
 				System.out.println("Target " + target);
 				System.out.println("Stamp: " + keyframe.getTimestamp());
 				System.out.println(pose);
+				System.out.println("ADD TRANSLATION " + pose.getTranslation());
 				keyframe.getTranslations()[jointID] = (Vector3f) pose.getTranslation();
 				System.out.println("ADD ROTATION " + keyframe.getRotations()[jointID] + "; "
 						+ pose.getSubMatrix().toQuaternionf());
@@ -707,6 +713,10 @@ public class ColladaLoader {
 			}
 		}
 
+		// TODO: remove (?)
+		Matrix4f correction = new Matrix4f();
+		correction.rotate(-90, new Vector3f(1, 0, 0));
+		rootjoint.setLocalBindTransform(VecMath.transformMatrix(rootjoint.getLocalBindTransform(), correction));
 		BoneAnimationSkeleton3 animationSkeleton = new BoneAnimationSkeleton3(new BoneAnimation3(), skin, rootjoint,
 				joints.size());
 		animationSkeleton.getJointIndicesDataAttributes().data = finalJointIDs;

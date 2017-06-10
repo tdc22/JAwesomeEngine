@@ -117,7 +117,6 @@ public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation
 		 */
 		Matrix4f currentLocalTransform = bonematrices[joint.getIndex()];
 		Matrix4f currentTransform = VecMath.transformMatrix(parentTransform, currentLocalTransform);
-		System.out.println(joint.getIndex() + "; IBT " + joint.getInverseBindTransform());
 		for (BoneJoint childJoint : joint.children) {
 			applyPoseToJoints(childJoint, currentTransform);
 		}
