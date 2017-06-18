@@ -1,6 +1,7 @@
 package anim;
 
 import math.QuatMath;
+import matrix.Matrix3f;
 import matrix.Matrix4f;
 import objects.ShapedObject;
 import objects.ShapedObject3;
@@ -28,11 +29,10 @@ public class BoneAnimationSkeleton3 extends BoneAnimationSkeleton<Vector3f, Quat
 			Matrix4f mat = bonematrices[i];
 			mat.translateTo(start.x + (end.x - start.x) * progression, start.y + (end.y - start.y) * progression,
 					start.z + (end.z - start.z) * progression);
-			mat.setSubMatrix(
-					QuatMath.slerp(prevKeyframe.rotations[i], nextKeyframe.rotations[i], progression).toMatrixf());
-			System.out.println(i + "; " + start + "; " + end);
-			System.out.println(mat);
+			Matrix3f rotationmat = QuatMath.slerp(prevKeyframe.rotations[i], nextKeyframe.rotations[i], progression)
+					.toMatrixf();
+			rotationmat.transpose();
+			mat.setSubMatrix(rotationmat);
 		}
 	}
-
 }

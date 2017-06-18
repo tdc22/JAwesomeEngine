@@ -60,9 +60,10 @@ public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation
 	@Override
 	protected void updateAnimation(float animationTimer) {
 		Pair<B, B> currentKeyframes = animation.getCurrentKeyframes(animationTimer);
-		float progression = (animationTimer - currentKeyframes.getFirst().getTimestamp())
-				/ (currentKeyframes.getSecond().getTimestamp() - currentKeyframes.getFirst().getTimestamp());
-		System.out.println("Animationtimer: " + animationTimer);
+		float currentTime = animationTimer - currentKeyframes.getFirst().getTimestamp();
+		float keyframeDifference = currentKeyframes.getSecond().getTimestamp()
+				- currentKeyframes.getFirst().getTimestamp();
+		float progression = currentTime / keyframeDifference;
 		interpolate(currentKeyframes.getFirst(), currentKeyframes.getSecond(), progression);
 		applyPoseToJoints(rootJoint, new Matrix4f());
 	}
@@ -107,20 +108,13 @@ public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation
 	}
 
 	private void applyPoseToJoints(BoneJoint joint, Matrix4f parentTransform) {
-		/*
-		 * Matrix4f currentLocalTransform = bonematrices[joint.getIndex()];
-		 * Matrix4f currentTransform = VecMath.transformMatrix(parentTransform,
-		 * currentLocalTransform); for (BoneJoint childJoint : joint.children) {
-		 * applyPoseToJoints(childJoint, currentTransform); }
-		 * currentTransform.transform(joint.getInverseBindTransform());
-		 * joint.setAnimationTransform(currentTransform);
-		 */
 		Matrix4f currentLocalTransform = bonematrices[joint.getIndex()];
-		Matrix4f currentTransform = VecMath.transformMatrix(parentTransform, currentLocalTransform);
+		Matrix4f currentTransform = VecMath.transformMatrix(currentLocalTransform, parentTransform);
 		for (BoneJoint childJoint : joint.children) {
 			applyPoseToJoints(childJoint, currentTransform);
 		}
-		currentTransform = VecMath.transformMatrix(currentTransform, joint.getInverseBindTransform());
+		// TODO: optimize!
+		currentTransform = VecMath.transformMatrix(joint.getInverseBindTransform(), currentTransform);
 		joint.setAnimationTransform(currentTransform);
 	}
 }

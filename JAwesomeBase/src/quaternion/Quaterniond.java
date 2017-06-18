@@ -12,7 +12,7 @@ import vector.Vector3;
  */
 
 public class Quaterniond extends Quaternion {
-	double q0, q1, q2, q3;
+	public double q0, q1, q2, q3;
 
 	public Quaterniond() {
 		setIdentity();

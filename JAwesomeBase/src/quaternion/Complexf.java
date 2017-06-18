@@ -4,7 +4,7 @@ import matrix.Matrix2d;
 import matrix.Matrix2f;
 
 public class Complexf extends Complex {
-	float real, imaginary;
+	public float real, imaginary;
 
 	public Complexf() {
 		setIdentity();

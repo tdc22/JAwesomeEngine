@@ -12,7 +12,7 @@ import vector.Vector3;
  */
 
 public class Quaternionf extends Quaternion {
-	float q0, q1, q2, q3;
+	public float q0, q1, q2, q3;
 
 	public Quaternionf() {
 		setIdentity();

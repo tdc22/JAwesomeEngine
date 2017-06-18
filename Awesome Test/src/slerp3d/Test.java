@@ -16,8 +16,8 @@ import texture.Texture;
 import vector.Vector3f;
 
 public class Test extends StandardGame {
-	Box q1, q2, q3, q4, q5, q6;
-	Quaternionf c1, c2, c3;
+	Box q1, q2, q3, q4, q5, q6, q7, q8, q9;
+	Quaternionf c1, c2, c3, c4;
 	float t = 0;
 
 	@Override
@@ -41,6 +41,9 @@ public class Test extends StandardGame {
 		q4 = new Box(0, 3, 0, 1, 1, 1);
 		q5 = new Box(3, 3, 0, 1, 1, 1);
 		q6 = new Box(6, 3, 0, 1, 1, 1);
+		q7 = new Box(0, 6, 0, 1, 1, 1);
+		q8 = new Box(3, 6, 0, 1, 1, 1);
+		q9 = new Box(6, 6, 0, 1, 1, 1);
 
 		q1.setRenderHints(false, true, false);
 		q2.setRenderHints(false, true, false);
@@ -48,13 +51,18 @@ public class Test extends StandardGame {
 		q4.setRenderHints(false, true, false);
 		q5.setRenderHints(false, true, false);
 		q6.setRenderHints(false, true, false);
+		q7.setRenderHints(false, true, false);
+		q8.setRenderHints(false, true, false);
+		q9.setRenderHints(false, true, false);
 
 		c1 = new Quaternionf();
 		c2 = new Quaternionf();
 		c3 = new Quaternionf();
+		c4 = new Quaternionf();
 
 		c2.rotate(90, new Vector3f(0, 1, 0));
 		c3.rotate(180, new Vector3f(0, 1, 0));
+		c4.rotate(-90, new Vector3f(0, 1, 0));
 
 		textureshader.addObject(q1);
 		textureshader.addObject(q2);
@@ -62,6 +70,9 @@ public class Test extends StandardGame {
 		textureshader.addObject(q4);
 		textureshader.addObject(q5);
 		textureshader.addObject(q6);
+		textureshader.addObject(q7);
+		textureshader.addObject(q8);
+		textureshader.addObject(q9);
 	}
 
 	@Override
@@ -92,6 +103,10 @@ public class Test extends StandardGame {
 		q4.rotate(0, d * 180f, 0);
 		q5.rotateTo(QuatMath.lerp(c1, c3, t));
 		q6.rotateTo(QuatMath.slerp(c1, c3, t));
+
+		q7.rotate(0, -d * 90f, 0);
+		q8.rotateTo(QuatMath.lerp(c1, c4, t));
+		q9.rotateTo(QuatMath.slerp(c1, c4, t));
 
 		cam.update(delta);
 	}

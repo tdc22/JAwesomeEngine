@@ -3,7 +3,6 @@ package anim;
 import java.util.ArrayList;
 import java.util.List;
 
-import math.VecMath;
 import matrix.Matrix4f;
 
 public class BoneJoint {
@@ -25,7 +24,6 @@ public class BoneJoint {
 
 	public void setLocalBindTransform(Matrix4f localBindTransform) {
 		this.localBindTransform = localBindTransform;
-		System.out.println("InitJointLBT: " + index + "; " + localBindTransform);
 	}
 
 	public void setAnimationTransform(Matrix4f animatedTransform) {
@@ -53,22 +51,11 @@ public class BoneJoint {
 	}
 
 	protected void calculateInverseBindTransform(Matrix4f parentBindTransform) {
-		/*
-		 * inverseBindTransform.set(parentBindTransform);
-		 * inverseBindTransform.transform(localBindTransform);
-		 * System.out.println("InverseBind: " + this.index + "; " +
-		 * this.inverseBindTransform); for (BoneJoint child : children) {
-		 * child.calculateInverseBindTransform(inverseBindTransform); }
-		 * inverseBindTransform.invert();
-		 */
-		Matrix4f bindTransform = VecMath.transformMatrix(localBindTransform, parentBindTransform);
-		inverseBindTransform = new Matrix4f(bindTransform);
-		inverseBindTransform.invert();
-		System.out.println("InverseBindTransform: " + this.index + "; ");
-		System.out.println(inverseBindTransform);
-		System.out.println();
+		inverseBindTransform.set(localBindTransform);
+		inverseBindTransform.transform(parentBindTransform);
 		for (BoneJoint child : children) {
-			child.calculateInverseBindTransform(bindTransform);
+			child.calculateInverseBindTransform(inverseBindTransform);
 		}
+		inverseBindTransform.invert();
 	}
 }
