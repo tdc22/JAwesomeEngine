@@ -1,7 +1,7 @@
 package utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import game.StandardGame;
@@ -25,8 +25,8 @@ public class Profiler implements Updateable {
 	PhysicsProfiler physicsprofiler;
 	final int numvalues = 455;
 	long maxvalue = 0;
-	List<Long> times;
-	HashMap<Integer, List<Long>> values;
+	LinkedList<Long> times;
+	HashMap<Integer, LinkedList<Long>> values;
 	boolean showScale = false;
 	boolean showGameProfile = false;
 	boolean showPhysicsProfile = false;
@@ -60,16 +60,16 @@ public class Profiler implements Updateable {
 	}
 
 	private void init(StandardGame game, Font f) {
-		times = new ArrayList<Long>();
-		values = new HashMap<Integer, List<Long>>();
-		values.put(0, new ArrayList<Long>());
-		values.put(1, new ArrayList<Long>());
-		values.put(2, new ArrayList<Long>());
-		values.put(3, new ArrayList<Long>());
-		values.put(4, new ArrayList<Long>());
-		values.put(5, new ArrayList<Long>());
-		values.put(6, new ArrayList<Long>());
-		values.put(7, new ArrayList<Long>());
+		times = new LinkedList<Long>();
+		values = new HashMap<Integer, LinkedList<Long>>();
+		values.put(0, new LinkedList<Long>());
+		values.put(1, new LinkedList<Long>());
+		values.put(2, new LinkedList<Long>());
+		values.put(3, new LinkedList<Long>());
+		values.put(4, new LinkedList<Long>());
+		values.put(5, new LinkedList<Long>());
+		values.put(6, new LinkedList<Long>());
+		values.put(7, new LinkedList<Long>());
 
 		String c = "u_color";
 		int colorShaderID = ShaderLoader.loadShader(DefaultShader.COLOR_SHADER_VERTEX,
@@ -244,11 +244,17 @@ public class Profiler implements Updateable {
 				values.get(i).add(profilevalues[i + 1]);
 			}
 			if (times.size() > numvalues) {
-				times.remove(0);
-				values.get(0).remove(0);
-				values.get(1).remove(0);
-				values.get(2).remove(0);
-				values.get(3).remove(0);
+				times.pop();
+				values.get(0).pop();
+				values.get(1).pop();
+				values.get(2).pop();
+				values.get(3).pop();
+				if (physicsprofiler != null) {
+					values.get(4).pop();
+					values.get(5).pop();
+					values.get(6).pop();
+					values.get(7).pop();
+				}
 			}
 			gameProfileLine0.addValue(profilevalues[1]);
 			gameProfileLine1.addValue(profilevalues[2]);
@@ -283,12 +289,13 @@ public class Profiler implements Updateable {
 				values.get(i + 4).add(profilevalues[i + 1]);
 			}
 			if (times.size() > numvalues) {
-				if (gameprofiler == null)
-					times.remove(0);
-				values.get(4).remove(0);
-				values.get(5).remove(0);
-				values.get(6).remove(0);
-				values.get(7).remove(0);
+				if (gameprofiler == null) {
+					times.pop();
+					values.get(4).pop();
+					values.get(5).pop();
+					values.get(6).pop();
+					values.get(7).pop();
+				}
 			}
 			physicsProfileLine0.addValue(profilevalues[1]);
 			physicsProfileLine1.addValue(profilevalues[2]);
@@ -342,16 +349,16 @@ public class Profiler implements Updateable {
 		return max;
 	}
 
-	private void scaleProfileLines(float scale) {
-		scale = -sizeY / scale;
-		gameProfileLine0.scaleProfile(scale);
-		gameProfileLine1.scaleProfile(scale);
-		gameProfileLine2.scaleProfile(scale);
-		gameProfileLine3.scaleProfile(scale);
-		physicsProfileLine0.scaleProfile(scale);
-		physicsProfileLine1.scaleProfile(scale);
-		physicsProfileLine2.scaleProfile(scale);
-		physicsProfileLine3.scaleProfile(scale);
+	private void scaleProfileLines(long scale) {
+		float scalef = -sizeY / scale;
+		gameProfileLine0.scaleProfile(scalef);
+		gameProfileLine1.scaleProfile(scalef);
+		gameProfileLine2.scaleProfile(scalef);
+		gameProfileLine3.scaleProfile(scalef);
+		physicsProfileLine0.scaleProfile(scalef);
+		physicsProfileLine1.scaleProfile(scalef);
+		physicsProfileLine2.scaleProfile(scalef);
+		physicsProfileLine3.scaleProfile(scalef);
 	}
 
 	private class ProfileLine extends ShapedObject2 {
@@ -379,9 +386,9 @@ public class Profiler implements Updateable {
 					scaleMax.setText(maxvalue / 1000f + " ms");
 					scaleProfileLines(maxvalue);
 				}
-				removeVertex(0);
+				vertices.data.remove(0);
 				vert.set(0, value);
-				addVertex(vert);
+				vertices.data.add(vert);
 			} else {
 				addIndex(getVertexCount());
 				addVertex(new Vector2f(0, value));
