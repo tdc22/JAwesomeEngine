@@ -54,16 +54,14 @@ public class SkeletalTest extends StandardGame {
 
 		ShapedObject3 model = ModelLoader.load(modelname);
 		animationskeleton = AnimationLoader.load(modelname, model, ColladaLoader.getLastVertexIndexMap());
-
-		animationskeleton.update(0);
 		animationskeleton.getShape().setRenderHints(false, true, false);
+		animationskeleton.getAnimation().setSpeed(0.001f);
+
 		textureshader.addObject(animationskeleton.getShape());
 		model.rotate(-90, 0, 0);
 
 		textureshader.addArgumentName("u_jointTransforms");
 		textureshader.addArgument(animationskeleton.getJointTransforms());
-
-		animationskeleton.getAnimation().setSpeed(0.001f);
 	}
 
 	@Override

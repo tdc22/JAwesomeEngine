@@ -17,6 +17,7 @@ import input.KeyInput;
 import input.MouseInput;
 import integration.VerletIntegration;
 import loader.FontLoader;
+import loader.ModelLoader;
 import loader.ShaderLoader;
 import loader.TextureLoader;
 import manifold.MultiPointManifoldManager;
@@ -63,11 +64,13 @@ public class PortalDemo extends StandardGame {
 	PhysicsSpace space;
 
 	RigidBody3 playerbody, groundchecker;
+	Cylinder playerbounds, playerclonebounds;
 	float playerspeed = 6; // turn up the speed to ~10 to have fun ;)
 	float mousesensitivity = 0.2f;
 	boolean onground = false;
 	ShapedObject3 playerclone;
 
+	final String PLAYER_MODELNAME = "res/models/tmModel.dae";
 	final float PLAYER_RADIUS = 0.55f;
 	final float PLAYER_RADIUS_CAMERA = 0.65f;
 	final float PLAYER_RADIUS_COLLISION = 0.7f;
@@ -83,6 +86,8 @@ public class PortalDemo extends StandardGame {
 	final int PORTAL_RESOLUTION_X = 800;
 	final int PORTAL_RESOLUTION_Y = 800;
 	final float PORTAL_VIEW_ASPECT = PORTAL_RESOLUTION_X / PORTAL_RESOLUTION_Y;
+
+	final float DOT_FLOOR_CEILING_THRESHOLD = 0.01f;
 
 	final Vector3f HIDDEN_SPAWN = new Vector3f(0, -10, 0);
 
@@ -137,9 +142,18 @@ public class PortalDemo extends StandardGame {
 
 		initLevel(textureshader);
 
-		Cylinder player = new Cylinder(PLAYER_START_POSITION, PLAYER_RADIUS, PLAYER_HEIGHT / 2f, 50);
-		playerclone = new Cylinder(HIDDEN_SPAWN, PLAYER_RADIUS, PLAYER_HEIGHT / 2f, 50);
+		ShapedObject3 player = ModelLoader.load(PLAYER_MODELNAME);
+		player.translate(0, 5, 0);
+		player.rotate(90, 0, 0);
+		player.scale(0.6f);
+		playerclone = new ShapedObject3(player);
 		player.setRenderHints(false, false, false);
+		playerclone.setRenderHints(false, false, false);
+
+		playerbounds = new Cylinder(PLAYER_START_POSITION, PLAYER_RADIUS, PLAYER_HEIGHT / 2f, 50);
+		playerclonebounds = new Cylinder(HIDDEN_SPAWN, PLAYER_RADIUS, PLAYER_HEIGHT / 2f, 50);
+		playerbounds.setRenderHints(false, false, false);
+		playerclonebounds.setRenderHints(false, false, false);
 
 		forward = new InputEvent("Forward", new Input(Input.KEYBOARD_EVENT, "W", KeyInput.KEY_DOWN),
 				new Input(Input.KEYBOARD_EVENT, "Up", KeyInput.KEY_DOWN));
@@ -162,8 +176,8 @@ public class PortalDemo extends StandardGame {
 		inputs.addEvent(shootleft);
 		inputs.addEvent(shootright);
 
-		portal1 = new PortalShape(HIDDEN_SPAWN, 1, 2, 32);
-		portal2 = new PortalShape(HIDDEN_SPAWN, 1, 2, 32);
+		portal1 = new PortalShape(HIDDEN_SPAWN, 1, 2, 64);
+		portal2 = new PortalShape(HIDDEN_SPAWN, 1, 2, 64);
 		portal1.setRenderHints(false, true, false);
 		portal2.setRenderHints(false, true, false);
 		portalTestCamSphere1 = new Sphere(HIDDEN_SPAWN, 0.2f, 36, 36);
@@ -198,7 +212,7 @@ public class PortalDemo extends StandardGame {
 		portalShader2.addObject(portalTestCamSphere2);
 
 		playerbody = new RigidBody3(
-				new CylinderShape(player.getTranslation(), PLAYER_RADIUS_COLLISION, player.getHalfHeight()));
+				new CylinderShape(player.getTranslation(), PLAYER_RADIUS_COLLISION, playerbounds.getHalfHeight()));
 		playerbody.setMass(1f);
 		playerbody.setLinearFactor(new Vector3f(1, 1, 1));
 		playerbody.setAngularFactor(new Vector3f(0, 0, 0));
@@ -219,10 +233,12 @@ public class PortalDemo extends StandardGame {
 
 		Shader playershader = new Shader(colorshaderID);
 		playershader.addArgumentName("u_color");
-		playershader.addArgument(new Vector4f(0f, 0f, 1f, 1f));
+		playershader.addArgument(new Vector4f(0f, 0f, 1f, 0.4f));
 		addShader(playershader);
 		playershader.addObject(player);
 		playershader.addObject(playerclone);
+		playershader.addObject(playerbounds);
+		playershader.addObject(playerclonebounds);
 
 		Shader crosshairshader = new Shader(colorshaderID);
 		crosshairshader.addArgumentName("u_color");
@@ -461,6 +477,8 @@ public class PortalDemo extends StandardGame {
 				checkCameraPassPortal2();
 			}
 		}
+		playerbounds.translateTo(playerbody.getTranslation());
+		playerclonebounds.translateTo(playerclone.getTranslation());
 	}
 
 	private void checkCameraPassPortal1() {
@@ -525,7 +543,7 @@ public class PortalDemo extends StandardGame {
 				rotH = -rotH;
 		}
 
-		System.out.println(portalToPlayer + "; " + rotH + "; " + portalRotH);
+		// System.out.println(portalToPlayer + "; " + rotH + "; " + portalRotH);
 
 		camToMove.rotateTo(portalRotH + rotH, rotV);
 	}
@@ -566,7 +584,7 @@ public class PortalDemo extends StandardGame {
 			}
 
 			Vector3f a = VecMath.crossproduct(up, hitnormal);
-			if (a.lengthSquared() > 0) {
+			if (a.lengthSquared() > DOT_FLOOR_CEILING_THRESHOLD) {
 				Vector2f rot = calculatePortalRotation(hitnormal);
 				if (portalOne) {
 					portal1RotH = rot.x;
@@ -579,6 +597,9 @@ public class PortalDemo extends StandardGame {
 				portal.rotateTo(q);
 			} else {
 				portal.rotateTo(playerbody.getRotation());
+				if (hitnormal.y < 0) {
+					portal.rotate(0, 0, 180);
+				}
 			}
 
 			portalbody.translateTo(portal.getTranslation());

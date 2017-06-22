@@ -54,14 +54,23 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 		dataattributes.add(texturecoords);
 	}
 
-	// public void copy(ShapedObject<L, A> original) {
-	// indices.addAll(original.getIndices());
-	// vertices.addAll(original.getVertices());
-	// normals.addAll(original.getNormals());
-	// colors.addAll(original.getColors());
-	// texturecoords.addAll(original.getTextureCoordinates());
-	// prerender();
-	// }
+	public void copyShapeData(ShapedObject<L, A> original) {
+		indices.data.addAll(original.getIndexDataAttribute().data);
+		for (ObjectDataAttributes<?, ?> dataattribute : original.getDataAttributes()) {
+			if (dataattribute.equals(original.getVertexDataAttribute())) {
+				vertices.data.addAll(original.getVertexDataAttribute().data);
+			} else if (dataattribute.equals(original.getNormalDataAttribute())) {
+				normals.data.addAll(original.getNormalDataAttribute().data);
+			} else if (dataattribute.equals(original.getColorDataAttribute())) {
+				colors.data.addAll(original.getColorDataAttribute().data);
+			} else if (dataattribute.equals(original.getTextureCoordinateDataAttribute())) {
+				texturecoords.data.addAll(original.getTextureCoordinateDataAttribute().data);
+			} else {
+				dataattributes.add(dataattribute);
+			}
+		}
+		prerender();
+	}
 
 	// public void copyDirect(ShapedObject original) {
 	// vaoHandle = original.getVAOHandle();
@@ -71,10 +80,29 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	// vboTextureCoordHandle = original.getVBOTextureCoordinateHandle();
 	// vboNormalHandle = original.getVBONormalHandle();
 	// }
-	//
 
 	public List<ObjectDataAttributes<?, ?>> getDataAttributes() {
 		return dataattributes;
+	}
+
+	public ObjectDataAttributesInteger getIndexDataAttribute() {
+		return indices;
+	}
+
+	public ObjectDataAttributesVectorf<L> getVertexDataAttribute() {
+		return vertices;
+	}
+
+	public ObjectDataAttributesVectorf<L> getNormalDataAttribute() {
+		return normals;
+	}
+
+	public ObjectDataAttributesVectorf<Vector3f> getColorDataAttribute() {
+		return colors;
+	}
+
+	public ObjectDataAttributesVectorf<Vector2f> getTextureCoordinateDataAttribute() {
+		return texturecoords;
 	}
 
 	public void addDataAttribute(ObjectDataAttributes<?, ?> dataattribute) {
@@ -202,27 +230,27 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 	@Override
 	public void delete() {
 		// matrix = null;
-		deleteData();
-		deleteGPUData();
+		indices.delete();
+		for (ObjectDataAttributes<?, ?> dataattribute : dataattributes) {
+			dataattribute.delete();
+		}
 		// buf.clear();
 	}
 
 	public void deleteData() {
 		indices.deleteData();
-		vertices.deleteData();
-		colors.deleteData();
-		texturecoords.deleteData();
-		normals.deleteData();
+		for (ObjectDataAttributes<?, ?> dataattribute : dataattributes) {
+			dataattribute.deleteData();
+		}
 	}
 
 	public void deleteGPUData() {
 		if (vaoHandle != 0)
 			glDeleteVertexArrays(vaoHandle);
 		indices.deleteGPUData();
-		vertices.deleteGPUData();
-		colors.deleteGPUData();
-		texturecoords.deleteGPUData();
-		normals.deleteGPUData();
+		for (ObjectDataAttributes<?, ?> dataattribute : dataattributes) {
+			dataattribute.deleteGPUData();
+		}
 	}
 
 	public Integer getIndex(int indexid) {
@@ -398,6 +426,10 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 
 	public void setRenderMode(int mode) {
 		rendermode = mode;
+	}
+
+	public int getRenderMode() {
+		return rendermode;
 	}
 
 	public void setVertices(List<L> verts) {

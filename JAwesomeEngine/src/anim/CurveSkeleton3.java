@@ -23,7 +23,7 @@ public class CurveSkeleton3 extends CurveSkeleton<Vector3f, Quaternionf> {
 	}
 
 	@Override
-	protected void updateAnimation(float animationTimer) {
+	public void updateAnimation(float animationTimer) {
 		for (int i = 0; i < bodyparts.size(); i++) {
 			BaseObject<Vector3f, Quaternionf> part = bodyparts.get(i);
 			part.translate(animation.getAnimationTranslationPath(i).getPoint(animationTimer));

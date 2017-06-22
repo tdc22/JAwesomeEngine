@@ -58,7 +58,7 @@ public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation
 	}
 
 	@Override
-	protected void updateAnimation(float animationTimer) {
+	public void updateAnimation(float animationTimer) {
 		Pair<B, B> currentKeyframes = animation.getCurrentKeyframes(animationTimer);
 		float currentTime = animationTimer - currentKeyframes.getFirst().getTimestamp();
 		float keyframeDifference = currentKeyframes.getSecond().getTimestamp()

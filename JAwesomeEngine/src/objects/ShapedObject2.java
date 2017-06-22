@@ -25,6 +25,14 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 		init();
 	}
 
+	public ShapedObject2(ShapedObject2 shape) {
+		super(new Vector2f(shape.getRotationCenter()), new Vector2f(shape.getTranslation()),
+				new Complexf(shape.getRotation()), new Vector2f(shape.getScale()));
+		init();
+		setRenderMode(shape.getRenderMode());
+		copyShapeData(shape);
+	}
+
 	private void init() {
 		vertices = new ObjectDataAttributesVectorf<Vector2f>(VERTEX_POSITION, 4, new float[] { 0, 1 }, true);
 		normals = new ObjectDataAttributesVectorf<Vector2f>(NORMAL_POSITION, 4, new float[] { 0, 0 }, true);

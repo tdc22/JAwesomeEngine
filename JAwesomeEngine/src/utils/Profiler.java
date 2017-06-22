@@ -1,8 +1,7 @@
 package utils;
 
+import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 import game.StandardGame;
 import gui.Font;
@@ -25,8 +24,8 @@ public class Profiler implements Updateable {
 	PhysicsProfiler physicsprofiler;
 	final int numvalues = 455;
 	long maxvalue = 0;
-	LinkedList<Long> times;
-	HashMap<Integer, LinkedList<Long>> values;
+	ArrayDeque<Long> times;
+	HashMap<Integer, ArrayDeque<Long>> values;
 	boolean showScale = false;
 	boolean showGameProfile = false;
 	boolean showPhysicsProfile = false;
@@ -60,16 +59,16 @@ public class Profiler implements Updateable {
 	}
 
 	private void init(StandardGame game, Font f) {
-		times = new LinkedList<Long>();
-		values = new HashMap<Integer, LinkedList<Long>>();
-		values.put(0, new LinkedList<Long>());
-		values.put(1, new LinkedList<Long>());
-		values.put(2, new LinkedList<Long>());
-		values.put(3, new LinkedList<Long>());
-		values.put(4, new LinkedList<Long>());
-		values.put(5, new LinkedList<Long>());
-		values.put(6, new LinkedList<Long>());
-		values.put(7, new LinkedList<Long>());
+		times = new ArrayDeque<Long>();
+		values = new HashMap<Integer, ArrayDeque<Long>>();
+		values.put(0, new ArrayDeque<Long>());
+		values.put(1, new ArrayDeque<Long>());
+		values.put(2, new ArrayDeque<Long>());
+		values.put(3, new ArrayDeque<Long>());
+		values.put(4, new ArrayDeque<Long>());
+		values.put(5, new ArrayDeque<Long>());
+		values.put(6, new ArrayDeque<Long>());
+		values.put(7, new ArrayDeque<Long>());
 
 		String c = "u_color";
 		int colorShaderID = ShaderLoader.loadShader(DefaultShader.COLOR_SHADER_VERTEX,
@@ -339,7 +338,7 @@ public class Profiler implements Updateable {
 
 	private Long findNextMax() {
 		Long max = 0L;
-		for (List<Long> list : values.values()) {
+		for (ArrayDeque<Long> list : values.values()) {
 			for (Long l : list) {
 				if (l > max) {
 					max = l;

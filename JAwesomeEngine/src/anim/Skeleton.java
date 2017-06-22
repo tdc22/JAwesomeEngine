@@ -70,5 +70,5 @@ public abstract class Skeleton<L extends Vector, A extends Rotation, Anim extend
 		}
 	}
 
-	protected abstract void updateAnimation(float animationTimer);
+	public abstract void updateAnimation(float animationTimer);
 }

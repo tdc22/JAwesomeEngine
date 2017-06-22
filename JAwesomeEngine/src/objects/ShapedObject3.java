@@ -28,6 +28,14 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 		init();
 	}
 
+	public ShapedObject3(ShapedObject3 shape) {
+		super(new Vector3f(shape.getRotationCenter()), new Vector3f(shape.getTranslation()),
+				new Quaternionf(shape.getRotation()), new Vector3f(shape.getScale()));
+		init();
+		setRenderMode(shape.getRenderMode());
+		copyShapeData(shape);
+	}
+
 	private void init() {
 		vertices = new ObjectDataAttributesVectorf<Vector3f>(VERTEX_POSITION, 4, new float[] { 1 }, true);
 		normals = new ObjectDataAttributesVectorf<Vector3f>(NORMAL_POSITION, 4, new float[] { 0 }, true);

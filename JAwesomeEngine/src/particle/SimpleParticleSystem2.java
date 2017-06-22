@@ -1,8 +1,8 @@
 package particle;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import org.lwjgl.opengl.GL11;
 
@@ -14,14 +14,14 @@ import vector.Vector3f;
 public class SimpleParticleSystem2 extends ParticleSystem2 {
 	ShapedObject2 particles;
 	HashMap<Integer, Particle> particleList;
-	LinkedList<Integer> freeindices;
+	ArrayDeque<Integer> freeindices;
 	int maxParticles;
 
 	public SimpleParticleSystem2(Vector2f center) {
 		particles = new ShapedObject2(center);
 		particles.setRenderMode(GL11.GL_TRIANGLES);
 		particleList = new HashMap<Integer, Particle>();
-		freeindices = new LinkedList<Integer>();
+		freeindices = new ArrayDeque<Integer>();
 		maxParticles = 0;
 	}
 

@@ -815,6 +815,7 @@ public class ColladaLoader {
 			System.err.println("File extension not recognized. (Use *.dae)");
 			return null;
 		}
+		object.updateAnimation(0);
 
 		return object;
 	}

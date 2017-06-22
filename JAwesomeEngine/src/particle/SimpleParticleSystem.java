@@ -3,8 +3,8 @@ package particle;
 import static org.lwjgl.opengl.GL11.glDepthMask;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import org.lwjgl.opengl.GL11;
 
@@ -19,7 +19,7 @@ import vector.Vector3f;
 public class SimpleParticleSystem extends ParticleSystem3 {
 	ShapedObject3 particles;
 	HashMap<Integer, Particle> particleList;
-	LinkedList<Integer> freeindices;
+	ArrayDeque<Integer> freeindices;
 	int maxParticles;
 	Camera3 cam;
 	boolean useDepthSorting;
@@ -28,7 +28,7 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 		particles = new ShapedObject3(center);
 		particles.setRenderMode(GL11.GL_TRIANGLES);
 		particleList = new HashMap<Integer, Particle>();
-		freeindices = new LinkedList<Integer>();
+		freeindices = new ArrayDeque<Integer>();
 		maxParticles = 0;
 		useDepthSorting = depthSorting;
 		setCamera(cam);

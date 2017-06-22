@@ -27,7 +27,7 @@ public class CurveSkeleton2 extends CurveSkeleton<Vector2f, Complexf> {
 	}
 
 	@Override
-	protected void updateAnimation(float animationTimer) {
+	public void updateAnimation(float animationTimer) {
 		CurveAnimation<Vector2f, Complexf> currentAnimation = (dynamicAnimationTransition != null)
 				? dynamicAnimationTransition.getAnimation() : animation;
 		for (int i = 0; i < bodyparts.size(); i++) {

@@ -87,13 +87,11 @@ public class Text extends ShapedObject2 {
 
 	public void setText(String text) {
 		this.text = text;
-		char[] chars = text.toCharArray();
 
-		delete();
+		deleteData();
 		currPos.set(0, 0);
 		int indexCount = 0;
-		for (int i = 0; i < chars.length; i++) {
-			char c = chars[i];
+		for (char c : text.toCharArray()) {
 			FontCharacter character = font.getCharacter(c);
 			for (int v = 0; v < character.getVertices().size(); v++) {
 				this.addVertex(VecMath.addition(currPos, character.getVertices().get(v)), character.getColor(v),
