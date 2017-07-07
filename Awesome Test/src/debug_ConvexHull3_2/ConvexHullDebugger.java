@@ -292,8 +292,8 @@ public class ConvexHullDebugger extends StandardGame {
 			for (Integer adj : adjacentsMap.get(i)) {
 				adjacentsMap.put(adj, removeArrayEntry(adjacentsMap.get(adj), i));
 			}
-			lightFaceVertices.remove(i);
-			vertices.remove(i);
+			lightFaceVertices.remove((int) i);
+			vertices.remove((int) i);
 		}
 		// 4.1 Get vertices on border between lit and unlit triangles
 		HashSet<Integer> vertsOnEdge = new HashSet<Integer>();

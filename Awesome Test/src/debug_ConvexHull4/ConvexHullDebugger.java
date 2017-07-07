@@ -29,6 +29,7 @@ import shape.Sphere;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
 import utils.GLConstants;
+import utils.Pair;
 import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
@@ -73,6 +74,14 @@ public class ConvexHullDebugger extends StandardGame {
 	List<Sphere> edgeSpheres;
 
 	public void hullInit() {
+		List<Vector3f> testpointsforDups = new ArrayList<Vector3f>();
+		for(Vector3f p : points) {
+			if(testpointsforDups.contains(p)) {
+				System.out.println("FOUND DUPLICATE " + p);
+			}
+			testpointsforDups.add(p);
+		}
+		
 		// Initial Phase
 		// 1. Create initial simplex
 		Vector3f[] EPs = getExtremePoints(points);
@@ -201,6 +210,10 @@ public class ConvexHullDebugger extends StandardGame {
 	
 	Integer[] furthestPointNeighbours;
 	
+	HashMap<Pair<Integer, Integer>, Pair<Triangle, Triangle>> edgesToTriangles;
+	
+	List<Triangle> lastremovedTriangles;
+	
 	public void step1(Triangle t) {
 		System.out.println("Step 1 " + t.a + "; " + t.b + "; " + t.c + "; " + faceIndex);
 		// 2. Get most distant point of the face's point set
@@ -219,6 +232,7 @@ public class ConvexHullDebugger extends StandardGame {
 				furthestPointID = i;
 			}
 		}
+		System.out.println("furthest: " + furthestPointID + "; " + furthestPoint);
 		
 		// DEBUG
 		if(furthestPoint != null)
@@ -228,16 +242,19 @@ public class ConvexHullDebugger extends StandardGame {
 
 	public void step2(Triangle t) {
 		System.out.println("Step 2 " + t.a + "; " + t.b + "; " + t.c + "; " + faceIndex);
+		System.out.println("R " + furthestPointID + ";");
 		facepoints.remove(furthestPointID);
 		if (vertices.contains(furthestPoint)) {
-			// TODO: HashSet?
+			// TODO: Remove!
 			System.out.println("SHIT WENT DOWN MATE!");
 			return;
 		} else {
+			System.out.println("Added vert");
 			vertices.add(furthestPoint);
 			furthestPointID = vertices.size() - 1;
 		}
-		faces.remove(faceIndex);
+		lastremovedTriangles.clear();
+		lastremovedTriangles.add(faces.remove(faceIndex));
 		listsOfFacePoints.remove(faceIndex);
 		// 3. Find all faces that can be seen from this point
 		lightFaceVertices = new HashSet<Integer>(); // TODO: remove?
@@ -258,7 +275,7 @@ public class ConvexHullDebugger extends StandardGame {
 			Triangle tri = faces.get(i);
 			Vector3f triP = VecMath.subtraction(furthestPoint, vertices.get(tri.a));
 			if (VecMath.dotproduct(tri.normal, triP) > 0) {
-				faces.remove(i);
+				lastremovedTriangles.add(faces.remove(i));
 				lightFaceVertices.add(tri.a);
 				lightFaceVertices.add(tri.b);
 				lightFaceVertices.add(tri.c);
@@ -309,12 +326,13 @@ public class ConvexHullDebugger extends StandardGame {
 			for (Integer adj : adjacentsMap.get(i)) {
 				adjacentsMap.put(adj, removeArrayEntry(adjacentsMap.get(adj), i));
 			}
-			lightFaceVertices.remove(i);
+			lightFaceVertices.remove((int) i);
 			// DEBUG
 			removeUnconnectedVerticesSpheres.get(s).translateTo(vertices.get(i));
 			s++;
+			System.out.println("Delete verts " + i);
 			// DEBUG
-			vertices.remove(i);
+			vertices.set((int) i, null);
 		}
 	}
 	
@@ -329,6 +347,7 @@ public class ConvexHullDebugger extends StandardGame {
 			vertsOnEdge.add(vert);
 			// }
 			//DEBUG
+			System.out.println("edgevert: " + vert);
 			vertsOnEdgeSpheres.get(s).translateTo(vertices.get(vert));
 			s++;
 			//DEBUG
@@ -345,8 +364,10 @@ public class ConvexHullDebugger extends StandardGame {
 			Integer[] adjs = adjacentsMap.get(currentVert);
 
 			List<Triangle> vertexLightTriangles = lightFaceVerticesToTriangles.get(currentVert);
+			System.out.print(currentVert + ": ");
 			for (int j = 0; j < adjs.length; j++) {
 				Integer currAdj = adjs[j];
+				System.out.print(currAdj + " ");
 				if (vertsOnEdge.contains(currAdj) && !edge.contains(currAdj)) {
 					int tricount = 0;
 					for (int k = 0; k < vertexLightTriangles.size() && tricount < 2; k++) {
@@ -361,7 +382,12 @@ public class ConvexHullDebugger extends StandardGame {
 					}
 				}
 			}
+			System.out.println();
 		}
+		
+		System.out.print("Edges:");
+		for(Integer e : edge)
+			System.out.println(e);
 		
 		// DEBUG
 		for(int i = 0; i < edge.size(); i++) {
@@ -375,6 +401,8 @@ public class ConvexHullDebugger extends StandardGame {
 		}
 		// DEBUG
 	}
+	
+	Pair<Integer, Integer> testpair = new Pair<Integer, Integer>(null, null);
 	
 	public void step6(Triangle t) {
 		System.out.println("Step 6 " + t.a + "; " + t.b + "; " + t.c + "; " + faceIndex);
@@ -390,7 +418,13 @@ public class ConvexHullDebugger extends StandardGame {
 					if (Math.abs(i - adjIndexOnEdge) > 1 && !(i == 0 && adjIndexOnEdge == edgesizeMinusOne)
 							&& !(i == edgesizeMinusOne && adjIndexOnEdge == 0)) {
 						//System.out.println("Diff: " + i + "; " + edge.indexOf(adj) + "; " + (i - edge.indexOf(adj)));
-						removeAdj.add(adj);
+						testpair.setFirst(currentVert);
+						testpair.setFirst(adj);
+						Pair<Triangle, Triangle> edgeTriangles = edgesToTriangles.get(testpair);
+						if(lastremovedTriangles.contains(edgeTriangles.getFirst()) && lastremovedTriangles.contains(edgeTriangles.getSecond())) { // TODO: check for islands
+							removeAdj.add(adj);
+							edgesToTriangles.remove(edgeTriangles);
+						}
 					}
 				}
 			}
@@ -436,6 +470,10 @@ public class ConvexHullDebugger extends StandardGame {
 
 				// Upade adjacents map
 				adjacentsMap.put(vertIDa, addArrayEntry(adjacentsMap.get(vertIDa), furthestPointID));
+				Pair<Triangle, Triangle> oldEdgeIfno = edgesToTriangles.get(new Pair<Integer, Integer>(vertIDa, furthestPointID));
+				/*if(oldEdgeIfno.equals(other)) { // previous iterations!
+					
+				}*/
 			} else {
 				System.out.println("Stitchingerror!"); // TODO: investigate?
 			}
@@ -588,6 +626,8 @@ public class ConvexHullDebugger extends StandardGame {
 		// points.add(new Vector3f(2.2193725, -1.7034389, -4.2405186));
 		// points.add(new Vector3f(-0.8538285, 3.822501, 4.7598157));
 		vertices = new ArrayList<Vector3f>();
+		edgesToTriangles = new HashMap<Pair<Integer, Integer>, Pair<Triangle, Triangle>>();
+		lastremovedTriangles = new ArrayList<Triangle>();
 		
 		int colorShaderHandle = ShaderLoader.loadShaderFromFile("res/shaders/colorshader.vert", "res/shaders/colorshader.frag");
 		
@@ -631,18 +671,17 @@ public class ConvexHullDebugger extends StandardGame {
 			edgeSpheres.add(s);
 		}
 
-		System.out.println(points.size());
 		pointcloud = new PointCloud(points);
 		hullInit();
 
 		facesDone = 1;
-		for (int i = 0; i < 0; i++) { // 112 /// Aktuelles Problem Iteration:
+		for (int i = 0; i < 65; i++) { // 100 // 112 // Aktuelles Problem Iteration:
 										// 64 -> 65 Adj zwischen 2 und 58 geht
 										// verloren
 			faceIndex = faces.size() - facesDone;
 			Triangle t = faces.get(faceIndex);
 			step1(t);
-			if(furthestPointID != -1) {
+			if(furthestPointID != -1 && !vertices.contains(furthestPoint)) {// TODO: HashSet?
 				step2(t);
 				step3(t);
 				step4(t);
@@ -651,12 +690,24 @@ public class ConvexHullDebugger extends StandardGame {
 				step7(t);
 				step8(t);
 			}
+			else {
+				facesDone++;
+			}
+			
+			//DEBUG
+			if(this.adjacentsMap.containsKey(2)) {
+				System.out.print("ADJS 2: ");
+				for(Integer a : adjacentsMap.get(2)) {
+					System.out.print(a + " ");
+				}
+				System.out.println();
+			}
+			//DEBUG
 		}
 		faceIndex = faces.size() - facesDone;
 
 		simplex = new Simplex(vertices, faces, faces.get(faceIndex));
 		defaultshader.addObject(simplex);
-		System.out.println(points.size());
 		defaultshader.addObject(pointcloud);
 
 		font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
@@ -694,7 +745,7 @@ public class ConvexHullDebugger extends StandardGame {
 				case 0:
 					mT = faces.get(faceIndex);
 					step1(mT);
-					if(furthestPointID != -1)
+					if(furthestPointID != -1 && !vertices.contains(furthestPoint))
 						currentstep++;
 					else
 						facesDone++;
@@ -744,6 +795,16 @@ public class ConvexHullDebugger extends StandardGame {
 			// }
 			System.out.println("NUM FACES : " + faces.size() + " (done: " + facesDone + ")");
 			updateTexts();
+			
+			//DEBUG
+			if(this.adjacentsMap.containsKey(2)) {
+				System.out.print("ADJS 2: ");
+				for(Integer a : adjacentsMap.get(2)) {
+					System.out.print(a + " ");
+				}
+				System.out.println();
+			}
+			//DEBUG
 		}
 		if (inputs.isKeyDown("P")) {
 			facesDone = 1;
@@ -768,22 +829,25 @@ public class ConvexHullDebugger extends StandardGame {
 		}
 		texts.clear();
 		for (int i = 0; i < vertices.size(); i++) {
-			Text t = new Text(i + "", 0, 0, font, 0.3f);
-			t.scale(1, -1);
-			Matrix4f mat = t.getMatrix();
-			mat.translateTo(vertices.get(i));
-			mat.store(t.getMatrixBuffer());
-			t.getMatrixBuffer().flip();
-			t.prerender();
-			defaultshader.addObject(t);
-			texts.add(t);
+			Vector3f v = vertices.get(i);
+			if(v != null) {
+				Text t = new Text(i + "", 0, 0, font, 0.3f);
+				t.scale(1, -1);
+				Matrix4f mat = t.getMatrix();
+				mat.translateTo(v);
+				mat.store(t.getMatrixBuffer());
+				t.getMatrixBuffer().flip();
+				t.prerender();
+				defaultshader.addObject(t);
+				texts.add(t);
+			}
 		}
 		// Duplicationcheck
 		for (int i = 0; i < vertices.size(); i++) {
 			Vector3f v = vertices.get(i);
 			for (int j = i + 1; j < vertices.size(); j++) {
 				Vector3f v2 = vertices.get(j);
-				if (v.equals(v2)) {
+				if (v != null && v.equals(v2)) {
 					System.out.println("Duplicated vertices: " + i + "; " + j + "; " + v + "; " + v2);
 				}
 			}
