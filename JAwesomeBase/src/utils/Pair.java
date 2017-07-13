@@ -112,4 +112,15 @@ public class Pair<A, B> {
 		this.first = first;
 		this.second = second;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(64);
+		sb.append("Pair[");
+		sb.append(first);
+		sb.append(", ");
+		sb.append(second);
+		sb.append(']');
+		return sb.toString();
+	}
 }
