@@ -13,6 +13,7 @@ import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import manifold.SimpleManifoldManager;
+import math.QuatMath;
 import math.VecMath;
 import narrowphase.EPA;
 import narrowphase.GJK;
@@ -22,11 +23,13 @@ import objects.ShapedObject3;
 import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
+import physicsSupportFunction.SupportObject;
 import positionalcorrection.ProjectionCorrection;
 import quaternion.Quaternionf;
 import resolution.ImpulseResolution;
 import shader.Shader;
 import shape.Box;
+import shape.Cylinder;
 import shape.Sphere;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
@@ -34,12 +37,15 @@ import vector.Vector3f;
 
 public class ConvexTest extends StandardGame {
 	PhysicsSpace space;
-	RigidBody3 rb1;
 	int tempdelta = 0;
 	boolean impulseapplied = false;
 	Debugger debugger;
 	PhysicsDebug physicsdebug;
 	Shader defaultshader;
+	
+	RigidBody3 bunnyBody;
+	Cylinder directionpointer;
+	Sphere supportposition;
 
 	@Override
 	public void init() {
@@ -71,12 +77,22 @@ public class ConvexTest extends StandardGame {
 		space.addRigidBody(ground, rb);
 		defaultshader.addObject(ground);
 
-		ShapedObject3 bunny = ModelLoader.load("res/models/bunny.mobj");
-		RigidBody3 bunnyBody = new RigidBody3(PhysicsShapeCreator.createHull(bunny));
-		bunnyBody.setMass(1);
+		ShapedObject3 bunny = ModelLoader.load("res/models/bunny_lowpoly.mobj");
+		System.out.println("LoadedVertexCount: " + bunny.getVertices().size());
+		bunnyBody = new RigidBody3(PhysicsShapeCreator.createHull(bunny));
+		bunnyBody.setMass(0);
 
 		space.addRigidBody(bunny, bunnyBody);
 		defaultshader.addObject(bunny);
+		
+		SupportObject so1 = new SupportObject(bunny, bunnyBody);
+		defaultshader.addObject(so1);
+		
+		directionpointer = new Cylinder(0, 0, 0, 0.1f, 1, 36);
+		defaultshader.addObject(directionpointer);
+		
+		supportposition = new Sphere(0, 0, 0, 0.2f, 36, 36);
+		defaultshader.addObject(supportposition);
 	}
 
 	@Override
@@ -96,6 +112,8 @@ public class ConvexTest extends StandardGame {
 		renderInterfaceLayer();
 		debugger.end();
 	}
+	
+	private Vector3f up = new Vector3f(0, 1, 0);
 
 	@Override
 	public void update(int delta) {
@@ -131,6 +149,21 @@ public class ConvexTest extends StandardGame {
 		space.update(delta);
 		physicsdebug.update();
 
+		if(inputs.isKeyDown("I")) {
+			directionpointer.rotate(0, 0, 0.1f * delta);
+		}
+		if(inputs.isKeyDown("K")) {
+			directionpointer.rotate(0, 0, -0.1f * delta);
+		}
+		if(inputs.isKeyDown("J")) {
+			directionpointer.rotate(0.1f * delta, 0, 0);
+		}
+		if(inputs.isKeyDown("L")) {
+			directionpointer.rotate(-0.1f * delta, 0, 0);
+		}
+		Vector3f dir = QuatMath.transform(directionpointer.getRotation(), up);
+		this.supportposition.translateTo(bunnyBody.supportPoint(dir));
+		
 		if (display.isMouseBound())
 			cam.update(delta);
 	}

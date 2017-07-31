@@ -1,7 +1,6 @@
 package physics;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import collisionshape.BoxShape;
 import collisionshape.CapsuleShape;
@@ -12,8 +11,8 @@ import collisionshape.PlaneShape;
 import collisionshape2d.ConvexShape2;
 import collisionshape2d.EllipseShape;
 import collisionshape2d.QuadShape;
+import convexhull.ConvexHull3;
 import convexhull.Quickhull2;
-import convexhull.Quickhull3Old;
 import objects.ShapedObject2;
 import objects.ShapedObject3;
 import shapedata.BoxStructure;
@@ -24,6 +23,7 @@ import shapedata.PlaneStructure;
 import shapedata2d.EllipseStructure;
 import shapedata2d.QuadStructure;
 import vector.Vector2f;
+import vector.Vector3f;
 
 public class PhysicsShapeCreator {
 	public static BoxShape create(BoxStructure box) {
@@ -56,16 +56,13 @@ public class PhysicsShapeCreator {
 	}
 
 	public static ConvexShape createHull(ShapedObject3 shapedobject) {
-		ConvexShape hull = Quickhull3Old.computeConvexHull(shapedobject.getVertices());
+		ConvexShape hull = ConvexHull3.computeConvexHull(new ArrayList<Vector3f>(shapedobject.getVertices()));
 		hull.translateTo(shapedobject.getTranslation());
 		return hull;
 	}
 
 	public static ConvexShape2 createHull(ShapedObject2 shapedobject) {
-		List<Vector2f> vertices = new ArrayList<Vector2f>();
-		for (Vector2f v : shapedobject.getVertices())
-			vertices.add(new Vector2f(v.x, v.y));
-		ConvexShape2 hull = Quickhull2.computeConvexHull(vertices);
+		ConvexShape2 hull = Quickhull2.computeConvexHull(new ArrayList<Vector2f>(shapedobject.getVertices()));
 		hull.translateTo(shapedobject.getTranslation());
 		return hull;
 	}

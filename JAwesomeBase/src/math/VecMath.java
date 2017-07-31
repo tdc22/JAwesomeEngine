@@ -76,6 +76,62 @@ public class VecMath {
 	public static Vector3f addition(Vector3f v1, Vector3f v2) {
 		return new Vector3f(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
 	}
+	
+	/**
+	 * Addition of two vectors.
+	 * 
+	 * @param v1
+	 *            first vector
+	 * @param v2
+	 *            second vector
+	 * @param result
+	 *            stores the result
+	 * @return sum in a new vector
+	 */
+	public static Vector1 addition(Vector1 v1, Vector1 v2, Vector1 result) {
+		result.set(v1.getX() + v2.getX());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#addition(Vector1, Vector1, Vector1)
+	 */
+	public static Vector1f addition(Vector1f v1, Vector1f v2, Vector1f result) {
+		result.set(v1.x + v2.x);
+		return result;
+	}
+	
+	/**
+	 * @see math.VecMath#addition(Vector1, Vector1, Vector1)
+	 */
+	public static Vector2 addition(Vector2 v1, Vector2 v2, Vector2 result) {
+		result.set(v1.getX() + v2.getX(), v1.getY() + v2.getY());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#addition(Vector1, Vector1, Vector1)
+	 */
+	public static Vector2f addition(Vector2f v1, Vector2f v2, Vector2f result) {
+		result.set(v1.x + v2.x, v1.y + v2.y);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#addition(Vector1, Vector1, Vector1)
+	 */
+	public static Vector3 addition(Vector3 v1, Vector3 v2, Vector3 result) {
+		result.set(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#addition(Vector1, Vector1, Vector1)
+	 */
+	public static Vector3f addition(Vector3f v1, Vector3f v2, Vector3f result) {
+		result.set(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
+		return result;
+	}
 
 	/**
 	 * Computes the normal of a plane given by three points.
@@ -115,6 +171,48 @@ public class VecMath {
 				dif1x * dif2y - dif1y * dif2x);
 	}
 
+	/**
+	 * Computes the normal of a plane given by three points.
+	 * 
+	 * @param p1
+	 *            first point
+	 * @param p2
+	 *            second point
+	 * @param p3
+	 *            third point
+	 * @param result
+	 *            stores the result
+	 * @return normal of the plane
+	 */
+	public static Vector3 computeNormal(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 result) {
+		double dif1x = p2.getX() - p1.getX();
+		double dif1y = p2.getY() - p1.getY();
+		double dif1z = p2.getZ() - p1.getZ();
+		double dif2x = p3.getX() - p1.getX();
+		double dif2y = p3.getY() - p1.getY();
+		double dif2z = p3.getZ() - p1.getZ();
+
+		result.set(dif1y * dif2z - dif1z * dif2y, dif1z * dif2x - dif1x * dif2z,
+				dif1x * dif2y - dif1y * dif2x);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#computeNormal(Vector3, Vector3, Vector3, Vector3)
+	 */
+	public static Vector3f computeNormal(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f result) {
+		float dif1x = p2.x - p1.x;
+		float dif1y = p2.y - p1.y;
+		float dif1z = p2.z - p1.z;
+		float dif2x = p3.x - p1.x;
+		float dif2y = p3.y - p1.y;
+		float dif2z = p3.z - p1.z;
+
+		result.set(dif1y * dif2z - dif1z * dif2y, dif1z * dif2x - dif1x * dif2z,
+				dif1x * dif2y - dif1y * dif2x);
+		return result;
+	}
+	
 	/**
 	 * Calculates the cross product of two vectors.
 	 * 
@@ -177,6 +275,48 @@ public class VecMath {
 	 */
 	public static Vector3f crossproduct(float v1x, float v1y, float v1z, float v2x, float v2y, float v2z) {
 		return new Vector3f(v1y * v2z - v1z * v2y, v1z * v2x - v1x * v2z, v1x * v2y - v1y * v2x);
+	}
+	
+	/**
+	 * Calculates the cross product of two vectors.
+	 * 
+	 * @param v1
+	 *            first vector
+	 * @param v2
+	 *            second vector
+	 * @param result
+	 *            stores the result
+	 * @return cross product value
+	 */
+	public static Vector3d crossproduct(Vector3 v1, Vector3 v2, Vector3d result) {
+		result.set(v1.getY() * v2.getZ() - v1.getZ() * v2.getY(),
+				v1.getZ() * v2.getX() - v1.getX() * v2.getZ(), v1.getX() * v2.getY() - v1.getY() * v2.getX());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#crossproduct(Vector3, Vector3, Vector3)
+	 */
+	public static Vector3f crossproduct(Vector3f v1, Vector3f v2, Vector3f result) {
+		result.set(v1.getYf() * v2.getZf() - v1.getZf() * v2.getYf(),
+				v1.getZf() * v2.getXf() - v1.getXf() * v2.getZf(), v1.getXf() * v2.getYf() - v1.getYf() * v2.getXf());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#crossproduct(Vector3, Vector3, Vector3)
+	 */
+	public static Vector3d crossproduct(double v1x, double v1y, double v1z, double v2x, double v2y, double v2z, Vector3d result) {
+		result.set(v1y * v2z - v1z * v2y, v1z * v2x - v1x * v2z, v1x * v2y - v1y * v2x);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#crossproduct(Vector3, Vector3, Vector3)
+	 */
+	public static Vector3f crossproduct(float v1x, float v1y, float v1z, float v2x, float v2y, float v2z, Vector3f result) {
+		result.set(v1y * v2z - v1z * v2y, v1z * v2x - v1x * v2z, v1x * v2y - v1y * v2x);
+		return result;
 	}
 
 	/**
@@ -373,6 +513,62 @@ public class VecMath {
 	 */
 	public static Vector3f multiplication(Vector3f v1, Vector3f v2) {
 		return new Vector3f(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
+	}
+	
+	/**
+	 * Multiplication of two vectors.
+	 * 
+	 * @param v1
+	 *            first vector
+	 * @param v2
+	 *            second vector
+	 * @param result
+	 *            stores the result
+	 * @return product in a new vector
+	 */
+	public static Vector1 multiplication(Vector1 v1, Vector1 v2, Vector1 result) {
+		result.set(v1.getX() * v2.getX());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#multiplication(Vector1, Vector1, Vector1)
+	 */
+	public static Vector1f multiplication(Vector1f v1, Vector1f v2, Vector1f result) {
+		result.set(v1.x * v2.x);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#multiplication(Vector1, Vector1, Vector1)
+	 */
+	public static Vector2 multiplication(Vector2 v1, Vector2 v2, Vector2 result) {
+		result.set(v1.getX() * v2.getX(), v1.getY() * v2.getY());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#multiplication(Vector1, Vector1, Vector1)
+	 */
+	public static Vector2f multiplication(Vector2f v1, Vector2f v2, Vector2f result) {
+		result.set(v1.x * v2.x, v1.y * v2.y);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#multiplication(Vector1, Vector1, Vector1)
+	 */
+	public static Vector3 multiplication(Vector3 v1, Vector3 v2, Vector3 result) {
+		result.set(v1.getX() * v2.getX(), v1.getY() * v2.getY(), v1.getZ() * v2.getZ());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#multiplication(Vector1, Vector1, Vector1)
+	 */
+	public static Vector3f multiplication(Vector3f v1, Vector3f v2, Vector3f result) {
+		result.set(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
+		return result;
 	}
 
 	/**
@@ -606,27 +802,67 @@ public class VecMath {
 		return new Vector3d(v1.getX() - v2.getX(), v1.getY() - v2.getY(), v1.getZ() - v2.getZ());
 	}
 
-	// public static Vector2f crossproduct(Vector2f v, float s) {
-	// return new Vector2f(s * v.y, -s * v.x);
-	// }
-	//
-	// public static Vector2d crossproduct(Vector2 v, double s) {
-	// return new Vector2d(s * v.getY(), -s * v.getX());
-	// }
-	//
-	// public static Vector2f crossproduct(float s, Vector2f v) {
-	// return new Vector2f(-s * v.y, s * v.x);
-	// }
-	//
-	// public static Vector2d crossproduct(double s, Vector2 v) {
-	// return new Vector2d(-s * v.getY(), s * v.getX());
-	// }
-
 	/**
 	 * @see math.VecMath#subtraction(Vector1, Vector1)
 	 */
 	public static Vector3f subtraction(Vector3f v1, Vector3f v2) {
 		return new Vector3f(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
+	}
+	
+	/**
+	 * Subtracts the vector v2 from v1. (v1 - v2)
+	 * 
+	 * @param v1
+	 *            first vector
+	 * @param v2
+	 *            second vector
+	 * @param result
+	 *            stores the result
+	 * @return difference in a new vector
+	 */
+	public static Vector1 subtraction(Vector1 v1, Vector1 v2, Vector1 result) {
+		result.set(v1.getX() - v2.getX());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#subtraction(Vector1, Vector1, Vector1)
+	 */
+	public static Vector1f subtraction(Vector1f v1, Vector1f v2, Vector1f result) {
+		result.set(v1.x - v2.x);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#subtraction(Vector1, Vector1, Vector1)
+	 */
+	public static Vector2 subtraction(Vector2 v1, Vector2 v2, Vector2 result) {
+		result.set(v1.getX() - v2.getX(), v1.getY() - v2.getY());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#subtraction(Vector1, Vector1, Vector1)
+	 */
+	public static Vector2f subtraction(Vector2f v1, Vector2f v2, Vector2f result) {
+		result.set(v1.x - v2.x, v1.y - v2.y);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#subtraction(Vector1, Vector1, Vector1)
+	 */
+	public static Vector3 subtraction(Vector3 v1, Vector3 v2, Vector3 result) {
+		result.set(v1.getX() - v2.getX(), v1.getY() - v2.getY(), v1.getZ() - v2.getZ());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#subtraction(Vector1, Vector1, Vector1)
+	 */
+	public static Vector3f subtraction(Vector3f v1, Vector3f v2, Vector3f result) {
+		result.set(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
+		return result;
 	}
 
 	/**
