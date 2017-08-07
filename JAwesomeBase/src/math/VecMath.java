@@ -716,6 +716,92 @@ public class VecMath {
 	public static Vector3f scale(Vector3f v, float factor) {
 		return new Vector3f(v.x * factor, v.y * factor, v.z * factor);
 	}
+	
+	/**
+	 * @see math.VecMath#scale(Vector1, double)
+	 */
+	public static Vector4d scale(Vector4 v, double factor) {
+		return new Vector4d(v.getX() * factor, v.getY() * factor, v.getZ() * factor, v.getW() * factor);
+	}
+
+	/**
+	 * @see math.VecMath#scale(Vector1, double)
+	 */
+	public static Vector4f scale(Vector4f v, float factor) {
+		return new Vector4f(v.x * factor, v.y * factor, v.z * factor, v.w * factor);
+	}
+	
+	/**
+	 * Scales a vector by a factor.
+	 * 
+	 * @param v
+	 *            vector to scale
+	 * @param factor
+	 *            scales the vector
+	 * @param result
+	 *            stores the result
+	 * @return result in a new vector
+	 */
+	public static Vector1 scale(Vector1 v, double factor, Vector1 result) {
+		result.set(v.getX() * factor);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#scale(Vector1, double, Vector1)
+	 */
+	public static Vector1f scale(Vector1f v, float factor, Vector1f result) {
+		result.set(v.x * factor);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#scale(Vector1, double, Vector1)
+	 */
+	public static Vector2 scale(Vector2 v, double factor, Vector2 result) {
+		result.set(v.getX() * factor, v.getY() * factor);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#scale(Vector1, double, Vector1)
+	 */
+	public static Vector2f scale(Vector2f v, float factor, Vector2f result) {
+		result.set(v.x * factor, v.y * factor);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#scale(Vector1, double, Vector1)
+	 */
+	public static Vector3 scale(Vector3 v, double factor, Vector3 result) {
+		result.set(v.getX() * factor, v.getY() * factor, v.getZ() * factor);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#scale(Vector1, double, Vector1)
+	 */
+	public static Vector3f scale(Vector3f v, float factor, Vector3f result) {
+		result.set(v.x * factor, v.y * factor, v.z * factor);
+		return result;
+	}
+	
+	/**
+	 * @see math.VecMath#scale(Vector1, double, Vector1)
+	 */
+	public static Vector4 scale(Vector4 v, double factor, Vector4 result) {
+		result.set(v.getX() * factor, v.getY() * factor, v.getZ() * factor, v.getW() * factor);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#scale(Vector1, double, Vector1)
+	 */
+	public static Vector4f scale(Vector4f v, float factor, Vector4f result) {
+		result.set(v.x * factor, v.y * factor, v.z * factor, v.w * factor);
+		return result;
+	}
 
 	/**
 	 * Scales a vector to a length.

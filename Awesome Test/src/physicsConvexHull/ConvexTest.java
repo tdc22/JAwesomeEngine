@@ -1,4 +1,4 @@
-package physicsConvexTest;
+package physicsConvexHull;
 
 import broadphase.SAP;
 import display.DisplayMode;
@@ -43,7 +43,7 @@ public class ConvexTest extends StandardGame {
 	PhysicsDebug physicsdebug;
 	Shader defaultshader;
 	
-	RigidBody3 bunnyBody;
+	RigidBody3 bunnyBody, bunnyBody2;
 	Cylinder directionpointer;
 	Sphere supportposition;
 
@@ -77,16 +77,18 @@ public class ConvexTest extends StandardGame {
 		space.addRigidBody(ground, rb);
 		defaultshader.addObject(ground);
 
-		System.out.println("Relevant");
 		ShapedObject3 bunny = ModelLoader.load("res/models/bunny.mobj");
-//		ShapedObject3 bunny = ModelLoader.load("res/models/bunny_lowpoly.mobj");
-//		ShapedObject3 bunny = ModelLoader.load("res/models/cube.mobj");
-		System.out.println("LoadedVertexCount: " + bunny.getVertices().size());
+		ShapedObject3 bunny2 = ModelLoader.load("res/models/bunny_lowpoly.mobj");
+		bunny2.translateTo(20, 0, 0);
 		bunnyBody = new RigidBody3(PhysicsShapeCreator.createHull(bunny));
+		bunnyBody2 = new RigidBody3(PhysicsShapeCreator.createHull(bunny2));
 		bunnyBody.setMass(0);
+		bunnyBody2.setMass(0);
 
 		space.addRigidBody(bunny, bunnyBody);
+		space.addRigidBody(bunny2, bunnyBody2);
 		defaultshader.addObject(bunny);
+		defaultshader.addObject(bunny2);
 		
 		SupportObject so1 = new SupportObject(bunny, bunnyBody);
 		defaultshader.addObject(so1);
@@ -147,6 +149,9 @@ public class ConvexTest extends StandardGame {
 		} else {
 			tempdelta += delta;
 		}
+		
+		float rotspeed = delta * 0.01f;
+		bunnyBody2.rotate(rotspeed, rotspeed, rotspeed);
 
 		debugger.update(fps, 0, 0);
 		space.update(delta);
@@ -165,7 +170,8 @@ public class ConvexTest extends StandardGame {
 			directionpointer.rotate(-0.1f * delta, 0, 0);
 		}
 		Vector3f dir = QuatMath.transform(directionpointer.getRotation(), up);
-		this.supportposition.translateTo(bunnyBody.supportPoint(dir));
+		Vector3f sup = bunnyBody.supportPoint(dir);
+		this.supportposition.translateTo(sup);
 		
 		if (display.isMouseBound())
 			cam.update(delta);

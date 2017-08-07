@@ -38,7 +38,6 @@ public class HalfSphere extends ShapedObject3 {
 
 		int lv = (int) (trisV / 2f);
 		int lh = trisH;
-		int num = this.getVertices().size() - 1;
 		int pos = 0;
 
 		pos += lh;

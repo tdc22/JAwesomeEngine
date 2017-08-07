@@ -39,7 +39,8 @@ public class ConvexShape2 extends CollisionShape2 {
 				if (currentVertex != lastVertex) {
 					lastVertex = currentVertex;
 				} else {
-					return vertices.get(currentVertex);
+					v.set(vertices.get(currentVertex));
+					return v;
 				}
 			}
 		}
@@ -63,7 +64,8 @@ public class ConvexShape2 extends CollisionShape2 {
 				if (currentVertex != lastVertex) {
 					lastVertex = currentVertex;
 				} else {
-					return vertices.get(currentVertex);
+					v.set(vertices.get(currentVertex));
+					return v;
 				}
 			}
 		}

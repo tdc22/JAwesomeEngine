@@ -38,7 +38,8 @@ public class ConvexShape extends CollisionShape3 {
 				if (currentVertex != lastVertex) {
 					lastVertex = currentVertex;
 				} else {
-					return vertices.get(currentVertex);
+					v.set(vertices.get(currentVertex));
+					return v;
 				}
 			}
 		}
@@ -62,7 +63,8 @@ public class ConvexShape extends CollisionShape3 {
 				if (currentVertex != lastVertex) {
 					lastVertex = currentVertex;
 				} else {
-					return vertices.get(currentVertex);
+					v.set(vertices.get(currentVertex));
+					return v;
 				}
 			}
 		}
@@ -118,20 +120,7 @@ public class ConvexShape extends CollisionShape3 {
 		}
 		maxLength = (float) Math.sqrt(maxLength);
 
-		// TODO: either include rotation center in aabb calculation for broadphase or
-		// translate all vertices here instead of setting the rotation center
-		// TODO: translate vertices, then translate object in negative direction
-		// TODO: do same in 2d convexshape
-		setRotationCenter(center);
-		/* Wir wollen hier doch nicht die vertices verschieben, da dies zu ungewünschten Effekten führen kann.
-		 * Beispielsweise könnte ein nutzer hier ein Objekt reinladen und von einer gewissen Position ausgehen,
-		 * daraufhin die Position absolut setzen. Dann ist hier die Ausrichtung futsch.
-		 * Stattdessen soll hier das Rotation-Center reaktiviert werden. Das muss auch beim Rendering wieder
-		 * aktiviert werden. Der Performance-Penalty ist vernachlässigbar. Auch bei der Berechnung der AABB-Maxima/
-		 * Minima soll dieser als referenzwert verwendet werden.
-		 * Außerdem sollte ein entsprechender rendering-test für das rotationcenter angelegt werden. (TransRot) */
 		setAABB(new Vector3f(-maxLength, -maxLength, -maxLength), new Vector3f(maxLength, maxLength, maxLength));
-		System.out.println("Center: " + center + "; " + maxLength);
 		supportcalculator = createSupportCalculator(this);
 	}
 }

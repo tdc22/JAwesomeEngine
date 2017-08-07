@@ -60,7 +60,8 @@ public class PhysicsShapeCreator {
 		Vector3f min = new Vector3f();
 		Vector3f max = new Vector3f();
 		VecMath.minMaxVectors(shapedobject.getVertices(), min, max);
-		Vector3f center = VecMath.addition(min, VecMath.scale(VecMath.subtraction(max, min), 0.5f));
+		Vector3f center = new Vector3f();
+		VecMath.addition(min, VecMath.scale(VecMath.subtraction(max, min, center), 0.5f, center), center);
 		center.negate();
 		for(Vector3f v : shapedobject.getVertices()) {
 			v.translate(center);
@@ -72,6 +73,16 @@ public class PhysicsShapeCreator {
 	}
 
 	public static ConvexShape2 createHull(ShapedObject2 shapedobject) {
+		Vector2f min = new Vector2f();
+		Vector2f max = new Vector2f();
+		VecMath.minMaxVectors(shapedobject.getVertices(), min, max);
+		Vector2f center = new Vector2f();
+		VecMath.addition(min, VecMath.scale(VecMath.subtraction(max, min, center), 0.5f, center), center);
+		center.negate();
+		for(Vector2f v : shapedobject.getVertices()) {
+			v.translate(center);
+		}
+		shapedobject.prerender();
 		ConvexShape2 hull = Quickhull2.computeConvexHull(new ArrayList<Vector2f>(shapedobject.getVertices()));
 		hull.translateTo(shapedobject.getTranslation());
 		return hull;
