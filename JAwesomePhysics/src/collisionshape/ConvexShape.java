@@ -106,22 +106,9 @@ public class ConvexShape extends CollisionShape3 {
 	}
 
 	private void init() {
-		Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
-		Vector3f max = new Vector3f(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
-		for (Vector3f v : vertices) {
-			if (v.x < min.x)
-				min.x = v.x;
-			if (v.y < min.y)
-				min.y = v.y;
-			if (v.z < min.z)
-				min.z = v.z;
-			if (v.x > max.x)
-				max.x = v.x;
-			if (v.y > max.y)
-				max.y = v.y;
-			if (v.z > max.z)
-				max.z = v.z;
-		}
+		Vector3f min = new Vector3f();
+		Vector3f max = new Vector3f();
+		VecMath.minMaxVectors(vertices, min, max);
 		Vector3f center = VecMath.addition(min, VecMath.scale(VecMath.subtraction(max, min), 0.5f));
 		float maxLength = 0;
 		for (Vector3f v : vertices) {
@@ -131,8 +118,20 @@ public class ConvexShape extends CollisionShape3 {
 		}
 		maxLength = (float) Math.sqrt(maxLength);
 
+		// TODO: either include rotation center in aabb calculation for broadphase or
+		// translate all vertices here instead of setting the rotation center
+		// TODO: translate vertices, then translate object in negative direction
+		// TODO: do same in 2d convexshape
 		setRotationCenter(center);
+		/* Wir wollen hier doch nicht die vertices verschieben, da dies zu ungewünschten Effekten führen kann.
+		 * Beispielsweise könnte ein nutzer hier ein Objekt reinladen und von einer gewissen Position ausgehen,
+		 * daraufhin die Position absolut setzen. Dann ist hier die Ausrichtung futsch.
+		 * Stattdessen soll hier das Rotation-Center reaktiviert werden. Das muss auch beim Rendering wieder
+		 * aktiviert werden. Der Performance-Penalty ist vernachlässigbar. Auch bei der Berechnung der AABB-Maxima/
+		 * Minima soll dieser als referenzwert verwendet werden.
+		 * Außerdem sollte ein entsprechender rendering-test für das rotationcenter angelegt werden. (TransRot) */
 		setAABB(new Vector3f(-maxLength, -maxLength, -maxLength), new Vector3f(maxLength, maxLength, maxLength));
+		System.out.println("Center: " + center + "; " + maxLength);
 		supportcalculator = createSupportCalculator(this);
 	}
 }

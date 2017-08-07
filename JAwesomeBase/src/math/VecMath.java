@@ -1,5 +1,7 @@
 package math;
 
+import java.util.Collection;
+
 import matrix.Matrix1;
 import matrix.Matrix1f;
 import matrix.Matrix2;
@@ -1042,5 +1044,172 @@ public class VecMath {
 		result.w = matrix[0][3] * v.x + matrix[1][3] * v.y + matrix[2][3] * v.z + matrix[3][3] * v.w;
 
 		return result;
+	}
+	
+	/**
+	 * Gets minumum- and maximum-vector of a tight AABB containing all points in the given collection of points.
+	 * 
+	 * @param vectors
+	 *            collection of points
+	 * @param min
+	 *            minimum vector of resulting AABB
+	 * @param max
+	 *            maximum vector of resulting AABB
+	 */
+	public static void minMaxVectors(Collection<Vector1> vectors, Vector1 min, Vector1 max) {
+		min.set(Float.MAX_VALUE);
+		max.set(-Float.MAX_VALUE);
+		for(Vector1 v : vectors) {
+			if(v.getX() < min.getX())
+				min.setX(v.getX());
+			if(v.getX() > max.getX())
+				max.setX(v.getX());
+		}
+	}
+	
+	/**
+	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
+	 */
+	public static void minMaxVectors(Collection<Vector1f> vectors, Vector1f min, Vector1f max) {
+		min.set(Float.MAX_VALUE);
+		max.set(-Float.MAX_VALUE);
+		for(Vector1f v : vectors) {
+			if(v.x < min.x)
+				min.x = v.x;
+			if(v.x > max.x)
+				max.x = v.x;
+		}
+	}
+	
+	/**
+	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
+	 */
+	public static void minMaxVectors(Collection<Vector2> vectors, Vector2 min, Vector2 max) {
+		min.set(Float.MAX_VALUE, Float.MAX_VALUE);
+		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE);
+		for(Vector2 v : vectors) {
+			if(v.getX() < min.getX())
+				min.setX(v.getX());
+			if(v.getY() < min.getY())
+				min.setY(v.getY());
+			if(v.getX() > max.getX())
+				max.setX(v.getX());
+			if(v.getY() > max.getY())
+				max.setY(v.getY());
+		}
+	}
+	
+	/**
+	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
+	 */
+	public static void minMaxVectors(Collection<Vector2f> vectors, Vector2f min, Vector2f max) {
+		min.set(Float.MAX_VALUE, Float.MAX_VALUE);
+		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE);
+		for(Vector2f v : vectors) {
+			if(v.x < min.x)
+				min.x = v.x;
+			if(v.y < min.y)
+				min.y = v.y;
+			if(v.x > max.x)
+				max.x = v.x;
+			if(v.y > max.y)
+				max.y = v.y;
+		}
+	}
+
+	/**
+	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
+	 */
+	public static void minMaxVectors(Collection<Vector3> vectors, Vector3 min, Vector3 max) {
+		min.set(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
+		for(Vector3 v : vectors) {
+			if(v.getX() < min.getX())
+				min.setX(v.getX());
+			if(v.getY() < min.getY())
+				min.setY(v.getY());
+			if(v.getZ() < min.getZ())
+				min.setZ(v.getZ());
+			if(v.getX() > max.getX())
+				max.setX(v.getX());
+			if(v.getY() > max.getY())
+				max.setY(v.getY());
+			if(v.getZ() > max.getZ())
+				max.setZ(v.getZ());
+		}
+	}
+	
+	/**
+	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
+	 */
+	public static void minMaxVectors(Collection<Vector3f> vectors, Vector3f min, Vector3f max) {
+		min.set(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
+		for(Vector3f v : vectors) {
+			if(v.x < min.x)
+				min.x = v.x;
+			if(v.y < min.y)
+				min.y = v.y;
+			if(v.z < min.z)
+				min.z = v.z;
+			if(v.x > max.x)
+				max.x = v.x;
+			if(v.y > max.y)
+				max.y = v.y;
+			if(v.z > max.z)
+				max.z = v.z;
+		}
+	}
+	
+	/**
+	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
+	 */
+	public static void minMaxVectors(Collection<Vector4> vectors, Vector4 min, Vector4 max) {
+		min.set(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
+		for(Vector4 v : vectors) {
+			if(v.getX() < min.getX())
+				min.setX(v.getX());
+			if(v.getY() < min.getY())
+				min.setY(v.getY());
+			if(v.getZ() < min.getZ())
+				min.setZ(v.getZ());
+			if(v.getW() < min.getW())
+				min.setW(v.getW());
+			if(v.getX() > max.getX())
+				max.setX(v.getX());
+			if(v.getY() > max.getY())
+				max.setY(v.getY());
+			if(v.getZ() > max.getZ())
+				max.setZ(v.getZ());
+			if(v.getW() > max.getW())
+				max.setW(v.getW());
+		}
+	}
+	
+	/**
+	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
+	 */
+	public static void minMaxVectors(Collection<Vector4f> vectors, Vector4f min, Vector4f max) {
+		min.set(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
+		for(Vector4f v : vectors) {
+			if(v.x < min.x)
+				min.x = v.x;
+			if(v.y < min.y)
+				min.y = v.y;
+			if(v.z < min.z)
+				min.z = v.z;
+			if(v.w < min.w)
+				min.w = v.w;
+			if(v.x > max.x)
+				max.x = v.x;
+			if(v.y > max.y)
+				max.y = v.y;
+			if(v.z > max.z)
+				max.z = v.z;
+			if(v.w > max.w)
+				max.w = v.w;
+		}
 	}
 }

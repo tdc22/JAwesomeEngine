@@ -2,6 +2,7 @@ package physics;
 
 import java.util.ArrayList;
 
+import math.VecMath;
 import collisionshape.BoxShape;
 import collisionshape.CapsuleShape;
 import collisionshape.ConvexShape;
@@ -56,6 +57,15 @@ public class PhysicsShapeCreator {
 	}
 
 	public static ConvexShape createHull(ShapedObject3 shapedobject) {
+		Vector3f min = new Vector3f();
+		Vector3f max = new Vector3f();
+		VecMath.minMaxVectors(shapedobject.getVertices(), min, max);
+		Vector3f center = VecMath.addition(min, VecMath.scale(VecMath.subtraction(max, min), 0.5f));
+		center.negate();
+		for(Vector3f v : shapedobject.getVertices()) {
+			v.translate(center);
+		}
+		shapedobject.prerender();
 		ConvexShape hull = ConvexHull3.computeConvexHull(new ArrayList<Vector3f>(shapedobject.getVertices()));
 		hull.translateTo(shapedobject.getTranslation());
 		return hull;

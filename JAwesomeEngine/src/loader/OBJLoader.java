@@ -112,17 +112,19 @@ public class OBJLoader {
 				writer.newLine();
 			}
 		}
-
+		
 		List<Integer[]> faces = new ArrayList<Integer[]>();
-		List<Integer[]> vertices = new ArrayList<Integer[]>();
+		List<VertexStructure> vertices = new ArrayList<VertexStructure>();
+		VertexStructure tmpVert = new VertexStructure(-1, -1, -1);
 		for (Integer[][] a : facevertices) {
 			Integer[] faceVertIds = new Integer[3];
 			for (int i = 0; i < 3; i++) {
 				Integer[] b = a[i];
-				int pos = vertices.indexOf(b);
+				tmpVert.set(b[0], b[1], b[2]);
+				int pos = vertices.indexOf(tmpVert);
 				if (pos == -1) {
 					pos = vertices.size();
-					vertices.add(b);
+					vertices.add(new VertexStructure(b[0], b[1], b[2]));
 				}
 				faceVertIds[i] = pos;
 			}
@@ -131,8 +133,8 @@ public class OBJLoader {
 			writer.newLine();
 		}
 
-		for (Integer[] a : vertices) {
-			writer.write("vs " + a[0] + " " + a[1] + " " + a[2]);
+		for (VertexStructure a : vertices) {
+			writer.write("vs " + a.vertID + " " + a.normalID + " " + a.texCoordID);
 			writer.newLine();
 		}
 
@@ -282,5 +284,44 @@ public class OBJLoader {
 		}
 
 		return object;
+	}
+	
+	private static class VertexStructure {
+		int vertID, normalID, texCoordID;
+		
+		private VertexStructure(int vertID, int normalID, int texCoordID) {
+			this.vertID = vertID;
+			this.normalID = normalID;
+			this.texCoordID = texCoordID;
+		}
+		
+		@Override
+		public boolean equals(Object other) {
+			if (this == other)
+				return true;
+			if (other == null)
+				return false;
+			if (other instanceof VertexStructure) {
+				return (this.vertID == ((VertexStructure)other).vertID && this.normalID == ((VertexStructure)other).normalID &&
+						this.texCoordID == ((VertexStructure)other).texCoordID);
+			}
+			return false;
+		}
+		
+		// TODO: think about this. Less collisions = more performance in HashMap
+		@Override
+		public int hashCode() {
+			int hash = 17;
+			hash = hash * 31 + vertID;
+			hash = hash * 31 + normalID;
+			hash = hash * 31 + texCoordID;
+			return hash;
+		}
+		
+		public void set(int vertID, int normalID, int texCoordID) {
+			this.vertID = vertID;
+			this.normalID = normalID;
+			this.texCoordID = texCoordID;
+		}
 	}
 }

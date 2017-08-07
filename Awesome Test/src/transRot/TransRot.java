@@ -16,7 +16,7 @@ import shader.Shader;
 import sound.NullSoundEnvironment;
 
 public class TransRot extends StandardGame {
-	ShapedObject3 rabbit1, rabbit2;
+	ShapedObject3 bunny1, bunny2;
 	float r2y;
 	InputEvent toggleMouseBind;
 
@@ -33,13 +33,14 @@ public class TransRot extends StandardGame {
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 
-		rabbit1 = ModelLoader.load("res/models/bunny.mobj");
-		rabbit2 = ModelLoader.load("res/models/bunny.mobj");
-		defaultshader.addObject(rabbit1);
-		defaultshader.addObject(rabbit2);
-
-		rabbit1.translateTo(-10, 0, 0);
-		rabbit2.translateTo(10, 0, 0);
+		ShapedObject3 bunnymodel = ModelLoader.load("res/models/bunny.mobj");
+		bunny1 = new ShapedObject3(bunnymodel);
+		bunny2 = new ShapedObject3(bunnymodel);
+		defaultshader.addObject(bunny1);
+		defaultshader.addObject(bunny2);
+		
+		bunny1.translateTo(-10, 0, 0);
+		bunny2.translateTo(10, 0, 0);
 
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
@@ -71,10 +72,10 @@ public class TransRot extends StandardGame {
 				display.unbindMouse();
 		}
 
-		float speed = 0.01f * delta;
-		rabbit1.rotate(speed, speed, speed);
-		r2y += speed;
-		rabbit2.translateTo(rabbit2.getTranslation().getXf(), FastMath.sin(r2y) * 3, 0);
+		float speed = 0.02f * delta;
+		bunny1.rotate(speed, speed, speed);
+		r2y += speed/2f;
+		bunny2.translateTo(bunny2.getTranslation().getXf(), FastMath.sin(r2y) * 3, 0);
 	}
 
 }

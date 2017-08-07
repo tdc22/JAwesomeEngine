@@ -77,7 +77,10 @@ public class ConvexTest extends StandardGame {
 		space.addRigidBody(ground, rb);
 		defaultshader.addObject(ground);
 
-		ShapedObject3 bunny = ModelLoader.load("res/models/bunny_lowpoly.mobj");
+		System.out.println("Relevant");
+		ShapedObject3 bunny = ModelLoader.load("res/models/bunny.mobj");
+//		ShapedObject3 bunny = ModelLoader.load("res/models/bunny_lowpoly.mobj");
+//		ShapedObject3 bunny = ModelLoader.load("res/models/cube.mobj");
 		System.out.println("LoadedVertexCount: " + bunny.getVertices().size());
 		bunnyBody = new RigidBody3(PhysicsShapeCreator.createHull(bunny));
 		bunnyBody.setMass(0);

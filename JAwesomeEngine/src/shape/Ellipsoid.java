@@ -67,7 +67,7 @@ public class Ellipsoid extends ShapedObject3 implements EllipsoidStructure {
 				addVertex(pos, c, new Vector2f(1 - b / (float) trisH, 1 - a / (float) trisV), normal);
 			}
 		}
-		addVertex(VecMath.subtraction(getVertex(0), new Vector3f(0, radiusY * 2, 0)), Color.GRAY, new Vector2f(0, 0),
+		addVertex(VecMath.subtraction(getVertex(0), new Vector3f(0, radiusY * 2, 0)), c, new Vector2f(0, 0),
 				new Vector3f(0, -1, 0));
 
 		int lv = trisV;

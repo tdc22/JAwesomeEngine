@@ -24,7 +24,6 @@ public class ConvexHull3 {
 		int facesDone = 1;
 		int faceIndex = faces.size() - facesDone;
 		while(faceIndex >= 0) {
-			System.out.println(faces.size() + "; " + facesDone);
 			if(step(faceIndex)) {
 				facesDone++;
 			}
@@ -35,7 +34,6 @@ public class ConvexHull3 {
 			int newPos = freeVertexPositions.remove(0);
 			if(newPos < i) {
 				Vector3f v = vertices.set(i, null);
-				System.out.println("nulled " + i + "; " + freeVertexPositions.size() + "; " + newPos);
 				if(v != null) {
 					for(Integer adj : adjacentsMap.get(i)) {
 						ArrayList<Integer> adjAdjs = adjacentsMap.get((int) adj);
@@ -70,7 +68,6 @@ public class ConvexHull3 {
 			ArrayList<Integer> adjList = adjacentsMap.get(k);
 			Integer[] adjArray = new Integer[adjList.size()];
 			adjacentsMap.get(k).toArray(adjArray);
-			System.out.println("tmparraysize: " + adjArray.length);
 			resultAdjacentsMap.put(k, adjArray);
 		}
 		
@@ -160,9 +157,6 @@ public class ConvexHull3 {
 			}
 		}
 		Vector3f D = EPs[d];
-		
-		System.out.println("Pointcount: " + points.size());
-		System.out.println("Init: " + A + "; " + B + "; " + C + "; " + D);
 
 		// 2. Assign points to faces
 		// 2.1 Create faces and add them to queue
@@ -242,7 +236,6 @@ public class ConvexHull3 {
 	// WELCOME TO MADNESS
 	
 	private static boolean step(int faceIndex) {
-		System.out.println(faceIndex);
 		Triangle t = faces.get(faceIndex);
 		// 2. Get most distant point of the face's point set
 		Vector3f furthestPoint = null;
@@ -259,8 +252,6 @@ public class ConvexHull3 {
 				furthestPointID = i;
 			}
 		}
-		System.out.println("furthest: " + furthestPointID + "; "
-				+ furthestPoint);
 		if (furthestPointID == -1 || vertices.contains(furthestPoint)) { // TODO: check
 			return true;
 		}
