@@ -1,6 +1,7 @@
 package physics;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import math.VecMath;
 import collisionshape.BoxShape;
@@ -63,7 +64,8 @@ public class PhysicsShapeCreator {
 		Vector3f center = new Vector3f();
 		VecMath.addition(min, VecMath.scale(VecMath.subtraction(max, min, center), 0.5f, center), center);
 		center.negate();
-		for(Vector3f v : shapedobject.getVertices()) {
+		HashSet<Vector3f> vert = new HashSet<Vector3f>(shapedobject.getVertices());
+		for(Vector3f v : vert) {
 			v.translate(center);
 		}
 		shapedobject.prerender();
@@ -79,7 +81,8 @@ public class PhysicsShapeCreator {
 		Vector2f center = new Vector2f();
 		VecMath.addition(min, VecMath.scale(VecMath.subtraction(max, min, center), 0.5f, center), center);
 		center.negate();
-		for(Vector2f v : shapedobject.getVertices()) {
+		HashSet<Vector2f> vert = new HashSet<Vector2f>(shapedobject.getVertices());
+		for(Vector2f v : vert) {
 			v.translate(center);
 		}
 		shapedobject.prerender();
