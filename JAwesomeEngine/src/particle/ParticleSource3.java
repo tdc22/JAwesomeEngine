@@ -26,7 +26,7 @@ public abstract class ParticleSource3 extends ParticleSource<Vector3f, Vector3f>
 
 	public void update(int delta) {
 		lastparticle += delta;
-		for (; lastparticle > 0; lastparticle -= spawnRate) {
+		for (; lastparticle > 0; lastparticle -= inverseSpawnRate) {
 			float angleX = minAngle.x + (float) Math.random() * diffAngle.x;
 			float angleY = minAngle.y + (float) Math.random() * diffAngle.y;
 			float angleZ = minAngle.z + (float) Math.random() * diffAngle.z;
@@ -44,5 +44,4 @@ public abstract class ParticleSource3 extends ParticleSource<Vector3f, Vector3f>
 		}
 		particles.updateParticles(delta, minLifeTime + diffLifeTime);
 	}
-
 }

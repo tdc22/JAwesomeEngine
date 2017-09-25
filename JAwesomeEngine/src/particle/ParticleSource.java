@@ -8,7 +8,7 @@ public abstract class ParticleSource<L extends Vector, A extends Vector> impleme
 	L center, spawnAreaHalfSize;
 	A minAngle, diffAngle;
 	int minLifeTime, diffLifeTime;
-	float minSize, diffSize, minVelocity, diffVelocity, spawnRate, lastparticle;
+	float minSize, diffSize, minVelocity, diffVelocity, inverseSpawnRate, lastparticle;
 
 	public ParticleSource(L center, L spawnAreaHalfSize, A minAngle, A maxAngle, float minVelocity, float maxVelocity,
 			float minSize, float maxSize, int minLifeTime, int maxLifeTime, float spawnRate) {
@@ -18,7 +18,7 @@ public abstract class ParticleSource<L extends Vector, A extends Vector> impleme
 		setParticleVelocity(minVelocity, maxVelocity);
 		setParticleSize(minSize, maxSize);
 		setParticleLifeTime(minLifeTime, maxLifeTime);
-		this.spawnRate = spawnRate;
+		setSpawnRate(spawnRate);
 		lastparticle = 0;
 	}
 
@@ -41,5 +41,9 @@ public abstract class ParticleSource<L extends Vector, A extends Vector> impleme
 
 	public ParticleSystem<L, A> getParticleSystem() {
 		return particles;
+	}
+	
+	public void setSpawnRate(float spawnRate) {
+		this.inverseSpawnRate = 1/spawnRate;
 	}
 }

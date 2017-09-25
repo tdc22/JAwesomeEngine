@@ -4,32 +4,32 @@ import static org.lwjgl.opengl.GL11.glDepthMask;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayDeque;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import math.QuatMath;
 import math.VecMath;
 import objects.Camera3;
 import objects.ShapedObject;
 import objects.ShapedObject3;
+import utils.VectorConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
 public class SimpleParticleSystem extends ParticleSystem3 {
 	ShapedObject3 particles;
-	HashMap<Integer, Particle> particleList;
-	ArrayDeque<Integer> freeindices;
-	int maxParticles;
+	ArrayList<Particle> particleList;
+	ArrayDeque<Integer> freevertices, freeindices;
 	Camera3 cam;
 	boolean useDepthSorting;
 
 	public SimpleParticleSystem(Vector3f center, Camera3 cam, boolean depthSorting) {
 		particles = new ShapedObject3(center);
 		particles.setRenderMode(GL11.GL_TRIANGLES);
-		particleList = new HashMap<Integer, Particle>();
+		particleList = new ArrayList<Particle>();
+		freevertices = new ArrayDeque<Integer>();
 		freeindices = new ArrayDeque<Integer>();
-		maxParticles = 0;
 		useDepthSorting = depthSorting;
 		setCamera(cam);
 	}
@@ -42,13 +42,14 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 	public int addParticle(Vector3f position, Vector3f velocity, Vector2f size, int lifetime) {
 		return addParticle(new Particle(position, velocity, lifetime, size));
 	}
-
+	
 	public int addParticle(Particle particle) {
-		Integer pos = freeindices.poll();
-		int insertpos;
+		Integer pos = freevertices.poll();
+		int insertindex, insertvertex;
 		Vector3f color = new Vector3f(1, 1, 1);
 		if (pos != null) {
-			insertpos = pos;
+			insertindex = freeindices.poll();
+			insertvertex = pos;
 			pos *= 4;
 			particles.setVertex(pos, new Vector3f(particle.position.x - particle.size.x,
 					particle.position.y - particle.size.y, particle.position.z), color, topleft, normal);
@@ -58,7 +59,7 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 					particle.position.y + particle.size.y, particle.position.z), color, bottomright, normal);
 			particles.setVertex(pos + 3, new Vector3f(particle.position.x + particle.size.x,
 					particle.position.y - particle.size.y, particle.position.z), color, bottomleft, normal);
-			int indexpos = insertpos * 6;
+			int indexpos = insertindex * 6;
 			particles.setIndex(indexpos, pos);
 			particles.setIndex(indexpos + 1, pos + 1);
 			particles.setIndex(indexpos + 2, pos + 2);
@@ -74,20 +75,22 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 					particle.position.y + particle.size.y, particle.position.z), color, bottomright, normal);
 			particles.addVertex(new Vector3f(particle.position.x + particle.size.x,
 					particle.position.y - particle.size.y, particle.position.z), color, bottomleft, normal);
-			insertpos = maxParticles;
-			pos = maxParticles * 4;
+			insertindex = particleList.size();
+			insertvertex = insertindex;
+			pos = insertvertex * 4;
 			particles.addIndices(pos, pos + 1, pos + 2, pos, pos + 2, pos + 3);
-			maxParticles++;
 		}
-		particleList.put(insertpos, particle);
-		return insertpos;
+		particle.indexindex = insertindex;
+		particle.vertexindex = insertvertex;
+		particleList.add(particle);
+		return insertindex;
 	}
 
 	public Particle getParticle(int particleID) {
 		return particleList.get(particleID);
 	}
 
-	public HashMap<Integer, Particle> getParticleList() {
+	public List<Particle> getParticleList() {
 		return particleList;
 	}
 
@@ -95,30 +98,35 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 
 	@Override
 	public void removeParticle(int particleID) {
-		particleList.remove(particleID);
-		int i4 = particleID * 4;
-		particles.setVertex(i4 + 3, nullvec);
-		particles.setVertex(i4 + 2, nullvec);
-		particles.setVertex(i4 + 1, nullvec);
+		Particle p = particleList.remove(particleID);
+		int i4 = p.vertexindex * 4;
 		particles.setVertex(i4, nullvec);
-		int i6 = particleID * 6;
-		particles.setIndex(i6 + 5, 0);
-		particles.setIndex(i6 + 4, 0);
-		particles.setIndex(i6 + 3, 0);
-		particles.setIndex(i6 + 2, 0);
-		particles.setIndex(i6 + 1, 0);
+		particles.setVertex(i4 + 1, nullvec);
+		particles.setVertex(i4 + 2, nullvec);
+		particles.setVertex(i4 + 3, nullvec);
+		int i6 = p.indexindex * 6;
 		particles.setIndex(i6, 0);
-		freeindices.add(particleID);
+		particles.setIndex(i6 + 1, 0);
+		particles.setIndex(i6 + 2, 0);
+		particles.setIndex(i6 + 3, 0);
+		particles.setIndex(i6 + 4, 0);
+		particles.setIndex(i6 + 5, 0);
+		freevertices.add(p.vertexindex);
+		freeindices.add(p.indexindex);
 	}
-
+	
+	private final Vector3f particleright = new Vector3f();
+	private final Vector3f particleup = new Vector3f();
+	
 	@Override
 	public void updateParticles(int delta, float maxLifeTime) {
 		// TODO: parallel
-		Vector3f right = QuatMath.transform(cam.getRotation(), new Vector3f(1, 0, 0));
-		right.normalize();
-		Vector3f up = VecMath.crossproduct(right, cam.getDirection());
+		particleright.set(VectorConstants.AXIS_X);
+		particleright.transform(cam.getRotation());
+		particleright.normalize();
+		VecMath.crossproduct(particleright, cam.getDirection(), particleup);
 
-		for (int i = 0; i < maxParticles; i++) {
+		for (int i = 0; i < particleList.size(); i++) {
 			Particle p = particleList.get(i);
 			if (p != null) {
 				if (p.lifetime > delta) {
@@ -129,23 +137,18 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 					float xd = p.position.x - cam.getTranslation().x;
 					float yd = p.position.y - cam.getTranslation().y;
 					float zd = p.position.z - cam.getTranslation().z;
-					p.distance = (float) Math.sqrt(xd * xd + yd * yd + zd * zd);
-					/*
-					 * Math.abs(p.position.x - cam.getTranslation().x) +
-					 * Math.abs(p.position.y - cam.getTranslation().y) +
-					 * Math.abs(p.position.z - cam.getTranslation().z);
-					 */
+					p.distance = xd * xd + yd * yd + zd * zd;
 
-					int i4 = i * 4;
-					float rx = right.x * p.size.x;
-					float ux = up.x * p.size.y;
+					int i4 = p.vertexindex * 4;
+					float rx = particleright.x * p.size.x;
+					float ux = particleup.x * p.size.y;
 					float ax = rx + ux;
 					float bx = rx - ux;
-					float rz = right.z * p.size.x;
-					float uz = up.z * p.size.y;
+					float rz = particleright.z * p.size.x;
+					float uz = particleup.z * p.size.y;
 					float ay = rz + uz;
 					float by = rz - uz;
-					float uy = up.y * p.size.y;
+					float uy = particleup.y * p.size.y;
 					particles.getVertex(i4).set(p.position.x - ax, p.position.y - uy, p.position.z - ay);
 					particles.getVertex(i4 + 1).set(p.position.x + bx, p.position.y - uy, p.position.z + by);
 					particles.getVertex(i4 + 2).set(p.position.x + ax, p.position.y + uy, p.position.z + ay);
@@ -160,50 +163,61 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 				}
 			}
 		}
-		// TODO: depth-sorting by insertion sort
-		// TODO: insert at right position to speed up sorting for new particles
+//		System.out.print("Before " + particleList.size() + " ");
+//		for(Particle p : particleList.values())
+//			System.out.print(p.distance + " ");
 		if (useDepthSorting) {
-			for (int i = 0; i < maxParticles - 1; i++) {
+			for (int i = 1; i < particleList.size(); i++) {
 				Particle p = particleList.get(i);
 				if (p != null) {
-					int a = i;
-					Particle next = null;
-
-					while (next == null && a < maxParticles) {
-						a++;
-						next = particleList.get(a);
+					int i6 = p.indexindex * 6;
+					int ind0 = particles.getIndex(i6);
+					int ind1 = particles.getIndex(i6 + 1);
+					int ind2 = particles.getIndex(i6 + 2);
+					int ind3 = particles.getIndex(i6 + 3);
+					int ind4 = particles.getIndex(i6 + 4);
+					int ind5 = particles.getIndex(i6 + 5);
+					
+					int k = i;
+					int j = i - 1;
+					Particle pj;
+					while(j >= 0 && ((pj = particleList.get(j)) == null || pj.distance < p.distance)) {
+						if(pj != null) {
+							particleList.set(k, pj);
+							int from6 = pj.indexindex * 6;
+							int to6 = k * 6;
+							particles.setIndex(to6, particles.getIndex(from6));
+							particles.setIndex(to6 + 1, particles.getIndex(from6 + 1));
+							particles.setIndex(to6 + 2, particles.getIndex(from6 + 2));
+							particles.setIndex(to6 + 3, particles.getIndex(from6 + 3));
+							particles.setIndex(to6 + 4, particles.getIndex(from6 + 4));
+							particles.setIndex(to6 + 5, particles.getIndex(from6 + 5));
+							pj.indexindex = k;
+							k = j;
+						}
+						j--;
 					}
-
-					if (next != null && p.distance > next.distance) {
-						particleList.put(i, next);
-						particleList.put(a, p);
-						int i6 = i * 6;
-						int a6 = a * 6;
-						int index1 = particles.getIndex(i6);
-						int index2 = particles.getIndex(i6 + 1);
-						int index3 = particles.getIndex(i6 + 2);
-						int index4 = particles.getIndex(i6 + 3);
-						int index5 = particles.getIndex(i6 + 4);
-						int index6 = particles.getIndex(i6 + 5);
-						particles.setIndex(i6, particles.getIndex(a6));
-						particles.setIndex(i6 + 1, particles.getIndex(a6 + 1));
-						particles.setIndex(i6 + 2, particles.getIndex(a6 + 2));
-						particles.setIndex(i6 + 3, particles.getIndex(a6 + 3));
-						particles.setIndex(i6 + 4, particles.getIndex(a6 + 4));
-						particles.setIndex(i6 + 5, particles.getIndex(a6 + 5));
-						particles.setIndex(a6, index1);
-						particles.setIndex(a6 + 1, index2);
-						particles.setIndex(a6 + 2, index3);
-						particles.setIndex(a6 + 3, index4);
-						particles.setIndex(a6 + 4, index5);
-						particles.setIndex(a6 + 5, index6);
-
-						if (a < maxParticles - 1)
-							i = a;
-					}
+					/*k = j+1; // TODO: what if j+1 is null?
+					while(particleList.get(k) == null && k < i) k++;*/
+					// We don't need to reassign k because k is the origin (j) of the last swap here!
+//					if(i != k) {
+					particleList.set(k, p);
+					int k6 = k * 6;
+					particles.setIndex(k6, ind0);
+					particles.setIndex(k6 + 1, ind1);
+					particles.setIndex(k6 + 2, ind2);
+					particles.setIndex(k6 + 3, ind3);
+					particles.setIndex(k6 + 4, ind4);
+					particles.setIndex(k6 + 5, ind5);
+					p.indexindex = k;
+//					}
 				}
 			}
 		}
+//		System.out.print("After ");
+//		for(Particle p : particleList)
+//			System.out.print(p.distance + " ");
+//		System.out.println();
 		particles.prerender();
 	}
 
@@ -213,7 +227,7 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 
 	public class Particle {
 		Vector3f position, velocity;
-		int lifetime;
+		int lifetime, vertexindex, indexindex;
 		Vector2f size;
 		float distance;
 

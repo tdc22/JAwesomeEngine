@@ -9,7 +9,6 @@ uniform mat4 view;
 uniform mat4 model;
 
 uniform sampler2D u_texture;
-uniform vec3 u_color;
 
 out float minusAlpha;
 out vec2 tex_coord;
