@@ -15,7 +15,7 @@ A list of most current, wip and planned features can be found here: [Featureslis
 [Setup](https://github.com/tdc22/JAwesomeEngine/wiki/Setup)
 
 ### Tutorials
-[Tutorial](/Tutorial.md)
+[Tutorial](https://github.com/tdc22/JAwesomeEngine/wiki/Tutorial)
 
 ## License
 The whole engine is under the [zlib-license](http://opensource.org/licenses/Zlib). (see [LICENSE](/LICENSE))
