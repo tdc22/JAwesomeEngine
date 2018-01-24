@@ -22,6 +22,7 @@
     "lwjgl-opengl",
     "lwjgl-openvr",
     "lwjgl-sse",
-    "lwjgl-vulkan"
+    "lwjgl-vulkan",
+    "lwjgl-stb"
   ]
 }

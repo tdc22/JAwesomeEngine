@@ -34,7 +34,7 @@ public class ALSoundEnvironment extends SoundEnvironment {
 	public ALSoundEnvironment() {
 		device = alcOpenDevice((ByteBuffer) null);
 		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
-		context = alcCreateContext(device, null);
+		context = alcCreateContext(device, (int[]) null);
 
 		if (!alcMakeContextCurrent(context)) {
 			System.err.println("Failed to make context current.");
