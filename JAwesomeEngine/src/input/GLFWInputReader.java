@@ -20,7 +20,6 @@ import static org.lwjgl.glfw.GLFW.glfwGetJoystickButtons;
 import static org.lwjgl.glfw.GLFW.glfwGetKey;
 import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
 
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
@@ -308,7 +307,7 @@ public class GLFWInputReader extends InputReader {
 		gamepadbuttons.clear();
 		int a = 0;
 		for (int i = GLFW_JOYSTICK_1; i < GLFW_JOYSTICK_LAST; i++) {
-			if (glfwJoystickPresent(i) == GL_TRUE) {
+			if (glfwJoystickPresent(i)) {
 				gamepadaxes.put(a, glfwGetJoystickAxes(i));
 				gamepadbuttons.put(a, glfwGetJoystickButtons(i));
 				if (a < gamepads.size()) {

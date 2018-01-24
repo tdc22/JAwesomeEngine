@@ -278,10 +278,9 @@ public class PortalDemo extends StandardGame {
 		 * addShaderInterface(portal1texturetest);
 		 * addShaderInterface(portal2texturetest);
 		 * 
-		 * Quad q1 = new Quad(100, 200, 100, 100); Quad q2 = new Quad(100, 400,
-		 * 100, 100); q1.setRenderHints(false, true, false);
-		 * q2.setRenderHints(false, true, false);
-		 * portal1texturetest.addObject(q1); portal2texturetest.addObject(q2);
+		 * Quad q1 = new Quad(100, 200, 100, 100); Quad q2 = new Quad(100, 400, 100,
+		 * 100); q1.setRenderHints(false, true, false); q2.setRenderHints(false, true,
+		 * false); portal1texturetest.addObject(q1); portal2texturetest.addObject(q2);
 		 */
 	}
 

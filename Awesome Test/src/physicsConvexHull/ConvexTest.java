@@ -42,7 +42,7 @@ public class ConvexTest extends StandardGame {
 	Debugger debugger;
 	PhysicsDebug physicsdebug;
 	Shader defaultshader;
-	
+
 	RigidBody3 bunnyBody, bunnyBody2;
 	Cylinder directionpointer;
 	Sphere supportposition;
@@ -89,13 +89,13 @@ public class ConvexTest extends StandardGame {
 		space.addRigidBody(bunny2, bunnyBody2);
 		defaultshader.addObject(bunny);
 		defaultshader.addObject(bunny2);
-		
+
 		SupportObject so1 = new SupportObject(bunny, bunnyBody);
 		defaultshader.addObject(so1);
-		
+
 		directionpointer = new Cylinder(0, 0, 0, 0.1f, 1, 36);
 		defaultshader.addObject(directionpointer);
-		
+
 		supportposition = new Sphere(0, 0, 0, 0.2f, 36, 36);
 		defaultshader.addObject(supportposition);
 	}
@@ -117,7 +117,7 @@ public class ConvexTest extends StandardGame {
 		renderInterfaceLayer();
 		debugger.end();
 	}
-	
+
 	private Vector3f up = new Vector3f(0, 1, 0);
 
 	@Override
@@ -149,7 +149,7 @@ public class ConvexTest extends StandardGame {
 		} else {
 			tempdelta += delta;
 		}
-		
+
 		float rotspeed = delta * 0.01f;
 		bunnyBody2.rotate(rotspeed, rotspeed, rotspeed);
 
@@ -157,22 +157,22 @@ public class ConvexTest extends StandardGame {
 		space.update(delta);
 		physicsdebug.update();
 
-		if(inputs.isKeyDown("I")) {
+		if (inputs.isKeyDown("I")) {
 			directionpointer.rotate(0, 0, 0.1f * delta);
 		}
-		if(inputs.isKeyDown("K")) {
+		if (inputs.isKeyDown("K")) {
 			directionpointer.rotate(0, 0, -0.1f * delta);
 		}
-		if(inputs.isKeyDown("J")) {
+		if (inputs.isKeyDown("J")) {
 			directionpointer.rotate(0.1f * delta, 0, 0);
 		}
-		if(inputs.isKeyDown("L")) {
+		if (inputs.isKeyDown("L")) {
 			directionpointer.rotate(-0.1f * delta, 0, 0);
 		}
 		Vector3f dir = QuatMath.transform(directionpointer.getRotation(), up);
 		Vector3f sup = bunnyBody.supportPoint(dir);
 		this.supportposition.translateTo(sup);
-		
+
 		if (display.isMouseBound())
 			cam.update(delta);
 	}

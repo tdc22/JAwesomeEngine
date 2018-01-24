@@ -107,25 +107,19 @@ public class ShaderList {
 				}
 
 				/*
-				 * if(argumenttype == 1) glUniform1i(uniformlocation,
-				 * (Integer)argument); if(argumenttype == 2)
-				 * glUniform1f(uniformlocation, (Float)argument);
-				 * if(argumenttype == 3) glUniform2f(uniformlocation,
-				 * ((Vector2f)argument).x, ((Vector2f)argument).y);
-				 * if(argumenttype == 4) glUniform3f(uniformlocation,
-				 * ((Vector3f)argument).x, ((Vector3f)argument).y,
-				 * ((Vector3f)argument).z); if(argumenttype == 5)
-				 * glUniform4f(uniformlocation, ((Vector4f)argument).x,
-				 * ((Vector4f)argument).y, ((Vector4f)argument).z,
-				 * ((Vector4f)argument).w); if(argumenttype == 6)
-				 * glUniformMatrix2(uniformlocation, false,
+				 * if(argumenttype == 1) glUniform1i(uniformlocation, (Integer)argument);
+				 * if(argumenttype == 2) glUniform1f(uniformlocation, (Float)argument);
+				 * if(argumenttype == 3) glUniform2f(uniformlocation, ((Vector2f)argument).x,
+				 * ((Vector2f)argument).y); if(argumenttype == 4) glUniform3f(uniformlocation,
+				 * ((Vector3f)argument).x, ((Vector3f)argument).y, ((Vector3f)argument).z);
+				 * if(argumenttype == 5) glUniform4f(uniformlocation, ((Vector4f)argument).x,
+				 * ((Vector4f)argument).y, ((Vector4f)argument).z, ((Vector4f)argument).w);
+				 * if(argumenttype == 6) glUniformMatrix2(uniformlocation, false,
 				 * (FloatBuffer)argument); if(argumenttype == 7)
-				 * glUniformMatrix3(uniformlocation, false,
-				 * (FloatBuffer)argument); if(argumenttype == 8)
-				 * glUniformMatrix4(uniformlocation, false,
-				 * (FloatBuffer)argument); if(argumenttype == 9) {
-				 * glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D,
-				 * (Integer)argument); }
+				 * glUniformMatrix3(uniformlocation, false, (FloatBuffer)argument);
+				 * if(argumenttype == 8) glUniformMatrix4(uniformlocation, false,
+				 * (FloatBuffer)argument); if(argumenttype == 9) { glActiveTexture(GL_TEXTURE0);
+				 * glBindTexture(GL_TEXTURE_2D, (Integer)argument); }
 				 */
 			}
 		}

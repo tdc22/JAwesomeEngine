@@ -132,11 +132,10 @@ public class Updater extends TCPByteClient implements ActionListener {
 	 * System.out.println(message); if (message.startsWith("start download")) {
 	 * tmpfile = new File(downloadfile + ".tmp"); try { output = new
 	 * FileOutputStream(tmpfile).getChannel(); } catch (IOException e) {
-	 * e.printStackTrace(); } newversion = message.split(" ")[3]; download =
-	 * true; } if (message.equals("no download needed")) {
-	 * start.setEnabled(true); } } else { try {
-	 * output.write(encoder.encode(CharBuffer.wrap(message.toCharArray()))); //
-	 * System.out.println(output.size()); } catch (IOException e) {
+	 * e.printStackTrace(); } newversion = message.split(" ")[3]; download = true; }
+	 * if (message.equals("no download needed")) { start.setEnabled(true); } } else
+	 * { try { output.write(encoder.encode(CharBuffer.wrap(message.toCharArray())));
+	 * // System.out.println(output.size()); } catch (IOException e) {
 	 * e.printStackTrace(); } } }
 	 */
 

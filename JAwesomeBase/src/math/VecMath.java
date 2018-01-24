@@ -78,7 +78,7 @@ public class VecMath {
 	public static Vector3f addition(Vector3f v1, Vector3f v2) {
 		return new Vector3f(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
 	}
-	
+
 	/**
 	 * Addition of two vectors.
 	 * 
@@ -102,7 +102,7 @@ public class VecMath {
 		result.set(v1.x + v2.x);
 		return result;
 	}
-	
+
 	/**
 	 * @see math.VecMath#addition(Vector1, Vector1, Vector1)
 	 */
@@ -194,8 +194,7 @@ public class VecMath {
 		double dif2y = p3.getY() - p1.getY();
 		double dif2z = p3.getZ() - p1.getZ();
 
-		result.set(dif1y * dif2z - dif1z * dif2y, dif1z * dif2x - dif1x * dif2z,
-				dif1x * dif2y - dif1y * dif2x);
+		result.set(dif1y * dif2z - dif1z * dif2y, dif1z * dif2x - dif1x * dif2z, dif1x * dif2y - dif1y * dif2x);
 		return result;
 	}
 
@@ -210,11 +209,10 @@ public class VecMath {
 		float dif2y = p3.y - p1.y;
 		float dif2z = p3.z - p1.z;
 
-		result.set(dif1y * dif2z - dif1z * dif2y, dif1z * dif2x - dif1x * dif2z,
-				dif1x * dif2y - dif1y * dif2x);
+		result.set(dif1y * dif2z - dif1z * dif2y, dif1z * dif2x - dif1x * dif2z, dif1x * dif2y - dif1y * dif2x);
 		return result;
 	}
-	
+
 	/**
 	 * Calculates the cross product of two vectors.
 	 * 
@@ -278,7 +276,7 @@ public class VecMath {
 	public static Vector3f crossproduct(float v1x, float v1y, float v1z, float v2x, float v2y, float v2z) {
 		return new Vector3f(v1y * v2z - v1z * v2y, v1z * v2x - v1x * v2z, v1x * v2y - v1y * v2x);
 	}
-	
+
 	/**
 	 * Calculates the cross product of two vectors.
 	 * 
@@ -291,8 +289,8 @@ public class VecMath {
 	 * @return cross product value
 	 */
 	public static Vector3d crossproduct(Vector3 v1, Vector3 v2, Vector3d result) {
-		result.set(v1.getY() * v2.getZ() - v1.getZ() * v2.getY(),
-				v1.getZ() * v2.getX() - v1.getX() * v2.getZ(), v1.getX() * v2.getY() - v1.getY() * v2.getX());
+		result.set(v1.getY() * v2.getZ() - v1.getZ() * v2.getY(), v1.getZ() * v2.getX() - v1.getX() * v2.getZ(),
+				v1.getX() * v2.getY() - v1.getY() * v2.getX());
 		return result;
 	}
 
@@ -300,15 +298,16 @@ public class VecMath {
 	 * @see math.VecMath#crossproduct(Vector3, Vector3, Vector3)
 	 */
 	public static Vector3f crossproduct(Vector3f v1, Vector3f v2, Vector3f result) {
-		result.set(v1.getYf() * v2.getZf() - v1.getZf() * v2.getYf(),
-				v1.getZf() * v2.getXf() - v1.getXf() * v2.getZf(), v1.getXf() * v2.getYf() - v1.getYf() * v2.getXf());
+		result.set(v1.getYf() * v2.getZf() - v1.getZf() * v2.getYf(), v1.getZf() * v2.getXf() - v1.getXf() * v2.getZf(),
+				v1.getXf() * v2.getYf() - v1.getYf() * v2.getXf());
 		return result;
 	}
 
 	/**
 	 * @see math.VecMath#crossproduct(Vector3, Vector3, Vector3)
 	 */
-	public static Vector3d crossproduct(double v1x, double v1y, double v1z, double v2x, double v2y, double v2z, Vector3d result) {
+	public static Vector3d crossproduct(double v1x, double v1y, double v1z, double v2x, double v2y, double v2z,
+			Vector3d result) {
 		result.set(v1y * v2z - v1z * v2y, v1z * v2x - v1x * v2z, v1x * v2y - v1y * v2x);
 		return result;
 	}
@@ -316,7 +315,8 @@ public class VecMath {
 	/**
 	 * @see math.VecMath#crossproduct(Vector3, Vector3, Vector3)
 	 */
-	public static Vector3f crossproduct(float v1x, float v1y, float v1z, float v2x, float v2y, float v2z, Vector3f result) {
+	public static Vector3f crossproduct(float v1x, float v1y, float v1z, float v2x, float v2y, float v2z,
+			Vector3f result) {
 		result.set(v1y * v2z - v1z * v2y, v1z * v2x - v1x * v2z, v1x * v2y - v1y * v2x);
 		return result;
 	}
@@ -516,7 +516,7 @@ public class VecMath {
 	public static Vector3f multiplication(Vector3f v1, Vector3f v2) {
 		return new Vector3f(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
 	}
-	
+
 	/**
 	 * Multiplication of two vectors.
 	 * 
@@ -716,7 +716,7 @@ public class VecMath {
 	public static Vector3f scale(Vector3f v, float factor) {
 		return new Vector3f(v.x * factor, v.y * factor, v.z * factor);
 	}
-	
+
 	/**
 	 * @see math.VecMath#scale(Vector1, double)
 	 */
@@ -730,7 +730,7 @@ public class VecMath {
 	public static Vector4f scale(Vector4f v, float factor) {
 		return new Vector4f(v.x * factor, v.y * factor, v.z * factor, v.w * factor);
 	}
-	
+
 	/**
 	 * Scales a vector by a factor.
 	 * 
@@ -786,7 +786,7 @@ public class VecMath {
 		result.set(v.x * factor, v.y * factor, v.z * factor);
 		return result;
 	}
-	
+
 	/**
 	 * @see math.VecMath#scale(Vector1, double, Vector1)
 	 */
@@ -896,7 +896,7 @@ public class VecMath {
 	public static Vector3f subtraction(Vector3f v1, Vector3f v2) {
 		return new Vector3f(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
 	}
-	
+
 	/**
 	 * Subtracts the vector v2 from v1. (v1 - v2)
 	 * 
@@ -1131,9 +1131,10 @@ public class VecMath {
 
 		return result;
 	}
-	
+
 	/**
-	 * Gets minumum- and maximum-vector of a tight AABB containing all points in the given collection of points.
+	 * Gets minumum- and maximum-vector of a tight AABB containing all points in the
+	 * given collection of points.
 	 * 
 	 * @param vectors
 	 *            collection of points
@@ -1145,60 +1146,60 @@ public class VecMath {
 	public static void minMaxVectors(Collection<Vector1> vectors, Vector1 min, Vector1 max) {
 		min.set(Float.MAX_VALUE);
 		max.set(-Float.MAX_VALUE);
-		for(Vector1 v : vectors) {
-			if(v.getX() < min.getX())
+		for (Vector1 v : vectors) {
+			if (v.getX() < min.getX())
 				min.setX(v.getX());
-			if(v.getX() > max.getX())
+			if (v.getX() > max.getX())
 				max.setX(v.getX());
 		}
 	}
-	
+
 	/**
 	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
 	 */
 	public static void minMaxVectors(Collection<Vector1f> vectors, Vector1f min, Vector1f max) {
 		min.set(Float.MAX_VALUE);
 		max.set(-Float.MAX_VALUE);
-		for(Vector1f v : vectors) {
-			if(v.x < min.x)
+		for (Vector1f v : vectors) {
+			if (v.x < min.x)
 				min.x = v.x;
-			if(v.x > max.x)
+			if (v.x > max.x)
 				max.x = v.x;
 		}
 	}
-	
+
 	/**
 	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
 	 */
 	public static void minMaxVectors(Collection<Vector2> vectors, Vector2 min, Vector2 max) {
 		min.set(Float.MAX_VALUE, Float.MAX_VALUE);
 		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE);
-		for(Vector2 v : vectors) {
-			if(v.getX() < min.getX())
+		for (Vector2 v : vectors) {
+			if (v.getX() < min.getX())
 				min.setX(v.getX());
-			if(v.getY() < min.getY())
+			if (v.getY() < min.getY())
 				min.setY(v.getY());
-			if(v.getX() > max.getX())
+			if (v.getX() > max.getX())
 				max.setX(v.getX());
-			if(v.getY() > max.getY())
+			if (v.getY() > max.getY())
 				max.setY(v.getY());
 		}
 	}
-	
+
 	/**
 	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
 	 */
 	public static void minMaxVectors(Collection<Vector2f> vectors, Vector2f min, Vector2f max) {
 		min.set(Float.MAX_VALUE, Float.MAX_VALUE);
 		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE);
-		for(Vector2f v : vectors) {
-			if(v.x < min.x)
+		for (Vector2f v : vectors) {
+			if (v.x < min.x)
 				min.x = v.x;
-			if(v.y < min.y)
+			if (v.y < min.y)
 				min.y = v.y;
-			if(v.x > max.x)
+			if (v.x > max.x)
 				max.x = v.x;
-			if(v.y > max.y)
+			if (v.y > max.y)
 				max.y = v.y;
 		}
 	}
@@ -1209,92 +1210,92 @@ public class VecMath {
 	public static void minMaxVectors(Collection<Vector3> vectors, Vector3 min, Vector3 max) {
 		min.set(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
 		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
-		for(Vector3 v : vectors) {
-			if(v.getX() < min.getX())
+		for (Vector3 v : vectors) {
+			if (v.getX() < min.getX())
 				min.setX(v.getX());
-			if(v.getY() < min.getY())
+			if (v.getY() < min.getY())
 				min.setY(v.getY());
-			if(v.getZ() < min.getZ())
+			if (v.getZ() < min.getZ())
 				min.setZ(v.getZ());
-			if(v.getX() > max.getX())
+			if (v.getX() > max.getX())
 				max.setX(v.getX());
-			if(v.getY() > max.getY())
+			if (v.getY() > max.getY())
 				max.setY(v.getY());
-			if(v.getZ() > max.getZ())
+			if (v.getZ() > max.getZ())
 				max.setZ(v.getZ());
 		}
 	}
-	
+
 	/**
 	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
 	 */
 	public static void minMaxVectors(Collection<Vector3f> vectors, Vector3f min, Vector3f max) {
 		min.set(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
 		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
-		for(Vector3f v : vectors) {
-			if(v.x < min.x)
+		for (Vector3f v : vectors) {
+			if (v.x < min.x)
 				min.x = v.x;
-			if(v.y < min.y)
+			if (v.y < min.y)
 				min.y = v.y;
-			if(v.z < min.z)
+			if (v.z < min.z)
 				min.z = v.z;
-			if(v.x > max.x)
+			if (v.x > max.x)
 				max.x = v.x;
-			if(v.y > max.y)
+			if (v.y > max.y)
 				max.y = v.y;
-			if(v.z > max.z)
+			if (v.z > max.z)
 				max.z = v.z;
 		}
 	}
-	
+
 	/**
 	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
 	 */
 	public static void minMaxVectors(Collection<Vector4> vectors, Vector4 min, Vector4 max) {
 		min.set(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
 		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
-		for(Vector4 v : vectors) {
-			if(v.getX() < min.getX())
+		for (Vector4 v : vectors) {
+			if (v.getX() < min.getX())
 				min.setX(v.getX());
-			if(v.getY() < min.getY())
+			if (v.getY() < min.getY())
 				min.setY(v.getY());
-			if(v.getZ() < min.getZ())
+			if (v.getZ() < min.getZ())
 				min.setZ(v.getZ());
-			if(v.getW() < min.getW())
+			if (v.getW() < min.getW())
 				min.setW(v.getW());
-			if(v.getX() > max.getX())
+			if (v.getX() > max.getX())
 				max.setX(v.getX());
-			if(v.getY() > max.getY())
+			if (v.getY() > max.getY())
 				max.setY(v.getY());
-			if(v.getZ() > max.getZ())
+			if (v.getZ() > max.getZ())
 				max.setZ(v.getZ());
-			if(v.getW() > max.getW())
+			if (v.getW() > max.getW())
 				max.setW(v.getW());
 		}
 	}
-	
+
 	/**
 	 * @see math.VecMath#minMaxVectors(Collection<Vector1>, Vector1, Vector1)
 	 */
 	public static void minMaxVectors(Collection<Vector4f> vectors, Vector4f min, Vector4f max) {
 		min.set(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
 		max.set(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
-		for(Vector4f v : vectors) {
-			if(v.x < min.x)
+		for (Vector4f v : vectors) {
+			if (v.x < min.x)
 				min.x = v.x;
-			if(v.y < min.y)
+			if (v.y < min.y)
 				min.y = v.y;
-			if(v.z < min.z)
+			if (v.z < min.z)
 				min.z = v.z;
-			if(v.w < min.w)
+			if (v.w < min.w)
 				min.w = v.w;
-			if(v.x > max.x)
+			if (v.x > max.x)
 				max.x = v.x;
-			if(v.y > max.y)
+			if (v.y > max.y)
 				max.y = v.y;
-			if(v.z > max.z)
+			if (v.z > max.z)
 				max.z = v.z;
-			if(v.w > max.w)
+			if (v.w > max.w)
 				max.w = v.w;
 		}
 	}

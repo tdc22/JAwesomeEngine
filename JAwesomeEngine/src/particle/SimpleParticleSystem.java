@@ -42,7 +42,7 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 	public int addParticle(Vector3f position, Vector3f velocity, Vector2f size, int lifetime) {
 		return addParticle(new Particle(position, velocity, lifetime, size));
 	}
-	
+
 	public int addParticle(Particle particle) {
 		Integer pos = freevertices.poll();
 		int insertindex, insertvertex;
@@ -114,10 +114,10 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 		freevertices.add(p.vertexindex);
 		freeindices.add(p.indexindex);
 	}
-	
+
 	private final Vector3f particleright = new Vector3f();
 	private final Vector3f particleup = new Vector3f();
-	
+
 	@Override
 	public void updateParticles(int delta, float maxLifeTime) {
 		// TODO: parallel
@@ -163,9 +163,9 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 				}
 			}
 		}
-//		System.out.print("Before " + particleList.size() + " ");
-//		for(Particle p : particleList.values())
-//			System.out.print(p.distance + " ");
+		// System.out.print("Before " + particleList.size() + " ");
+		// for(Particle p : particleList.values())
+		// System.out.print(p.distance + " ");
 		if (useDepthSorting) {
 			for (int i = 1; i < particleList.size(); i++) {
 				Particle p = particleList.get(i);
@@ -177,12 +177,12 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 					int ind3 = particles.getIndex(i6 + 3);
 					int ind4 = particles.getIndex(i6 + 4);
 					int ind5 = particles.getIndex(i6 + 5);
-					
+
 					int k = i;
 					int j = i - 1;
 					Particle pj;
-					while(j >= 0 && ((pj = particleList.get(j)) == null || pj.distance < p.distance)) {
-						if(pj != null) {
+					while (j >= 0 && ((pj = particleList.get(j)) == null || pj.distance < p.distance)) {
+						if (pj != null) {
 							particleList.set(k, pj);
 							int from6 = pj.indexindex * 6;
 							int to6 = k * 6;
@@ -197,10 +197,13 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 						}
 						j--;
 					}
-					/*k = j+1; // TODO: what if j+1 is null?
-					while(particleList.get(k) == null && k < i) k++;*/
-					// We don't need to reassign k because k is the origin (j) of the last swap here!
-//					if(i != k) {
+					/*
+					 * k = j+1; // TODO: what if j+1 is null? while(particleList.get(k) == null && k
+					 * < i) k++;
+					 */
+					// We don't need to reassign k because k is the origin (j) of the last swap
+					// here!
+					// if(i != k) {
 					particleList.set(k, p);
 					int k6 = k * 6;
 					particles.setIndex(k6, ind0);
@@ -210,14 +213,14 @@ public class SimpleParticleSystem extends ParticleSystem3 {
 					particles.setIndex(k6 + 4, ind4);
 					particles.setIndex(k6 + 5, ind5);
 					p.indexindex = k;
-//					}
+					// }
 				}
 			}
 		}
-//		System.out.print("After ");
-//		for(Particle p : particleList)
-//			System.out.print(p.distance + " ");
-//		System.out.println();
+		// System.out.print("After ");
+		// for(Particle p : particleList)
+		// System.out.print(p.distance + " ");
+		// System.out.println();
 		particles.prerender();
 	}
 

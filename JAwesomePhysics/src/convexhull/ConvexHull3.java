@@ -6,39 +6,39 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import collisionshape.ConvexShape;
 import math.VecMath;
 import utils.Pair;
 import vector.Vector3f;
-import collisionshape.ConvexShape;
 
 public class ConvexHull3 {
 	public static List<Vector3f> computeConvexHullVertices(List<Vector3f> points) {
 		return computeConvexHull(points).getVertices();
 	}
-	
+
 	// TODO: allow for just a limited number of iterations!!!
-	
+
 	public static ConvexShape computeConvexHull(List<Vector3f> points) {
 		initHull(points);
-		
+
 		int facesDone = 1;
 		int faceIndex = faces.size() - facesDone;
-		while(faceIndex >= 0) {
-			if(step(faceIndex)) {
+		while (faceIndex >= 0) {
+			if (step(faceIndex)) {
 				facesDone++;
 			}
 			faceIndex = faces.size() - facesDone;
 		}
-		
-		for(int i = vertices.size() - 1; i >= 0 && freeVertexPositions.size() > 0; i--) {
+
+		for (int i = vertices.size() - 1; i >= 0 && freeVertexPositions.size() > 0; i--) {
 			int newPos = freeVertexPositions.remove(0);
-			if(newPos < i) {
+			if (newPos < i) {
 				Vector3f v = vertices.set(i, null);
-				if(v != null) {
-					for(Integer adj : adjacentsMap.get(i)) {
+				if (v != null) {
+					for (Integer adj : adjacentsMap.get(i)) {
 						ArrayList<Integer> adjAdjs = adjacentsMap.get((int) adj);
-						for(int j = 0; j < adjAdjs.size(); j++) {
-							if(adjAdjs.get(j) == i) {
+						for (int j = 0; j < adjAdjs.size(); j++) {
+							if (adjAdjs.get(j) == i) {
 								adjAdjs.set(j, newPos);
 								break;
 							}
@@ -46,34 +46,32 @@ public class ConvexHull3 {
 					}
 					vertices.set(newPos, v);
 					adjacentsMap.put(newPos, adjacentsMap.remove(i));
-				}
-				else {
+				} else {
 					freeVertexPositions.add(0, newPos);
 				}
-			}
-			else {
+			} else {
 				i++;
 			}
 		}
-		for(int i = vertices.size() - 1; i >= 0; i--) {
+		for (int i = vertices.size() - 1; i >= 0; i--) {
 			Vector3f v = vertices.remove(i);
-			if(v != null) {
+			if (v != null) {
 				vertices.add(v);
 				break;
 			}
 		}
-		
+
 		HashMap<Integer, Integer[]> resultAdjacentsMap = new HashMap<Integer, Integer[]>();
-		for(Integer k : adjacentsMap.keySet()) {
+		for (Integer k : adjacentsMap.keySet()) {
 			ArrayList<Integer> adjList = adjacentsMap.get(k);
 			Integer[] adjArray = new Integer[adjList.size()];
 			adjacentsMap.get(k).toArray(adjArray);
 			resultAdjacentsMap.put(k, adjArray);
 		}
-		
+
 		return new ConvexShape(0, 0, 0, vertices, resultAdjacentsMap);
 	}
-	
+
 	private static class Triangle {
 		int a, b, c;
 		Vector3f normal;
@@ -85,7 +83,7 @@ public class ConvexHull3 {
 			this.normal = normal;
 		}
 	}
-	
+
 	private static List<Triangle> faces;
 
 	private static List<Vector3f> vertices;
@@ -95,9 +93,9 @@ public class ConvexHull3 {
 	private static ArrayList<List<Vector3f>> listsOfFacePoints;
 
 	private static HashMap<Pair<Integer, Integer>, Pair<Triangle, Triangle>> edgesToTriangles;
-	
+
 	private static Vector3f tmpvec = new Vector3f();
-	
+
 	private static void initHull(List<Vector3f> points) {
 		// Initial Phase
 		// 1. Create initial simplex
@@ -129,8 +127,7 @@ public class ConvexHull3 {
 			if (i != a && i != b) {
 				Vector3f ep = EPs[i];
 				IA.set(ep.x - A.x, ep.y - A.y, ep.z - A.z);
-				float dist = (float) VecMath.crossproduct(AB, IA, tmpvec)
-						.lengthSquared();
+				float dist = (float) VecMath.crossproduct(AB, IA, tmpvec).lengthSquared();
 				if (dist > distance) {
 					distance = dist;
 					c = i;
@@ -223,7 +220,7 @@ public class ConvexHull3 {
 			listsOfFacePoints.add(getLightPoints(faces.get(i), points));
 		}
 	}
-	
+
 	private static List<Triangle> lastremovedTriangles;
 	private static HashMap<Integer, List<Triangle>> lightFaceVerticesToTriangles;
 	private static Pair<Integer, Integer> tmppair = new Pair<Integer, Integer>(null, null);
@@ -232,9 +229,9 @@ public class ConvexHull3 {
 	private static List<Integer> removeAdj = new ArrayList<Integer>();
 	private static List<Triangle> newLightFaces = new ArrayList<Triangle>();
 	private static List<Integer> freeVertexPositions = new ArrayList<Integer>();
-	
+
 	// WELCOME TO MADNESS
-	
+
 	private static boolean step(int faceIndex) {
 		Triangle t = faces.get(faceIndex);
 		// 2. Get most distant point of the face's point set
@@ -255,8 +252,7 @@ public class ConvexHull3 {
 		if (furthestPointID == -1 || vertices.contains(furthestPoint)) { // TODO: check
 			return true;
 		}
-		
-		
+
 		facepoints.remove(furthestPointID);
 		vertices.add(furthestPoint);
 		furthestPointID = vertices.size() - 1;
@@ -310,15 +306,13 @@ public class ConvexHull3 {
 				facepoints.addAll(listsOfFacePoints.remove(i));
 			}
 		}
-		
-		
+
 		// 4.0 Remove all vertices that are only connected to lightFaceVertices
 		Iterator<Integer> iter = lightFaceVertices.iterator();
 		toRemove.clear();
 		for (int i = 0; i < lightFaceVertices.size(); i++) {
 			int vert = iter.next(); // TODO: check
-			if (lightFaceVerticesToTriangles.get(vert).size() == adjacentsMap
-					.get(vert).size()) {
+			if (lightFaceVerticesToTriangles.get(vert).size() == adjacentsMap.get(vert).size()) {
 				toRemove.add(vert);
 			}
 		}
@@ -332,15 +326,13 @@ public class ConvexHull3 {
 			vertices.set((int) i, null);
 			freeVertexPositions.add(i);
 		}
-		
-		
+
 		// 4.1 Get vertices on border between lit and unlit triangles
 		HashSet<Integer> vertsOnEdge = new HashSet<Integer>(); // HAS TO BE REINITIALIZED
 		for (Integer vert : lightFaceVertices) {
 			vertsOnEdge.add(vert);
 		}
-		
-		
+
 		// 4.2 Get edges on border
 		int currentVert = vertsOnEdge.iterator().next();
 		edge.clear(); // TODO: make HashSet (no! has to be ordered list!)
@@ -348,17 +340,14 @@ public class ConvexHull3 {
 			edge.add(currentVert);
 			ArrayList<Integer> adjs = adjacentsMap.get(currentVert);
 
-			List<Triangle> vertexLightTriangles = lightFaceVerticesToTriangles
-					.get(currentVert);
+			List<Triangle> vertexLightTriangles = lightFaceVerticesToTriangles.get(currentVert);
 			for (int j = 0; j < adjs.size(); j++) {
 				Integer currAdj = adjs.get(j);
 				if (vertsOnEdge.contains(currAdj) && !edge.contains(currAdj)) {
 					int tricount = 0;
-					for (int k = 0; k < vertexLightTriangles.size()
-							&& tricount < 2; k++) {
+					for (int k = 0; k < vertexLightTriangles.size() && tricount < 2; k++) {
 						Triangle kTri = vertexLightTriangles.get(k);
-						if (kTri.a == currAdj || kTri.b == currAdj
-								|| kTri.c == currAdj) {
+						if (kTri.a == currAdj || kTri.b == currAdj || kTri.c == currAdj) {
 							tricount++;
 						}
 					}
@@ -369,8 +358,7 @@ public class ConvexHull3 {
 				}
 			}
 		}
-		
-		
+
 		// 4.2.1 remove old adjacents (crossing triangle hole)
 		int edgesize = edge.size();
 		int edgesizeMinusOne = edgesize - 1;
@@ -380,17 +368,13 @@ public class ConvexHull3 {
 			for (Integer adj : adjacentsMap.get(currentVert)) {
 				if (edge.contains(adj)) {
 					int adjIndexOnEdge = edge.indexOf(adj);
-					if (Math.abs(i - adjIndexOnEdge) > 1
-							&& !(i == 0 && adjIndexOnEdge == edgesizeMinusOne)
+					if (Math.abs(i - adjIndexOnEdge) > 1 && !(i == 0 && adjIndexOnEdge == edgesizeMinusOne)
 							&& !(i == edgesizeMinusOne && adjIndexOnEdge == 0)) {
 						tmppair.set(currentVert, adj);
-						Pair<Triangle, Triangle> edgeTriangles = edgesToTriangles
-								.get(tmppair);
+						Pair<Triangle, Triangle> edgeTriangles = edgesToTriangles.get(tmppair);
 						// TODO: performance
-						if (lastremovedTriangles.contains(edgeTriangles
-								.getFirst())
-								&& lastremovedTriangles.contains(edgeTriangles
-										.getSecond())) {
+						if (lastremovedTriangles.contains(edgeTriangles.getFirst())
+								&& lastremovedTriangles.contains(edgeTriangles.getSecond())) {
 							removeAdj.add(adj);
 							edgesToTriangles.remove(edgeTriangles);
 						}
@@ -401,8 +385,7 @@ public class ConvexHull3 {
 				adjacentsMap.get(currentVert).remove(removAdjacent);
 			}
 		}
-		
-		
+
 		// 4.3 Stitch holes using edge
 		newLightFaces.clear();
 		ArrayList<Integer> furthestPointNeighbours = new ArrayList<Integer>(edge.size());
@@ -430,12 +413,10 @@ public class ConvexHull3 {
 			Vector3f norm = VecMath.computeNormal(vA, vB, furthestPoint);
 			Triangle stitchTriangle;
 			if (correctOrientation) {
-				stitchTriangle = new Triangle(vertIDa, vertIDb,
-						furthestPointID, norm);
+				stitchTriangle = new Triangle(vertIDa, vertIDb, furthestPointID, norm);
 			} else {
 				norm.negate();
-				stitchTriangle = new Triangle(vertIDa, furthestPointID,
-						vertIDb, norm);
+				stitchTriangle = new Triangle(vertIDa, furthestPointID, vertIDb, norm);
 			}
 			faces.add(0, stitchTriangle);
 			newLightFaces.add(stitchTriangle);
@@ -443,8 +424,7 @@ public class ConvexHull3 {
 			// Update adjacents map
 			adjacentsMap.get(vertIDa).add(furthestPointID);
 			tmppair.set(vertIDa, vertIDb);
-			Pair<Triangle, Triangle> oldEdgeInfo = edgesToTriangles
-					.get(tmppair);
+			Pair<Triangle, Triangle> oldEdgeInfo = edgesToTriangles.get(tmppair);
 			// find out which triangle got deleted
 			if (lastremovedTriangles.contains(oldEdgeInfo.getFirst())) {
 				oldEdgeInfo.setFirst(stitchTriangle);
@@ -457,9 +437,8 @@ public class ConvexHull3 {
 				oldEdgeInfo.setSecond(stitchTriangle);
 			} else {
 				// TODO: just relevant for first iteration, move before loop
-				edgesToTriangles.put(new Pair<Integer, Integer>(vertIDa,
-						furthestPointID), new Pair<Triangle, Triangle>(
-						null, stitchTriangle));
+				edgesToTriangles.put(new Pair<Integer, Integer>(vertIDa, furthestPointID),
+						new Pair<Triangle, Triangle>(null, stitchTriangle));
 			}
 			tmppair.set(vertIDb, furthestPointID);
 			oldEdgeInfo = edgesToTriangles.get(tmppair);
@@ -467,14 +446,12 @@ public class ConvexHull3 {
 				// TODO: just relevant for last iteration
 				oldEdgeInfo.setFirst(stitchTriangle);
 			} else {
-				edgesToTriangles.put(new Pair<Integer, Integer>(vertIDb,
-						furthestPointID), new Pair<Triangle, Triangle>(
-						stitchTriangle, null));
+				edgesToTriangles.put(new Pair<Integer, Integer>(vertIDb, furthestPointID),
+						new Pair<Triangle, Triangle>(stitchTriangle, null));
 			}
 			furthestPointNeighbours.add(vertIDa);
 		}
-		
-		
+
 		// 5. Assign all points of all light-faces to the new created faces
 		adjacentsMap.put(furthestPointID, furthestPointNeighbours);
 
@@ -485,12 +462,12 @@ public class ConvexHull3 {
 		// 6. Push new created faces on the stack and start at (1))
 		return false;
 	}
-	
+
 	private static Vector3f[] getExtremePoints(List<Vector3f> points) {
 		Vector3f[] result = new Vector3f[6];
 
 		Vector3f initial = points.get(0);
-		for(int i = 0; i < 6; i++)
+		for (int i = 0; i < 6; i++)
 			result[i] = initial;
 
 		for (Vector3f p : points) {
@@ -516,17 +493,16 @@ public class ConvexHull3 {
 
 		return result;
 	}
-	
+
 	private static ArrayList<Integer> createArrayList(Integer... initialValues) {
 		ArrayList<Integer> result = new ArrayList<Integer>();
-		for(Integer a : initialValues) {
+		for (Integer a : initialValues) {
 			result.add(a);
 		}
 		return result;
 	}
-	
-	private static List<Vector3f> getLightPoints(Triangle triangle,
-			List<Vector3f> points) {
+
+	private static List<Vector3f> getLightPoints(Triangle triangle, List<Vector3f> points) {
 		Vector3f A = vertices.get(triangle.a);
 		ArrayList<Vector3f> result = new ArrayList<Vector3f>();
 		for (int i = points.size() - 1; i >= 0; i--) {
@@ -538,7 +514,7 @@ public class ConvexHull3 {
 		}
 		return result;
 	}
-	
+
 	private static boolean linearIndependent(Vector3f a, Vector3f b, Vector3f c) {
 		// ((x1*y2 - x2*y1) != 0 || (x1*z2 - x2*z1) != 0 || (y1*z2 - y2*z1) != 0
 		// x1 = ab, x2 = ac
@@ -548,7 +524,6 @@ public class ConvexHull3 {
 		float x2 = c.x - a.x;
 		float y2 = c.y - a.y;
 		float z2 = c.z - a.z;
-		return ((x1 * y2 - x2 * y1) != 0 || (x1 * z2 - x2 * z1) != 0 || (y1
-				* z2 - y2 * z1) != 0);
+		return ((x1 * y2 - x2 * y1) != 0 || (x1 * z2 - x2 * z1) != 0 || (y1 * z2 - y2 * z1) != 0);
 	}
 }

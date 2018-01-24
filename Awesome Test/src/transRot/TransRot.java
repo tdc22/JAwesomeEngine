@@ -38,7 +38,7 @@ public class TransRot extends StandardGame {
 		bunny2 = new ShapedObject3(bunnymodel);
 		defaultshader.addObject(bunny1);
 		defaultshader.addObject(bunny2);
-		
+
 		bunny1.translateTo(-10, 0, 0);
 		bunny2.translateTo(10, 0, 0);
 
@@ -74,7 +74,7 @@ public class TransRot extends StandardGame {
 
 		float speed = 0.02f * delta;
 		bunny1.rotate(speed, speed, speed);
-		r2y += speed/2f;
+		r2y += speed / 2f;
 		bunny2.translateTo(bunny2.getTranslation().getXf(), FastMath.sin(r2y) * 3, 0);
 	}
 

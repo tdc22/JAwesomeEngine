@@ -21,8 +21,7 @@ public interface ObjectData {
 	public static final int SHAPE_TERRAIN = 7;
 
 	/**
-	 * Gets the type of the shape in an integer. Use SHAPE constants for
-	 * comparison.
+	 * Gets the type of the shape in an integer. Use SHAPE constants for comparison.
 	 * 
 	 * @return shape type
 	 */

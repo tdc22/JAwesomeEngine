@@ -76,9 +76,8 @@ public class ConstraintSolverErin2 {
 			sum[2] += jsp(j, i + 2, 1) * V[b2 + 2];
 
 			/*
-			 * sum[0] = -jsp(j, i, 0); sum[1] = -jsp(j, i+1, 0); sum[2] = jsp(j,
-			 * i+2, 0); sum[3] = -jsp(j, i, 1); sum[4] = -jsp(j, i+1, 1); sum[5]
-			 * = jsp(j, i+2, 1);
+			 * sum[0] = -jsp(j, i, 0); sum[1] = -jsp(j, i+1, 0); sum[2] = jsp(j, i+2, 0);
+			 * sum[3] = -jsp(j, i, 1); sum[4] = -jsp(j, i+1, 1); sum[5] = jsp(j, i+2, 1);
 			 */
 			C[i * 3 + 0] = sum[0];
 			C[i * 3 + 1] = sum[1];

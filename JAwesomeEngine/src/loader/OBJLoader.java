@@ -112,7 +112,7 @@ public class OBJLoader {
 				writer.newLine();
 			}
 		}
-		
+
 		List<Integer[]> faces = new ArrayList<Integer[]>();
 		List<VertexStructure> vertices = new ArrayList<VertexStructure>();
 		VertexStructure tmpVert = new VertexStructure(-1, -1, -1);
@@ -285,16 +285,16 @@ public class OBJLoader {
 
 		return object;
 	}
-	
+
 	private static class VertexStructure {
 		int vertID, normalID, texCoordID;
-		
+
 		private VertexStructure(int vertID, int normalID, int texCoordID) {
 			this.vertID = vertID;
 			this.normalID = normalID;
 			this.texCoordID = texCoordID;
 		}
-		
+
 		@Override
 		public boolean equals(Object other) {
 			if (this == other)
@@ -302,12 +302,13 @@ public class OBJLoader {
 			if (other == null)
 				return false;
 			if (other instanceof VertexStructure) {
-				return (this.vertID == ((VertexStructure)other).vertID && this.normalID == ((VertexStructure)other).normalID &&
-						this.texCoordID == ((VertexStructure)other).texCoordID);
+				return (this.vertID == ((VertexStructure) other).vertID
+						&& this.normalID == ((VertexStructure) other).normalID
+						&& this.texCoordID == ((VertexStructure) other).texCoordID);
 			}
 			return false;
 		}
-		
+
 		// TODO: think about this. Less collisions = more performance in HashMap
 		@Override
 		public int hashCode() {
@@ -317,7 +318,7 @@ public class OBJLoader {
 			hash = hash * 31 + texCoordID;
 			return hash;
 		}
-		
+
 		public void set(int vertID, int normalID, int texCoordID) {
 			this.vertID = vertID;
 			this.normalID = normalID;

@@ -136,7 +136,7 @@ public class CollisionDetectionTest extends StandardGame {
 		rb6 = new RigidBody3(new HalfSphereShape(10, -10, 0, 1));
 		space.addRigidBody(hs, rb6);
 		s6.addObject(hs);
-		
+
 		bunny = ModelLoader.load("res/models/bunny_lowpoly.mobj");
 		bunny.translateTo(20, 0, 0);
 		rb7 = new RigidBody3(PhysicsShapeCreator.createHull(bunny));

@@ -42,8 +42,8 @@ public abstract class ParticleSource<L extends Vector, A extends Vector> impleme
 	public ParticleSystem<L, A> getParticleSystem() {
 		return particles;
 	}
-	
+
 	public void setSpawnRate(float spawnRate) {
-		this.inverseSpawnRate = 1/spawnRate;
+		this.inverseSpawnRate = 1 / spawnRate;
 	}
 }

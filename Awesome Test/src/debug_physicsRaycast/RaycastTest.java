@@ -611,40 +611,36 @@ public class RaycastTest extends StandardGame {
 			/*
 			 * System.out.println(simplex.size());
 			 * 
-			 * if (simplex.size() == 3) { Sphere pi =
-			 * planeintersections.get(count); pi.translateTo(simplex3.get(0));
-			 * pi.setRendered(true);
+			 * if (simplex.size() == 3) { Sphere pi = planeintersections.get(count);
+			 * pi.translateTo(simplex3.get(0)); pi.setRendered(true);
 			 * 
-			 * Sphere sf = supportvectors.get(count);
-			 * sf.translateTo(simplex3.get(1)); sf.setRendered(true);
+			 * Sphere sf = supportvectors.get(count); sf.translateTo(simplex3.get(1));
+			 * sf.setRendered(true);
 			 * 
 			 * Sphere cs = firstC.get(count); cs.translateTo(simplex3.get(2));
 			 * cs.setRendered(true);
 			 * 
 			 * Circle c1 = projections.get(count * 3);
-			 * c1.translateTo(VecMath.scale(simplex.get(0), 20));
-			 * c1.translate(400, 300); c1.setRendered(true); Circle c2 =
-			 * projections.get(count * 3 + 1);
-			 * c2.translateTo(VecMath.scale(simplex.get(1), 20));
-			 * c2.translate(400, 300); c2.setRendered(true); Circle c3 =
-			 * projections.get(count * 3 + 2);
-			 * c3.translateTo(VecMath.scale(simplex.get(2), 20));
-			 * c3.translate(400, 300); c3.setRendered(true);
+			 * c1.translateTo(VecMath.scale(simplex.get(0), 20)); c1.translate(400, 300);
+			 * c1.setRendered(true); Circle c2 = projections.get(count * 3 + 1);
+			 * c2.translateTo(VecMath.scale(simplex.get(1), 20)); c2.translate(400, 300);
+			 * c2.setRendered(true); Circle c3 = projections.get(count * 3 + 2);
+			 * c3.translateTo(VecMath.scale(simplex.get(2), 20)); c3.translate(400, 300);
+			 * c3.setRendered(true);
 			 * 
 			 * Circle c4 = projections2.get(count * 3);
 			 * c4.translateTo(VecMath.scale(VecMath.addition(simplex.get(0),
-			 * centerOnPlane2), 20)); c4.translate(400, 300);
-			 * c4.setRendered(true); Circle c5 = projections2.get(count * 3 +
-			 * 1); c5.translateTo(VecMath.scale(VecMath.addition(simplex.get(1),
-			 * centerOnPlane2), 20)); c5.translate(400, 300);
-			 * c5.setRendered(true); Circle c6 = projections2.get(count * 3 +
-			 * 2); c6.translateTo(VecMath.scale(VecMath.addition(simplex.get(2),
-			 * centerOnPlane2), 20)); c6.translate(400, 300);
-			 * c6.setRendered(true);
+			 * centerOnPlane2), 20)); c4.translate(400, 300); c4.setRendered(true); Circle
+			 * c5 = projections2.get(count * 3 + 1);
+			 * c5.translateTo(VecMath.scale(VecMath.addition(simplex.get(1),
+			 * centerOnPlane2), 20)); c5.translate(400, 300); c5.setRendered(true); Circle
+			 * c6 = projections2.get(count * 3 + 2);
+			 * c6.translateTo(VecMath.scale(VecMath.addition(simplex.get(2),
+			 * centerOnPlane2), 20)); c6.translate(400, 300); c6.setRendered(true);
 			 * 
 			 * Circle c7 = projections3.get(count);
-			 * c7.translateTo(VecMath.scale(centerOnPlane2, 20));
-			 * c7.translate(400, 300); c7.setRendered(true); }
+			 * c7.translateTo(VecMath.scale(centerOnPlane2, 20)); c7.translate(400, 300);
+			 * c7.setRendered(true); }
 			 * 
 			 * count++;
 			 */
@@ -666,8 +662,7 @@ public class RaycastTest extends StandardGame {
 
 			/*
 			 * Sphere hitmarker = hitmarkers.get(count);
-			 * hitmarker.translateTo(hit.getSecond());
-			 * hitmarker.setRendered(true);
+			 * hitmarker.translateTo(hit.getSecond()); hitmarker.setRendered(true);
 			 */
 
 			// count++;

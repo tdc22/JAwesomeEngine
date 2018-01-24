@@ -1,13 +1,12 @@
 package debug_ConvexHull4_2;
 
-import gui.Color;
-
 import java.util.List;
 
+import debug_ConvexHull4_2.ConvexHullDebugger.Triangle;
+import gui.Color;
 import objects.ShapedObject3;
 import utils.GLConstants;
 import vector.Vector3f;
-import debug_ConvexHull4_2.ConvexHullDebugger.Triangle;
 
 public class Simplex extends ShapedObject3 {
 	public Simplex(List<Vector3f> vertices, List<Triangle> triangles, Triangle next) {

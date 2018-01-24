@@ -284,9 +284,9 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	public void resolveConstraints(float delta) {
 		/*
-		 * for (Constraint<L, A1, A2, A3> c : constraints) c.initStep(delta);
-		 * for (int i = 0; i < constraintResolutionIterations; i++) for
-		 * (Constraint<L, A1, A2, A3> c : constraints) c.solve(delta);
+		 * for (Constraint<L, A1, A2, A3> c : constraints) c.initStep(delta); for (int i
+		 * = 0; i < constraintResolutionIterations; i++) for (Constraint<L, A1, A2, A3>
+		 * c : constraints) c.solve(delta);
 		 */
 		// source: http://www.cs.cmu.edu/~baraff/papers/sig96.pdf
 		// http://www.bulletphysics.com/ftp/pub/test/physics/papers/IterativeDynamics.pdf

@@ -1,0 +1,27 @@
+{
+  "build": "stable",
+  "mode": "zip",
+  "selectedAddons": [],
+  "platform": [
+    "windows",
+    "macos",
+    "linux"
+  ],
+  "descriptions": true,
+  "compact": false,
+  "hardcoded": false,
+  "javadoc": false,
+  "source": false,
+  "osgi": false,
+  "language": "groovy",
+  "contents": [
+    "lwjgl",
+    "lwjgl-glfw",
+    "lwjgl-openal",
+    "lwjgl-opencl",
+    "lwjgl-opengl",
+    "lwjgl-openvr",
+    "lwjgl-sse",
+    "lwjgl-vulkan"
+  ]
+}

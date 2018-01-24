@@ -59,7 +59,6 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWWindowPosCallback;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 
 public class GLDisplay extends Display {
 	private long windowid;
@@ -101,7 +100,7 @@ public class GLDisplay extends Display {
 
 	@Override
 	public boolean isCloseRequested() {
-		return glfwWindowShouldClose(windowid) == 1;
+		return glfwWindowShouldClose(windowid);
 	}
 
 	@Override
@@ -113,7 +112,7 @@ public class GLDisplay extends Display {
 	public void open(DisplayMode displaymode, PixelFormat pixelformat) {
 		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 
-		if (glfwInit() != GL11.GL_TRUE)
+		if (glfwInit() != true)
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		// See: http://www.glfw.org/docs/latest/window.html#window_hints_values

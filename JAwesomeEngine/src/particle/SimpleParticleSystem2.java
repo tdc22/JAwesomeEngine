@@ -38,18 +38,14 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 		if (pos != null) {
 			insertpos = pos;
 			pos *= 4;
-			particles.setVertex(pos,
-					new Vector2f(position.x - particle.size.x, position.y - particle.size.y), color,
+			particles.setVertex(pos, new Vector2f(position.x - particle.size.x, position.y - particle.size.y), color,
 					topleft);
-			particles.setVertex(pos + 1,
-					new Vector2f(position.x - particle.size.x, position.y + particle.size.y), color,
-					topright);
-			particles.setVertex(pos + 2,
-					new Vector2f(position.x + particle.size.x, position.y + particle.size.y), color,
-					bottomright);
-			particles.setVertex(pos + 3,
-					new Vector2f(position.x + particle.size.x, position.y - particle.size.y), color,
-					bottomleft);
+			particles.setVertex(pos + 1, new Vector2f(position.x - particle.size.x, position.y + particle.size.y),
+					color, topright);
+			particles.setVertex(pos + 2, new Vector2f(position.x + particle.size.x, position.y + particle.size.y),
+					color, bottomright);
+			particles.setVertex(pos + 3, new Vector2f(position.x + particle.size.x, position.y - particle.size.y),
+					color, bottomleft);
 			int indexpos = insertpos * 6;
 			particles.setIndex(indexpos, pos);
 			particles.setIndex(indexpos + 1, pos + 1);
@@ -58,17 +54,13 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 			particles.setIndex(indexpos + 4, pos + 2);
 			particles.setIndex(indexpos + 5, pos + 3);
 		} else {
-			particles.addVertex(
-					new Vector2f(position.x - particle.size.x, position.y - particle.size.y), color,
+			particles.addVertex(new Vector2f(position.x - particle.size.x, position.y - particle.size.y), color,
 					topleft);
-			particles.addVertex(
-					new Vector2f(position.x - particle.size.x, position.y + particle.size.y), color,
+			particles.addVertex(new Vector2f(position.x - particle.size.x, position.y + particle.size.y), color,
 					topright);
-			particles.addVertex(
-					new Vector2f(position.x + particle.size.x, position.y + particle.size.y), color,
+			particles.addVertex(new Vector2f(position.x + particle.size.x, position.y + particle.size.y), color,
 					bottomright);
-			particles.addVertex(
-					new Vector2f(position.x + particle.size.x, position.y - particle.size.y), color,
+			particles.addVertex(new Vector2f(position.x + particle.size.x, position.y - particle.size.y), color,
 					bottomleft);
 			insertpos = particleList.size();
 			pos = insertpos * 4;
@@ -144,7 +136,7 @@ public class SimpleParticleSystem2 extends ParticleSystem2 {
 			this.lifetime = lifetime;
 			this.size = size;
 		}
-		
+
 		protected void setVertexIndex(int vertexindex) {
 			this.vertexindex = vertexindex;
 		}

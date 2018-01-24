@@ -107,9 +107,9 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 	private void updateCenterAndAABB() {
 
 		/*
-		 * Plan: 1. Calculate Center 1.1 Calculate global min and max for
-		 * Collisionshape AABBs 1.2 Calculate center from global min and max 1.3
-		 * Recalculate local translations 2. Update AABB
+		 * Plan: 1. Calculate Center 1.1 Calculate global min and max for Collisionshape
+		 * AABBs 1.2 Calculate center from global min and max 1.3 Recalculate local
+		 * translations 2. Update AABB
 		 */
 
 		Vector2f min = new Vector2f(Float.MAX_VALUE, Float.MAX_VALUE);

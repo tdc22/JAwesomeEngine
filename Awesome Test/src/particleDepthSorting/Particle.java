@@ -48,11 +48,15 @@ public class Particle extends StandardGame {
 
 		particlesource = new SimpleParticleSource(new Vector3f(0, 0, 0), new Vector3f(), new Vector3f(0, 0, 0),
 				new Vector3f(360, 360, 360), 0.001f, 0.002f, 0.3f, 0.3f, 3000, 3500, 0.1f, cam, true);
-		particlesource.getParticleSystem().getParticleObject().setRenderHints(true, true, false); // Color is important for particles as it represents lifetime
+		particlesource.getParticleSystem().getParticleObject().setRenderHints(true, true, false); // Color is important
+																									// for particles as
+																									// it represents
+																									// lifetime
 		particleshader.addObject(particlesource.getParticleSystem());
-		
+
 		particlesource2 = new SimpleParticleSource(new Vector3f(5, 0, 0), new Vector3f(), new Vector3f(0, 0, 0),
-				new Vector3f(360, 360, 360), 0.001f, 0.002f, 0.3f, 0.3f, 3000, 3500, 0.1f, cam, true); // no depth sorting!
+				new Vector3f(360, 360, 360), 0.001f, 0.002f, 0.3f, 0.3f, 3000, 3500, 0.1f, cam, true); // no depth
+																										// sorting!
 		particlesource2.getParticleSystem().getParticleObject().setRenderHints(true, true, false);
 		particleshader.addObject(particlesource2.getParticleSystem());
 	}

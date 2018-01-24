@@ -266,26 +266,23 @@ public class EPADebugger extends StandardGame {
 		// rb2 = new RigidBody3(PhysicsShapeCreator.create(s2));
 
 		/*
-		 * output: 4; Vector3f[0.5908022, 1.0959291, -0.57619476];
-		 * Vector3f[-0.03338337, -1.4683976, -0.78323746]; Vector3f[-1.0176206,
-		 * 0.1312356, 0.26089716]; Vector3f[1.1122894, -0.14214492,
-		 * -0.13434744];|; Vector3f[8.088608, -3.203665, -7.5166597];
-		 * Quaternionf[0.8605771, 0.37082738, 0.0139486715, -0.34885654];
-		 * Vector3f[8.280044, -3.325496, -6.407919]; Quaternionf[0.9584382,
-		 * 0.028309878, 0.061130494, -0.27723733] ERROR
+		 * output: 4; Vector3f[0.5908022, 1.0959291, -0.57619476]; Vector3f[-0.03338337,
+		 * -1.4683976, -0.78323746]; Vector3f[-1.0176206, 0.1312356, 0.26089716];
+		 * Vector3f[1.1122894, -0.14214492, -0.13434744];|; Vector3f[8.088608,
+		 * -3.203665, -7.5166597]; Quaternionf[0.8605771, 0.37082738, 0.0139486715,
+		 * -0.34885654]; Vector3f[8.280044, -3.325496, -6.407919];
+		 * Quaternionf[0.9584382, 0.028309878, 0.061130494, -0.27723733] ERROR
 		 */
 
 		// Test 4
 		/*
-		 * Box s1 = new Box(8.088608f, -3.203665f, -7.5166597f, 0.5f, 0.5f,
-		 * 0.5f); s1.setRotation(new Quaternionf(0.8605771, 0.37082738,
-		 * 0.0139486715, -0.34885654)); rb1 = new
-		 * RigidBody3(PhysicsShapeCreator.create(s1));
+		 * Box s1 = new Box(8.088608f, -3.203665f, -7.5166597f, 0.5f, 0.5f, 0.5f);
+		 * s1.setRotation(new Quaternionf(0.8605771, 0.37082738, 0.0139486715,
+		 * -0.34885654)); rb1 = new RigidBody3(PhysicsShapeCreator.create(s1));
 		 * 
-		 * Box s2 = new Box(8.280044f, -3.325496f, -6.407919f, 0.5f, 0.5f,
-		 * 0.5f); s2.setRotation(new Quaternionf(0.9584382, 0.028309878,
-		 * 0.061130494, -0.27723733)); rb2 = new
-		 * RigidBody3(PhysicsShapeCreator.create(s2));
+		 * Box s2 = new Box(8.280044f, -3.325496f, -6.407919f, 0.5f, 0.5f, 0.5f);
+		 * s2.setRotation(new Quaternionf(0.9584382, 0.028309878, 0.061130494,
+		 * -0.27723733)); rb2 = new RigidBody3(PhysicsShapeCreator.create(s2));
 		 */
 
 		// Test 5

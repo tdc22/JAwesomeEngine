@@ -238,9 +238,9 @@ public class RegionTest extends StandardGame {
 
 		Thread input = new Thread() {
 			/**
-			 * The thread "input" handles inputs such as: X, X, X: 3-tuple of
-			 * float numbers r*: removes the last simplex element start: starts
-			 * random point generation stop: stops random point generation
+			 * The thread "input" handles inputs such as: X, X, X: 3-tuple of float numbers
+			 * r*: removes the last simplex element start: starts random point generation
+			 * stop: stops random point generation
 			 */
 			@Override
 			public void run() {

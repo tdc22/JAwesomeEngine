@@ -342,25 +342,22 @@ public class AnimationEditor extends StandardGame {
 		}
 		if (swapPointOrder.isActive()) {
 			/*
-			 * for (int i = 0; i < paths.size(); i++) { AnimationPath ap =
-			 * paths.get(i); int halfCurveNum = (int) (ap.beziercurves.size() /
-			 * 2f); AnimationPath newpath = new AnimationPath(ap); for(int j =
-			 * 0; j < ap.beziercurves.size(); j++) { int oldCurveIndex =
-			 * (j+halfCurveNum) % ap.beziercurves.size(); BezierCurve2 swapCurve
-			 * = ap.beziercurves.get(oldCurveIndex).bezier;
+			 * for (int i = 0; i < paths.size(); i++) { AnimationPath ap = paths.get(i); int
+			 * halfCurveNum = (int) (ap.beziercurves.size() / 2f); AnimationPath newpath =
+			 * new AnimationPath(ap); for(int j = 0; j < ap.beziercurves.size(); j++) { int
+			 * oldCurveIndex = (j+halfCurveNum) % ap.beziercurves.size(); BezierCurve2
+			 * swapCurve = ap.beziercurves.get(oldCurveIndex).bezier;
 			 * newpath.addBezierCurve(new RenderedBezierCurve(new
-			 * BezierCurve2(swapCurve.getP0(), swapCurve.getP1(),
-			 * swapCurve.getP2(), swapCurve.getP3())));
-			 * newpath.markers.add(ap.markers.get(oldCurveIndex));
+			 * BezierCurve2(swapCurve.getP0(), swapCurve.getP1(), swapCurve.getP2(),
+			 * swapCurve.getP3()))); newpath.markers.add(ap.markers.get(oldCurveIndex));
 			 * newpath.markers.add(ap.markers.get(oldCurveIndex + 1));
 			 * newpath.markers.add(ap.markers.get(oldCurveIndex + 2));
 			 * newpath.markers.add(ap.markers.get(oldCurveIndex + 3));
-			 * newpath.rotationreferences.add(ap.rotationreferences.get(
-			 * oldCurveIndex)); } newpath.closed = ap.closed;
-			 * newpath.updateSquad(); newpath.updatePathMarker();
-			 * ap.textureshader.removeObject(ap.pathmarker);
-			 * ap.pathmarker.delete(); paths.set(i, newpath);
-			 * newpath.updateSquad(); } System.out.println("Swapped");
+			 * newpath.rotationreferences.add(ap.rotationreferences.get( oldCurveIndex)); }
+			 * newpath.closed = ap.closed; newpath.updateSquad();
+			 * newpath.updatePathMarker(); ap.textureshader.removeObject(ap.pathmarker);
+			 * ap.pathmarker.delete(); paths.set(i, newpath); newpath.updateSquad(); }
+			 * System.out.println("Swapped");
 			 */
 
 			System.out.println("---------- Start Output SWAPPED ----------");
