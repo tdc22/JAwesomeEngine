@@ -86,6 +86,10 @@ public class Layer implements ViewProjection {
 		shader.add(s);
 	}
 
+	public void removeShader(Shader s) {
+		shader.remove(s);
+	}
+
 	public void applyPostProcessing(Shader target, int width, int height) {
 		int iterations = 0;
 		int tex0 = framebufferMultisample.getColorTextureID();

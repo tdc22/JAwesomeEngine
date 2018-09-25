@@ -16,7 +16,6 @@ public class FileLoader {
 		try {
 			String line = reader.readLine();
 			while (line != null) {
-				System.out.println("APPEND");
 				content.append(line);
 				if ((line = reader.readLine()) != null) {
 					content.append("\n");

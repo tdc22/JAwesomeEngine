@@ -90,6 +90,18 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 		return layerInterface.shader;
 	}
 
+	public void removeShader(Shader s) {
+		layer3d.removeShader(s);
+	}
+
+	public void removeShader2d(Shader s) {
+		layer2d.removeShader(s);
+	}
+
+	public void removeShaderInterface(Shader s) {
+		layerInterface.removeShader(s);
+	}
+
 	public void addPostProcessingShader(PostProcessingShader shader) {
 		shader.getShader().addObject(screen);
 		layer3d.postProcessing.add(shader);
