@@ -3,14 +3,15 @@
   "mode": "zip",
   "selectedAddons": [],
   "platform": [
-    "windows",
+    "linux",
     "macos",
-    "linux"
+    "windows"
   ],
-  "descriptions": true,
+  "descriptions": false,
   "compact": false,
   "hardcoded": false,
   "javadoc": false,
+  "includeJSON": true,
   "source": false,
   "osgi": false,
   "language": "groovy",
@@ -22,7 +23,7 @@
     "lwjgl-opengl",
     "lwjgl-openvr",
     "lwjgl-sse",
-    "lwjgl-vulkan",
-    "lwjgl-stb"
+    "lwjgl-stb",
+    "lwjgl-vulkan"
   ]
 }
