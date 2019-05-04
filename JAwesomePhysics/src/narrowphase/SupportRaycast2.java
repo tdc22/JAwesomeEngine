@@ -19,7 +19,9 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 		}
 
 		v = Sa.supportPoint(b);
-		return dotRay(ray.getPosition(), v, b) <= 0;
+		float diffX = ray.getPosition().x - v.x;
+		float diffY = ray.getPosition().y - v.y;
+		return (diffX * b.x + diffY * b.y <= 0 && diffX * ray.getDirection().x + diffY * ray.getDirection().y <= 0);
 	}
 
 	private float dotRay(Vector2f vecA, Vector2f vecB, Vector2f vecCheck) {

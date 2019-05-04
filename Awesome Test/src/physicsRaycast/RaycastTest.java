@@ -252,7 +252,6 @@ public class RaycastTest extends StandardGame {
 
 		// Raycast broad- and narrowphase
 		Set<RaycastResult<Vector3f>> hits = space.raycastAll(ray);
-		System.out.println("Num hits: " + hits.size());
 		for (RaycastResult<Vector3f> hit : hits) {
 			RigidBody<Vector3f, ?, ?, ?> o = hit.getHitObject();
 			if (o.equals(rb1))

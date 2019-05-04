@@ -38,6 +38,9 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		// STEP 2: Project support center on plane and adjust base
 		// directions/pick start directions
 		float t0 = dotRay(Sa.getSupportCenter(), ray.getPosition(), ray.getDirection());
+		if (t0 < 0) {
+			return false;
+		}
 		Vector3f hitOfPlane = VecMath.scale(ray.getDirection(), t0);
 		hitOfPlane.translate(ray.getPosition());
 
