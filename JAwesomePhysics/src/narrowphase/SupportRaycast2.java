@@ -14,14 +14,21 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 	public boolean isColliding(SupportMap<Vector2f> Sa, Ray<Vector2f> ray) {
 		b.set(-ray.getDirection().y, ray.getDirection().x);
 
-		if (dotRay(ray.getPosition(), Sa.getSupportCenter(), b) < 0) {
+		boolean flipB = dotRay(ray.getPosition(), Sa.getSupportCenter(), b) < 0;
+		if (flipB) {
 			b.negate();
 		}
 
 		v = Sa.supportPoint(b);
-		float diffX = ray.getPosition().x - v.x;
-		float diffY = ray.getPosition().y - v.y;
-		return (diffX * b.x + diffY * b.y <= 0 && diffX * ray.getDirection().x + diffY * ray.getDirection().y <= 0);
+		float rayVx = ray.getPosition().x - v.x;
+		float rayVy = ray.getPosition().y - v.y;
+		if(rayVx * b.x + rayVy * b.y <= 0) {
+			float raySCx = ray.getPosition().x - Sa.getSupportCenter().x;
+			float raySCy = ray.getPosition().y - Sa.getSupportCenter().y;
+			float cp = (raySCy - ray.getDirection().y)*(rayVx - raySCx)-(raySCx - ray.getDirection().x) * (rayVy - raySCy);
+			return flipB ? cp >= 0 : cp <= 0;
+		}
+		return false;
 	}
 
 	private float dotRay(Vector2f vecA, Vector2f vecB, Vector2f vecCheck) {

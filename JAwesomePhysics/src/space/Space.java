@@ -339,6 +339,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 				RaycastHitResult<L> rayhit = raycastnarrowphase.computeCollision(body, ray);
 				if (rayhit.getHitDistance() < distance) {
 					result = new RaycastResult<L>(body, rayhit);
+					distance = result.getHitDistance();
 				}
 			}
 		}

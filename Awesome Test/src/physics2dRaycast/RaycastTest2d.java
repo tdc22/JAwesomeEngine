@@ -44,12 +44,12 @@ import vector.Vector4f;
 
 public class RaycastTest2d extends StandardGame {
 	PhysicsSpace2 space;
-	Quad q2, q3, q4;
+	Quad q2, q3, q4, q5;
 	Circle c, c1;
 	Ellipse e1;
-	Shader defaultshader, s1, s2, s3, s4, s5, s6, s7;
-	RigidBody2 rb1, rb2, rb3, rb4, rb5, rb6;
-	CompoundObject2 rb7;
+	Shader defaultshader, s1, s2, s3, s4, s5, s6, s7, s8;
+	RigidBody2 rb1, rb2, rb3, rb4, rb5, rb6, rb7;
+	CompoundObject2 rb8;
 	Ray2 ray;
 	RayVisualization rayVis;
 	List<Circle> hitmarkers;
@@ -71,6 +71,7 @@ public class RaycastTest2d extends StandardGame {
 		s5 = new Shader(shaderprogram);
 		s6 = new Shader(shaderprogram);
 		s7 = new Shader(shaderprogram);
+		s8 = new Shader(shaderprogram);
 		Shader hitmarkershader = new Shader(shaderprogram);
 		Shader hitnormalshader = new Shader(shaderprogram);
 
@@ -81,6 +82,7 @@ public class RaycastTest2d extends StandardGame {
 		s5.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s6.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s7.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
+		s8.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		hitmarkershader.addArgument("u_color", new Vector4f(0f, 1f, 0f, 1f));
 		hitnormalshader.addArgument("u_color", new Vector4f(0f, 0f, 1f, 1f));
 
@@ -91,6 +93,7 @@ public class RaycastTest2d extends StandardGame {
 		addShader2d(s5);
 		addShader2d(s6);
 		addShader2d(s7);
+		addShader2d(s8);
 		addShader2d(hitmarkershader);
 		addShader2d(hitnormalshader);
 
@@ -124,27 +127,33 @@ public class RaycastTest2d extends StandardGame {
 		rb4 = new RigidBody2(PhysicsShapeCreator.create(q4));
 		space.addRigidBody(q4, rb4);
 		s4.addObject(q4);
+		
+		q5 = new Quad(600, 400, 150, 10);
+		q5.rotate(20);
+		rb5 = new RigidBody2(PhysicsShapeCreator.create(q5));
+		space.addRigidBody(q5, rb5);
+		s5.addObject(q5);
 
 		c1 = new Circle(80, 80, 25, 40);
-		rb5 = new RigidBody2(PhysicsShapeCreator.create(c1));
-		space.addRigidBody(c1, rb5);
-		s5.addObject(c1);
+		rb6 = new RigidBody2(PhysicsShapeCreator.create(c1));
+		space.addRigidBody(c1, rb6);
+		s6.addObject(c1);
 
 		e1 = new Ellipse(500, 50, 50, 25, 40);
-		rb6 = new RigidBody2(PhysicsShapeCreator.create(e1));
-		space.addRigidBody(e1, rb6);
-		s6.addObject(e1);
+		rb7 = new RigidBody2(PhysicsShapeCreator.create(e1));
+		space.addRigidBody(e1, rb7);
+		s7.addObject(e1);
 
 		Quad q = new Quad(500, 500, 20, 20);
 		Circle c = new Circle(500, 500, 20, 10);
-		rb7 = new CompoundObject2(new DynamicAABBTree2Generic<CollisionShape<Vector2f, ?, ?>>());
-		rb7.addCollisionShape(PhysicsShapeCreator.create(q));
-		rb7.addCollisionShape(PhysicsShapeCreator.create(c));
-		rb7.setMass(1f);
-		rb7.setInertia(new Matrix1f(1));
-		space.addCompoundObject(rb7, new ShapedObject2[] { q, c });
-		s7.addObject(q);
-		s7.addObject(c);
+		rb8 = new CompoundObject2(new DynamicAABBTree2Generic<CollisionShape<Vector2f, ?, ?>>());
+		rb8.addCollisionShape(PhysicsShapeCreator.create(q));
+		rb8.addCollisionShape(PhysicsShapeCreator.create(c));
+		rb8.setMass(1f);
+		rb8.setInertia(new Matrix1f(1));
+		space.addCompoundObject(rb8, new ShapedObject2[] { q, c });
+		s8.addObject(q);
+		s8.addObject(c);
 
 		hitmarkers = new ArrayList<Circle>();
 		for (int i = 0; i < 6; i++) {
@@ -209,6 +218,7 @@ public class RaycastTest2d extends StandardGame {
 		s5.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s6.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s7.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
+		s8.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 
 		ray.setPosition(c.getTranslation());
 		ray.setDirection(ComplexMath.transform(c.getRotation(), up));
@@ -230,6 +240,8 @@ public class RaycastTest2d extends StandardGame {
 				s6.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 			if (o.equals(rb7))
 				s7.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
+			if (o.equals(rb8))
+				s8.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 		}
 
 		Set<RaycastResult<Vector2f>> hits = space.raycastAll(ray);
@@ -254,6 +266,8 @@ public class RaycastTest2d extends StandardGame {
 				s6.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 			if (o.equals(rb7))
 				s7.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
+			if (o.equals(rb8))
+				s8.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 
 			Circle hitmarker = hitmarkers.get(c);
 			hitmarker.translateTo(hit.getHitPosition());
