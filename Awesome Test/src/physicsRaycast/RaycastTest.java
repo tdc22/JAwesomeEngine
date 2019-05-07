@@ -49,12 +49,12 @@ import vector.Vector4f;
 
 public class RaycastTest extends StandardGame {
 	PhysicsSpace space;
-	Box b1, b2, b3;
+	Box b1, b2, b3, b4;
 	Sphere sp1;
 	Cylinder c1;
 	HalfSphere hs;
-	Shader defaultshader, s1, s2, s3, s4, s5, s6;
-	RigidBody3 rb1, rb2, rb3, rb4, rb5, rb6;
+	Shader defaultshader, s1, s2, s3, s4, s5, s6, s7;
+	RigidBody3 rb1, rb2, rb3, rb4, rb5, rb6, rb7;
 	Debugger debugger;
 	PhysicsDebug physicsdebug;
 	InputEvent increaseIterations, decreaseIterations;
@@ -86,6 +86,7 @@ public class RaycastTest extends StandardGame {
 		s4 = new Shader(shaderprogram);
 		s5 = new Shader(shaderprogram);
 		s6 = new Shader(shaderprogram);
+		s7 = new Shader(shaderprogram);
 		Shader hitmarkershader = new Shader(shaderprogram);
 		Shader hitnormalshader = new Shader(shaderprogram);
 
@@ -95,6 +96,7 @@ public class RaycastTest extends StandardGame {
 		s4.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s5.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		s6.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
+		s7.addArgument("u_color", new Vector4f(1f, 1f, 1f, 1f));
 		hitmarkershader.addArgument("u_color", new Vector4f(0f, 1f, 0f, 1f));
 		hitnormalshader.addArgument("u_color", new Vector4f(0f, 0f, 1f, 1f));
 
@@ -104,6 +106,7 @@ public class RaycastTest extends StandardGame {
 		addShader(s4);
 		addShader(s5);
 		addShader(s6);
+		addShader(s7);
 		addShader(hitmarkershader);
 		addShader(hitnormalshader);
 
@@ -127,21 +130,27 @@ public class RaycastTest extends StandardGame {
 		rb3 = new RigidBody3(PhysicsShapeCreator.create(b3));
 		space.addRigidBody(b3, rb3);
 		s3.addObject(b3);
+		
+		b4 = new Box(0, -10, -20, 10f, 0.5f, 10f);
+		b4.rotate(20, 0, 0);
+		rb4 = new RigidBody3(PhysicsShapeCreator.create(b4));
+		space.addRigidBody(b4, rb4);
+		s4.addObject(b4);
 
 		sp1 = new Sphere(-10, 10, 0, 2, 36, 36);
-		rb4 = new RigidBody3(PhysicsShapeCreator.create(sp1));
-		space.addRigidBody(sp1, rb4);
-		s4.addObject(sp1);
+		rb5 = new RigidBody3(PhysicsShapeCreator.create(sp1));
+		space.addRigidBody(sp1, rb5);
+		s5.addObject(sp1);
 
 		c1 = new Cylinder(10, 10, 0, 1, 1, 36);
-		rb5 = new RigidBody3(PhysicsShapeCreator.create(c1));
-		space.addRigidBody(c1, rb5);
-		s5.addObject(c1);
+		rb6 = new RigidBody3(PhysicsShapeCreator.create(c1));
+		space.addRigidBody(c1, rb6);
+		s6.addObject(c1);
 
 		hs = new HalfSphere(10, -10, 0, 1, 36, 36);
-		rb6 = new RigidBody3(new HalfSphereShape(10, -10, 0, 1));
-		space.addRigidBody(hs, rb6);
-		s6.addObject(hs);
+		rb7 = new RigidBody3(new HalfSphereShape(10, -10, 0, 1));
+		space.addRigidBody(hs, rb7);
+		s7.addObject(hs);
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		debugger = new Debugger(inputs, defaultshader, defaultshaderInterface, font, cam);
@@ -215,6 +224,7 @@ public class RaycastTest extends StandardGame {
 		s4.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s5.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s6.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
+		s7.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 
 		if (inputs.isKeyDown("Q")) {
 			cam.translate(0, 0.002f * delta, 0);
@@ -248,6 +258,8 @@ public class RaycastTest extends StandardGame {
 				s5.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 			if (o.equals(rb6))
 				s6.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
+			if (o.equals(rb7))
+				s7.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 		}
 
 		// Raycast broad- and narrowphase
@@ -266,6 +278,8 @@ public class RaycastTest extends StandardGame {
 				s5.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 			if (o.equals(rb6))
 				s6.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
+			if (o.equals(rb7))
+				s7.setArgument(0, new Vector4f(1f, 0f, 0f, 1f));
 
 			Sphere hitsphere = hitmarkers.get(count);
 			hitsphere.translateTo(hit.getHitPosition());
