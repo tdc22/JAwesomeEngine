@@ -56,6 +56,14 @@ public class InputManager {
 		return inputreader.getMouseY();
 	}
 
+	public float getMouseWheelX() {
+		return inputreader.getMouseWheelX();
+	}
+
+	public float getMouseWheelY() {
+		return inputreader.getMouseWheelY();
+	}
+
 	public boolean isEventActive(String eventname) {
 		return inputevents.get(eventname).isActive();
 	}
@@ -74,6 +82,10 @@ public class InputManager {
 
 	public boolean isMouseMoved() {
 		return inputreader.isMouseMoved();
+	}
+
+	public boolean isMouseWheelMoved() {
+		return inputreader.isMouseWheelMoved();
 	}
 
 	public void setInputReader(InputReader inputreader) {

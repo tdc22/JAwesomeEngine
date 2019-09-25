@@ -1,7 +1,7 @@
 package input;
 
 public abstract class InputReader {
-	protected float mousex, mousey;
+	protected float mousex, mousey, mousewheelx, mousewheely;
 
 	public abstract int getGamepadCount();
 
@@ -19,6 +19,14 @@ public abstract class InputReader {
 		return mousey;
 	}
 
+	public float getMouseWheelX() {
+		return mousewheelx;
+	}
+
+	public float getMouseWheelY() {
+		return mousewheely;
+	}
+
 	public abstract boolean isGamepadButtonDown(int gamepad, String button);
 
 	public boolean isInputActive(Input input) {
@@ -28,6 +36,8 @@ public abstract class InputReader {
 			switch (input.getEventType()) {
 			case MouseInput.MOUSE_MOVED:
 				return isMouseMoved();
+			case MouseInput.MOUSE_WHEEL_MOVED:
+				return isMouseWheelMoved();
 			case MouseInput.MOUSE_BUTTON_PRESSED:
 				if (input.isFlag()) { // if event was already active during this
 					// press interval
@@ -93,9 +103,8 @@ public abstract class InputReader {
 			// Gamepad Events
 			switch (input.getEventType()) {
 			case GamepadInput.STICK_ACTIVE:
-				return getGamepadStickValue(((GamepadInput) input).getGamepadID(),
-						Integer.parseInt(((GamepadInput) input).getComponentName())) > ((GamepadInput) input)
-								.getDeadZone();
+				return getGamepadStickValue(((GamepadInput) input).getGamepadID(), Integer
+						.parseInt(((GamepadInput) input).getComponentName())) > ((GamepadInput) input).getDeadZone();
 			case GamepadInput.BUTTON_PRESSED:
 				if (input.isFlag()) { // if event was already active during this
 										// press interval
@@ -135,6 +144,10 @@ public abstract class InputReader {
 
 	public boolean isMouseMoved() {
 		return (getMouseX() != 0 || getMouseY() != 0);
+	}
+
+	public boolean isMouseWheelMoved() {
+		return (getMouseWheelX() != 0 || getMouseWheelY() != 0);
 	}
 
 	public abstract void update();

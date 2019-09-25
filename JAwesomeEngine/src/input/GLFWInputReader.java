@@ -30,19 +30,22 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWScrollCallback;
 
 public class GLFWInputReader extends InputReader {
 	List<Long> windowids;
 	HashMap<String, Integer> keys;
 	private DoubleBuffer tmpMousePosX, tmpMousePosY;
+	private float tmpMouseWheelX, tmpMouseWheelY;
 	private List<Integer> gamepads;
 	private HashMap<Integer, FloatBuffer> gamepadaxes;
 	private HashMap<Integer, ByteBuffer> gamepadbuttons;
 
 	public GLFWInputReader(Long... windowids) {
 		this.windowids = new ArrayList<Long>();
-		for (Long id : windowids)
-			this.windowids.add(id);
+		for (Long id : windowids) {
+			addWindowID(id);
+		}
 
 		tmpMousePosX = BufferUtils.createDoubleBuffer(1);
 		tmpMousePosY = BufferUtils.createDoubleBuffer(1);
@@ -57,6 +60,13 @@ public class GLFWInputReader extends InputReader {
 
 	public void addWindowID(Long windowid) {
 		windowids.add(windowid);
+		GLFW.glfwSetScrollCallback(windowid, new GLFWScrollCallback() {
+			@Override
+			public void invoke(long win, double dx, double dy) {
+				tmpMouseWheelX += dx;
+				tmpMouseWheelY += dy;
+			}
+		});
 	}
 
 	@Override
@@ -329,19 +339,18 @@ public class GLFWInputReader extends InputReader {
 	}
 
 	private void updateMouseData() {
-		double tmpmx, tmpmy;
 		mousex = 0;
 		mousey = 0;
 		for (Long id : windowids) {
 			glfwGetCursorPos(id, tmpMousePosX, tmpMousePosY);
 			tmpMousePosX.rewind();
 			tmpMousePosY.rewind();
-			tmpmx = tmpMousePosX.get(0);
-			tmpmy = tmpMousePosY.get(0);
-			if (tmpmx != 0 || tmpmy != 0) {
-				mousex += tmpmx;
-				mousey += tmpmy;
-			}
+			mousex += tmpMousePosX.get(0);
+			mousey += tmpMousePosY.get(0);
 		}
+		mousewheelx = tmpMouseWheelX;
+		mousewheely = tmpMouseWheelY;
+		tmpMouseWheelX = 0;
+		tmpMouseWheelY = 0;
 	}
 }
