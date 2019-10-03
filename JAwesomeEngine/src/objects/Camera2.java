@@ -12,9 +12,15 @@ public class Camera2 extends GameObject2 implements Camera {
 		super(pos);
 	}
 
+	private Matrix4f mat;
+
 	@Override
 	public void updateBuffer() {
-		Matrix4f mat = new Matrix4f();
+		if (mat == null) {
+			mat = new Matrix4f();
+		}
+
+		mat.setIdentity();
 		mat.setSubMatrix2(rotation.toMatrixf());
 		mat.scale(getScale());
 		mat.translate(getTranslation());

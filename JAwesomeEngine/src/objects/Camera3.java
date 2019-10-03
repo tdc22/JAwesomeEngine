@@ -1,8 +1,8 @@
 package objects;
 
-import math.QuatMath;
 import matrix.Matrix4f;
 import utils.DefaultValues;
+import utils.VectorConstants;
 import vector.Vector3f;
 
 public class Camera3 extends GameObject3 implements Camera {
@@ -65,11 +65,19 @@ public class Camera3 extends GameObject3 implements Camera {
 		rotateTo(vrot, hrot, 0);
 	}
 
+	private Matrix4f mat;
+
 	@Override
 	public void updateBuffer() {
-		direction = QuatMath.transform(rotation, new Vector3f(0, 0, -1));
+		if (mat == null) {
+			mat = new Matrix4f();
+			direction = new Vector3f();
+		}
 
-		Matrix4f mat = new Matrix4f();
+		direction.set(VectorConstants.BACK);
+		direction.transform(rotation);
+
+		mat.setIdentity();
 		mat.setSubMatrix(rotation.toMatrixf());
 		mat.scale(getScale());
 		mat.translate(getTranslation());
