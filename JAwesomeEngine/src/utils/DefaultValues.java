@@ -60,8 +60,10 @@ public class DefaultValues {
 	public static final int DEFAULT_FRAMEBUFFER_SAMPLES = 0;
 	public static final boolean DEFAULT_FRAMEBUFFER_RENDER_COLOR = true;
 	public static final boolean DEFAULT_FRAMEBUFFER_RENDER_DEPTH = true;
+	public static final boolean DEFAULT_FRAMEBUFFER_RENDER_NORMAL = false;
 	public static final boolean DEFAULT_FRAMEBUFFER_COLOR_TEXTURE = true;
 	public static final boolean DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE = true;
+	public static final boolean DEFAULT_FRAMEBUFFER_NORMAL_TEXTURE = false;
 	// Texture values
 	public static final int DEFAULT_TEXTURE_TYPE = GL_TEXTURE_2D;
 	// PostProcessingShader values

@@ -124,13 +124,13 @@ public class RaycastTest extends StandardGame {
 		rb2 = new RigidBody3(PhysicsShapeCreator.create(b2));
 		space.addRigidBody(b2, rb2);
 		s2.addObject(b2);
-		
+
 		b3 = new Box(0, -10, 0, 1.5f, 1.5f, 1.5f);
 		b3.rotate(45, 20, 0);
 		rb3 = new RigidBody3(PhysicsShapeCreator.create(b3));
 		space.addRigidBody(b3, rb3);
 		s3.addObject(b3);
-		
+
 		b4 = new Box(0, -10, -20, 10f, 0.5f, 10f);
 		b4.rotate(20, 0, 0);
 		rb4 = new RigidBody3(PhysicsShapeCreator.create(b4));

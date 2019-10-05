@@ -31,9 +31,12 @@ public class Layer implements ViewProjection {
 		postProcessing = new ArrayList<PostProcessingShader>();
 	}
 
-	public void initLayer(int resX, int resY, int samples) {
-		framebufferMultisample = new FramebufferObjectMultisample(this, resX, resY, samples);
-		framebufferPostProcessing = new FramebufferObject(this, resX, resY, 0);
+	public void initLayer(int resX, int resY, int samples, boolean renderColor, boolean renderDepth,
+			boolean renderNormal) {
+		framebufferMultisample = new FramebufferObjectMultisample(this, resX, resY, samples, renderColor, renderDepth,
+				renderNormal, renderColor, renderDepth, renderNormal);
+		framebufferPostProcessing = new FramebufferObject(this, resX, resY, 0, renderColor, renderDepth, renderNormal,
+				renderColor, renderDepth, renderNormal);
 	}
 
 	public void delete() {

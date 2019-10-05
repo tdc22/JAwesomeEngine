@@ -224,9 +224,12 @@ public abstract class StandardGame extends AbstractGame implements Updateable {
 			((GLFWInputReader) inputs.getInputReader()).addWindowID(((GLDisplay) display).getWindowID());
 
 		if (useFBO) {
-			layer3d.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples());
-			layer2d.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples());
-			layerInterface.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples());
+			layer3d.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples(), true,
+					true, false);
+			layer2d.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples(), true,
+					false, false);
+			layerInterface.initLayer(settings.getResolutionX(), settings.getResolutionY(), pixelformat.getSamples(),
+					true, false, false);
 
 			screen = new Quad(0, 0, 1, -1, false);
 			screen.setRenderHints(false, true, false);

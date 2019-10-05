@@ -1,4 +1,4 @@
-package postProcessingDepth;
+package postProcessingTextures;
 
 import display.DisplayMode;
 import display.GLDisplay;
@@ -11,18 +11,22 @@ import input.KeyInput;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
+import objects.ShapedObject3;
 import shader.PostProcessingShader;
 import shader.Shader;
 import shape.Box;
 import sound.NullSoundEnvironment;
 import texture.Texture;
 import utils.Debugger;
+import utils.DefaultValues;
 
-public class DepthTest extends StandardGame {
+public class PostProcessingTest extends StandardGame {
 	Debugger debugger;
-	InputEvent toggleMouseBind, toggleDepthPP;
-	PostProcessingShader depthPPShader;
-	boolean depthPPActive;
+	InputEvent toggleMouseBind, togglePPTexture;
+	PostProcessingShader depthPPShader, normalPPShader;
+	int shadermode;
+
+	Shader textureshader;
 
 	@Override
 	public void init() {
@@ -32,8 +36,11 @@ public class DepthTest extends StandardGame {
 		cam.setFlyCam(true);
 		cam.translateTo(0, 2, 20);
 
-		Shader defaultshader = new Shader(
-				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		layer3d.initLayer(settings.getResolutionX(), settings.getResolutionY(),
+				DefaultValues.DEFAULT_PIXELFORMAT_SAMPLES, true, true, true);
+
+		Shader defaultshader = new Shader(ShaderLoader.loadShaderFromFile("res/shaders/defaultshaderNormal.vert",
+				"res/shaders/defaultshaderNormal.frag"));
 		addShader(defaultshader);
 		Shader defaultshaderInterface = new Shader(
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
@@ -48,27 +55,44 @@ public class DepthTest extends StandardGame {
 		depthShader.addArgument(new Texture());
 		depthShader.addArgumentName("u_depthTexture");
 		depthShader.addArgument(new Texture());
+		depthShader.addArgumentName("u_normalTexture");
+		depthShader.addArgument(new Texture());
 		depthShader.addArgumentName("u_depthMin");
 		depthShader.addArgument(settings.getZNear());
 		depthShader.addArgumentName("u_depthMax");
 		depthShader.addArgument(settings.getZFar());
 
 		depthPPShader = new PostProcessingShader(depthShader, 1);
-
 		addPostProcessingShader(depthPPShader);
-		depthPPActive = true;
 
-		defaultshader.addObject(ModelLoader.load("res/models/bunny.mobj"));
+		Shader normalShader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/ppNormalshader.vert", "res/shaders/ppNormalshader.frag"));
+		normalShader.addArgumentName("u_texture");
+		normalShader.addArgument(new Texture());
+		normalShader.addArgumentName("u_depthTexture");
+		normalShader.addArgument(new Texture());
+		normalShader.addArgumentName("u_normalTexture");
+		normalShader.addArgument(new Texture());
+
+		normalPPShader = new PostProcessingShader(normalShader, 1);
+
+		shadermode = 0;
+
+		ShapedObject3 bunny = ModelLoader.load("res/models/bunny.mobj");
+		bunny.setRenderHints(true, false, true);
+		defaultshader.addObject(bunny);
 		for (int i = 0; i < 200; i++) {
-			defaultshader.addObject(new Box(0, 0, i * 2, 0.5f, 0.5f, 0.5f));
+			Box b = new Box(0, 0, i * 2, 0.5f, 0.5f, 0.5f);
+			b.setRenderHints(true, false, true);
+			defaultshader.addObject(b);
 		}
 
 		toggleMouseBind = new InputEvent("toggleMouseBind", new Input(Input.KEYBOARD_EVENT, "T", KeyInput.KEY_PRESSED));
 		inputs.addEvent(toggleMouseBind);
 
-		toggleDepthPP = new InputEvent("toggleDepthPostProcessingShader",
+		togglePPTexture = new InputEvent("toggleDepthPostProcessingShader",
 				new Input(Input.KEYBOARD_EVENT, "E", KeyInput.KEY_PRESSED));
-		inputs.addEvent(toggleDepthPP);
+		inputs.addEvent(togglePPTexture);
 	}
 
 	@Override
@@ -101,13 +125,18 @@ public class DepthTest extends StandardGame {
 				display.unbindMouse();
 		}
 
-		if (toggleDepthPP.isActive()) {
-			if (depthPPActive)
+		if (togglePPTexture.isActive()) {
+			if (shadermode == 0) {
 				removePostProcessingShader(depthPPShader);
-			else
+				addPostProcessingShader(normalPPShader);
+			} else if (shadermode == 1) {
+				removePostProcessingShader(normalPPShader);
+			} else {
 				addPostProcessingShader(depthPPShader);
-			depthPPActive = !depthPPActive;
-			System.out.println("Depth Shader active: " + depthPPActive);
+			}
+			shadermode++;
+			shadermode %= 3;
+			System.out.println("Mode active: " + shadermode);
 		}
 	}
 

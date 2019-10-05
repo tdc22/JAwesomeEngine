@@ -1,5 +1,7 @@
 package texture;
 
+import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
+import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT1;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
@@ -14,8 +16,8 @@ import objects.ViewFrustum;
 
 public class FramebufferObjectMultisample extends FramebufferObject {
 	int unsampledFramebufferID;
-	Texture unsampledColorTexture, unsampledDepthTexture;
-	int unsampledColorRBID, unsampledDepthRBID;
+	Texture unsampledColorTexture, unsampledDepthTexture, unsampledNormalTexture;
+	int unsampledColorRBID, unsampledDepthRBID, unsampledNormalRBID;
 
 	public FramebufferObjectMultisample(Layer render) {
 		super(render);
@@ -29,19 +31,32 @@ public class FramebufferObjectMultisample extends FramebufferObject {
 		super(render, width, height, samples);
 	}
 
+	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, boolean renderColor,
+			boolean renderDepth, boolean renderNormal) {
+		super(render, width, height, samples, null, renderColor, renderDepth, renderNormal);
+	}
+
+	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, boolean renderColor,
+			boolean renderDepth, boolean renderNormal, boolean renderColorToTexture, boolean renderDepthToTexture,
+			boolean renderNormalToTexture) {
+		super(render, width, height, samples, null, renderColor, renderDepth, renderNormal, renderColorToTexture,
+				renderDepthToTexture, renderNormalToTexture);
+	}
+
 	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, Camera cam) {
 		super(render, width, height, samples, cam);
 	}
 
 	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, Camera cam,
-			boolean renderColor, boolean renderDepth) {
-		super(render, width, height, samples, cam, renderColor, renderDepth);
+			boolean renderColor, boolean renderDepth, boolean renderNormal) {
+		super(render, width, height, samples, cam, renderColor, renderDepth, renderNormal);
 	}
 
 	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, Camera cam,
-			boolean renderColor, boolean renderDepth, boolean renderColorToTexture, boolean renderDepthToTexture) {
-		super(render, width, height, samples, cam, renderColor, renderDepth, renderColorToTexture,
-				renderDepthToTexture);
+			boolean renderColor, boolean renderDepth, boolean renderNormal, boolean renderColorToTexture,
+			boolean renderDepthToTexture, boolean renderNormalToTexture) {
+		super(render, width, height, samples, cam, renderColor, renderDepth, renderNormal, renderColorToTexture,
+				renderDepthToTexture, renderNormalToTexture);
 	}
 
 	public FramebufferObjectMultisample(Layer render, int width, int height, int samples, Camera cam,
@@ -75,6 +90,11 @@ public class FramebufferObjectMultisample extends FramebufferObject {
 	}
 
 	@Override
+	public Texture getNormalTexture() {
+		return unsampledNormalTexture;
+	}
+
+	@Override
 	public int getColorTextureID() {
 		return unsampledColorTexture.getTextureID();
 	}
@@ -85,11 +105,16 @@ public class FramebufferObjectMultisample extends FramebufferObject {
 	}
 
 	@Override
+	public int getNormalTextureID() {
+		return unsampledNormalTexture.getTextureID();
+	}
+
+	@Override
 	protected void init(Layer render, int width, int height, int samples, Camera camera, Texture colorbuffer,
-			ViewFrustum frustum, boolean renderColor, boolean renderDepth, boolean renderColorToTexture,
-			boolean renderDepthToTexture) {
-		super.init(render, width, height, samples, camera, null, frustum, renderColor, renderDepth,
-				renderColorToTexture, renderDepthToTexture);
+			ViewFrustum frustum, boolean renderColor, boolean renderDepth, boolean renderNormal,
+			boolean renderColorToTexture, boolean renderDepthToTexture, boolean renderNormalToTexture) {
+		super.init(render, width, height, samples, camera, null, frustum, renderColor, renderDepth, renderNormal,
+				renderColorToTexture, renderDepthToTexture, renderNormalToTexture);
 
 		unsampledFramebufferID = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, unsampledFramebufferID);
@@ -97,9 +122,9 @@ public class FramebufferObjectMultisample extends FramebufferObject {
 		// Colorbuffer
 		if (renderColor) {
 			if (renderColorToTexture) {
-				unsampledColorTexture = attachColorTexture(colorbuffer, 0);
+				unsampledColorTexture = attachColorTexture(colorbuffer, GL_COLOR_ATTACHMENT0, 0);
 			} else {
-				unsampledColorRBID = attachColorRenderbuffer(0);
+				unsampledColorRBID = attachColorRenderbuffer(GL_COLOR_ATTACHMENT0, 0);
 			}
 		}
 
@@ -109,6 +134,15 @@ public class FramebufferObjectMultisample extends FramebufferObject {
 				unsampledDepthTexture = attachDepthTexture(0);
 			} else {
 				unsampledDepthRBID = attachDepthRenderbuffer(0);
+			}
+		}
+
+		// Normalbuffer
+		if (renderNormal) {
+			if (renderNormalToTexture) {
+				unsampledNormalTexture = attachColorTexture(null, GL_COLOR_ATTACHMENT1, 0);
+			} else {
+				unsampledNormalRBID = attachColorRenderbuffer(GL_COLOR_ATTACHMENT1, 0);
 			}
 		}
 
@@ -130,6 +164,13 @@ public class FramebufferObjectMultisample extends FramebufferObject {
 				glBindRenderbuffer(GL_RENDERBUFFER, 0);
 			}
 		}
+		if (renderNormal) {
+			if (renderNormalToTexture) {
+				unsampledNormalTexture.unbind();
+			} else {
+				glBindRenderbuffer(GL_RENDERBUFFER, 0);
+			}
+		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
@@ -145,16 +186,23 @@ public class FramebufferObjectMultisample extends FramebufferObject {
 	@Override
 	public void delete() {
 		super.delete();
+		if (renderNormal) {
+			if (renderNormalToTexture) {
+				unsampledNormalTexture.delete();
+			} else {
+				glDeleteRenderbuffers(unsampledNormalRBID);
+			}
+		}
 		if (renderDepth) {
 			if (renderDepthToTexture) {
-				unsampledColorTexture.delete();
+				unsampledDepthTexture.delete();
 			} else {
 				glDeleteRenderbuffers(unsampledDepthRBID);
 			}
 		}
 		if (renderColor) {
 			if (renderColorToTexture) {
-				unsampledDepthTexture.delete();
+				unsampledColorTexture.delete();
 			} else {
 				glDeleteRenderbuffers(unsampledColorRBID);
 			}

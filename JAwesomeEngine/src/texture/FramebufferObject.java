@@ -15,14 +15,18 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glDrawBuffer;
 import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glReadBuffer;
 import static org.lwjgl.opengl.GL11.glReadPixels;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
+import static org.lwjgl.opengl.GL20.glDrawBuffers;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
+import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT1;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
@@ -63,12 +67,13 @@ import utils.DefaultValues;
 
 public class FramebufferObject {
 	Layer render;
-	int frameBufferID, colorRBID, depthRBID, samples;
-	Texture colorTexture, depthTexture;
+	int frameBufferID, colorRBID, depthRBID, normalRBID, samples;
+	Texture colorTexture, depthTexture, normalTexture;
 	int width, height;
 	IntBuffer imageData;
 	FloatBuffer viewTemp, projectionTemp;
-	boolean useCam, useFrustum, renderColor, renderDepth, renderColorToTexture, renderDepthToTexture;
+	boolean useCam, useFrustum, renderColor, renderDepth, renderNormal, renderColorToTexture, renderDepthToTexture,
+			renderNormalToTexture;
 	Camera cam;
 	ViewFrustum frustum;
 
@@ -76,56 +81,79 @@ public class FramebufferObject {
 		init(render, DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_X, DefaultValues.DEFAULT_FRAMEBUFFER_RESOLUTION_Y,
 				DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
-				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_NORMAL, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_NORMAL_TEXTURE);
 	}
 
 	public FramebufferObject(Layer render, int width, int height) {
 		init(render, width, height, DefaultValues.DEFAULT_FRAMEBUFFER_SAMPLES, null, null, null,
 				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH,
-				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_NORMAL, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_NORMAL_TEXTURE);
 	}
 
 	public FramebufferObject(Layer render, int width, int height, int samples) {
 		init(render, width, height, samples, null, null, null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_NORMAL,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_NORMAL_TEXTURE);
+	}
+
+	public FramebufferObject(Layer render, int width, int height, int samples, boolean renderColor, boolean renderDepth,
+			boolean renderNormal) {
+		init(render, width, height, samples, null, null, null, renderColor, renderDepth, renderNormal,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_NORMAL_TEXTURE);
+	}
+
+	public FramebufferObject(Layer render, int width, int height, int samples, boolean renderColor, boolean renderDepth,
+			boolean renderNormal, boolean renderColorToTexture, boolean renderDepthToTexture,
+			boolean renderNormalToTexture) {
+		init(render, width, height, samples, null, null, null, renderColor, renderDepth, renderNormal,
+				renderColorToTexture, renderDepthToTexture, renderNormalToTexture);
 	}
 
 	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam) {
 		init(render, width, height, samples, cam, null, null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_NORMAL,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_NORMAL_TEXTURE);
 	}
 
 	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam, boolean renderColor,
-			boolean renderDepth) {
-		init(render, width, height, samples, cam, null, null, renderColor, renderDepth,
-				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+			boolean renderDepth, boolean renderNormal) {
+		init(render, width, height, samples, cam, null, null, renderColor, renderDepth, renderNormal,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_NORMAL_TEXTURE);
 	}
 
 	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam, boolean renderColor,
-			boolean renderDepth, boolean renderColorToTexture, boolean renderDepthToTexture) {
-		init(render, width, height, samples, cam, null, null, renderColor, renderDepth, renderColorToTexture,
-				renderDepthToTexture);
+			boolean renderDepth, boolean renderNormal, boolean renderColorToTexture, boolean renderDepthToTexture,
+			boolean renderNormalToTexture) {
+		init(render, width, height, samples, cam, null, null, renderColor, renderDepth, renderNormal,
+				renderColorToTexture, renderDepthToTexture, renderNormalToTexture);
 	}
 
 	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam, Texture colorbuffer) {
 		init(render, width, height, samples, cam, colorbuffer, null, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_NORMAL,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_NORMAL_TEXTURE);
 	}
 
 	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam, ViewFrustum frustum) {
 		init(render, width, height, samples, cam, null, frustum, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_NORMAL,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_NORMAL_TEXTURE);
 	}
 
 	public FramebufferObject(Layer render, int width, int height, int samples, Camera cam, Texture colorbuffer,
 			ViewFrustum frustum) {
 		init(render, width, height, samples, cam, colorbuffer, frustum, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_COLOR,
-				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE,
-				DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE);
+				DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_DEPTH, DefaultValues.DEFAULT_FRAMEBUFFER_RENDER_NORMAL,
+				DefaultValues.DEFAULT_FRAMEBUFFER_COLOR_TEXTURE, DefaultValues.DEFAULT_FRAMEBUFFER_DEPTH_TEXTURE,
+				DefaultValues.DEFAULT_FRAMEBUFFER_NORMAL_TEXTURE);
 	}
 
 	public void begin() {
@@ -180,8 +208,18 @@ public class FramebufferObject {
 	public void copyTo(int targetFramebufferID, int w, int h) {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBufferID);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetFramebufferID);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, w, h, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
-				(w == width && h == height) ? GL_NEAREST : GL_LINEAR);
+		if (renderColor || renderDepth) {
+			glReadBuffer(GL_COLOR_ATTACHMENT0);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
+			glBlitFramebuffer(0, 0, width, height, 0, 0, w, h, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
+					(w == width && h == height) ? GL_NEAREST : GL_LINEAR);
+		}
+		if (renderNormal) {
+			glReadBuffer(GL_COLOR_ATTACHMENT1);
+			glDrawBuffer(GL_COLOR_ATTACHMENT1);
+			glBlitFramebuffer(0, 0, width, height, 0, 0, w, h, GL_COLOR_BUFFER_BIT,
+					(w == width && h == height) ? GL_NEAREST : GL_LINEAR);
+		}
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
@@ -189,6 +227,13 @@ public class FramebufferObject {
 	public void delete() {
 		if (useCam)
 			cam.delete();
+		if (renderNormal) {
+			if (renderNormalToTexture) {
+				normalTexture.delete();
+			} else {
+				glDeleteRenderbuffers(normalRBID);
+			}
+		}
 		if (renderDepth) {
 			if (renderDepthToTexture) {
 				depthTexture.delete();
@@ -218,12 +263,20 @@ public class FramebufferObject {
 		return depthTexture;
 	}
 
+	public Texture getNormalTexture() {
+		return normalTexture;
+	}
+
 	public IntBuffer getData() {
 		return imageData;
 	}
 
 	public Layer getRenderedLayer() {
 		return render;
+	}
+
+	public int getNormalTextureID() {
+		return normalTexture.getTextureID();
 	}
 
 	public int getDepthTextureID() {
@@ -251,16 +304,18 @@ public class FramebufferObject {
 	}
 
 	protected void init(Layer render, int width, int height, int samples, Camera camera, Texture colorbuffer,
-			ViewFrustum frustum, boolean renderColor, boolean renderDepth, boolean renderColorToTexture,
-			boolean renderDepthToTexture) {
+			ViewFrustum frustum, boolean renderColor, boolean renderDepth, boolean renderNormal,
+			boolean renderColorToTexture, boolean renderDepthToTexture, boolean renderNormalToTexture) {
 		this.render = render;
 		this.width = width;
 		this.height = height;
 		this.samples = samples;
 		this.renderColor = renderColor;
 		this.renderDepth = renderDepth;
+		this.renderNormal = renderNormal;
 		this.renderColorToTexture = renderColorToTexture;
 		this.renderDepthToTexture = renderDepthToTexture;
+		this.renderNormalToTexture = renderNormalToTexture;
 
 		if (useCam = (camera != null))
 			this.cam = camera;
@@ -272,14 +327,16 @@ public class FramebufferObject {
 
 		frameBufferID = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+		IntBuffer drawColorBuffers = BufferUtils.createIntBuffer(2);
 
 		// Colorbuffer
 		if (renderColor) {
 			if (renderColorToTexture) {
-				colorTexture = attachColorTexture(colorbuffer, samples);
+				colorTexture = attachColorTexture(colorbuffer, GL_COLOR_ATTACHMENT0, samples);
 			} else {
-				colorRBID = attachColorRenderbuffer(samples);
+				colorRBID = attachColorRenderbuffer(samples, GL_COLOR_ATTACHMENT0);
 			}
+			drawColorBuffers.put(GL_COLOR_ATTACHMENT0);
 		}
 
 		// Depthbuffer
@@ -291,6 +348,18 @@ public class FramebufferObject {
 			}
 		}
 
+		// Normalbuffer
+		if (renderNormal) {
+			if (renderNormalToTexture) {
+				normalTexture = attachColorTexture(null, GL_COLOR_ATTACHMENT1, samples);
+			} else {
+				normalRBID = attachColorRenderbuffer(GL_COLOR_ATTACHMENT1, samples);
+			}
+			drawColorBuffers.put(GL_COLOR_ATTACHMENT1);
+		}
+
+		drawColorBuffers.flip();
+		glDrawBuffers(drawColorBuffers);
 		checkFramebufferStatus();
 
 		if (renderColor) {
@@ -309,10 +378,17 @@ public class FramebufferObject {
 				glBindRenderbuffer(GL_RENDERBUFFER, 0);
 			}
 		}
+		if (renderNormal) {
+			if (renderNormalToTexture) {
+				normalTexture.unbind();
+			} else {
+				glBindRenderbuffer(GL_RENDERBUFFER, 0);
+			}
+		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	protected Texture attachColorTexture(Texture texturebuffer, int textureSamples) {
+	protected Texture attachColorTexture(Texture texturebuffer, int attachmentId, int textureSamples) {
 		Texture texture = new Texture();
 		boolean multisampledTexture = textureSamples > 0;
 		if (texturebuffer == null) {
@@ -332,12 +408,11 @@ public class FramebufferObject {
 		} else {
 			texture = texturebuffer;
 		}
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture.getTextureType(), texture.getTextureID(),
-				0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentId, texture.getTextureType(), texture.getTextureID(), 0);
 		return texture;
 	}
 
-	protected int attachColorRenderbuffer(int textureSamples) {
+	protected int attachColorRenderbuffer(int attachmentId, int textureSamples) {
 		int textureRenderbufferID = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, textureRenderbufferID);
 		if (textureSamples > 0) {
@@ -345,7 +420,7 @@ public class FramebufferObject {
 		} else {
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width, height);
 		}
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, textureRenderbufferID);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachmentId, GL_RENDERBUFFER, textureRenderbufferID);
 		return textureRenderbufferID;
 	}
 
@@ -417,6 +492,14 @@ public class FramebufferObject {
 
 	public boolean isDepthRenderedToTexture() {
 		return renderDepthToTexture;
+	}
+
+	public boolean isNormalRendered() {
+		return renderNormal;
+	}
+
+	public boolean isNormalRenderedToTexture() {
+		return renderNormalToTexture;
 	}
 
 	public void unbind() {
