@@ -88,8 +88,8 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 		buf.put(0);
 		buf.put(0);
 		buf.put(0);
-		buf.put(translation.getXf());
-		buf.put(translation.getYf());
+		buf.put(translation.getXf() + real * rotationcenter.x + imaginary * rotationcenter.y);
+		buf.put(translation.getYf() - imaginary * rotationcenter.x + real * rotationcenter.y);
 		buf.put(0);
 		buf.put(1);
 		buf.flip();
@@ -136,9 +136,11 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 
 	@Override
 	public Matrix4f getMatrix() {
-		float[][] mat = rotation.toMatrixf().getArrayf();
-		return new Matrix4f(mat[0][0] * scale.x, mat[0][1] * scale.x, 0, 0, mat[1][0] * scale.y, mat[1][1] * scale.y, 0,
-				0, 0, 0, 0, 0, translation.getXf(), translation.getYf(), 0, 1);
+		float real = getRotation().getRealf();
+		float imaginary = getRotation().getImaginaryf();
+		return new Matrix4f(real * scale.x, -imaginary * scale.x, 0, 0, imaginary * scale.y, real * scale.y, 0, 0, 0, 0,
+				0, 0, translation.getXf() + real * rotationcenter.x + imaginary * rotationcenter.y,
+				translation.getYf() - imaginary * rotationcenter.x + real * rotationcenter.y, 0, 1);
 	}
 
 	public void addVertex(Vector2f vertex) {
