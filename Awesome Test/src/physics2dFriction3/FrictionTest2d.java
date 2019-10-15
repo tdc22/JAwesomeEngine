@@ -10,7 +10,7 @@ import gui.Font;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.ShaderLoader;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager2;
 import matrix.Matrix1f;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
@@ -53,7 +53,7 @@ public class FrictionTest2d extends StandardGame {
 		addShader2d(defaultshaderInterface);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(new EPA2()), new SupportRaycast2(),
-				new ImpulseResolution(), new ProjectionCorrection(1), new SimpleManifoldManager<Vector2f>());
+				new ImpulseResolution(), new ProjectionCorrection(1), new SimpleManifoldManager2());
 		space.setGlobalGravitation(new Vector2f(0, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");

@@ -10,7 +10,7 @@ import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.InputLoader;
 import loader.ShaderLoader;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager2;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
 import narrowphase.SupportRaycast2;
@@ -26,7 +26,6 @@ import shape2d.Circle;
 import shape2d.Quad;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
-import vector.Vector2f;
 
 public class SupportFunctionTest extends StandardGame {
 	PhysicsSpace2 space;
@@ -66,7 +65,7 @@ public class SupportFunctionTest extends StandardGame {
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(new EPA2()), new SupportRaycast2(),
-				new NullResolution(), new NullCorrection(), new SimpleManifoldManager<Vector2f>());
+				new NullResolution(), new NullCorrection(), new SimpleManifoldManager2());
 
 		// q1 = new Quad(400, 200, 25, 25);
 		// rb1 = new RigidBody2(PhysicsShapeCreator.create(q1));

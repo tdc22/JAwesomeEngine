@@ -22,10 +22,11 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 		v = Sa.supportPoint(b);
 		float rayVx = ray.getPosition().x - v.x;
 		float rayVy = ray.getPosition().y - v.y;
-		if(rayVx * b.x + rayVy * b.y <= 0) {
+		if (rayVx * b.x + rayVy * b.y <= 0) {
 			float raySCx = ray.getPosition().x - Sa.getSupportCenter().x;
 			float raySCy = ray.getPosition().y - Sa.getSupportCenter().y;
-			float cp = (raySCy - ray.getDirection().y)*(rayVx - raySCx)-(raySCx - ray.getDirection().x) * (rayVy - raySCy);
+			float cp = (raySCy - ray.getDirection().y) * (rayVx - raySCx)
+					- (raySCx - ray.getDirection().x) * (rayVy - raySCy);
 			return flipB ? cp >= 0 : cp <= 0;
 		}
 		return false;

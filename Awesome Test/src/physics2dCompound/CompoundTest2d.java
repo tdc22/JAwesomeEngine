@@ -48,7 +48,7 @@ public class CompoundTest2d extends StandardGame {
 		cam.rotateTo(0, 0);
 
 		space = new PhysicsSpace2(new VerletIntegration(), new SAP2(), new GJK2(new EPA2()), new SupportRaycast2(),
-				new ImpulseResolution(), new ProjectionCorrection(1), new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
+				new ImpulseResolution(), new ProjectionCorrection(1), new MultiPointManifoldManager2()); // SimpleManifoldManager2());
 		space.setGlobalGravitation(new Vector2f(0, 120));
 
 		Shader defaultshader = new Shader(

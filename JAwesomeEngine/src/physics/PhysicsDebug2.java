@@ -15,6 +15,7 @@ import manifold.CollisionManifold;
 import math.VecMath;
 import matrix.Matrix1f;
 import objects.AABB;
+import objects.AABB2;
 import objects.GhostObject;
 import objects.RigidBody;
 import objects.ShapedObject2;
@@ -22,6 +23,7 @@ import quaternion.Complexf;
 import shader.Shader;
 import space.Space2;
 import utils.Pair;
+import utils.RotationMath;
 import vector.Vector1f;
 import vector.Vector2f;
 
@@ -80,12 +82,15 @@ public class PhysicsDebug2 {
 		AABB<Vector2f> aabb = rb.getAABB();
 		ShapedObject2 aabbobj = new ShapedObject2();
 		aabbobj.setRenderMode(GL11.GL_LINE_LOOP);
-		aabbobj.addVertex(aabb.getMin(), c);
-		aabbobj.addVertex(new Vector2f(aabb.getMin().x, aabb.getMax().y), c);
-		aabbobj.addVertex(aabb.getMax(), c);
-		aabbobj.addVertex(new Vector2f(aabb.getMax().x, aabb.getMin().y), c);
+		aabbobj.addVertex(new Vector2f(-1, -1), c);
+		aabbobj.addVertex(new Vector2f(1, -1), c);
+		aabbobj.addVertex(new Vector2f(1, 1), c);
+		aabbobj.addVertex(new Vector2f(-1, 1), c);
 		aabbobj.addIndices(0, 1, 2, 3);
 		aabbobj.prerender();
+		float axisX = aabb.getMax().x - aabb.getMin().x;
+		float axisY = aabb.getMax().y - aabb.getMin().y;
+		aabbobj.scale(axisX * 0.5f, axisY * 0.5f);
 		shader.addObject(aabbobj);
 		aabbObjects.add(new Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2>(rb, aabbobj));
 	}
@@ -202,7 +207,17 @@ public class PhysicsDebug2 {
 
 		if (showAABBs) {
 			for (Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2> aabbobj : aabbObjects) {
-				aabbobj.getSecond().translateTo(aabbobj.getFirst().getTranslation());
+				if (aabbobj.getFirst().getRotationCenter().x != 0 || aabbobj.getFirst().getRotationCenter().y != 0) {
+					AABB<Vector2f> aabb = RotationMath.calculateRotationOffsetAABB(aabbobj.getFirst(), 0.1f,
+							new AABB2());
+					float axisX = (aabb.getMax().x - aabb.getMin().x) * 0.5f;
+					float axisY = (aabb.getMax().y - aabb.getMin().y) * 0.5f;
+					System.out.println("A " + axisX + "; " + axisY + "; " + aabb.toString());
+					aabbobj.getSecond().getScale().set(axisX, axisY);
+					aabbobj.getSecond().translateTo(aabb.getMin().x + axisX, aabb.getMin().y + axisY);
+				} else {
+					aabbobj.getSecond().translateTo(aabbobj.getFirst().getTranslation());
+				}
 			}
 		}
 		if (showVelocities) {
@@ -215,8 +230,8 @@ public class PhysicsDebug2 {
 		}
 		if (showCollisionNormals) {
 			clearLastNormals();
-			List<CollisionManifold<Vector2f>> manifolds = physics.getCollisionManifolds();
-			for (CollisionManifold<Vector2f> cm : manifolds) {
+			List<CollisionManifold<Vector2f, Complexf>> manifolds = physics.getCollisionManifolds();
+			for (CollisionManifold<Vector2f, Complexf> cm : manifolds) {
 				Color c = Color.RED;
 				ShapedObject2 normal1 = new ShapedObject2();
 				ShapedObject2 normal2 = new ShapedObject2();

@@ -23,9 +23,9 @@ public class PhysicsSpace extends Space3 {
 	List<GameObject<Vector3f, Quaternionf>> addedobjects;
 
 	public PhysicsSpace(IntegrationSolver integrationsolver,
-			Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> broadphase, Narrowphase<Vector3f> narrowphase,
+			Broadphase<Vector3f, RigidBody<Vector3f, ?, Quaternionf, ?>> broadphase, Narrowphase<Vector3f> narrowphase,
 			RaycastNarrowphase<Vector3f> raycastnarrowphase, CollisionResolution collisionresolution,
-			PositionalCorrection positionalcorrection, ManifoldManager<Vector3f> manifoldmanager) {
+			PositionalCorrection positionalcorrection, ManifoldManager<Vector3f, Quaternionf> manifoldmanager) {
 		super(integrationsolver, broadphase, narrowphase, raycastnarrowphase, collisionresolution, positionalcorrection,
 				manifoldmanager);
 		addedobjects = new ArrayList<GameObject<Vector3f, Quaternionf>>();
@@ -39,6 +39,7 @@ public class PhysicsSpace extends Space3 {
 			RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
 		body.setRotation(obj.getRotation());
 		body.setTranslation(obj.getTranslation());
+		body.setRotationCenter(obj.getRotationCenter());
 		addRigidBody(body);
 		addedobjects.add(obj);
 	}
@@ -53,6 +54,7 @@ public class PhysicsSpace extends Space3 {
 			GhostObject<Vector3f, Vector3f, Quaternionf, Quaternionf> body) {
 		body.setRotation(obj.getRotation());
 		body.setTranslation(obj.getTranslation());
+		body.setRotationCenter(obj.getRotationCenter());
 		addGhostObject(body);
 	}
 

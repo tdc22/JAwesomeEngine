@@ -19,7 +19,7 @@ import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.ShaderLoader;
 import manifold.RaycastResult;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager3;
 import math.VecMath;
 import misc.HalfSphere;
 import misc.HalfSphereShape;
@@ -35,6 +35,7 @@ import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import positionalcorrection.NullCorrection;
+import quaternion.Quaternionf;
 import resolution.NullResolution;
 import shader.Shader;
 import shape.Box;
@@ -111,8 +112,7 @@ public class RaycastTest extends StandardGame {
 		addShader(hitnormalshader);
 
 		space = new PhysicsSpace(new EulerIntegration(), new DynamicAABBTree3(), new GJK(new EPA()),
-				new SupportRaycast(), new NullResolution(), new NullCorrection(),
-				new SimpleManifoldManager<Vector3f>());
+				new SupportRaycast(), new NullResolution(), new NullCorrection(), new SimpleManifoldManager3());
 		space.setCullStaticOverlaps(false);
 
 		b1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);
@@ -244,8 +244,8 @@ public class RaycastTest extends StandardGame {
 		int count = 0;
 
 		// Just raycast in broadphase
-		Set<RigidBody<Vector3f, ?, ?, ?>> broadphaseHits = space.raycastAllBroadphase(ray);
-		for (RigidBody<Vector3f, ?, ?, ?> o : broadphaseHits) {
+		Set<RigidBody<Vector3f, ?, Quaternionf, ?>> broadphaseHits = space.raycastAllBroadphase(ray);
+		for (RigidBody<Vector3f, ?, Quaternionf, ?> o : broadphaseHits) {
 			if (o.equals(rb1))
 				s1.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 			if (o.equals(rb2))

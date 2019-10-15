@@ -12,7 +12,7 @@ import integration.VerletIntegration;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager3;
 import math.QuatMath;
 import math.VecMath;
 import narrowphase.EPA;
@@ -64,7 +64,7 @@ public class ConvexTest extends StandardGame {
 		addShaderInterface(defaultshaderInterface);
 
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(new EPA()), new SupportRaycast(),
-				new ImpulseResolution(), new ProjectionCorrection(0.01f), new SimpleManifoldManager<Vector3f>());
+				new ImpulseResolution(), new ProjectionCorrection(0.01f), new SimpleManifoldManager3());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");

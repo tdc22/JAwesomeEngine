@@ -25,9 +25,9 @@ public class PhysicsSpace2 extends Space2 {
 	List<GameObject<Vector2f, Complexf>> addedobjects;
 
 	public PhysicsSpace2(IntegrationSolver integrationsolver,
-			Broadphase<Vector2f, RigidBody<Vector2f, ?, ?, ?>> broadphase, Narrowphase<Vector2f> narrowphase,
+			Broadphase<Vector2f, RigidBody<Vector2f, ?, Complexf, ?>> broadphase, Narrowphase<Vector2f> narrowphase,
 			RaycastNarrowphase<Vector2f> raycastnarrowphase, CollisionResolution collisionresolution,
-			PositionalCorrection positionalcorrection, ManifoldManager<Vector2f> manifoldmanager) {
+			PositionalCorrection positionalcorrection, ManifoldManager<Vector2f, Complexf> manifoldmanager) {
 		super(integrationsolver, broadphase, narrowphase, raycastnarrowphase, collisionresolution, positionalcorrection,
 				manifoldmanager);
 		addedobjects = new ArrayList<GameObject<Vector2f, Complexf>>();
@@ -41,6 +41,7 @@ public class PhysicsSpace2 extends Space2 {
 			RigidBody<Vector2f, Vector1f, Complexf, Matrix1f> body) {
 		body.setRotation(obj.getRotation());
 		body.setTranslation(obj.getTranslation());
+		body.setRotationCenter(obj.getRotationCenter());
 		addRigidBody(body);
 		addedobjects.add(obj);
 	}
@@ -55,6 +56,7 @@ public class PhysicsSpace2 extends Space2 {
 			GhostObject<Vector2f, Vector1f, Complexf, Matrix1f> body) {
 		body.setRotation(obj.getRotation());
 		body.setTranslation(obj.getTranslation());
+		body.setRotationCenter(obj.getRotationCenter());
 		addGhostObject(body);
 	}
 

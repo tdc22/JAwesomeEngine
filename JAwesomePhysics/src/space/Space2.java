@@ -18,10 +18,10 @@ import vector.Vector2f;
 
 public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 
-	public Space2(IntegrationSolver integrationsolver, Broadphase<Vector2f, RigidBody<Vector2f, ?, ?, ?>> broadphase,
-			Narrowphase<Vector2f> narrowphase, RaycastNarrowphase<Vector2f> raycastnarrowphase,
-			CollisionResolution collisionresolution, PositionalCorrection positionalcorrection,
-			ManifoldManager<Vector2f> manifoldmanager) {
+	public Space2(IntegrationSolver integrationsolver,
+			Broadphase<Vector2f, RigidBody<Vector2f, ?, Complexf, ?>> broadphase, Narrowphase<Vector2f> narrowphase,
+			RaycastNarrowphase<Vector2f> raycastnarrowphase, CollisionResolution collisionresolution,
+			PositionalCorrection positionalcorrection, ManifoldManager<Vector2f, Complexf> manifoldmanager) {
 		super(integrationsolver, broadphase, narrowphase, raycastnarrowphase, collisionresolution, positionalcorrection,
 				manifoldmanager);
 		globalForce = new Vector2f();
@@ -30,7 +30,7 @@ public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 
 	@Override
 	protected void correct() {
-		for (CollisionManifold<Vector2f> manifold : getCollisionManifoldsNoGhosts())
+		for (CollisionManifold<Vector2f, Complexf> manifold : getCollisionManifoldsNoGhosts())
 			positionalcorrection.correct2(manifold);
 	}
 
@@ -43,7 +43,7 @@ public class Space2 extends Space<Vector2f, Vector1f, Complexf, Matrix1f> {
 
 	@Override
 	protected void resolve() {
-		for (CollisionManifold<Vector2f> manifold : getCollisionManifoldsNoGhosts())
+		for (CollisionManifold<Vector2f, Complexf> manifold : getCollisionManifoldsNoGhosts())
 			collisionresolution.resolve2(manifold);
 	}
 

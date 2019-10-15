@@ -14,7 +14,7 @@ import input.KeyInput;
 import integration.VerletIntegration;
 import loader.FontLoader;
 import loader.ShaderLoader;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager3;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import narrowphase.SupportRaycast;
@@ -61,8 +61,8 @@ public class CompoundTest extends StandardGame {
 		addShaderInterface(defaultshaderInterface);
 
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(new EPA()), new SupportRaycast(),
-				new ImpulseResolution(), new ProjectionCorrection(0.01f), new SimpleManifoldManager<Vector3f>());// new
-																													// MultiPointManifoldManager());
+				new ImpulseResolution(), new ProjectionCorrection(0.01f), new SimpleManifoldManager3());// new
+																										// MultiPointManifoldManager());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");

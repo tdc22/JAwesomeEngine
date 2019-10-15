@@ -36,18 +36,18 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 	List<CollisionShape<Vector2f, Complexf, ?>> collisionshapes;
 	Vector2f center;
 	List<Vector2f> localtranslations;
-	Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broadphase;
+	Broadphase<Vector2f, CollisionShape<Vector2f, Complexf, ?>> broadphase;
 	boolean updated = false;
 
 	public CompoundObject2() {
 		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
 		localtranslations = new ArrayList<Vector2f>();
-		broadphase = new SAP2Generic<CollisionShape<Vector2f, ?, ?>>();
+		broadphase = new SAP2Generic<CollisionShape<Vector2f, Complexf, ?>>();
 		supportcalculator = createSupportCalculator(this);
 		center = new Vector2f();
 	}
 
-	public CompoundObject2(Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broad) {
+	public CompoundObject2(Broadphase<Vector2f, CollisionShape<Vector2f, Complexf, ?>> broad) {
 		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
 		localtranslations = new ArrayList<Vector2f>();
 		broadphase = broad;
@@ -58,7 +58,7 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 	public CompoundObject2(CollisionShape2... shapes) {
 		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
 		localtranslations = new ArrayList<Vector2f>();
-		broadphase = new SAP2Generic<CollisionShape<Vector2f, ?, ?>>();
+		broadphase = new SAP2Generic<CollisionShape<Vector2f, Complexf, ?>>();
 
 		for (CollisionShape2 cs : shapes) {
 			addCollisionShape(cs);
@@ -67,7 +67,8 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 		center = new Vector2f();
 	}
 
-	public CompoundObject2(Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> broad, CollisionShape2... shapes) {
+	public CompoundObject2(Broadphase<Vector2f, CollisionShape<Vector2f, Complexf, ?>> broad,
+			CollisionShape2... shapes) {
 		collisionshapes = new ArrayList<CollisionShape<Vector2f, Complexf, ?>>();
 		localtranslations = new ArrayList<Vector2f>();
 		broadphase = broad;
@@ -165,12 +166,12 @@ public class CompoundObject2 extends RigidBody2 implements CompoundObject<Vector
 	}
 
 	@Override
-	public Broadphase<Vector2f, CollisionShape<Vector2f, ?, ?>> getCompoundBroadphase() {
+	public Broadphase<Vector2f, CollisionShape<Vector2f, Complexf, ?>> getCompoundBroadphase() {
 		return broadphase;
 	}
 
 	@Override
-	public RigidBody<Vector2f, ?, ?, ?> getRigidBody() {
+	public RigidBody<Vector2f, ?, Complexf, ?> getRigidBody() {
 		return this;
 	}
 

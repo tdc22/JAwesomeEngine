@@ -20,7 +20,7 @@ import loader.InputLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
 import manifold.CollisionManifold;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager3;
 import misc.HalfSphere;
 import misc.HalfSphereShape;
 import narrowphase.EPA;
@@ -33,6 +33,7 @@ import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
 import positionalcorrection.NullCorrection;
+import quaternion.Quaternionf;
 import resolution.NullResolution;
 import shader.Shader;
 import shape.Box;
@@ -103,8 +104,7 @@ public class CollisionDetectionTest extends StandardGame {
 		manifolds = new ArrayList<ManifoldVisualization>();
 
 		space = new PhysicsSpace(new EulerIntegration(), new DynamicAABBTree3(), new GJK(new EPA()),
-				new SupportRaycast(), new NullResolution(), new NullCorrection(),
-				new SimpleManifoldManager<Vector3f>());
+				new SupportRaycast(), new NullResolution(), new NullCorrection(), new SimpleManifoldManager3());
 		space.setCullStaticOverlaps(false);
 
 		b1 = new Box(-1, 0, 0, 1, 1, 1);
@@ -224,8 +224,9 @@ public class CollisionDetectionTest extends StandardGame {
 		s6.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 		s7.setArgument(0, new Vector4f(1f, 1f, 1f, 1f));
 
-		Set<Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>>> overlaps = space.getOverlaps();
-		for (Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>> o : overlaps) {
+		Set<Pair<RigidBody<Vector3f, ?, Quaternionf, ?>, RigidBody<Vector3f, ?, Quaternionf, ?>>> overlaps = space
+				.getOverlaps();
+		for (Pair<RigidBody<Vector3f, ?, Quaternionf, ?>, RigidBody<Vector3f, ?, Quaternionf, ?>> o : overlaps) {
 			if (o.contains(rb1))
 				s1.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 			if (o.contains(rb2))
@@ -242,11 +243,11 @@ public class CollisionDetectionTest extends StandardGame {
 				s7.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 		}
 
-		for (CollisionManifold<Vector3f> cm : space.getCollisionManifolds()) {
+		for (CollisionManifold<Vector3f, Quaternionf> cm : space.getCollisionManifolds()) {
 			ManifoldVisualization mv = new ManifoldVisualization(cm);
 			defaultshader.addObject(mv);
 			manifolds.add(mv);
-			Pair<RigidBody<Vector3f, ?, ?, ?>, RigidBody<Vector3f, ?, ?, ?>> o = cm.getObjects();
+			Pair<RigidBody<Vector3f, ?, Quaternionf, ?>, RigidBody<Vector3f, ?, Quaternionf, ?>> o = cm.getObjects();
 			if (o.contains(rb1))
 				s1.setArgument(0, new Vector4f(1f, 0f, 0f, 0.7f));
 			if (o.contains(rb2))

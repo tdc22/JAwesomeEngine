@@ -9,7 +9,7 @@ import game.StandardGame;
 import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.ShaderLoader;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager3;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import narrowphase.SupportRaycast;
@@ -53,7 +53,7 @@ public class ImpulseTest extends StandardGame {
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(new EPA()), new SupportRaycast(),
-				new NullResolution(), new NullCorrection(), new SimpleManifoldManager<Vector3f>());
+				new NullResolution(), new NullCorrection(), new SimpleManifoldManager3());
 
 		b = new Box(0, 0, 0, 1, 1, 1);
 		rb = new RigidBody3(PhysicsShapeCreator.create(b));

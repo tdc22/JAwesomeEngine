@@ -16,7 +16,7 @@ import integration.EulerIntegration;
 import loader.InputLoader;
 import loader.ShaderLoader;
 import manifold.RaycastResult;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager2;
 import math.ComplexMath;
 import math.VecMath;
 import matrix.Matrix1f;
@@ -32,6 +32,7 @@ import objects.ShapedObject2;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace2;
 import positionalcorrection.NullCorrection;
+import quaternion.Complexf;
 import resolution.NullResolution;
 import shader.Shader;
 import shape2d.Circle;
@@ -102,8 +103,7 @@ public class RaycastTest2d extends StandardGame {
 		addShader2d(defaultshader);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new DynamicAABBTree2(), new GJK2(new EPA2()),
-				new SupportRaycast2(), new NullResolution(), new NullCorrection(),
-				new SimpleManifoldManager<Vector2f>());
+				new SupportRaycast2(), new NullResolution(), new NullCorrection(), new SimpleManifoldManager2());
 		space.setCullStaticOverlaps(false);
 
 		c = new Circle(400, 200, 10, 36);
@@ -146,7 +146,7 @@ public class RaycastTest2d extends StandardGame {
 
 		Quad q = new Quad(500, 500, 20, 20);
 		Circle c = new Circle(500, 500, 20, 10);
-		rb8 = new CompoundObject2(new DynamicAABBTree2Generic<CollisionShape<Vector2f, ?, ?>>());
+		rb8 = new CompoundObject2(new DynamicAABBTree2Generic<CollisionShape<Vector2f, Complexf, ?>>());
 		rb8.addCollisionShape(PhysicsShapeCreator.create(q));
 		rb8.addCollisionShape(PhysicsShapeCreator.create(c));
 		rb8.setMass(1f);
@@ -224,8 +224,8 @@ public class RaycastTest2d extends StandardGame {
 		ray.setDirection(ComplexMath.transform(c.getRotation(), up));
 		rayVis.updateVisualization();
 
-		Set<RigidBody<Vector2f, ?, ?, ?>> broadphaseHits = space.raycastAllBroadphase(ray);
-		for (RigidBody<Vector2f, ?, ?, ?> o : broadphaseHits) {
+		Set<RigidBody<Vector2f, ?, Complexf, ?>> broadphaseHits = space.raycastAllBroadphase(ray);
+		for (RigidBody<Vector2f, ?, Complexf, ?> o : broadphaseHits) {
 			if (o.equals(rb1))
 				s1.setArgument(0, new Vector4f(1f, 1f, 0f, 1f));
 			if (o.equals(rb2))

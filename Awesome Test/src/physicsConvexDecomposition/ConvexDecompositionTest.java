@@ -7,18 +7,19 @@ import display.GLDisplay;
 import display.PixelFormat;
 import display.VideoSettings;
 import game.StandardGame;
+import gui.Color;
 import gui.Font;
 import integration.VerletIntegration;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager3;
 import math.VecMath;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import narrowphase.SupportRaycast;
 import objects.RigidBody3;
-import objects.ShapedObject;
+import objects.ShapedObject3;
 import physics.PhysicsDebug;
 import physics.PhysicsShapeCreator;
 import physics.PhysicsSpace;
@@ -59,7 +60,7 @@ public class ConvexDecompositionTest extends StandardGame {
 		addShader2d(defaultshaderInterface);
 
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(new EPA()), new SupportRaycast(),
-				new ImpulseResolution(), new ProjectionCorrection(0.01f), new SimpleManifoldManager<Vector3f>());
+				new ImpulseResolution(), new ProjectionCorrection(0.01f), new SimpleManifoldManager3());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
@@ -72,7 +73,7 @@ public class ConvexDecompositionTest extends StandardGame {
 		space.addRigidBody(ground, rb);
 		defaultshader.addObject(ground);
 
-		ShapedObject bunny = ModelLoader.load("res/models/bunny.mobj");
+		ShapedObject3 bunny = ModelLoader.load("res/models/bunny.mobj");
 
 		HACD hacd = new HACD();
 		Vector3d[] inputVertices = new Vector3d[bunny.getVertexCount()];

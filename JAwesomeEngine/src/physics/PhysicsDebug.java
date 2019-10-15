@@ -148,8 +148,8 @@ public class PhysicsDebug {
 			}
 		}
 		if (showCollisionNormals) {
-			List<CollisionManifold<Vector3f>> manifolds = physics.getCollisionManifolds();
-			for (CollisionManifold<Vector3f> cm : manifolds) {
+			List<CollisionManifold<Vector3f, Quaternionf>> manifolds = physics.getCollisionManifolds();
+			for (CollisionManifold<Vector3f, Quaternionf> cm : manifolds) {
 				Color c = Color.RED;
 				ShapedObject3 normal1 = new ShapedObject3();
 				ShapedObject3 normal2 = new ShapedObject3();
@@ -170,8 +170,8 @@ public class PhysicsDebug {
 			}
 		}
 		if (showCollisionTangents) {
-			List<CollisionManifold<Vector3f>> manifolds = physics.getCollisionManifolds();
-			for (CollisionManifold<Vector3f> cm : manifolds) {
+			List<CollisionManifold<Vector3f, Quaternionf>> manifolds = physics.getCollisionManifolds();
+			for (CollisionManifold<Vector3f, Quaternionf> cm : manifolds) {
 				Color c = Color.GREEN;
 				ShapedObject3 tangent1 = new ShapedObject3();
 				ShapedObject3 tangent2 = new ShapedObject3();

@@ -8,7 +8,7 @@ import display.VideoSettings;
 import game.StandardGame;
 import integration.EulerIntegration;
 import loader.ShaderLoader;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager2;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
 import narrowphase.SupportRaycast2;
@@ -40,7 +40,7 @@ public class FrictionTest2d extends StandardGame {
 		addShader2d(defaultshader2);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(new EPA2()), new SupportRaycast2(),
-				new LinearImpulseResolution(), new ProjectionCorrection(), new SimpleManifoldManager<Vector2f>());
+				new LinearImpulseResolution(), new ProjectionCorrection(), new SimpleManifoldManager2());
 		space.setGlobalGravitation(new Vector2f(0, 120));
 
 		Quad ground = new Quad(400, 550, 300, 20);

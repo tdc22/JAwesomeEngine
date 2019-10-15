@@ -3,10 +3,12 @@ package broadphase;
 import objects.AABB;
 import objects.AABB2;
 import objects.CollisionShape;
+import quaternion.Complexf;
 import utils.IntersectionLibrary;
+import utils.RotationMath;
 import vector.Vector2f;
 
-public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f, ?, ?>>
+public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f, Complexf, ?>>
 		extends DynamicAABBTree<Vector2f, ObjectType> {
 
 	public class Node2 extends Node {
@@ -16,10 +18,14 @@ public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f,
 
 		public void updateAABB(float margin) {
 			if (isLeaf()) {
-				Vector2f trans = object.getTranslation();
-				AABB<Vector2f> objAABB = object.getAABB();
-				aabb.getMin().set(trans.x + objAABB.getMin().x - margin, trans.y + objAABB.getMin().y - margin);
-				aabb.getMax().set(trans.x + objAABB.getMax().x + margin, trans.y + objAABB.getMax().y + margin);
+				if (object.getRotationCenter().x != 0 || object.getRotationCenter().y != 0) {
+					RotationMath.calculateRotationOffsetAABB(object, margin, aabb);
+				} else {
+					Vector2f trans = object.getTranslation();
+					AABB<Vector2f> objAABB = object.getAABB();
+					aabb.getMin().set(trans.x + objAABB.getMin().x - margin, trans.y + objAABB.getMin().y - margin);
+					aabb.getMax().set(trans.x + objAABB.getMax().x + margin, trans.y + objAABB.getMax().y + margin);
+				}
 			} else {
 				aabb.getMin().set(Math.min(leftChild.aabb.getMin().x, rightChild.aabb.getMin().x),
 						Math.min(leftChild.aabb.getMin().y, rightChild.aabb.getMin().y));
@@ -75,14 +81,12 @@ public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f,
 		return (newmaxx - newminx) * (newmaxy - newminy);
 	}
 
+	private AABB2 intersectAABB0 = new AABB2(), intersectAABB1 = new AABB2();
+
 	@Override
 	protected boolean intersect(Node node0, Node node1) {
-		Vector2f trans0 = node0.object.getTranslation();
-		Vector2f trans1 = node1.object.getTranslation();
-		AABB<Vector2f> aabb0 = node0.object.getAABB();
-		AABB<Vector2f> aabb1 = node1.object.getAABB();
-		return IntersectionLibrary.intersects(trans0.x + aabb0.getMin().x, trans0.y + aabb0.getMin().y,
-				trans0.x + aabb0.getMax().x, trans0.y + aabb0.getMax().y, trans1.x + aabb1.getMin().x,
-				trans1.y + aabb1.getMin().y, trans1.x + aabb1.getMax().x, trans1.y + aabb1.getMax().y);
+		RotationMath.calculateRotationOffsetAABB(node0.object, intersectAABB0);
+		RotationMath.calculateRotationOffsetAABB(node1.object, intersectAABB1);
+		return IntersectionLibrary.intersects(intersectAABB0, intersectAABB1);
 	}
 }

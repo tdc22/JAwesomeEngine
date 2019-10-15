@@ -1,10 +1,10 @@
 package objects;
 
 import math.ComplexMath;
-import math.VecMath;
 import matrix.Matrix1f;
 import matrix.Matrix4f;
 import quaternion.Complexf;
+import utils.RotationMath;
 import vector.Vector1f;
 import vector.Vector2f;
 
@@ -95,17 +95,19 @@ public class GhostObject2 extends GhostObject<Vector2f, Vector1f, Complexf, Matr
 
 	@Override
 	public AABB<Vector2f> getGlobalAABB() {
-		return new AABB2(getGlobalMinAABB(), getGlobalMaxAABB());
+		AABB2 result = new AABB2();
+		RotationMath.calculateRotationOffsetAABB(this, result);
+		return result;
 	}
 
 	@Override
 	public Vector2f getGlobalMaxAABB() {
-		return VecMath.addition(aabb.getMax(), getTranslation());
+		return RotationMath.calculateRotationOffsetAABBMax(this);
 	}
 
 	@Override
 	public Vector2f getGlobalMinAABB() {
-		return VecMath.addition(aabb.getMin(), getTranslation());
+		return RotationMath.calculateRotationOffsetAABBMin(this);
 	}
 
 	@Override

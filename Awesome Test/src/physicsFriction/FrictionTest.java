@@ -10,7 +10,7 @@ import gui.Font;
 import integration.VerletIntegration;
 import loader.FontLoader;
 import loader.ShaderLoader;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager3;
 import narrowphase.EPA;
 import narrowphase.GJK;
 import narrowphase.SupportRaycast;
@@ -51,7 +51,7 @@ public class FrictionTest extends StandardGame {
 		addShaderInterface(defaultshaderInterface);
 
 		space = new PhysicsSpace(new VerletIntegration(), new SAP(), new GJK(new EPA()), new SupportRaycast(),
-				new LinearImpulseResolution(), new ProjectionCorrection(0.01f), new SimpleManifoldManager<Vector3f>());
+				new LinearImpulseResolution(), new ProjectionCorrection(0.01f), new SimpleManifoldManager3());
 		space.setGlobalGravitation(new Vector3f(0, -8f, 0));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");

@@ -61,7 +61,7 @@ public class BasicTest2d extends StandardGame {
 
 		space = new PhysicsSpace2(new VerletIntegration(), new DynamicAABBTree2(), new GJK2(new EPA2()),
 				new SupportRaycast2(), new ImpulseResolution(), new ProjectionCorrection(1),
-				new MultiPointManifoldManager2()); // SimpleManifoldManager<Vector2f>());
+				new MultiPointManifoldManager2()); // SimpleManifoldManager2());
 		space.setGlobalGravitation(new Vector2f(0, 120));
 
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");

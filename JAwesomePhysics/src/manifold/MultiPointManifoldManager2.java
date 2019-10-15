@@ -5,27 +5,28 @@ import java.util.List;
 
 import math.VecMath;
 import objects.SupportMap;
+import quaternion.Complexf;
 import vector.Vector2f;
 import vector.Vector3f;
 
-public class MultiPointManifoldManager2 extends ManifoldManager<Vector2f> {
-	final List<CollisionManifold<Vector2f>> collisionmanifolds;
-	final List<CollisionManifold<Vector2f>> collisionmanifoldsnoghosts;
+public class MultiPointManifoldManager2 extends ManifoldManager<Vector2f, Complexf> {
+	final List<CollisionManifold<Vector2f, Complexf>> collisionmanifolds;
+	final List<CollisionManifold<Vector2f, Complexf>> collisionmanifoldsnoghosts;
 	float offsetscale = 0.04f;
 
 	public MultiPointManifoldManager2() {
-		collisionmanifolds = new ArrayList<CollisionManifold<Vector2f>>();
-		collisionmanifoldsnoghosts = new ArrayList<CollisionManifold<Vector2f>>();
+		collisionmanifolds = new ArrayList<CollisionManifold<Vector2f, Complexf>>();
+		collisionmanifoldsnoghosts = new ArrayList<CollisionManifold<Vector2f, Complexf>>();
 	}
 
 	public MultiPointManifoldManager2(float offsetscale) {
 		this.offsetscale = offsetscale;
-		collisionmanifolds = new ArrayList<CollisionManifold<Vector2f>>();
-		collisionmanifoldsnoghosts = new ArrayList<CollisionManifold<Vector2f>>();
+		collisionmanifolds = new ArrayList<CollisionManifold<Vector2f, Complexf>>();
+		collisionmanifoldsnoghosts = new ArrayList<CollisionManifold<Vector2f, Complexf>>();
 	}
 
 	@Override
-	public void add(CollisionManifold<Vector2f> cm) {
+	public void add(CollisionManifold<Vector2f, Complexf> cm) {
 		Vector2f normal = cm.getCollisionNormal();
 		Vector3f offset3 = VecMath.crossproduct(new Vector3f(normal.x, normal.y, 0), new Vector3f(0, 0, 1));
 		Vector2f offset = VecMath.scale(VecMath.normalize(new Vector2f(offset3.x, offset3.y)), offsetscale);
@@ -49,9 +50,10 @@ public class MultiPointManifoldManager2 extends ManifoldManager<Vector2f> {
 		Vector2f localContactB = computeCenter(Sb.supportPointLocal(negNormalMOffset),
 				Sb.supportPointLocal(negNormalPOffset));
 
-		CollisionManifold<Vector2f> result = new CollisionManifold<Vector2f>(cm.getObjects().getFirst(),
-				cm.getObjects().getSecond(), cm.getPenetrationDepth(), normal, contactA, contactB, relativeContactA,
-				relativeContactB, localContactA, localContactB, cm.getContactTangentA(), cm.getContactTangentB());
+		CollisionManifold<Vector2f, Complexf> result = new CollisionManifold<Vector2f, Complexf>(
+				cm.getObjects().getFirst(), cm.getObjects().getSecond(), cm.getPenetrationDepth(), normal, contactA,
+				contactB, relativeContactA, relativeContactB, localContactA, localContactB, cm.getContactTangentA(),
+				cm.getContactTangentB());
 
 		collisionmanifolds.add(result);
 
@@ -73,12 +75,12 @@ public class MultiPointManifoldManager2 extends ManifoldManager<Vector2f> {
 	}
 
 	@Override
-	public List<CollisionManifold<Vector2f>> getManifolds() {
+	public List<CollisionManifold<Vector2f, Complexf>> getManifolds() {
 		return collisionmanifolds;
 	}
 
 	@Override
-	public List<CollisionManifold<Vector2f>> getManifoldsNoGhosts() {
+	public List<CollisionManifold<Vector2f, Complexf>> getManifoldsNoGhosts() {
 		return collisionmanifoldsnoghosts;
 	}
 }

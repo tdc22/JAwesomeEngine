@@ -8,7 +8,7 @@ import display.VideoSettings;
 import game.StandardGame;
 import integration.EulerIntegration;
 import loader.ShaderLoader;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager2;
 import matrix.Matrix1f;
 import narrowphase.EPA2;
 import narrowphase.GJK2;
@@ -44,7 +44,7 @@ public class ImpulseTest2d extends StandardGame {
 		addShader2d(defaultshader2);
 
 		space = new PhysicsSpace2(new EulerIntegration(), new SAP2(), new GJK2(new EPA2()), new SupportRaycast2(),
-				new NullResolution(), new NullCorrection(), new SimpleManifoldManager<Vector2f>());
+				new NullResolution(), new NullCorrection(), new SimpleManifoldManager2());
 
 		q = new Quad(400, 200, 25, 25);
 		rb = new RigidBody2(PhysicsShapeCreator.create(q));

@@ -16,10 +16,10 @@ import vector.Vector3f;
 
 public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> {
 
-	public Space3(IntegrationSolver integrationsolver, Broadphase<Vector3f, RigidBody<Vector3f, ?, ?, ?>> broadphase,
-			Narrowphase<Vector3f> narrowphase, RaycastNarrowphase<Vector3f> raycastnarrowphase,
-			CollisionResolution collisionresolution, PositionalCorrection positionalcorrection,
-			ManifoldManager<Vector3f> manifoldmanager) {
+	public Space3(IntegrationSolver integrationsolver,
+			Broadphase<Vector3f, RigidBody<Vector3f, ?, Quaternionf, ?>> broadphase, Narrowphase<Vector3f> narrowphase,
+			RaycastNarrowphase<Vector3f> raycastnarrowphase, CollisionResolution collisionresolution,
+			PositionalCorrection positionalcorrection, ManifoldManager<Vector3f, Quaternionf> manifoldmanager) {
 		super(integrationsolver, broadphase, narrowphase, raycastnarrowphase, collisionresolution, positionalcorrection,
 				manifoldmanager);
 		globalForce = new Vector3f();
@@ -28,7 +28,7 @@ public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> 
 
 	@Override
 	protected void correct() {
-		for (CollisionManifold<Vector3f> manifold : getCollisionManifoldsNoGhosts())
+		for (CollisionManifold<Vector3f, Quaternionf> manifold : getCollisionManifoldsNoGhosts())
 			positionalcorrection.correct(manifold);
 	}
 
@@ -40,7 +40,7 @@ public class Space3 extends Space<Vector3f, Vector3f, Quaternionf, Quaternionf> 
 
 	@Override
 	protected void resolve() {
-		for (CollisionManifold<Vector3f> manifold : getCollisionManifoldsNoGhosts())
+		for (CollisionManifold<Vector3f, Quaternionf> manifold : getCollisionManifoldsNoGhosts())
 			collisionresolution.resolve(manifold);
 	}
 

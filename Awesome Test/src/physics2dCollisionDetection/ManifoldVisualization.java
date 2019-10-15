@@ -4,11 +4,12 @@ import gui.Color;
 import manifold.CollisionManifold;
 import math.VecMath;
 import objects.ShapedObject2;
+import quaternion.Complexf;
 import utils.GLConstants;
 import vector.Vector2f;
 
 public class ManifoldVisualization extends ShapedObject2 {
-	ManifoldVisualization(CollisionManifold<Vector2f> cm) {
+	ManifoldVisualization(CollisionManifold<Vector2f, Complexf> cm) {
 		setRenderMode(GLConstants.LINES);
 		Vector2f ca = VecMath.subtraction(cm.getContactPointA(), cm.getObjects().getFirst().getTranslation());
 		Vector2f cb = VecMath.subtraction(cm.getContactPointB(), cm.getObjects().getSecond().getTranslation());

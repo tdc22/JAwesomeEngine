@@ -13,7 +13,7 @@ import integration.EulerIntegration;
 import loader.FontLoader;
 import loader.InputLoader;
 import loader.ShaderLoader;
-import manifold.SimpleManifoldManager;
+import manifold.SimpleManifoldManager3;
 import misc.HalfSphere;
 import misc.HalfSphereShape;
 import narrowphase.EmptyManifoldGenerator;
@@ -31,7 +31,6 @@ import shape.Cylinder;
 import shape.Sphere;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
-import vector.Vector3f;
 
 public class SupportFunctionTest extends StandardGame {
 	PhysicsSpace space;
@@ -68,8 +67,7 @@ public class SupportFunctionTest extends StandardGame {
 				FontLoader.loadFont("res/fonts/DejaVuSans.ttf"), cam);
 
 		space = new PhysicsSpace(new EulerIntegration(), new SAP(), new GJK(new EmptyManifoldGenerator()),
-				new SupportRaycast(), new NullResolution(), new NullCorrection(),
-				new SimpleManifoldManager<Vector3f>());
+				new SupportRaycast(), new NullResolution(), new NullCorrection(), new SimpleManifoldManager3());
 
 		// b1 = new Box(-1, 0, 0, 1, 1, 1);
 		b1 = new Box(0, 0, 0, 1, 1, 1); // new Sphere(0, 0, 0, 1, 36, 36);

@@ -35,18 +35,18 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 	List<CollisionShape<Vector3f, Quaternionf, ?>> collisionshapes;
 	Vector3f center;
 	List<Vector3f> localtranslations;
-	Broadphase<Vector3f, CollisionShape<Vector3f, ?, ?>> broadphase;
+	Broadphase<Vector3f, CollisionShape<Vector3f, Quaternionf, ?>> broadphase;
 	boolean updated = false;
 
 	public CompoundObject3() {
 		collisionshapes = new ArrayList<CollisionShape<Vector3f, Quaternionf, ?>>();
 		localtranslations = new ArrayList<Vector3f>();
-		broadphase = new SAPGeneric<CollisionShape<Vector3f, ?, ?>>();
+		broadphase = new SAPGeneric<CollisionShape<Vector3f, Quaternionf, ?>>();
 		supportcalculator = createSupportCalculator(this);
 		center = new Vector3f();
 	}
 
-	public CompoundObject3(Broadphase<Vector3f, CollisionShape<Vector3f, ?, ?>> broad) {
+	public CompoundObject3(Broadphase<Vector3f, CollisionShape<Vector3f, Quaternionf, ?>> broad) {
 		collisionshapes = new ArrayList<CollisionShape<Vector3f, Quaternionf, ?>>();
 		localtranslations = new ArrayList<Vector3f>();
 		broadphase = broad;
@@ -57,7 +57,7 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 	public CompoundObject3(CollisionShape3... shapes) {
 		collisionshapes = new ArrayList<CollisionShape<Vector3f, Quaternionf, ?>>();
 		localtranslations = new ArrayList<Vector3f>();
-		broadphase = new SAPGeneric<CollisionShape<Vector3f, ?, ?>>();
+		broadphase = new SAPGeneric<CollisionShape<Vector3f, Quaternionf, ?>>();
 
 		for (CollisionShape3 cs : shapes) {
 			addCollisionShape(cs);
@@ -66,7 +66,8 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 		center = new Vector3f();
 	}
 
-	public CompoundObject3(Broadphase<Vector3f, CollisionShape<Vector3f, ?, ?>> broad, CollisionShape3... shapes) {
+	public CompoundObject3(Broadphase<Vector3f, CollisionShape<Vector3f, Quaternionf, ?>> broad,
+			CollisionShape3... shapes) {
 		collisionshapes = new ArrayList<CollisionShape<Vector3f, Quaternionf, ?>>();
 		localtranslations = new ArrayList<Vector3f>();
 		broadphase = broad;
@@ -169,12 +170,12 @@ public class CompoundObject3 extends RigidBody3 implements CompoundObject<Vector
 	}
 
 	@Override
-	public Broadphase<Vector3f, CollisionShape<Vector3f, ?, ?>> getCompoundBroadphase() {
+	public Broadphase<Vector3f, CollisionShape<Vector3f, Quaternionf, ?>> getCompoundBroadphase() {
 		return broadphase;
 	}
 
 	@Override
-	public RigidBody<Vector3f, ?, ?, ?> getRigidBody() {
+	public RigidBody<Vector3f, ?, Quaternionf, ?> getRigidBody() {
 		return this;
 	}
 

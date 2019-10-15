@@ -19,7 +19,7 @@ public class LinearImpulseResolution implements CollisionResolution {
 	}
 
 	@Override
-	public void resolve(CollisionManifold<Vector3f> manifold) {
+	public void resolve(CollisionManifold<Vector3f, ?> manifold) {
 		// Linear resolution (like in SimpleLinearResolution)
 		RigidBody3 A = (RigidBody3) manifold.getObjects().getFirst();
 		RigidBody3 B = (RigidBody3) manifold.getObjects().getSecond();
@@ -67,7 +67,7 @@ public class LinearImpulseResolution implements CollisionResolution {
 	}
 
 	@Override
-	public void resolve2(CollisionManifold<Vector2f> manifold) {
+	public void resolve2(CollisionManifold<Vector2f, ?> manifold) {
 		// Linear resolution (like in SimpleLinearResolution)
 		RigidBody2 A = (RigidBody2) manifold.getObjects().getFirst();
 		RigidBody2 B = (RigidBody2) manifold.getObjects().getSecond();
