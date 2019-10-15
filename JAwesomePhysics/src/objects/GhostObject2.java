@@ -42,6 +42,7 @@ public class GhostObject2 extends GhostObject<Vector2f, Vector1f, Complexf, Matr
 	@Override
 	public Vector2f supportPointRelative(Vector2f direction) {
 		Vector2f supportRel = supportcalculator.supportPointLocal(direction);
+		supportRel.translate(getRotationCenter());
 		supportRel.transform(getRotation());
 		return supportRel;
 	}
@@ -49,6 +50,7 @@ public class GhostObject2 extends GhostObject<Vector2f, Vector1f, Complexf, Matr
 	@Override
 	public Vector2f supportPointRelativeNegative(Vector2f direction) {
 		Vector2f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
+		supportRelNeg.translate(getRotationCenter());
 		supportRelNeg.transform(getRotation());
 		return supportRelNeg;
 	}

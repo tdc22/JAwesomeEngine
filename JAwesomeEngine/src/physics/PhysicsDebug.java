@@ -37,7 +37,7 @@ public class PhysicsDebug {
 	private List<Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>> aabbObjects;
 	private List<Pair<ShapedObject3, Node3>> aabbNodeObjects;
 
-	public PhysicsDebug(InputManager inputs, Font f, Space3 physics, Shader defaultshader) {
+	public PhysicsDebug(InputManager inputs, Shader defaultshader, Font f, Space3 physics) {
 		font = f;
 		this.physics = physics;
 		this.defaultshader = defaultshader;

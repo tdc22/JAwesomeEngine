@@ -258,8 +258,8 @@ public class PortalDemo extends StandardGame {
 		crosshair.prerender();
 		crosshairshader.addObject(crosshair);
 
-		portal1body = new CompoundObject3(new DynamicAABBTree3Generic<CollisionShape<Vector3f, ?, ?>>());
-		portal2body = new CompoundObject3(new DynamicAABBTree3Generic<CollisionShape<Vector3f, ?, ?>>());
+		portal1body = new CompoundObject3(new DynamicAABBTree3Generic<CollisionShape<Vector3f, Quaternionf, ?>>());
+		portal2body = new CompoundObject3(new DynamicAABBTree3Generic<CollisionShape<Vector3f, Quaternionf, ?>>());
 		createCollisionForPortal(portal1, portal1body);
 		createCollisionForPortal(portal2, portal2body);
 
