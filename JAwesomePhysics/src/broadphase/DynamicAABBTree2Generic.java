@@ -19,7 +19,7 @@ public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f,
 		public void updateAABB(float margin) {
 			if (isLeaf()) {
 				if (object.getRotationCenter().x != 0 || object.getRotationCenter().y != 0) {
-					RotationMath.calculateRotationOffsetAABB(object, margin, aabb);
+					RotationMath.calculateRotationOffsetAABB2(object, margin, aabb);
 				} else {
 					Vector2f trans = object.getTranslation();
 					AABB<Vector2f> objAABB = object.getAABB();
@@ -81,12 +81,12 @@ public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f,
 		return (newmaxx - newminx) * (newmaxy - newminy);
 	}
 
-	private AABB2 intersectAABB0 = new AABB2(), intersectAABB1 = new AABB2();
+	private final AABB2 intersectAABB0 = new AABB2(), intersectAABB1 = new AABB2();
 
 	@Override
 	protected boolean intersect(Node node0, Node node1) {
-		RotationMath.calculateRotationOffsetAABB(node0.object, intersectAABB0);
-		RotationMath.calculateRotationOffsetAABB(node1.object, intersectAABB1);
+		RotationMath.calculateRotationOffsetAABB2(node0.object, intersectAABB0);
+		RotationMath.calculateRotationOffsetAABB2(node1.object, intersectAABB1);
 		return IntersectionLibrary.intersects(intersectAABB0, intersectAABB1);
 	}
 }

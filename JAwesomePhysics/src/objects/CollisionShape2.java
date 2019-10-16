@@ -22,18 +22,18 @@ public abstract class CollisionShape2 extends CollisionShape<Vector2f, Complexf,
 	@Override
 	public AABB<Vector2f> getGlobalAABB() {
 		AABB2 result = new AABB2();
-		RotationMath.calculateRotationOffsetAABB(this, result);
+		RotationMath.calculateRotationOffsetAABB2(this, result);
 		return result;
 	}
 
 	@Override
 	public Vector2f getGlobalMaxAABB() {
-		return RotationMath.calculateRotationOffsetAABBMax(this);
+		return RotationMath.calculateRotationOffsetAABBMax2(this);
 	}
 
 	@Override
 	public Vector2f getGlobalMinAABB() {
-		return RotationMath.calculateRotationOffsetAABBMin(this);
+		return RotationMath.calculateRotationOffsetAABBMin2(this);
 	}
 
 	@Override
@@ -68,9 +68,8 @@ public abstract class CollisionShape2 extends CollisionShape<Vector2f, Complexf,
 
 	@Override
 	public void updateInverseRotation() {
-		Complexf c = new Complexf(getRotation());
-		c.invert();
-		invrotation = c;
+		invrotation.set(getRotation());
+		invrotation.invert();
 	}
 
 	@Override

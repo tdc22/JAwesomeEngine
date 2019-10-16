@@ -208,11 +208,10 @@ public class PhysicsDebug2 {
 		if (showAABBs) {
 			for (Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2> aabbobj : aabbObjects) {
 				if (aabbobj.getFirst().getRotationCenter().x != 0 || aabbobj.getFirst().getRotationCenter().y != 0) {
-					AABB<Vector2f> aabb = RotationMath.calculateRotationOffsetAABB(aabbobj.getFirst(), 0.1f,
+					AABB<Vector2f> aabb = RotationMath.calculateRotationOffsetAABB2(aabbobj.getFirst(), 0.1f,
 							new AABB2());
 					float axisX = (aabb.getMax().x - aabb.getMin().x) * 0.5f;
 					float axisY = (aabb.getMax().y - aabb.getMin().y) * 0.5f;
-					System.out.println("A " + axisX + "; " + axisY + "; " + aabb.toString());
 					aabbobj.getSecond().getScale().set(axisX, axisY);
 					aabbobj.getSecond().translateTo(aabb.getMin().x + axisX, aabb.getMin().y + axisY);
 				} else {

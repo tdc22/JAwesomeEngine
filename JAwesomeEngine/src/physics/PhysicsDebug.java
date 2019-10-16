@@ -16,6 +16,7 @@ import input.KeyInput;
 import manifold.CollisionManifold;
 import math.VecMath;
 import objects.AABB;
+import objects.AABB3;
 import objects.GhostObject;
 import objects.RigidBody;
 import objects.ShapedObject3;
@@ -23,6 +24,7 @@ import quaternion.Quaternionf;
 import shader.Shader;
 import space.Space3;
 import utils.Pair;
+import utils.RotationMath;
 import vector.Vector3f;
 
 public class PhysicsDebug {
@@ -34,8 +36,8 @@ public class PhysicsDebug {
 	boolean showCollisionNormals = false;
 	boolean showCollisionTangents = false;
 	private InputEvent toggleAABBs, toggleCollisionNormals, toggleVelocities, toggleCollisionTangents;
-	private List<Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>> aabbObjects;
-	private List<Pair<ShapedObject3, Node3>> aabbNodeObjects;
+	private List<Pair<RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>, ShapedObject3>> aabbObjects;
+	private List<Pair<Node3, ShapedObject3>> aabbNodeObjects;
 
 	public PhysicsDebug(InputManager inputs, Shader defaultshader, Font f, Space3 physics) {
 		font = f;
@@ -45,21 +47,21 @@ public class PhysicsDebug {
 	}
 
 	private void clearAABBObjects() {
-		for (Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> obj : aabbObjects) {
-			defaultshader.removeObject(obj.getFirst());
-			obj.getFirst().delete();
+		for (Pair<RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>, ShapedObject3> obj : aabbObjects) {
+			defaultshader.removeObject(obj.getSecond());
+			obj.getSecond().delete();
 		}
 		aabbObjects.clear();
-		for (Pair<ShapedObject3, Node3> obj : aabbNodeObjects) {
-			defaultshader.removeObject(obj.getFirst());
-			obj.getFirst().delete();
+		for (Pair<Node3, ShapedObject3> obj : aabbNodeObjects) {
+			defaultshader.removeObject(obj.getSecond());
+			obj.getSecond().delete();
 		}
 		aabbNodeObjects.clear();
 	}
 
 	private void initAABBObjects() {
-		aabbObjects = new ArrayList<Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>>();
-		aabbNodeObjects = new ArrayList<Pair<ShapedObject3, Node3>>();
+		aabbObjects = new ArrayList<Pair<RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>, ShapedObject3>>();
+		aabbNodeObjects = new ArrayList<Pair<Node3, ShapedObject3>>();
 		Color c = Color.YELLOW;
 		for (RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf> rb : physics.getObjects()) {
 			addAABB(rb, c);
@@ -89,30 +91,32 @@ public class PhysicsDebug {
 		AABB<Vector3f> aabb = rb.getAABB();
 		ShapedObject3 aabbobj = new ShapedObject3();
 		addAABBShape(aabb, aabbobj, c);
-		aabbObjects.add(new Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>>(aabbobj, rb));
+		aabbObjects.add(new Pair<RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>, ShapedObject3>(rb, aabbobj));
 	}
 
 	private void addAABB(Node3 node, Color c) {
 		AABB<Vector3f> aabb = node.getAABB();
 		ShapedObject3 aabbobj = new ShapedObject3();
 		addAABBShape(aabb, aabbobj, c);
-		aabbNodeObjects.add(new Pair<ShapedObject3, Node3>(aabbobj, node));
+		aabbNodeObjects.add(new Pair<Node3, ShapedObject3>(node, aabbobj));
 	}
 
 	private void addAABBShape(AABB<Vector3f> aabb, ShapedObject3 aabbobj, Color c) {
-		Vector3f min = aabb.getMin();
-		Vector3f max = aabb.getMax();
 		aabbobj.setRenderMode(GL11.GL_LINES);
-		aabbobj.addVertex(min, c);
-		aabbobj.addVertex(new Vector3f(max.x, min.y, min.z), c);
-		aabbobj.addVertex(new Vector3f(min.x, max.y, min.z), c);
-		aabbobj.addVertex(new Vector3f(min.x, min.y, max.z), c);
-		aabbobj.addVertex(new Vector3f(max.x, max.y, min.z), c);
-		aabbobj.addVertex(new Vector3f(max.x, min.y, max.z), c);
-		aabbobj.addVertex(new Vector3f(min.x, max.y, max.z), c);
-		aabbobj.addVertex(max, c);
+		aabbobj.addVertex(new Vector3f(-1, -1, -1), c);
+		aabbobj.addVertex(new Vector3f(1, -1, -1), c);
+		aabbobj.addVertex(new Vector3f(-1, 1, -1), c);
+		aabbobj.addVertex(new Vector3f(-1, -1, 1), c);
+		aabbobj.addVertex(new Vector3f(1, 1, -1), c);
+		aabbobj.addVertex(new Vector3f(1, -1, 1), c);
+		aabbobj.addVertex(new Vector3f(-1, 1, 1), c);
+		aabbobj.addVertex(new Vector3f(1, 1, 1), c);
 		aabbobj.addIndices(0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 2, 4, 2, 6, 3, 6, 3, 5, 4, 7, 5, 7, 6, 7);
 		aabbobj.prerender();
+		float axisX = aabb.getMax().x - aabb.getMin().x;
+		float axisY = aabb.getMax().y - aabb.getMin().y;
+		float axisZ = aabb.getMax().z - aabb.getMin().z;
+		aabbobj.scale(axisX * 0.5f, axisY * 0.5f, axisZ * 0.5f);
 		defaultshader.addObject(aabbobj);
 	}
 
@@ -132,21 +136,8 @@ public class PhysicsDebug {
 		return showCollisionTangents;
 	}
 
-	public void render2d() {
-
-	}
-
 	public void render3d() {
 		defaultshader.bind();
-		if (showAABBs) {
-			for (Pair<ShapedObject3, RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>> aabbobj : aabbObjects) {
-				aabbobj.getFirst().translateTo(aabbobj.getSecond().getTranslation());
-			}
-			for (Pair<ShapedObject3, Node3> aabbobj : aabbNodeObjects) {
-				System.out.println(aabbobj.getSecond().getAABB().getCenter());
-				// aabbobj.getFirst().translateTo(aabbobj.getSecond().getAABB().getCenter());
-			}
-		}
 		if (showCollisionNormals) {
 			List<CollisionManifold<Vector3f, Quaternionf>> manifolds = physics.getCollisionManifolds();
 			for (CollisionManifold<Vector3f, Quaternionf> cm : manifolds) {
@@ -269,5 +260,28 @@ public class PhysicsDebug {
 			toggleShowCollisionNormals();
 		if (toggleCollisionTangents.isActive())
 			toggleShowCollisionTangents();
+
+		if (showAABBs) {
+			for (Pair<RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>, ShapedObject3> aabbobj : aabbObjects) {
+				if (aabbobj.getFirst().getRotationCenter().x != 0 || aabbobj.getFirst().getRotationCenter().y != 0) {
+					AABB<Vector3f> aabb = RotationMath.calculateRotationOffsetAABB3(aabbobj.getFirst(), 0.1f,
+							new AABB3());
+					float axisX = (aabb.getMax().x - aabb.getMin().x) * 0.5f;
+					float axisY = (aabb.getMax().y - aabb.getMin().y) * 0.5f;
+					float axisZ = (aabb.getMax().z - aabb.getMin().z) * 0.5f;
+					aabbobj.getSecond().getScale().set(axisX, axisY, axisZ);
+					aabbobj.getSecond().translateTo(aabb.getMin().x + axisX, aabb.getMin().y + axisY,
+							aabb.getMin().z + axisZ);
+				} else {
+					aabbobj.getSecond().translateTo(aabbobj.getFirst().getTranslation());
+				}
+			}
+			/*
+			 * for (Pair<ShapedObject3, Node3> aabbobj : aabbNodeObjects) {
+			 * System.out.println(aabbobj.getSecond().getAABB().getCenter());
+			 * aabbobj.getFirst().translateTo((Vector3f)
+			 * aabbobj.getSecond().getAABB().getCenter()); }
+			 */
+		}
 	}
 }

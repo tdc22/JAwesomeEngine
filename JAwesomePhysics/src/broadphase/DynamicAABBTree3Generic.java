@@ -3,10 +3,12 @@ package broadphase;
 import objects.AABB;
 import objects.AABB3;
 import objects.CollisionShape;
+import quaternion.Quaternionf;
 import utils.IntersectionLibrary;
+import utils.RotationMath;
 import vector.Vector3f;
 
-public class DynamicAABBTree3Generic<ObjectType extends CollisionShape<Vector3f, ?, ?>>
+public class DynamicAABBTree3Generic<ObjectType extends CollisionShape<Vector3f, Quaternionf, ?>>
 		extends DynamicAABBTree<Vector3f, ObjectType> {
 
 	public class Node3 extends Node {
@@ -16,12 +18,17 @@ public class DynamicAABBTree3Generic<ObjectType extends CollisionShape<Vector3f,
 
 		public void updateAABB(float margin) {
 			if (isLeaf()) {
-				Vector3f trans = object.getTranslation();
-				AABB<Vector3f> objAABB = object.getAABB();
-				aabb.getMin().set(trans.x + objAABB.getMin().x - margin, trans.y + objAABB.getMin().y - margin,
-						trans.z + objAABB.getMin().z - margin);
-				aabb.getMax().set(trans.x + objAABB.getMax().x + margin, trans.y + objAABB.getMax().y + margin,
-						trans.z + objAABB.getMax().z + margin);
+				if (object.getRotationCenter().x != 0 || object.getRotationCenter().y != 0
+						|| object.getRotationCenter().z != 0) {
+					RotationMath.calculateRotationOffsetAABB3(object, margin, aabb);
+				} else {
+					Vector3f trans = object.getTranslation();
+					AABB<Vector3f> objAABB = object.getAABB();
+					aabb.getMin().set(trans.x + objAABB.getMin().x - margin, trans.y + objAABB.getMin().y - margin,
+							trans.z + objAABB.getMin().z - margin);
+					aabb.getMax().set(trans.x + objAABB.getMax().x + margin, trans.y + objAABB.getMax().y + margin,
+							trans.z + objAABB.getMin().z - margin);
+				}
 			} else {
 				aabb.getMin().set(Math.min(leftChild.aabb.getMin().x, rightChild.aabb.getMin().x),
 						Math.min(leftChild.aabb.getMin().y, rightChild.aabb.getMin().y),
@@ -57,6 +64,7 @@ public class DynamicAABBTree3Generic<ObjectType extends CollisionShape<Vector3f,
 		} else {
 			final AABB<Vector3f> aabb0 = parent.leftChild.aabb;
 			final AABB<Vector3f> aabb1 = parent.rightChild.aabb;
+
 			final float volumeDiff0 = mergedVolume(aabb0, node.aabb) - aabb0.volume();
 			final float volumeDiff1 = mergedVolume(aabb1, node.aabb) - aabb1.volume();
 
@@ -80,16 +88,12 @@ public class DynamicAABBTree3Generic<ObjectType extends CollisionShape<Vector3f,
 		return (newmaxx - newminx) * (newmaxy - newminy) * (newmaxz - newminz);
 	}
 
+	private final AABB3 intersectAABB0 = new AABB3(), intersectAABB1 = new AABB3();
+
 	@Override
 	protected boolean intersect(Node node0, Node node1) {
-		Vector3f trans0 = node0.object.getTranslation();
-		Vector3f trans1 = node1.object.getTranslation();
-		AABB<Vector3f> aabb0 = node0.object.getAABB();
-		AABB<Vector3f> aabb1 = node1.object.getAABB();
-		return IntersectionLibrary.intersects(trans0.x + aabb0.getMin().x, trans0.y + aabb0.getMin().y,
-				trans0.z + aabb0.getMin().z, trans0.x + aabb0.getMax().x, trans0.y + aabb0.getMax().y,
-				trans0.z + aabb0.getMax().z, trans1.x + aabb1.getMin().x, trans1.y + aabb1.getMin().y,
-				trans1.z + aabb1.getMin().z, trans1.x + aabb1.getMax().x, trans1.y + aabb1.getMax().y,
-				trans1.z + aabb1.getMax().z);
+		RotationMath.calculateRotationOffsetAABB3(node0.object, intersectAABB0);
+		RotationMath.calculateRotationOffsetAABB3(node1.object, intersectAABB1);
+		return IntersectionLibrary.intersects(intersectAABB0, intersectAABB1);
 	}
 }

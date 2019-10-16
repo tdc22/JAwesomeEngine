@@ -19,7 +19,6 @@ import loader.FontLoader;
 import loader.ShaderLoader;
 import manifold.RaycastHitResult;
 import manifold.RaycastResult;
-import manifold.SimpleManifoldManager;
 import manifold.SimpleManifoldManager3;
 import math.VecMath;
 import misc.HalfSphere;
@@ -129,8 +128,7 @@ public class RaycastTest extends StandardGame {
 		addShaderInterface(circleshader3);
 
 		space = new PhysicsSpace(new EulerIntegration(), new DynamicAABBTree3(), new GJK(new EPA()),
-				new SupportRaycast(), new NullResolution(), new NullCorrection(),
-				new SimpleManifoldManager3());
+				new SupportRaycast(), new NullResolution(), new NullCorrection(), new SimpleManifoldManager3());
 		space.setCullStaticOverlaps(false);
 
 		b1 = new Box(4, 0, 0, 1.5f, 1.5f, 1.5f);

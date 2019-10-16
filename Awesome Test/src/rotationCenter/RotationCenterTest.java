@@ -43,7 +43,8 @@ public class RotationCenterTest extends StandardGame {
 		cam.translateTo(0.5f, 0f, 5);
 		cam.rotateTo(0, 0);
 
-		defaultshader = new Shader(ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
+		defaultshader = new Shader(
+				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 
 		rotquad1 = new Box(0, 0, 0, 1, 1, 1);
@@ -60,11 +61,11 @@ public class RotationCenterTest extends StandardGame {
 		defaultshader.addObject(rotquad3);
 		defaultshader.addObject(rotquad4);
 		defaultshader.addObject(rotquad5);
-		
+
 		space = new PhysicsSpace(new VerletIntegration(), new DynamicAABBTree3(), new GJK(new EPA()),
 				new SupportRaycast(), new ImpulseResolution(), new ProjectionCorrection(1),
 				new MultiPointManifoldManager());
-		space.setGlobalGravitation(new Vector3f(0, -1, 0));
+		space.setGlobalGravitation(new Vector3f(0, -8, 0));
 		Font font = FontLoader.loadFont("res/fonts/DejaVuSans.ttf");
 		physicsdebug = new PhysicsDebug(inputs, defaultshader, font, space);
 
@@ -101,7 +102,7 @@ public class RotationCenterTest extends StandardGame {
 		rotquad4.rotate(0, 0, rotdelta);
 		rotquad5.rotate(0, 0, rotdelta);
 		rotquad6.rotate(0, 0, rotdelta);
-		
+
 		spawndelta += delta;
 		if (spawndelta > 1000) {
 			Sphere c = new Sphere(0, -4, 0, 1, 32, 32);

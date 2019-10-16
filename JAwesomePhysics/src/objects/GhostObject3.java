@@ -1,9 +1,8 @@
 package objects;
 
-import math.QuatMath;
-import math.VecMath;
 import matrix.Matrix4f;
 import quaternion.Quaternionf;
+import utils.RotationMath;
 import utils.VectorConstants;
 import vector.Vector3f;
 
@@ -44,6 +43,7 @@ public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Q
 	@Override
 	public Vector3f supportPointRelative(Vector3f direction) {
 		Vector3f supportRel = supportcalculator.supportPointLocal(direction);
+		supportRel.translate(getRotationCenter());
 		supportRel.transform(getRotation());
 		return supportRel;
 	}
@@ -51,6 +51,7 @@ public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Q
 	@Override
 	public Vector3f supportPointRelativeNegative(Vector3f direction) {
 		Vector3f supportRelNeg = supportcalculator.supportPointLocalNegative(direction);
+		supportRelNeg.translate(getRotationCenter());
 		supportRelNeg.transform(getRotation());
 		return supportRelNeg;
 	}
@@ -145,22 +146,25 @@ public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Q
 
 	@Override
 	public AABB<Vector3f> getGlobalAABB() {
-		return new AABB3(getGlobalMinAABB(), getGlobalMaxAABB());
+		AABB3 result = new AABB3();
+		RotationMath.calculateRotationOffsetAABB3(this, result);
+		return result;
 	}
 
 	@Override
 	public Vector3f getGlobalMaxAABB() {
-		return VecMath.addition(aabb.getMax(), getTranslation());
+		return RotationMath.calculateRotationOffsetAABBMax3(this);
 	}
 
 	@Override
 	public Vector3f getGlobalMinAABB() {
-		return VecMath.addition(aabb.getMin(), getTranslation());
+		return RotationMath.calculateRotationOffsetAABBMin3(this);
 	}
 
 	@Override
 	public void updateInverseRotation() {
-		invrotation = QuatMath.invert(getRotation());
+		invrotation.set(getRotation());
+		invrotation.invert();
 	}
 
 	@Override
