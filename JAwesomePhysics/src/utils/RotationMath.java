@@ -61,14 +61,15 @@ public class RotationMath {
 				trans.y + objectAABB.getMax().y + rcYRealXImaginary);
 	}
 
+	private static final Vector3f transformedCenter = new Vector3f();
+
 	public static AABB<Vector3f> calculateRotationOffsetAABB3(CollisionShape<Vector3f, Quaternionf, ?> collisionshape,
 			float margin, AABB<Vector3f> result) {
 		Vector3f trans = collisionshape.getTranslation();
 		AABB<Vector3f> objectAABB = collisionshape.getAABB();
 
-		Quaternionf rotation = collisionshape.getRotation();
-		Vector3f transformedCenter = QuatMath.transform(rotation, collisionshape.getRotationCenter()); // TODO:
-																										// optimize!!
+		transformedCenter.set(collisionshape.getRotationCenter());
+		transformedCenter.transform(collisionshape.getRotation());
 
 		result.getMin().set(trans.x + objectAABB.getMin().x - margin + transformedCenter.x,
 				trans.y + objectAABB.getMin().y - margin + transformedCenter.y,
@@ -84,8 +85,8 @@ public class RotationMath {
 		Vector3f trans = collisionshape.getTranslation();
 		AABB<Vector3f> objectAABB = collisionshape.getAABB();
 
-		Vector3f transformedCenter = QuatMath.transform(collisionshape.getRotation(),
-				collisionshape.getRotationCenter()); // TODO: optimize!!
+		transformedCenter.set(collisionshape.getRotationCenter());
+		transformedCenter.transform(collisionshape.getRotation());
 
 		result.getMin().set(trans.x + objectAABB.getMin().x + transformedCenter.x,
 				trans.y + objectAABB.getMin().y + transformedCenter.y,

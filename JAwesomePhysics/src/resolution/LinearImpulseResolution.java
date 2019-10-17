@@ -18,6 +18,8 @@ public class LinearImpulseResolution implements CollisionResolution {
 		return (float) Math.sqrt(a * a + b * b);
 	}
 
+	private final Vector3f impulse3 = new Vector3f(), frictionImpulse3 = new Vector3f();
+
 	@Override
 	public void resolve(CollisionManifold<Vector3f, ?> manifold) {
 		// Linear resolution (like in SimpleLinearResolution)
@@ -35,36 +37,41 @@ public class LinearImpulseResolution implements CollisionResolution {
 		float e = Math.min(A.getRestitution(), B.getRestitution());
 		float j = (-(1 + e) * velAlongNormal) / (A.getInverseMass() + B.getInverseMass());
 
-		Vector3f impulse = VecMath.scale(normal, j);
-		B.applyCentralImpulse(impulse);
-		impulse.negate();
-		A.applyCentralImpulse(impulse);
+		impulse3.set(normal);
+		impulse3.scale(j);
+		B.applyCentralImpulse(impulse3);
+		impulse3.negate();
+		A.applyCentralImpulse(impulse3);
 
 		// Friction
 		// Re-calculate rv after normal impulse!
-		Vector3f rv = VecMath.subtraction(B.getLinearVelocity(), A.getLinearVelocity());
+		float rvx = B.getLinearVelocity().x - A.getLinearVelocity().x;
+		float rvy = B.getLinearVelocity().y - A.getLinearVelocity().y;
+		float rvz = B.getLinearVelocity().z - A.getLinearVelocity().z;
 
-		float rvDotNormal = VecMath.dotproduct(rv, normal);
-		Vector3f frictionImpulse = new Vector3f(rv.x - normal.x * rvDotNormal, rv.y - normal.y * rvDotNormal,
-				rv.z - normal.z * rvDotNormal);
-		if (frictionImpulse.lengthSquared() > 0)
-			frictionImpulse.normalize();
+		float rvDotNormal = VecMath.dotproduct(rvx, rvy, rvz, normal.x, normal.y, normal.z);
+		frictionImpulse3.set(rvx - normal.x * rvDotNormal, rvy - normal.y * rvDotNormal, rvz - normal.z * rvDotNormal);
+		if (frictionImpulse3.lengthSquared() > 0)
+			frictionImpulse3.normalize();
 
-		float jt = (-VecMath.dotproduct(rv, frictionImpulse)) / ((A.getInverseMass() + B.getInverseMass()));
+		float jt = (-VecMath.dotproduct(rvx, rvy, rvz, frictionImpulse3.x, frictionImpulse3.y, frictionImpulse3.z))
+				/ ((A.getInverseMass() + B.getInverseMass()));
 
 		float mu = pythagoreanSolve(A.getStaticFriction(), B.getStaticFriction());
 
 		if (Math.abs(jt) < j * mu) {
-			frictionImpulse.scale(jt);
+			frictionImpulse3.scale(jt);
 		} else {
 			float dynamicFriction = pythagoreanSolve(A.getDynamicFriction(), B.getDynamicFriction());
-			frictionImpulse.scale(-j * dynamicFriction);
+			frictionImpulse3.scale(-j * dynamicFriction);
 		}
 
-		B.applyCentralImpulse(frictionImpulse);
-		frictionImpulse.negate();
-		A.applyCentralImpulse(frictionImpulse);
+		B.applyCentralImpulse(frictionImpulse3);
+		frictionImpulse3.negate();
+		A.applyCentralImpulse(frictionImpulse3);
 	}
+
+	private final Vector2f impulse2 = new Vector2f(), frictionImpulse2 = new Vector2f();
 
 	@Override
 	public void resolve2(CollisionManifold<Vector2f, ?> manifold) {
@@ -82,34 +89,37 @@ public class LinearImpulseResolution implements CollisionResolution {
 		float e = Math.min(A.getRestitution(), B.getRestitution());
 		float j = (-(1 + e) * velAlongNormal) / (A.getInverseMass() + B.getInverseMass());
 
-		Vector2f impulse = VecMath.scale(normal, j);
-		B.applyCentralImpulse(impulse);
-		impulse.negate();
-		A.applyCentralImpulse(impulse);
+		impulse2.set(normal);
+		impulse2.scale(j);
+		B.applyCentralImpulse(impulse2);
+		impulse2.negate();
+		A.applyCentralImpulse(impulse2);
 
 		// Friction
 		// Re-calculate rv after normal impulse!
-		Vector2f rv = VecMath.subtraction(B.getLinearVelocity(), A.getLinearVelocity());
+		float rvx = B.getLinearVelocity().x - A.getLinearVelocity().x;
+		float rvy = B.getLinearVelocity().y - A.getLinearVelocity().y;
 
-		float rvDotNormal = VecMath.dotproduct(rv, normal);
-		Vector2f frictionImpulse = new Vector2f(rv.x - normal.x * rvDotNormal, rv.y - normal.y * rvDotNormal);
+		float rvDotNormal = VecMath.dotproduct(rvx, rvy, normal.x, normal.y);
+		frictionImpulse2.set(rvx - normal.x * rvDotNormal, rvy - normal.y * rvDotNormal);
 
-		if (frictionImpulse.lengthSquared() > 0)
-			frictionImpulse.normalize();
+		if (frictionImpulse2.lengthSquared() > 0)
+			frictionImpulse2.normalize();
 
-		float jt = (-VecMath.dotproduct(rv, frictionImpulse)) / ((A.getInverseMass() + B.getInverseMass()));
+		float jt = (-VecMath.dotproduct(rvx, rvy, frictionImpulse2.x, frictionImpulse2.y))
+				/ ((A.getInverseMass() + B.getInverseMass()));
 
 		float mu = pythagoreanSolve(A.getStaticFriction(), B.getStaticFriction());
 
 		if (Math.abs(jt) < j * mu) {
-			frictionImpulse.scale(jt);
+			frictionImpulse2.scale(jt);
 		} else {
 			float dynamicFriction = pythagoreanSolve(A.getDynamicFriction(), B.getDynamicFriction());
-			frictionImpulse.scale(-j * dynamicFriction);
+			frictionImpulse2.scale(-j * dynamicFriction);
 		}
 
-		B.applyCentralImpulse(frictionImpulse);
-		frictionImpulse.negate();
-		A.applyCentralImpulse(frictionImpulse);
+		B.applyCentralImpulse(frictionImpulse2);
+		frictionImpulse2.negate();
+		A.applyCentralImpulse(frictionImpulse2);
 	}
 }
