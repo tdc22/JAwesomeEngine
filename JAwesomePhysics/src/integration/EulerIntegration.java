@@ -1,6 +1,5 @@
 package integration;
 
-import math.QuatMath;
 import matrix.Matrix1f;
 import objects.RigidBody2;
 import objects.RigidBody3;
@@ -17,6 +16,7 @@ import vector.Vector3f;
  */
 
 public class EulerIntegration implements IntegrationSolver {
+
 	@Override
 	public void integrate2(RigidBody2 obj, float delta, Vector2f gravitation) {
 		if (obj.getInverseMass() != 0) {
@@ -42,6 +42,8 @@ public class EulerIntegration implements IntegrationSolver {
 		obj.rotate(obj.getAngularVelocity().x * delta);
 	}
 
+	private final Vector3f transformedTorque = new Vector3f();
+
 	@Override
 	public void integrate3(RigidBody3 obj, float delta, Vector3f gravitation) {
 		if (obj.getInverseMass() != 0) {
@@ -61,7 +63,8 @@ public class EulerIntegration implements IntegrationSolver {
 		Vector3f ta = obj.getTorqueAccumulator();
 		Quaternionf ii = obj.getInverseInertia();
 		float angularDampingValue = 1 / (1 + obj.getAngularDamping() * delta);
-		Vector3f transformedTorque = QuatMath.transform(ii, ta);
+		transformedTorque.set(ta);
+		transformedTorque.transform(ii);
 		obj.setAngularVelocity((av.x + transformedTorque.x * delta) * angularDampingValue,
 				(av.y + transformedTorque.y * delta) * angularDampingValue,
 				(av.z + transformedTorque.z * delta) * angularDampingValue);

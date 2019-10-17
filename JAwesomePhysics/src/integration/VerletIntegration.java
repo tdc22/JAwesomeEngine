@@ -1,6 +1,5 @@
 package integration;
 
-import math.QuatMath;
 import matrix.Matrix1f;
 import objects.RigidBody2;
 import objects.RigidBody3;
@@ -40,6 +39,8 @@ public class VerletIntegration implements IntegrationSolver {
 		obj.rotate((oldangularvel.x + obj.getAngularVelocity().x) * delta * 0.5f);
 	}
 
+	private final Vector3f transformedTorque = new Vector3f();
+
 	@Override
 	public void integrate3(RigidBody3 obj, float delta, Vector3f gravitation) {
 		Vector3f oldlinearvel = obj.getLinearVelocity();
@@ -62,7 +63,8 @@ public class VerletIntegration implements IntegrationSolver {
 		Vector3f ta = obj.getTorqueAccumulator();
 		Quaternionf ii = obj.getInverseInertia();
 		float angularDampingValue = 1 / (1 + obj.getAngularDamping() * delta);
-		Vector3f transformedTorque = QuatMath.transform(ii, ta);
+		transformedTorque.set(ta);
+		transformedTorque.transform(ii);
 		obj.setAngularVelocity((av.x + transformedTorque.x * delta) * angularDampingValue,
 				(av.y + transformedTorque.y * delta) * angularDampingValue,
 				(av.z + transformedTorque.z * delta) * angularDampingValue);

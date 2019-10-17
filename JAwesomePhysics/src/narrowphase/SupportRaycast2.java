@@ -45,6 +45,7 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 
 	private Vector2f dir1 = new Vector2f();
 	private Vector2f dir2 = new Vector2f();
+	private final Vector2f dir3 = new Vector2f();
 
 	private final Vector2f normal = new Vector2f();
 
@@ -80,7 +81,7 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 		}
 
 		for (int i = 0; i < MAX_ITERATIONS; i++) {
-			Vector2f dir3 = getMiddleVector(dir1, dir2, ray.getDirection());
+			getMiddleVector(dir1, dir2, ray.getDirection(), dir3);
 			Vector2f bound3 = Sa.supportPoint(dir3);
 			float dot3 = dotRay(ray.getPosition(), bound3, b);
 
@@ -102,7 +103,7 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 						normal.negate();
 					return rayLineIntersection(ray, bound3, dx, dy);
 				}
-				dir1 = dir3;
+				dir1.set(dir3);
 				bound1 = bound3;
 				dot1 = dot3;
 			} else {
@@ -117,7 +118,7 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 						normal.negate();
 					return rayLineIntersection(ray, bound1, dx, dy);
 				}
-				dir2 = dir3;
+				dir2.set(dir3);
 				bound2 = bound3;
 				dot2 = dot3;
 			}
@@ -129,21 +130,19 @@ public class SupportRaycast2 implements RaycastNarrowphase<Vector2f> {
 		return result;
 	}
 
-	private Vector2f getMiddleVector(Vector2f a, Vector2f b, Vector2f negdir) {
-		Vector2f c = new Vector2f(a);
-		c.translate(b);
+	private void getMiddleVector(Vector2f a, Vector2f b, Vector2f negdir, Vector2f result) {
+		result.set(a);
+		result.translate(b);
 
-		if (c.lengthSquared() > 0) {
-			c.normalize();
-			if (VecMath.dotproduct(c, negdir) >= 0) {
-				c.negate();
+		if (result.lengthSquared() > 0) {
+			result.normalize();
+			if (VecMath.dotproduct(result, negdir) >= 0) {
+				result.negate();
 			}
 		} else {
-			c.set(negdir);
-			c.negate();
+			result.set(negdir);
+			result.negate();
 		}
-
-		return c;
 	}
 
 	private Vector2f rayLineIntersection(Ray<Vector2f> r, Vector2f la, float ldx, float ldy) {
