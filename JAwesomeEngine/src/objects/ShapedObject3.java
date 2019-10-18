@@ -246,4 +246,10 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 		this.scale.set(scale, scale, scale);
 		updateBuffer();
 	}
+
+	@Override
+	public void setRotationCenter(float x, float y, float z) {
+		rotationcenter.set(x, y, z);
+		updateBuffer();
+	}
 }

@@ -229,4 +229,9 @@ public class RigidBody2 extends RigidBody<Vector2f, Vector1f, Complexf, Matrix1f
 	public void scaleTo(float scaleX, float scaleY) {
 		scale.set(scaleX, scaleY);
 	}
+
+	@Override
+	public void setRotationCenter(float x, float y) {
+		rotationcenter.set(x, y);
+	}
 }

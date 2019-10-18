@@ -98,4 +98,9 @@ public class DataObject3 extends DataObject<Vector3f, Quaternionf> implements Ob
 	public void scaleTo(float scale) {
 		this.scale.set(scale, scale, scale);
 	}
+
+	@Override
+	public void setRotationCenter(float x, float y, float z) {
+		rotationcenter.set(x, y, z);
+	}
 }

@@ -192,4 +192,9 @@ public class GhostObject2 extends GhostObject<Vector2f, Vector1f, Complexf, Matr
 	public void scaleTo(float scaleX, float scaleY) {
 		scale.set(scaleX, scaleY);
 	}
+
+	@Override
+	public void setRotationCenter(float x, float y) {
+		rotationcenter.set(x, y);
+	}
 }

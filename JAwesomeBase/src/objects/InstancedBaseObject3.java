@@ -12,4 +12,6 @@ public interface InstancedBaseObject3 {
 	public void scale(float scaleX, float scaleY, float scaleZ);
 
 	public void scaleTo(float scaleX, float scaleY, float scaleZ);
+	
+	public void setRotationCenter(float x, float y, float z);
 }

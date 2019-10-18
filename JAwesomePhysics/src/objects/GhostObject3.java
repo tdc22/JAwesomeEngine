@@ -211,4 +211,9 @@ public class GhostObject3 extends GhostObject<Vector3f, Vector3f, Quaternionf, Q
 	public Matrix4f getMatrix() {
 		return null;
 	}
+
+	@Override
+	public void setRotationCenter(float x, float y, float z) {
+		rotationcenter.set(x, y, z);
+	}
 }

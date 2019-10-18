@@ -92,4 +92,9 @@ public class DataObject2 extends DataObject<Vector2f, Complexf> implements Objec
 	public void scaleTo(float scale) {
 		this.scale.set(scale, scale);
 	}
+
+	@Override
+	public void setRotationCenter(float x, float y) {
+		rotationcenter.set(x, y);
+	}
 }

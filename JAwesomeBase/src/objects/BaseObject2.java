@@ -91,4 +91,9 @@ public class BaseObject2 extends BaseObject<Vector2f, Complexf> implements Insta
 	public void scaleTo(float scale) {
 		this.scale.set(scale, scale);
 	}
+
+	@Override
+	public void setRotationCenter(float x, float y) {
+		rotationcenter.set(x, y);
+	}
 }

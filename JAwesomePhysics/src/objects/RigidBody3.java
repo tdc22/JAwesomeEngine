@@ -239,4 +239,9 @@ public class RigidBody3 extends RigidBody<Vector3f, Vector3f, Quaternionf, Quate
 	public void scaleTo(float scaleX, float scaleY, float scaleZ) {
 		scale.set(scaleX, scaleY, scaleZ);
 	}
+
+	@Override
+	public void setRotationCenter(float x, float y, float z) {
+		rotationcenter.set(x, y, z);
+	}
 }

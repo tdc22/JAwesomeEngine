@@ -128,4 +128,10 @@ public class GameObject2 extends GameObject<Vector2f, Complexf> implements Insta
 		this.scale.set(scale, scale);
 		updateBuffer();
 	}
+
+	@Override
+	public void setRotationCenter(float x, float y) {
+		rotationcenter.set(x, y);
+		updateBuffer();
+	}
 }

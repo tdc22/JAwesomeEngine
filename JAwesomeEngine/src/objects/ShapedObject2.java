@@ -225,4 +225,10 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 		this.scale.set(scale, scale);
 		updateBuffer();
 	}
+
+	@Override
+	public void setRotationCenter(float x, float y) {
+		rotationcenter.set(x, y);
+		updateBuffer();
+	}
 }

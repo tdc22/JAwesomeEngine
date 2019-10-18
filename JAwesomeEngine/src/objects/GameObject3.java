@@ -136,4 +136,10 @@ public class GameObject3 extends GameObject<Vector3f, Quaternionf> implements In
 		this.scale.set(scale, scale, scale);
 		updateBuffer();
 	}
+
+	@Override
+	public void setRotationCenter(float x, float y, float z) {
+		rotationcenter.set(x, y, z);
+		updateBuffer();
+	}
 }
