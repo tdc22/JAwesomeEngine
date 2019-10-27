@@ -632,6 +632,76 @@ public class VecMath {
 	public static Vector4f negate(Vector4f v1) {
 		return new Vector4f(-v1.x, -v1.y, -v1.z, -v1.w);
 	}
+	
+	/**
+	 * Negates the vector.
+	 * 
+	 * @param v1
+	 *            vector to negate
+	 * @param result
+	 *            stores the result
+	 * @return resulting vector
+	 */
+	public static Vector1 negate(Vector1 v1, Vector1 result) {
+		result.set(-v1.getX());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#negate(Vector1, Vector1)
+	 */
+	public static Vector1f negate(Vector1f v1, Vector1f result) {
+		result.set(-v1.x);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#negate(Vector1, Vector1)
+	 */
+	public static Vector2 negate(Vector2 v1, Vector2 result) {
+		result.set(-v1.getX(), -v1.getY());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#negate(Vector1, Vector1)
+	 */
+	public static Vector2f negate(Vector2f v1, Vector2f result) {
+		result.set(-v1.x, -v1.y);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#negate(Vector1, Vector1)
+	 */
+	public static Vector3 negate(Vector3 v1, Vector3 result) {
+		result.set(-v1.getX(), -v1.getY(), -v1.getZ());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#negate(Vector1, Vector1)
+	 */
+	public static Vector3f negate(Vector3f v1, Vector3f result) {
+		result.set(-v1.x, -v1.y, -v1.z);
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#negate(Vector1, Vector1)
+	 */
+	public static Vector4 negate(Vector4 v1, Vector4 result) {
+		result.set(-v1.getX(), -v1.getY(), -v1.getZ(), -v1.getW());
+		return result;
+	}
+
+	/**
+	 * @see math.VecMath#negate(Vector1, Vector1)
+	 */
+	public static Vector4f negate(Vector4f v1, Vector4f result) {
+		result.set(-v1.x, -v1.y, -v1.z, -v1.w);
+		return result;
+	}
 
 	/**
 	 * Normalizes a vector.

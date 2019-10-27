@@ -72,7 +72,7 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 		if (normal.lengthSquared() == 0)
 			return null;
 
-		Vector3f tmp = VecMath.crossproduct(new Vector3f(normal), VectorConstants.AXIS_Z);
+		Vector3f tmp = VecMath.crossproduct(normal.x, normal.y, 0, 0, 0, 1);
 		Vector2f tangentA = new Vector2f(tmp.x, tmp.y);
 		Vector2f tangentB = VecMath.negate(tangentA);
 

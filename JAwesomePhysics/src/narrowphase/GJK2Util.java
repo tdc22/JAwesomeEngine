@@ -11,14 +11,17 @@ public class GJK2Util {
 		return doSimplexRegion(simplex, direction) == 0;
 	}
 
+	private static final Vector2f AB = new Vector2f(), AC = new Vector2f(), AO = new Vector2f();
+	private static final Vector3f ABC = new Vector3f();
+
 	public static int doSimplexRegion(List<Vector2f> simplex, Vector2f direction) {
-		int simplexsize = simplex.size();
+		final int simplexsize = simplex.size();
 		// Line
 		if (simplexsize == 2) {
 			Vector2f A = simplex.get(1);
 			Vector2f B = simplex.get(0);
-			Vector2f AB = VecMath.subtraction(B, A);
-			Vector2f AO = VecMath.negate(A);
+			VecMath.subtraction(B, A, AB);
+			VecMath.negate(A, AO);
 
 			if (VecMath.dotproduct(AB, AO) > 0) {
 				// Region 1
@@ -36,10 +39,10 @@ public class GJK2Util {
 			Vector2f A = simplex.get(2);
 			Vector2f B = simplex.get(1);
 			Vector2f C = simplex.get(0);
-			Vector2f AB = VecMath.subtraction(B, A);
-			Vector2f AC = VecMath.subtraction(C, A);
-			Vector3f ABC = VecMath.crossproduct(AB.x, AB.y, 0, AC.x, AC.y, 0);
-			Vector2f AO = VecMath.negate(A);
+			VecMath.subtraction(B, A, AB);
+			VecMath.subtraction(C, A, AC);
+			VecMath.crossproduct(AB.x, AB.y, 0, AC.x, AC.y, 0, ABC);
+			VecMath.negate(A, AO);
 
 			// if (VecMath.dotproduct(VecMath.crossproduct(ABC, new
 			// Vector3f(AC)),
