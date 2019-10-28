@@ -10,6 +10,8 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 	public GJK(ManifoldGenerator<Vector3f> manifoldgeneration) {
 		super(manifoldgeneration, 4);
 	}
+	
+	private final Vector3f AO = new Vector3f(), AB = new Vector3f(), AC = new Vector3f(), AD = new Vector3f(), ABC = new Vector3f(), ACD = new Vector3f(), ADB = new Vector3f(), ABCxAC = new Vector3f(), ABxABC = new Vector3f();
 
 	private boolean doSimplex() {
 		int simplexsize = simplex.size();
@@ -18,8 +20,8 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 			// System.out.print("line ");
 			Vector3f A = simplex.get(1);
 			Vector3f B = simplex.get(0);
-			Vector3f AB = VecMath.subtraction(B, A);
-			Vector3f AO = VecMath.negate(A);
+			VecMath.subtraction(B, A, AB);
+			VecMath.negate(A, AO);
 			if (VecMath.dotproduct(AB, AO) > 0) {
 				// Region 1
 				direction = edgeDirection(AB, AO);
@@ -39,12 +41,12 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 			Vector3f A = simplex.get(2);
 			Vector3f B = simplex.get(1);
 			Vector3f C = simplex.get(0);
-			Vector3f AB = VecMath.subtraction(B, A);
-			Vector3f AC = VecMath.subtraction(C, A);
-			Vector3f ABC = VecMath.crossproduct(AB, AC);
-			Vector3f AO = VecMath.negate(A);
+			VecMath.subtraction(B, A, AB);
+			VecMath.subtraction(C, A, AC);
+			VecMath.crossproduct(AB, AC, ABC);
+			VecMath.negate(A, AO);
 
-			if (VecMath.dotproduct(VecMath.crossproduct(ABC, AC), AO) > 0) {
+			if (VecMath.dotproduct(VecMath.crossproduct(ABC, AC, ABCxAC), AO) > 0) {
 				if (VecMath.dotproduct(AC, AO) > 0) {
 					// Region 1
 					simplex.remove(1);
@@ -66,7 +68,7 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 					}
 				}
 			} else {
-				if (VecMath.dotproduct(VecMath.crossproduct(AB, ABC), AO) > 0) {
+				if (VecMath.dotproduct(VecMath.crossproduct(AB, ABC, ABxABC), AO) > 0) {
 					// *
 					if (VecMath.dotproduct(AB, AO) > 0) {
 						// Region 4
@@ -90,7 +92,7 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 						Vector3f temp = simplex.get(0);
 						simplex.set(0, simplex.get(1));
 						simplex.set(1, temp);
-						direction = VecMath.negate(ABC);
+						VecMath.negate(ABC, direction);
 						// System.out.print("r 3");
 					}
 				}
@@ -106,15 +108,15 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 			Vector3f C = simplex.get(1);
 			Vector3f D = simplex.get(0);
 
-			Vector3f AB = VecMath.subtraction(B, A);
-			Vector3f AC = VecMath.subtraction(C, A);
-			Vector3f AD = VecMath.subtraction(D, A);
+			VecMath.subtraction(B, A, AB);
+			VecMath.subtraction(C, A, AC);
+			VecMath.subtraction(D, A, AD);
 
-			Vector3f ABC = VecMath.crossproduct(AB, AC);
-			Vector3f ACD = VecMath.crossproduct(AC, AD);
-			Vector3f ADB = VecMath.crossproduct(AD, AB);
+			VecMath.crossproduct(AB, AC, ABC);
+			VecMath.crossproduct(AC, AD, ACD);
+			VecMath.crossproduct(AD, AB, ADB);
 
-			Vector3f AO = VecMath.negate(A);
+			VecMath.negate(A, AO);
 
 			// TEST
 			// Vector3f BA = VecMath.substraction(A, B);
