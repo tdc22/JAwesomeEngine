@@ -142,7 +142,7 @@ public abstract class CollisionShape2 extends CollisionShape<Vector2f, Complexf,
 	public void scaleTo(float scale) {
 		this.scale.set(scale, scale);
 	}
-	
+
 	@Override
 	public void setRotationCenter(float x, float y) {
 		rotationcenter.set(x, y);

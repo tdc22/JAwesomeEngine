@@ -10,8 +10,10 @@ public class GJK extends GilbertJohnsonKeerthi<Vector3f> {
 	public GJK(ManifoldGenerator<Vector3f> manifoldgeneration) {
 		super(manifoldgeneration, 4);
 	}
-	
-	private final Vector3f AO = new Vector3f(), AB = new Vector3f(), AC = new Vector3f(), AD = new Vector3f(), ABC = new Vector3f(), ACD = new Vector3f(), ADB = new Vector3f(), ABCxAC = new Vector3f(), ABxABC = new Vector3f();
+
+	private final Vector3f AO = new Vector3f(), AB = new Vector3f(), AC = new Vector3f(), AD = new Vector3f(),
+			ABC = new Vector3f(), ACD = new Vector3f(), ADB = new Vector3f(), ABCxAC = new Vector3f(),
+			ABxABC = new Vector3f();
 
 	private boolean doSimplex() {
 		int simplexsize = simplex.size();

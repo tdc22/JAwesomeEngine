@@ -146,7 +146,7 @@ public abstract class CollisionShape3 extends CollisionShape<Vector3f, Quaternio
 	public void scaleTo(float scale) {
 		this.scale.set(scale, scale, scale);
 	}
-	
+
 	@Override
 	public void setRotationCenter(float x, float y, float z) {
 		rotationcenter.set(x, y, z);

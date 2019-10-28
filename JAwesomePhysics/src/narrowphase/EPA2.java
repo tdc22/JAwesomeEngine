@@ -6,7 +6,6 @@ import java.util.List;
 import manifold.ContactManifold;
 import math.VecMath;
 import objects.SupportMap;
-import utils.VectorConstants;
 import vector.Vector2f;
 import vector.Vector3f;
 
@@ -36,6 +35,9 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 	public EPA2() {
 		edges = new ArrayList<Edge>();
 	}
+
+	private final Vector3f tmpCross = new Vector3f();
+	private final Vector2f negnormal = new Vector2f();
 
 	@Override
 	public ContactManifold<Vector2f> computeCollision(SupportMap<Vector2f> Sa, SupportMap<Vector2f> Sb,
@@ -72,11 +74,11 @@ public class EPA2 implements ManifoldGenerator<Vector2f> {
 		if (normal.lengthSquared() == 0)
 			return null;
 
-		Vector3f tmp = VecMath.crossproduct(normal.x, normal.y, 0, 0, 0, 1);
-		Vector2f tangentA = new Vector2f(tmp.x, tmp.y);
+		VecMath.crossproduct(normal.x, normal.y, 0, 0, 0, 1, tmpCross);
+		Vector2f tangentA = new Vector2f(tmpCross.x, tmpCross.y);
 		Vector2f tangentB = VecMath.negate(tangentA);
 
-		Vector2f negnormal = VecMath.negate(normal);
+		VecMath.negate(normal, negnormal);
 		return new ContactManifold<Vector2f>(depth, normal, Sa.supportPoint(normal), Sb.supportPoint(negnormal),
 				Sa.supportPointRelative(normal), Sb.supportPointRelative(normal), Sa.supportPointLocal(normal),
 				Sb.supportPointLocal(negnormal), tangentA, tangentB);

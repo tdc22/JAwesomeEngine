@@ -39,6 +39,8 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 		faces = new ArrayList<Triangle>();
 	}
 
+	private final Vector3f tmpSub = new Vector3f(), negnormal = new Vector3f();
+
 	@Override
 	public ContactManifold<Vector3f> computeCollision(SupportMap<Vector3f> Sa, SupportMap<Vector3f> Sb,
 			List<Vector3f> simplex) {
@@ -70,7 +72,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 					Triangle[] adjacents = findAdjacentTriangles(t, faces);
 
 					if (adjacents[0] != null
-							&& VecMath.dotproduct(VecMath.subtraction(p, t.a), adjacents[0].normal) > 0) {
+							&& VecMath.dotproduct(VecMath.subtraction(p, t.a, tmpSub), adjacents[0].normal) > 0) {
 						Vector3f adjD = findTheD(t.a, t.b, adjacents[0]);
 						faces.add(new Triangle(p, t.a, adjD));
 						faces.add(new Triangle(t.b, p, adjD));
@@ -80,7 +82,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 					}
 
 					if (adjacents[1] != null
-							&& VecMath.dotproduct(VecMath.subtraction(p, t.b), adjacents[1].normal) > 0) {
+							&& VecMath.dotproduct(VecMath.subtraction(p, t.b, tmpSub), adjacents[1].normal) > 0) {
 						Vector3f adjD = findTheD(t.b, t.c, adjacents[1]);
 						faces.add(new Triangle(p, t.b, adjD));
 						faces.add(new Triangle(t.c, p, adjD));
@@ -90,7 +92,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 					}
 
 					if (adjacents[2] != null
-							&& VecMath.dotproduct(VecMath.subtraction(p, t.c), adjacents[2].normal) > 0) {
+							&& VecMath.dotproduct(VecMath.subtraction(p, t.c, tmpSub), adjacents[2].normal) > 0) {
 						Vector3f adjD = findTheD(t.c, t.a, adjacents[2]);
 						faces.add(new Triangle(p, t.c, adjD));
 						faces.add(new Triangle(t.a, p, adjD));
@@ -123,7 +125,7 @@ public class EPA implements ManifoldGenerator<Vector3f> {
 			tangentA.normalize();
 		tangentB = VecMath.crossproduct(normal, tangentA);
 
-		Vector3f negnormal = VecMath.negate(normal);
+		VecMath.negate(normal, negnormal);
 		return new ContactManifold<Vector3f>(depth, normal, Sa.supportPoint(normal), Sb.supportPoint(negnormal),
 				Sa.supportPointRelative(normal), Sb.supportPointRelative(normal), Sa.supportPointLocal(normal),
 				Sb.supportPointLocal(negnormal), tangentA, tangentB);

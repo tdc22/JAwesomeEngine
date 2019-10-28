@@ -45,7 +45,7 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		hitOfPlane.translate(ray.getPosition());
 
 		Vector3f centerOnPlane = projectPointOnPlane(hitOfPlane, Sa.getSupportCenter(), ray.getDirection());
-		centerOnPlane = VecMath.subtraction(centerOnPlane, Sa.getSupportCenter());
+		VecMath.subtraction(centerOnPlane, Sa.getSupportCenter(), centerOnPlane);
 
 		// STEP 3: Calculate Support(centerOnPlane) and Support(centerOnPlane x
 		// normal)
@@ -62,7 +62,7 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 		start.translate(centerOnPlane2);
 		simplex.add(start);
 		simplex3.add(point);
-		dir = VecMath.negate(dir);
+		dir.negate();
 
 		for (int i = 0; i < MAX_ITERATIONS; i++) {
 			point = Sa.supportPoint(dir);
@@ -111,15 +111,8 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 	}
 
 	private final Vector3f n = new Vector3f();
-	private final Vector2f AB = new Vector2f();
-	private final Vector2f BC = new Vector2f();
-	private final Vector2f CA = new Vector2f();
-	private final Vector2f PA = new Vector2f();
-	private final Vector2f PB = new Vector2f();
-	private final Vector2f PC = new Vector2f();
-	private final Vector2f PAn = new Vector2f();
-	private final Vector2f PBn = new Vector2f();
-	private final Vector2f PCn = new Vector2f();
+	private final Vector2f AB = new Vector2f(), BC = new Vector2f(), CA = new Vector2f(), PA = new Vector2f(),
+			PB = new Vector2f(), PC = new Vector2f(), PAn = new Vector2f(), PBn = new Vector2f(), PCn = new Vector2f();
 
 	private float computeCollisionOnRay(SupportMap<Vector3f> Sa, Ray<Vector3f> ray) {
 		Vector3f a = simplex3.get(0);
@@ -164,19 +157,12 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 
 			AB.set(projB.x - projA.x, projB.y - projA.y);
 			BC.set(projC.x - projB.x, projC.y - projB.y);
-			CA.set(projA.x - projC.x, projA.y - projC.y);
-			PA.set(projA.x - q.x, projA.y - q.y);
 			PB.set(projB.x - q.x, projB.y - q.y);
-			PC.set(projC.x - q.x, projC.y - q.y); // TODO:
-													// optimize,
-													// put in
-													// else
-			PAn.set(-PA.y, PA.x);
+			PC.set(projC.x - q.x, projC.y - q.y);
 			PBn.set(-PB.y, PB.x);
 			PCn.set(-PC.y, PC.x);
 			boolean outsideA = VecMath.dotproduct(AB, PBn) > 0;
 			boolean outsideB = VecMath.dotproduct(BC, PCn) > 0;
-			boolean outsideC = VecMath.dotproduct(CA, PAn) > 0;
 
 			if (outsideA) {
 				if (outsideB) {
@@ -184,6 +170,10 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 					b = p;
 					projB = q;
 				} else {
+					PA.set(projA.x - q.x, projA.y - q.y);
+					PAn.set(-PA.y, PA.x);
+					CA.set(projA.x - projC.x, projA.y - projC.y);
+					boolean outsideC = VecMath.dotproduct(CA, PAn) > 0;
 					if (outsideC) {
 						// Region 3
 						a = p;
@@ -202,6 +192,10 @@ public class SupportRaycast implements RaycastNarrowphase<Vector3f> {
 					}
 				}
 			} else {
+				PA.set(projA.x - q.x, projA.y - q.y);
+				PAn.set(-PA.y, PA.x);
+				CA.set(projA.x - projC.x, projA.y - projC.y);
+				boolean outsideC = VecMath.dotproduct(CA, PAn) > 0;
 				if (outsideB) {
 					if (outsideC) {
 						// Region 2
