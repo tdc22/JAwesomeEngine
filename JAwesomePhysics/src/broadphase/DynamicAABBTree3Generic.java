@@ -27,7 +27,7 @@ public class DynamicAABBTree3Generic<ObjectType extends CollisionShape<Vector3f,
 					aabb.getMin().set(trans.x + objAABB.getMin().x - margin, trans.y + objAABB.getMin().y - margin,
 							trans.z + objAABB.getMin().z - margin);
 					aabb.getMax().set(trans.x + objAABB.getMax().x + margin, trans.y + objAABB.getMax().y + margin,
-							trans.z + objAABB.getMin().z - margin);
+							trans.z + objAABB.getMax().z - margin);
 				}
 			} else {
 				aabb.getMin().set(Math.min(leftChild.aabb.getMin().x, rightChild.aabb.getMin().x),
