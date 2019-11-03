@@ -277,10 +277,12 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 			}
 		}
 	}
+	
+	protected abstract boolean aabbContainsObject(AABB<L> aabb, ObjectType object);
 
 	private void updateNodeHelper(Node node, List<Node> invalidNodes) {
 		if (node.isLeaf()) {
-			if (!node.aabb.contains(node.object.getGlobalAABB())) {
+			if (!aabbContainsObject(node.aabb, node.object)) {
 				invalidNodes.add(node);
 			}
 		} else {

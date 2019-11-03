@@ -89,4 +89,10 @@ public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f,
 		RotationMath.calculateRotationOffsetAABB2(node1.object, intersectAABB1);
 		return IntersectionLibrary.intersects(intersectAABB0, intersectAABB1);
 	}
+
+	@Override
+	protected boolean aabbContainsObject(AABB<Vector2f> aabb, ObjectType object) {
+		RotationMath.calculateRotationOffsetAABB2(object, intersectAABB0);
+		return aabb.contains(intersectAABB0);
+	}
 }
