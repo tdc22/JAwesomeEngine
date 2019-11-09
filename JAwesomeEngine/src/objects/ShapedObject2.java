@@ -30,6 +30,7 @@ public class ShapedObject2 extends ShapedObject<Vector2f, Complexf> implements I
 				new Complexf(shape.getRotation()), new Vector2f(shape.getScale()));
 		init();
 		setRenderMode(shape.getRenderMode());
+		setRenderHints(shape.colors.isActive(), shape.texturecoords.isActive(), shape.normals.isActive());
 		copyShapeData(shape);
 	}
 

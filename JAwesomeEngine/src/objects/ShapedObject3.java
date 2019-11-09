@@ -33,6 +33,7 @@ public class ShapedObject3 extends ShapedObject<Vector3f, Quaternionf> implement
 				new Quaternionf(shape.getRotation()), new Vector3f(shape.getScale()));
 		init();
 		setRenderMode(shape.getRenderMode());
+		setRenderHints(shape.colors.isActive(), shape.texturecoords.isActive(), shape.normals.isActive());
 		copyShapeData(shape);
 	}
 
