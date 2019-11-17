@@ -251,6 +251,8 @@ public class PhysicsDebug {
 		setShowCollisionTangents(!showCollisionTangents);
 	}
 
+	final AABB3 aabb = new AABB3();
+
 	public void update() {
 		if (toggleAABBs.isActive())
 			toggleShowAABBs();
@@ -264,8 +266,7 @@ public class PhysicsDebug {
 		if (showAABBs) {
 			for (Pair<RigidBody<Vector3f, Vector3f, Quaternionf, Quaternionf>, ShapedObject3> aabbobj : aabbObjects) {
 				if (aabbobj.getFirst().getRotationCenter().x != 0 || aabbobj.getFirst().getRotationCenter().y != 0) {
-					AABB<Vector3f> aabb = RotationMath.calculateRotationOffsetAABB3(aabbobj.getFirst(), 0.1f,
-							new AABB3());
+					RotationMath.calculateRotationOffsetAABB3(aabbobj.getFirst(), 0.1f, aabb);
 					float axisX = (aabb.getMax().x - aabb.getMin().x) * 0.5f;
 					float axisY = (aabb.getMax().y - aabb.getMin().y) * 0.5f;
 					float axisZ = (aabb.getMax().z - aabb.getMin().z) * 0.5f;

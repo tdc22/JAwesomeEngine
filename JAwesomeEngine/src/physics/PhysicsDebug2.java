@@ -194,6 +194,8 @@ public class PhysicsDebug2 {
 	public void toggleShowCollisionTangents() {
 		setShowCollisionTangents(!showCollisionTangents);
 	}
+	
+	final AABB2 aabb = new AABB2();
 
 	public void update() {
 		if (toggleAABBs.isActive())
@@ -208,8 +210,7 @@ public class PhysicsDebug2 {
 		if (showAABBs) {
 			for (Pair<RigidBody<Vector2f, Vector1f, Complexf, Matrix1f>, ShapedObject2> aabbobj : aabbObjects) {
 				if (aabbobj.getFirst().getRotationCenter().x != 0 || aabbobj.getFirst().getRotationCenter().y != 0) {
-					AABB<Vector2f> aabb = RotationMath.calculateRotationOffsetAABB2(aabbobj.getFirst(), 0.1f,
-							new AABB2());
+					RotationMath.calculateRotationOffsetAABB2(aabbobj.getFirst(), 0.1f, aabb);
 					float axisX = (aabb.getMax().x - aabb.getMin().x) * 0.5f;
 					float axisY = (aabb.getMax().y - aabb.getMin().y) * 0.5f;
 					aabbobj.getSecond().getScale().set(axisX, axisY);
