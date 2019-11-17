@@ -1,6 +1,7 @@
 package broadphase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -70,6 +71,8 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 	Node root;
 
 	final List<ObjectType> objects;
+	
+	final HashMap<ObjectType, Node> nodemapping;
 
 	final List<Node> invalidNodes;
 
@@ -81,6 +84,7 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 
 	public DynamicAABBTree() {
 		objects = new ArrayList<ObjectType>();
+		nodemapping = new HashMap<ObjectType, Node>();
 		invalidNodes = new ArrayList<Node>();
 		overlaps = new ArrayList<Pair<ObjectType, ObjectType>>();
 		overlapSet = new HashSet<Pair<ObjectType, ObjectType>>();
@@ -159,29 +163,9 @@ public abstract class DynamicAABBTree<L extends Vector, ObjectType extends Colli
 		return new LinkedHashSet<Pair<ObjectType, ObjectType>>(overlaps);
 	}
 
-	protected Node getNode(Node startnode, ObjectType object, L objectGlobalMinAABB, L objectGlobalMaxAABB) {
-		// TODO: could be wrong if AABBs in tree are not up to date
-		if (startnode.isLeaf()) {
-			if (startnode.object.equals(object)) {
-				return startnode;
-			}
-			return null;
-		} else {
-			if (startnode.leftChild.aabb.contains(objectGlobalMinAABB)
-					&& startnode.leftChild.aabb.contains(objectGlobalMaxAABB)) {
-				return getNode(startnode.leftChild, object, objectGlobalMinAABB, objectGlobalMaxAABB);
-			} else if (startnode.rightChild.aabb.contains(objectGlobalMinAABB)
-					&& startnode.rightChild.aabb.contains(objectGlobalMaxAABB)) {
-				return getNode(startnode.rightChild, object, objectGlobalMinAABB, objectGlobalMaxAABB);
-			} else {
-				return null;
-			}
-		}
-	}
-
 	@Override
 	public void remove(ObjectType object) {
-		Node remove = getNode(root, object, object.getGlobalMinAABB(), object.getGlobalMaxAABB());
+		Node remove = nodemapping.remove(object);
 		if (remove != null)
 			removeNode(remove);
 

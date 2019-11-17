@@ -47,10 +47,12 @@ public class DynamicAABBTree3Generic<ObjectType extends CollisionShape<Vector3f,
 			node.setLeaf(object);
 			node.updateAABB(margin);
 			root = insertNode(node, root);
+			nodemapping.put(object, node);
 		} else {
 			root = new Node3();
 			root.setLeaf(object);
 			root.updateAABB(margin);
+			nodemapping.put(object, root);
 		}
 		objects.add(object);
 	}

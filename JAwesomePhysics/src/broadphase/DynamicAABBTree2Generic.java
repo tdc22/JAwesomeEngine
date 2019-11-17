@@ -42,10 +42,12 @@ public class DynamicAABBTree2Generic<ObjectType extends CollisionShape<Vector2f,
 			node.setLeaf(object);
 			node.updateAABB(margin);
 			root = insertNode(node, root);
+			nodemapping.put(object, node);
 		} else {
 			root = new Node2();
 			root.setLeaf(object);
 			root.updateAABB(margin);
+			nodemapping.put(object, root);
 		}
 		objects.add(object);
 	}
