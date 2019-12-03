@@ -45,6 +45,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 	protected final List<CompoundObject<L, A2>> compoundObjects;
 	protected final List<GhostObject<L, A1, A2, A3>> ghostobjects;
 	protected final Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> collisionfilters;
+	protected final Set<Pair<RigidBody<L, ?, ?, ?>, Ray<L>>> rayfilters;
 	protected final List<Constraint<L, A1, A2, A3>> constraints;
 	protected Set<Pair<RigidBody<L, ?, A2, ?>, RigidBody<L, ?, A2, ?>>> overlaps;
 	protected L globalForce;
@@ -97,6 +98,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		ghostobjects = new ArrayList<GhostObject<L, A1, A2, A3>>();
 		overlaps = new LinkedHashSet<Pair<RigidBody<L, ?, A2, ?>, RigidBody<L, ?, A2, ?>>>();
 		collisionfilters = new HashSet<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>>();
+		rayfilters = new HashSet<Pair<RigidBody<L, ?, ?, ?>, Ray<L>>>();
 		constraints = new ArrayList<Constraint<L, A1, A2, A3>>();
 		profiler = new NullPhysicsProfiler();
 		broadphase.addListener(new CompoundListener());
@@ -182,6 +184,10 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	public Set<Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>> getCollisionFilters() {
 		return collisionfilters;
+	}
+	
+	public Set<Pair<RigidBody<L, ?, ?, ?>, Ray<L>>> getRaycastFilters() {
+		return rayfilters;
 	}
 
 	public PositionalCorrection getPositionalCorrection() {
@@ -335,7 +341,7 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 		Set<RigidBody<L, ?, A2, ?>> raycastOverlaps = raycastAllBroadphase(ray);
 		for (RigidBody<L, ?, A2, ?> body : raycastOverlaps) {
-			if (raycastnarrowphase.isColliding(body, ray)) {
+			if (!isRaycastFiltered(body, ray) && raycastnarrowphase.isColliding(body, ray)) {
 				RaycastHitResult<L> rayhit = raycastnarrowphase.computeCollision(body, ray);
 				if (rayhit.getHitDistance() < distance) {
 					result = new RaycastResult<L>(body, rayhit);
@@ -353,14 +359,14 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 		Set<RigidBody<L, ?, A2, ?>> raycastOverlaps = raycastAllBroadphase(ray);
 		for (RigidBody<L, ?, A2, ?> body : raycastOverlaps) {
 			if (!body.isCompound()) {
-				if (raycastnarrowphase.isColliding(body, ray)) {
+				if (!isRaycastFiltered(body, ray) && raycastnarrowphase.isColliding(body, ray)) {
 					result.add(new RaycastResult<L>(body, raycastnarrowphase.computeCollision(body, ray)));
 				}
 			} else {
 				Set<CollisionShape<L, A2, ?>> compoundRaycastOverlaps = body.getCompound().getCompoundBroadphase()
 						.raycastAll(ray);
 				for (CollisionShape<L, ?, ?> compoundbody : compoundRaycastOverlaps) {
-					if (raycastnarrowphase.isColliding(compoundbody, ray)) {
+					if (!isRaycastFiltered(body, ray) && raycastnarrowphase.isColliding(compoundbody, ray)) {
 						result.add(new RaycastResult<L>(body, raycastnarrowphase.computeCollision(compoundbody, ray)));
 					}
 				}
@@ -388,6 +394,38 @@ public abstract class Space<L extends Vector, A1 extends Vector, A2 extends Rota
 
 	public boolean isCollisionFiltered(Pair<RigidBody<L, ?, A2, ?>, RigidBody<L, ?, A2, ?>> overlap) {
 		return collisionfilters.contains(overlap);
+	}
+	
+	private final Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>> objectfilterpair = new Pair<RigidBody<L, ?, ?, ?>, RigidBody<L, ?, ?, ?>>(null, null);
+	public boolean isCollisionFiltered(RigidBody<L, ?, A2, ?> objectA, RigidBody<L, ?, A2, ?> objectB) {
+		objectfilterpair.set(objectA, objectB);
+		return collisionfilters.contains(objectfilterpair);
+	}
+	
+	public void addRaycastFilter(RigidBody<L, ?, ?, ?> object, Ray<L> ray) {
+		addRaycastFilter(new Pair<RigidBody<L, ?, ?, ?>, Ray<L>>(object, ray));
+	}
+
+	public void addRaycastFilter(Pair<RigidBody<L, ?, ?, ?>, Ray<L>> objectraypair) {
+		rayfilters.add(objectraypair);
+	}
+
+	public void removeRaycastFilter(RigidBody<L, ?, ?, ?> object, Ray<L> ray) {
+		removeRaycastFilter(new Pair<RigidBody<L, ?, ?, ?>, Ray<L>>(object, ray));
+	}
+
+	public void removeRaycastFilter(Pair<RigidBody<L, ?, ?, ?>, Ray<L>> objectraypair) {
+		rayfilters.remove(objectraypair);
+	}
+
+	public boolean isRaycastFiltered(Pair<RigidBody<L, ?, ?, ?>, Ray<L>> overlap) {
+		return rayfilters.contains(overlap);
+	}
+	
+	private final Pair<RigidBody<L, ?, ?, ?>, Ray<L>> rayfilterpair = new Pair<RigidBody<L, ?, ?, ?>, Ray<L>>(null, null);
+	public boolean isRaycastFiltered(RigidBody<L, ?, ?, ?> object, Ray<L> ray) {
+		rayfilterpair.set(object, ray);
+		return rayfilters.contains(rayfilterpair);
 	}
 
 	public void updateTimestep(float delta) {
