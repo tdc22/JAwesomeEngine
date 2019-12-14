@@ -194,7 +194,7 @@ public class PhysicsDebug2 {
 	public void toggleShowCollisionTangents() {
 		setShowCollisionTangents(!showCollisionTangents);
 	}
-	
+
 	final AABB2 aabb = new AABB2();
 
 	public void update() {

@@ -34,7 +34,8 @@ import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 public class TextureLoader {
 	public static int loadCubeMap(BufferedImage top, BufferedImage bottom, BufferedImage front, BufferedImage back,
@@ -45,44 +46,54 @@ public class TextureLoader {
 		if (hasalpha)
 			bpp = 4;
 
-		ByteBuffer bufferTop = loadTextureIntoBuffer(top, width, height, bpp, hasalpha);
-		ByteBuffer bufferBottom = loadTextureIntoBuffer(bottom, width, height, bpp, hasalpha);
-		ByteBuffer bufferFront = loadTextureIntoBuffer(front, width, height, bpp, hasalpha);
-		ByteBuffer bufferBack = loadTextureIntoBuffer(back, width, height, bpp, hasalpha);
-		ByteBuffer bufferLeft = loadTextureIntoBuffer(left, width, height, bpp, hasalpha);
-		ByteBuffer bufferRight = loadTextureIntoBuffer(right, width, height, bpp, hasalpha);
+		int cubemapID;
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			int numbytes = width * height * bpp;
+			ByteBuffer bufferTop = stack.calloc(numbytes);
+			ByteBuffer bufferBottom = stack.calloc(numbytes);
+			ByteBuffer bufferFront = stack.calloc(numbytes);
+			ByteBuffer bufferBack = stack.calloc(numbytes);
+			ByteBuffer bufferLeft = stack.calloc(numbytes);
+			ByteBuffer bufferRight = stack.calloc(numbytes);
 
-		int cubemapID = glGenTextures();
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapID);
+			loadTextureIntoBuffer(top, width, height, bpp, hasalpha, bufferTop);
+			loadTextureIntoBuffer(bottom, width, height, bpp, hasalpha, bufferBottom);
+			loadTextureIntoBuffer(front, width, height, bpp, hasalpha, bufferFront);
+			loadTextureIntoBuffer(back, width, height, bpp, hasalpha, bufferBack);
+			loadTextureIntoBuffer(left, width, height, bpp, hasalpha, bufferLeft);
+			loadTextureIntoBuffer(right, width, height, bpp, hasalpha, bufferRight);
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
+			cubemapID = glGenTextures();
+			glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapID);
 
-		int format = GL_RGB;
-		int internalformat = GL_RGB;
-		if (hasalpha) {
-			format = GL_RGBA;
-			internalformat = GL_RGBA;
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
+
+			int format = GL_RGB;
+			int internalformat = GL_RGB;
+			if (hasalpha) {
+				format = GL_RGBA;
+				internalformat = GL_RGBA;
+			}
+
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
+					bufferTop);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
+					bufferBottom);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
+					bufferFront);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
+					bufferBack);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
+					bufferLeft);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
+					bufferRight);
 		}
-
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
-				bufferTop);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
-				bufferBottom);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
-				bufferFront);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
-				bufferBack);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
-				bufferLeft);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE,
-				bufferRight);
-
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 		return cubemapID;
@@ -124,7 +135,9 @@ public class TextureLoader {
 		if (hasalpha)
 			bpp = 4;
 
-		ByteBuffer buffer = loadTextureIntoBuffer(image, width, height, bpp, hasalpha);
+		ByteBuffer buffer = MemoryUtil.memAlloc(width * height * bpp);
+
+		loadTextureIntoBuffer(image, width, height, bpp, hasalpha, buffer);
 
 		int textureID = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, textureID);
@@ -142,8 +155,9 @@ public class TextureLoader {
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 		else
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, buffer);
-
 		glBindTexture(GL_TEXTURE_2D, 0);
+
+		MemoryUtil.memFree(buffer);
 
 		return textureID;
 	}
@@ -170,36 +184,32 @@ public class TextureLoader {
 		return loadTexture(new File(path), hasalpha);
 	}
 
-	private static ByteBuffer loadTextureIntoBuffer(BufferedImage image, int width, int height, int bpp,
-			boolean hasalpha) {
+	private static void loadTextureIntoBuffer(BufferedImage image, int width, int height, int bpp, boolean hasalpha,
+			ByteBuffer result) {
 		int[] pixels = new int[width * height];
 		image.getRGB(0, 0, width, height, pixels, 0, width);
-
-		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * bpp);
 
 		if (hasalpha) {
 			for (int y = (height - 1); y >= 0; y--) {
 				for (int x = 0; x < width; x++) {
 					int pixel = pixels[y * width + x];
-					buffer.put((byte) ((pixel >> 16) & 0xFF)); // Red component
-					buffer.put((byte) ((pixel >> 8) & 0xFF)); // Green component
-					buffer.put((byte) (pixel & 0xFF)); // Blue component
-					buffer.put((byte) ((pixel >> 24) & 0xFF)); // Alpha
-																// component
+					result.put((byte) ((pixel >> 16) & 0xFF)); // Red component
+					result.put((byte) ((pixel >> 8) & 0xFF)); // Green component
+					result.put((byte) (pixel & 0xFF)); // Blue component
+					result.put((byte) ((pixel >> 24) & 0xFF)); // Alpha component
 				}
 			}
 		} else {
 			for (int y = (height - 1); y >= 0; y--) {
 				for (int x = 0; x < width; x++) {
 					int pixel = pixels[y * width + x];
-					buffer.put((byte) ((pixel >> 16) & 0xFF)); // Red component
-					buffer.put((byte) ((pixel >> 8) & 0xFF)); // Green component
-					buffer.put((byte) (pixel & 0xFF)); // Blue component
+					result.put((byte) ((pixel >> 16) & 0xFF)); // Red component
+					result.put((byte) ((pixel >> 8) & 0xFF)); // Green component
+					result.put((byte) (pixel & 0xFF)); // Blue component
 				}
 			}
 		}
 
-		buffer.flip();
-		return buffer;
+		result.flip();
 	}
 }

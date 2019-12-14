@@ -58,7 +58,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryStack;
 
 import game.Layer;
 import objects.Camera;
@@ -327,39 +327,42 @@ public class FramebufferObject {
 
 		frameBufferID = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
-		IntBuffer drawColorBuffers = BufferUtils.createIntBuffer(2);
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer drawColorBuffers = stack.callocInt(2);
 
-		// Colorbuffer
-		if (renderColor) {
-			if (renderColorToTexture) {
-				colorTexture = attachColorTexture(colorbuffer, GL_COLOR_ATTACHMENT0, samples);
-			} else {
-				colorRBID = attachColorRenderbuffer(samples, GL_COLOR_ATTACHMENT0);
+			// Colorbuffer
+			if (renderColor) {
+				if (renderColorToTexture) {
+					colorTexture = attachColorTexture(colorbuffer, GL_COLOR_ATTACHMENT0, samples);
+				} else {
+					colorRBID = attachColorRenderbuffer(samples, GL_COLOR_ATTACHMENT0);
+				}
+				drawColorBuffers.put(GL_COLOR_ATTACHMENT0);
 			}
-			drawColorBuffers.put(GL_COLOR_ATTACHMENT0);
+
+			// Depthbuffer
+			if (renderDepth) {
+				if (renderDepthToTexture) {
+					depthTexture = attachDepthTexture(samples);
+				} else {
+					depthRBID = attachDepthRenderbuffer(samples);
+				}
+			}
+
+			// Normalbuffer
+			if (renderNormal) {
+				if (renderNormalToTexture) {
+					normalTexture = attachColorTexture(null, GL_COLOR_ATTACHMENT1, samples);
+				} else {
+					normalRBID = attachColorRenderbuffer(GL_COLOR_ATTACHMENT1, samples);
+				}
+				drawColorBuffers.put(GL_COLOR_ATTACHMENT1);
+			}
+
+			drawColorBuffers.flip();
+			glDrawBuffers(drawColorBuffers);
 		}
 
-		// Depthbuffer
-		if (renderDepth) {
-			if (renderDepthToTexture) {
-				depthTexture = attachDepthTexture(samples);
-			} else {
-				depthRBID = attachDepthRenderbuffer(samples);
-			}
-		}
-
-		// Normalbuffer
-		if (renderNormal) {
-			if (renderNormalToTexture) {
-				normalTexture = attachColorTexture(null, GL_COLOR_ATTACHMENT1, samples);
-			} else {
-				normalRBID = attachColorRenderbuffer(GL_COLOR_ATTACHMENT1, samples);
-			}
-			drawColorBuffers.put(GL_COLOR_ATTACHMENT1);
-		}
-
-		drawColorBuffers.flip();
-		glDrawBuffers(drawColorBuffers);
 		checkFramebufferStatus();
 
 		if (renderColor) {
@@ -513,23 +516,26 @@ public class FramebufferObject {
 	}
 
 	public BufferedImage getColorTextureImage() {
-		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
-		bind();
-		// glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-		unbind();
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		int[] px = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				int i = (x + (width * y)) * 4;
-				int r = buffer.get(i) & 0xff;
-				int g = buffer.get(i + 1) & 0xff;
-				int b = buffer.get(i + 2) & 0xff;
-				int a = buffer.get(i + 3) & 0xff;
-				int argb = (a << 24) | (r << 16) | (g << 8) | b;
-				int off = (x + width * (height - y - 1));
-				px[off] = argb;
+		BufferedImage image;
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			ByteBuffer buffer = stack.calloc(width * height * 4);
+			bind();
+			// glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+			glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+			unbind();
+			image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			int[] px = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					int i = (x + (width * y)) * 4;
+					int r = buffer.get(i) & 0xff;
+					int g = buffer.get(i + 1) & 0xff;
+					int b = buffer.get(i + 2) & 0xff;
+					int a = buffer.get(i + 3) & 0xff;
+					int argb = (a << 24) | (r << 16) | (g << 8) | b;
+					int off = (x + width * (height - y - 1));
+					px[off] = argb;
+				}
 			}
 		}
 		return image;

@@ -8,7 +8,7 @@ import quaternion.Rotation;
 import vector.Vector;
 
 public abstract class GameObject<L extends Vector, A extends Rotation> extends DataObject<L, A> {
-	protected FloatBuffer buf;
+	final protected FloatBuffer buf;
 
 	public GameObject(L rotcenter, L translation, A rotation, L scale) {
 		super(rotcenter, translation, rotation, scale);

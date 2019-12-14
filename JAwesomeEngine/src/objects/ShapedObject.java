@@ -229,12 +229,12 @@ public abstract class ShapedObject<L extends Vector, A extends Rotation> extends
 
 	@Override
 	public void delete() {
-		// matrix = null;
+		if (vaoHandle != 0)
+			glDeleteVertexArrays(vaoHandle);
 		indices.delete();
 		for (ObjectDataAttributes<?, ?> dataattribute : dataattributes) {
 			dataattribute.delete();
 		}
-		// buf.clear();
 	}
 
 	public void deleteData() {

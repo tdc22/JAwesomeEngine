@@ -260,25 +260,32 @@ public class Profiler implements Updateable {
 			gameProfileLine2.addValue(profilevalues[3]);
 			gameProfileLine3.addValue(profilevalues[4]);
 
-			stringbuilder.setLength(0);
-			stringbuilder.append(StringConstants.PROFILER_UPDATE);
-			stringbuilder.append(profilevalues[1]);
-			gameProfileText0.setText(stringbuilder.toString());
+			if (showScale && showGameProfile) {
+				stringbuilder.setLength(0);
+				stringbuilder.append(StringConstants.PROFILER_UPDATE);
+				stringbuilder.append(profilevalues[1]);
+				gameProfileText0.setText(stringbuilder.toString());
 
-			stringbuilder.setLength(0);
-			stringbuilder.append(StringConstants.PROFILER_RENDER_3D);
-			stringbuilder.append(profilevalues[2]);
-			gameProfileText1.setText(stringbuilder.toString());
+				stringbuilder.setLength(0);
+				stringbuilder.append(StringConstants.PROFILER_RENDER_3D);
+				stringbuilder.append(profilevalues[2]);
+				gameProfileText1.setText(stringbuilder.toString());
 
-			stringbuilder.setLength(0);
-			stringbuilder.append(StringConstants.PROFILER_RENDER_2D);
-			stringbuilder.append(profilevalues[3]);
-			gameProfileText2.setText(stringbuilder.toString());
+				stringbuilder.setLength(0);
+				stringbuilder.append(StringConstants.PROFILER_RENDER_2D);
+				stringbuilder.append(profilevalues[3]);
+				gameProfileText2.setText(stringbuilder.toString());
 
-			stringbuilder.setLength(0);
-			stringbuilder.append(StringConstants.PROFILER_DISPLAY);
-			stringbuilder.append(profilevalues[4]);
-			gameProfileText3.setText(stringbuilder.toString());
+				stringbuilder.setLength(0);
+				stringbuilder.append(StringConstants.PROFILER_DISPLAY);
+				stringbuilder.append(profilevalues[4]);
+				gameProfileText3.setText(stringbuilder.toString());
+
+				gameProfileLine0.prerender();
+				gameProfileLine1.prerender();
+				gameProfileLine2.prerender();
+				gameProfileLine3.prerender();
+			}
 		}
 		if (physicsprofiler != null) {
 			long[] profilevalues = physicsprofiler.getValues();
@@ -301,38 +308,32 @@ public class Profiler implements Updateable {
 			physicsProfileLine2.addValue(profilevalues[3]);
 			physicsProfileLine3.addValue(profilevalues[4]);
 
-			stringbuilder.setLength(0);
-			stringbuilder.append(StringConstants.PROFILER_BROADPHASE);
-			stringbuilder.append(profilevalues[1]);
-			physicsProfileText0.setText(stringbuilder.toString());
+			if (showScale && showPhysicsProfile) {
+				stringbuilder.setLength(0);
+				stringbuilder.append(StringConstants.PROFILER_BROADPHASE);
+				stringbuilder.append(profilevalues[1]);
+				physicsProfileText0.setText(stringbuilder.toString());
 
-			stringbuilder.setLength(0);
-			stringbuilder.append(StringConstants.PROFILER_NARROWPHASE);
-			stringbuilder.append(profilevalues[2]);
-			physicsProfileText1.setText(stringbuilder.toString());
+				stringbuilder.setLength(0);
+				stringbuilder.append(StringConstants.PROFILER_NARROWPHASE);
+				stringbuilder.append(profilevalues[2]);
+				physicsProfileText1.setText(stringbuilder.toString());
 
-			stringbuilder.setLength(0);
-			stringbuilder.append(StringConstants.PROFILER_RESOLUTION);
-			stringbuilder.append(profilevalues[3]);
-			physicsProfileText2.setText(stringbuilder.toString());
+				stringbuilder.setLength(0);
+				stringbuilder.append(StringConstants.PROFILER_RESOLUTION);
+				stringbuilder.append(profilevalues[3]);
+				physicsProfileText2.setText(stringbuilder.toString());
 
-			stringbuilder.setLength(0);
-			stringbuilder.append(StringConstants.PROFILER_INTEGRATION);
-			stringbuilder.append(profilevalues[4]);
-			physicsProfileText3.setText(stringbuilder.toString());
-		}
+				stringbuilder.setLength(0);
+				stringbuilder.append(StringConstants.PROFILER_INTEGRATION);
+				stringbuilder.append(profilevalues[4]);
+				physicsProfileText3.setText(stringbuilder.toString());
 
-		if (gameprofiler != null && showScale && showGameProfile) {
-			gameProfileLine0.prerender();
-			gameProfileLine1.prerender();
-			gameProfileLine2.prerender();
-			gameProfileLine3.prerender();
-		}
-		if (physicsprofiler != null && showScale && showPhysicsProfile) {
-			physicsProfileLine0.prerender();
-			physicsProfileLine1.prerender();
-			physicsProfileLine2.prerender();
-			physicsProfileLine3.prerender();
+				physicsProfileLine0.prerender();
+				physicsProfileLine1.prerender();
+				physicsProfileLine2.prerender();
+				physicsProfileLine3.prerender();
+			}
 		}
 	}
 

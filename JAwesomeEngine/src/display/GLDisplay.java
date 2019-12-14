@@ -54,11 +54,11 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.IntBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWWindowPosCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 
 public class GLDisplay extends Display {
 	private long windowid;
@@ -165,11 +165,13 @@ public class GLDisplay extends Display {
 		glfwShowWindow(windowid);
 
 		// Mac-workaround (creates windows with different size than asked for)
-		IntBuffer w = BufferUtils.createIntBuffer(1);
-		IntBuffer h = BufferUtils.createIntBuffer(1);
-		glfwGetFramebufferSize(windowid, w, h);
-		width = w.get(0);
-		height = h.get(0);
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer w = stack.callocInt(1);
+			IntBuffer h = stack.callocInt(1);
+			glfwGetFramebufferSize(windowid, w, h);
+			width = w.get(0);
+			height = h.get(0);
+		}
 
 		glfwSetWindowPosCallback(windowid, posCallback = new GLFWWindowPosCallback() {
 			@Override
