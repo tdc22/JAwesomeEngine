@@ -219,32 +219,25 @@ public class AnimationEditor extends StandardGame {
 	public void renderInterface() {
 		renderInterfaceLayer();
 	}
+	
+	private Vector2f getClickPosition() {
+		Vector2f pos = new Vector2f(inputs.getMouseX() / (float) settings.getResolutionX(),
+				inputs.getMouseY() / (float) settings.getResolutionY());
+		pos.x *= 133;
+		pos.y *= 100;
+		return pos;
+	}
 
 	@Override
 	public void update(int delta) {
 		if (leftMousePressed.isActive()) {
-			Vector2f pos = new Vector2f(inputs.getMouseX() / (float) settings.getResolutionX(),
-					inputs.getMouseY() / (float) settings.getResolutionY());
-			pos.x *= 133;
-			pos.y *= 100;
-
-			currentpath.clickLeft(pos);
+			currentpath.clickLeft(getClickPosition());
 		}
 		if (leftMouseDown.isActive()) {
-			Vector2f pos = new Vector2f(inputs.getMouseX() / (float) settings.getResolutionX(),
-					inputs.getMouseY() / (float) settings.getResolutionY());
-			pos.x *= 133;
-			pos.y *= 100;
-
-			currentpath.downLeft(pos);
+			currentpath.downLeft(getClickPosition());
 		}
 		if (leftMouseReleased.isActive()) {
-			Vector2f pos = new Vector2f(inputs.getMouseX() / (float) settings.getResolutionX(),
-					inputs.getMouseY() / (float) settings.getResolutionY());
-			pos.x *= 133;
-			pos.y *= 100;
-
-			currentpath.releaseLeft(pos);
+			currentpath.releaseLeft(getClickPosition());
 		}
 		if (closePath.isActive()) {
 			currentpath.closePath();
@@ -428,15 +421,13 @@ public class AnimationEditor extends StandardGame {
 	}
 
 	private void loadFile() {
-		// try {
 		String input = null;
 		try {
 			input = FileLoader.readFile("src/tool_animationEditor/AnimationInput.txt");
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		}
 		System.out.println("INPUT: " + input);
-		if (!input.isEmpty()) {
+		if (input != null && !input.isEmpty()) {
 			String[] lines = input.split("\n");
 			boolean lastBezier = true;
 			boolean lastSquad = false;
@@ -548,11 +539,9 @@ public class AnimationEditor extends StandardGame {
 				ap.updatePathMarker();
 			}
 		}
-		// }
-		// catch(Exception e) {
-		// System.err.println(e);
-		// System.out.println("No file found. Starting normally.");
-		// }
+		else {
+			System.out.println("No file found or file is empty. Starting normally.");
+		}
 	}
 
 	private Vector2f invertRotation(Vector2f pathmarker, Complexf rotation) {
