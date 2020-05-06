@@ -53,18 +53,20 @@ public class Ellipsoid extends ShapedObject3 implements EllipsoidStructure {
 		trisV = tV;
 		Color c = Color.WHITE;
 
-		float angleStepv = 360 / (float) trisV;
-		float angleSteph = 360 / (float) trisH;
+		final float angleStepv = 360 / (float) trisV;
+		final float angleSteph = 360 / (float) trisH;
 		for (int a = 0; a < trisV; a++) {
+			double anglePosV = Math.toRadians(angleStepv * (a / 2f));
+			float texturePosV = 1 - a / (float) trisV;
 			for (int b = 0; b < trisH; b++) {
+				double anglePosH = Math.toRadians(angleSteph * b);
+				float anglePosVSin = (float) Math.sin(anglePosV);
 				Vector3f pos = new Vector3f(
-						radiusX * (float) Math.sin(Math.toRadians(angleStepv * (a / (float) 2)))
-								* (float) Math.sin(Math.toRadians(angleSteph * b)),
-						radiusY * (float) Math.cos(Math.toRadians(angleStepv * (a / (float) 2))),
-						radiusZ * (float) Math.sin(Math.toRadians(angleStepv * (a / (float) 2)))
-								* (float) Math.cos(Math.toRadians(angleSteph * b)));
+						radiusX * anglePosVSin * (float) Math.sin(anglePosH),
+						radiusY * (float) Math.cos(anglePosV),
+						radiusZ * anglePosVSin * (float) Math.cos(anglePosH));
 				Vector3f normal = VecMath.normalize(pos);
-				addVertex(pos, c, new Vector2f(1 - b / (float) trisH, 1 - a / (float) trisV), normal);
+				addVertex(pos, c, new Vector2f(1 - b / (float) trisH, texturePosV), normal);
 			}
 		}
 		addVertex(VecMath.subtraction(getVertex(0), new Vector3f(0, radiusY * 2, 0)), c, new Vector2f(0, 0),

@@ -52,14 +52,16 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 		this.slices = slices;
 		Color color = Color.WHITE;
 
-		float anglestep = (float) (2 * Math.PI / (float) slices);
+		final float anglestep = (float) (2 * Math.PI / (float) slices);
+		float anglepos = 0;
 		addVertex(new Vector2f(0, 0), color, new Vector2f(0.5f, 0.5f));
 		for (int s = 0; s < slices; s++) {
-			Vector2f t = new Vector2f(Math.sin(s * anglestep), Math.cos(s * anglestep));
+			Vector2f t = new Vector2f(Math.sin(anglepos), Math.cos(anglepos));
 			Vector2f v = new Vector2f(radius * t.x, halfheight * t.y);
 			t.x = (t.x + 1) * 0.5f;
 			t.y = 1 - (t.y + 1) * 0.5f;
 			addVertex(v, color, t);
+			anglepos += anglestep;
 		}
 
 		if (adjacency) {
@@ -72,8 +74,8 @@ public class Ellipse extends ShapedObject2 implements EllipseStructure {
 			addTriangle(0, slices, 1, 1, 2, 3);
 		} else {
 			setRenderMode(GLConstants.TRIANGLES);
-			for (int s = 0; s < slices - 1; s++) {
-				addTriangle(0, s + 1, s + 2);
+			for (int s = 1; s < slices; s++) {
+				addTriangle(0, s, s + 1);
 			}
 			addTriangle(0, slices, 1);
 		}
