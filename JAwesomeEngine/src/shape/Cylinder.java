@@ -48,21 +48,26 @@ public class Cylinder extends ShapedObject3 implements CylinderStructure {
 		Color c = Color.WHITE;
 
 		addVertex(new Vector3f(0, halfheight, 0), c, new Vector2f(0, 0), new Vector3f(0, 1, 0));
-		float angleStep = 360 / (float) slices;
+		final float angleStep = 360 / (float) slices;
 		Vector3f[] circle = new Vector3f[slices];
+		Vector3f[] circlenormals = new Vector3f[slices];
 		for (int a = 0; a < slices; a++) {
-			circle[a] = new Vector3f((float) Math.sin(Math.toRadians(angleStep * a)) * radius, 0,
-					(float) Math.cos(Math.toRadians(angleStep * a)) * radius);
+			double angleStepARad = Math.toRadians(angleStep * a);
+			Vector3f pos = new Vector3f((float) Math.sin(angleStepARad) * radius, 0,
+					(float) Math.cos(angleStepARad) * radius);
+			circle[a] = pos;
+			circlenormals[a] = VecMath.normalize(pos);
+		}
+		final float textureStep = 1 / (float) slices;
+		for (int a = 0; a < slices; a++) {
+			Vector3f pos = circle[a];
+			float texturepos = a * textureStep;
+			addVertex(new Vector3f(pos.x, halfheight, pos.z), c, new Vector2f(texturepos, 1), circlenormals[a]);
 		}
 		for (int a = 0; a < slices; a++) {
 			Vector3f pos = circle[a];
-			Vector3f normal = VecMath.normalize(pos);
-			addVertex(new Vector3f(pos.x, halfheight, pos.z), c, new Vector2f(a, 1), normal);
-		}
-		for (int a = 0; a < slices; a++) {
-			Vector3f pos = circle[a];
-			Vector3f normal = VecMath.normalize(pos);
-			addVertex(new Vector3f(pos.x, -halfheight, pos.z), c, new Vector2f(a, 0), normal);
+			float texturepos = a * textureStep;
+			addVertex(new Vector3f(pos.x, -halfheight, pos.z), c, new Vector2f(texturepos, 0), circlenormals[a]);
 		}
 
 		addVertex(new Vector3f(0, -halfheight, 0), c, new Vector2f(1, 1), new Vector3f(0, -1, 0));
