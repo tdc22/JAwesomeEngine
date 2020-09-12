@@ -68,7 +68,7 @@ public class AnimationEditor extends StandardGame {
 	private final static float bodyX = 2.2f, bodyY = 3.4f;
 	private final static float handX = 1, handY = 1;
 	private final static float footX = 1.5f, footY = 0.8f;
-	final int MAXLAYERS = 6;
+	final int MAXLAYERS = 7;
 
 	String[] pathnames = new String[] { "headPath", "bodyPath", "handPath1", "handPath2", "footPath1", "footPath2" };
 	String[] rotationnames = new String[] { "headRotation", "bodyRotation", "handRotation1", "handRotation2",
@@ -102,7 +102,7 @@ public class AnimationEditor extends StandardGame {
 		sliderframe.setLocation(display.getPositionX(), display.getPositionY() + display.getHeight() + 5);
 		sliderframe.setVisible(true);
 
-		textures = new Texture[6];
+		textures = new Texture[7];
 		textures[0] = new Texture(
 				TextureLoader.loadTexture("../../2dplatformer/2dPlatformer/res/textures/dumb2_head1.png"));
 		textures[1] = new Texture(
@@ -115,14 +115,17 @@ public class AnimationEditor extends StandardGame {
 				TextureLoader.loadTexture("../../2dplatformer/2dPlatformer/res/textures/dumb2_foot1_1.png"));
 		textures[5] = new Texture(
 				TextureLoader.loadTexture("../../2dplatformer/2dPlatformer/res/textures/dumb2_foot1_1.png"));
+		textures[6] = new Texture(
+				TextureLoader.loadTexture("../../2dplatformer/2dPlatformer/res/textures/dumb2_foot1_1.png"));
 
-		sizes = new Vector2f[6];
+		sizes = new Vector2f[7];
 		sizes[0] = new Vector2f(headX * scale, headY * scale);
 		sizes[1] = new Vector2f(bodyX * scale, bodyY * scale);
 		sizes[2] = new Vector2f(handX * scale, handY * scale);
 		sizes[3] = new Vector2f(handX * scale, handY * scale);
 		sizes[4] = new Vector2f(footX * scale, footY * scale);
 		sizes[5] = new Vector2f(footX * scale, footY * scale);
+		sizes[6] = new Vector2f(footX * scale, footY * scale);
 
 		animationcenter = new AnimationCenter(new Vector2f(66, 50));
 

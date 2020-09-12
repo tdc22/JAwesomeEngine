@@ -32,7 +32,7 @@ public class AnimationPath3 {
 	int temppoint = -1, temppoint2 = -1, tempreference = -1;
 	int dragID;
 	boolean isMarkerDragged = true;
-	final float maxDraggingDistanceSqr = 20f;
+	final float maxDraggingDistanceSqr = 0.001f;
 	float animationTimer = 0;
 	boolean closed = false;
 	Vector3f clickpos;
@@ -81,43 +81,60 @@ public class AnimationPath3 {
 		return squadcurves.get(num).getRotation(t);
 	}
 
-	public void clickLeft(Vector3f pos) {
-		clickpos = pos;
-		float mindistance = Float.MAX_VALUE;
+	public void clickLeft(Vector3f campos, Vector3f clickdir, Vector3f projectedpos) {
+		System.out.println("Dir " + clickdir.length() + "; " + clickdir);
+		clickpos = projectedpos;
+		float maxproject = 0;
 		double dist;
-		for (int i = 0; i < markers.size(); i++) {
-			if ((dist = VecMath.subtraction(pos, markers.get(i).getTranslation()).lengthSquared()) < mindistance) {
+		for(int i = 0; i < markers.size(); i++) {
+			Vector3f camToMarker = VecMath.subtraction(markers.get(i).getTranslation(), campos);
+			camToMarker.normalize();
+			System.out.println(camToMarker);
+			if ((dist = VecMath.dotproduct(camToMarker, clickdir)) > maxproject) {
 				dragID = i;
-				mindistance = (float) dist;
+				maxproject = (float) dist;
 				isMarkerDragged = true;
 			}
+			System.out.println("Dist1 " + dist);
 		}
-		for (int i = 0; i < rotationreferences.size(); i++) {
-			if ((dist = VecMath.subtraction(pos, rotationreferences.get(i).getTranslation())
-					.lengthSquared()) < mindistance) {
+		for(int i = 0; i < rotationreferences.size(); i++) {
+			Vector3f camToMarker = VecMath.subtraction(rotationreferences.get(i).getTranslation(), campos);
+			camToMarker.normalize();
+			System.out.println(camToMarker);
+			if ((dist = VecMath.dotproduct(camToMarker, clickdir)) > maxproject) {
 				dragID = i;
-				mindistance = (float) dist;
+				maxproject = (float) dist;
 				isMarkerDragged = false;
 			}
+			System.out.println("Dist2 " + dist);
 		}
-		if (mindistance <= maxDraggingDistanceSqr) {
+		System.out.println("Proj " + (1 - maxproject));
+		if ((1 - maxproject) <= maxDraggingDistanceSqr) {
+			System.out.println("Start drag");
 			dragging = true;
 		} else {
+			System.out.println("A");
 			if (!closed) {
+				System.out.println("B");
 				if (!skipPress) {
+					System.out.println("Add marker 1");
 					if (temppoint == -1) {
 						temppoint = markers.size();
 					} else {
 						temppoint2 = markers.size();
 					}
-					addBoxMarker(pos);
+					addBoxMarker(projectedpos);
 
-					pos.x += 10;
-					addRotationMarker(pos);
+					projectedpos.x += 0.2;
+					addRotationMarker(projectedpos);
 				} else {
+					System.out.println("Add marker 2");
 					markers.add(markers.get(markers.size() - 2));
 					skipPress = false;
 				}
+			}
+			else {
+				dragging = false;
 			}
 		}
 	}
@@ -142,6 +159,7 @@ public class AnimationPath3 {
 
 	public void downLeft(Vector3f pos) {
 		if (dragging) {
+			System.out.println("DRAG");
 			if (isMarkerDragged) {
 				markers.get(dragID).translateTo(pos);
 			} else {

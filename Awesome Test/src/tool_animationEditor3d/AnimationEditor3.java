@@ -26,6 +26,7 @@ import loader.FontLoader;
 import loader.ShaderLoader;
 import math.QuatMath;
 import math.VecMath;
+import matrix.Matrix4f;
 import objects.ShapedObject3;
 import quaternion.Quaternionf;
 import shader.Shader;
@@ -36,6 +37,7 @@ import shape.Sphere;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
 import utils.GLConstants;
+import utils.ProjectionHelper;
 import vector.Vector3f;
 import vector.Vector4f;
 
@@ -43,6 +45,7 @@ public class AnimationEditor3 extends StandardGame {
 	InputEvent toggleMouseBind, leftMousePressed, leftMouseDown, leftMouseReleased, rightMouseReleased, closePath, deleteMarker, addLayer, switchLayer;
 	
 	Shader colorshader;
+	Matrix4f inverseprojectionmatrix;
 	
 	Font font;
 	
@@ -50,6 +53,9 @@ public class AnimationEditor3 extends StandardGame {
 	List<AnimationPath3> paths;
 	AnimationPath3 currentpath;
 	int currentpathID;
+	
+	Sphere debugsphere;
+	Box debugbox;
 	
 	Shader defaultshader;
 	ShapedObject3[] bodyparts;
@@ -125,6 +131,11 @@ public class AnimationEditor3 extends StandardGame {
 		
 		defaultshader.addObject(animationcenter);
 		
+		inverseprojectionmatrix = ProjectionHelper.perspective(settings.getFOVy(),
+				settings.getResolutionX() / (float) settings.getResolutionY(), settings.getZNear(),
+				settings.getZFar());
+		inverseprojectionmatrix.invert();
+		
 		paths = new ArrayList<AnimationPath3>();
 		currentpathID = 0;
 		currentpath = new AnimationPath3(defaultshader, defaultshader, box);
@@ -160,14 +171,30 @@ public class AnimationEditor3 extends StandardGame {
 		debugger = new Debugger(inputs, defaultshader, lt1, font, cam);
 	}
 	
-	private Vector3f getClickPosition() {
-		Vector3f p = VecMath.subtraction(currentpath.bodypart.getTranslation(), cam.getTranslation());
-		float dist = VecMath.dotproduct(p, cam.getDirection());
-		p.set(cam.getDirection());
-		p.scale(dist);
-		p.translate(cam.getTranslation());
-		System.out.println("Clickpos: " + p);
-		return p;
+	private Vector3f screenPositionToRayDirection(float mouseX, float mouseY) {
+		float x = (2.0f * mouseX) / settings.getResolutionX() - 1f;
+		float y = (2.0f * mouseY) / settings.getResolutionY() - 1f;
+		Vector4f clipCoords = new Vector4f(x, -y, -1.0f, 1.0f);
+		clipCoords.transform(inverseprojectionmatrix);
+		clipCoords.z = -1.0f;
+		clipCoords.w = 0;
+		
+		Matrix4f invertedView = new Matrix4f(cam.getMatrix());
+		invertedView.invert();
+		clipCoords.transform(invertedView);
+		Vector3f mouseRay = new Vector3f(clipCoords.x, clipCoords.y, clipCoords.z);
+		mouseRay.normalize();
+		
+		return mouseRay;
+	}
+	
+	private Vector3f projectClickOntoObjectPlane(Vector3f campos, Vector3f dir, Vector3f planepos) {
+		Vector3f camToPlane = VecMath.subtraction(planepos, campos);
+		float camToPlaneLength = (float) camToPlane.length();
+		if(camToPlane.lengthSquared() > 0) {
+			camToPlane.normalize();
+		}
+		return VecMath.addition(campos, VecMath.scale(dir, camToPlaneLength / VecMath.dotproduct(dir, camToPlane)));
 	}
 
 	@Override
@@ -181,13 +208,17 @@ public class AnimationEditor3 extends StandardGame {
 			}
 		}
 		if (leftMousePressed.isActive()) {
-			currentpath.clickLeft(getClickPosition());
+			Vector3f clickdir = screenPositionToRayDirection(inputs.getMouseX(), inputs.getMouseY());
+			currentpath.clickLeft(cam.getTranslation(), clickdir, projectClickOntoObjectPlane(cam.getTranslation(), clickdir, new Vector3f(0, 0, 0)));
 		}
 		if (leftMouseDown.isActive()) {
-			currentpath.downLeft(getClickPosition());
+			Vector3f clickdir = screenPositionToRayDirection(inputs.getMouseX(), inputs.getMouseY());
+			Vector3f projectedPos = projectClickOntoObjectPlane(cam.getTranslation(), clickdir, new Vector3f(0, 0, 0));
+			currentpath.downLeft(projectedPos);
 		}
 		if (leftMouseReleased.isActive()) {
-			currentpath.releaseLeft(getClickPosition());
+			Vector3f clickdir = screenPositionToRayDirection(inputs.getMouseX(), inputs.getMouseY());
+			currentpath.releaseLeft(projectClickOntoObjectPlane(cam.getTranslation(), clickdir, new Vector3f(0, 0, 0)));
 		}
 		if (closePath.isActive()) {
 			currentpath.closePath();
@@ -210,6 +241,7 @@ public class AnimationEditor3 extends StandardGame {
 			layertexts.get(currentpathID).setArgument("u_color", new Vector4f(1, 0, 0, 1));
 			System.out.println("Switched to layer: " + currentpathID);
 		}
+		
 		debugger.update(fps, 0, 0);
 		if(display.isMouseBound()) {
 			cam.update(delta);
