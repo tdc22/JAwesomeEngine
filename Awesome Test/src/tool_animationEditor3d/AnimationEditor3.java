@@ -38,6 +38,7 @@ import sound.NullSoundEnvironment;
 import utils.Debugger;
 import utils.GLConstants;
 import utils.ProjectionHelper;
+import utils.VectorConstants;
 import vector.Vector3f;
 import vector.Vector4f;
 
@@ -209,16 +210,16 @@ public class AnimationEditor3 extends StandardGame {
 		}
 		if (leftMousePressed.isActive()) {
 			Vector3f clickdir = screenPositionToRayDirection(inputs.getMouseX(), inputs.getMouseY());
-			currentpath.clickLeft(cam.getTranslation(), clickdir, projectClickOntoObjectPlane(cam.getTranslation(), clickdir, new Vector3f(0, 0, 0)));
+			currentpath.clickLeft(cam.getTranslation(), clickdir, projectClickOntoObjectPlane(cam.getTranslation(), clickdir, VectorConstants.ZERO));
 		}
 		if (leftMouseDown.isActive()) {
 			Vector3f clickdir = screenPositionToRayDirection(inputs.getMouseX(), inputs.getMouseY());
-			Vector3f projectedPos = projectClickOntoObjectPlane(cam.getTranslation(), clickdir, new Vector3f(0, 0, 0));
+			Vector3f projectedPos = projectClickOntoObjectPlane(cam.getTranslation(), clickdir, currentpath.draggedMarker.getTranslation());
 			currentpath.downLeft(projectedPos);
 		}
 		if (leftMouseReleased.isActive()) {
 			Vector3f clickdir = screenPositionToRayDirection(inputs.getMouseX(), inputs.getMouseY());
-			currentpath.releaseLeft(projectClickOntoObjectPlane(cam.getTranslation(), clickdir, new Vector3f(0, 0, 0)));
+			currentpath.releaseLeft(projectClickOntoObjectPlane(cam.getTranslation(), clickdir, currentpath.draggedMarker.getTranslation()));
 		}
 		if (closePath.isActive()) {
 			currentpath.closePath();

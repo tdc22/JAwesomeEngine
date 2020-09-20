@@ -31,11 +31,12 @@ public class AnimationPath {
 	boolean dragging = false;
 	int temppoint = -1, temppoint2 = -1, tempreference = -1;
 	int dragID;
+	ShapedObject2 draggedMarker;
 	boolean isMarkerDragged = true;
 	final float maxDraggingDistanceSqr = 20f;
 	float animationTimer = 0;
 	boolean closed = false;
-	Vector2f clickpos;
+	final Vector2f startpos = new Vector2f();
 
 	public AnimationPath(Shader defaultshader, Shader markershader, Shader textureshader, Vector2f markersize) {
 		init(defaultshader, markershader, textureshader, markersize);
@@ -85,24 +86,28 @@ public class AnimationPath {
 	}
 
 	public void clickLeft(Vector2f pos) {
-		clickpos = pos;
 		float mindistance = Float.MAX_VALUE;
 		double dist;
 		for (int i = 0; i < markers.size(); i++) {
-			if ((dist = VecMath.subtraction(pos, markers.get(i).getTranslation()).lengthSquared()) < mindistance) {
+			ShapedObject2 marker = markers.get(i);
+			if ((dist = VecMath.subtraction(pos, marker.getTranslation()).lengthSquared()) < mindistance) {
 				dragID = i;
+				draggedMarker = marker;
 				mindistance = (float) dist;
 				isMarkerDragged = true;
 			}
 		}
 		for (int i = 0; i < rotationreferences.size(); i++) {
-			if ((dist = VecMath.subtraction(pos, rotationreferences.get(i).getTranslation())
+			ShapedObject2 rotationmarker = rotationreferences.get(i);
+			if ((dist = VecMath.subtraction(pos, rotationmarker.getTranslation())
 					.lengthSquared()) < mindistance) {
 				dragID = i;
+				draggedMarker = rotationmarker;
 				mindistance = (float) dist;
 				isMarkerDragged = false;
 			}
 		}
+		startpos.set(draggedMarker.getTranslation());
 		if (mindistance <= maxDraggingDistanceSqr) {
 			dragging = true;
 		} else {
@@ -145,11 +150,7 @@ public class AnimationPath {
 
 	public void downLeft(Vector2f pos) {
 		if (dragging) {
-			if (isMarkerDragged) {
-				markers.get(dragID).translateTo(pos);
-			} else {
-				rotationreferences.get(dragID).translateTo(pos);
-			}
+			draggedMarker.translateTo(pos);
 		}
 	}
 
@@ -166,7 +167,7 @@ public class AnimationPath {
 					rb.delete();
 					if (pointid == 0) {
 						rb = new RenderedBezierCurve(new BezierCurve2(pos, b.getP1(), b.getP2(), b.getP3()));
-						rotationreferences.get(bezierid).translate(VecMath.subtraction(pos, clickpos));
+						rotationreferences.get(bezierid).translate(VecMath.subtraction(pos, startpos));
 						if (closed) {
 							RenderedBezierCurve rbLast = beziercurves.get(beziercurves.size() - 1);
 							BezierCurve2 b1 = rbLast.bezier;
@@ -180,7 +181,7 @@ public class AnimationPath {
 						rb = new RenderedBezierCurve(new BezierCurve2(b.getP0(), b.getP1(), pos, b.getP3()));
 					} else if (pointid == 2) {
 						rb = new RenderedBezierCurve(new BezierCurve2(b.getP0(), b.getP1(), b.getP2(), pos));
-						rotationreferences.get(bezierid + 1).translate(VecMath.subtraction(pos, clickpos));
+						rotationreferences.get(bezierid + 1).translate(VecMath.subtraction(pos, startpos));
 						if (beziercurves.size() > bezierid + 1) {
 							RenderedBezierCurve rbNext = beziercurves.get(bezierid + 1);
 							BezierCurve2 b1 = rbNext.bezier;

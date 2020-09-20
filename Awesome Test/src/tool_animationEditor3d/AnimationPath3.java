@@ -22,7 +22,7 @@ public class AnimationPath3 {
 	List<SquadCurve3> squadcurves;
 	ShapedObject3 bodypart;
 
-	Shader markershader, defaultshader, textureshader;
+	Shader markershader, defaultshader;
 
 	int numCurves = 0;
 	float oneOverNum = 0;
@@ -31,11 +31,12 @@ public class AnimationPath3 {
 	boolean dragging = false;
 	int temppoint = -1, temppoint2 = -1, tempreference = -1;
 	int dragID;
+	ShapedObject3 draggedMarker;
 	boolean isMarkerDragged = true;
 	final float maxDraggingDistanceSqr = 0.001f;
 	float animationTimer = 0;
 	boolean closed = false;
-	Vector3f clickpos;
+	final Vector3f startpos = new Vector3f();
 
 	public AnimationPath3(Shader defaultshader, Shader markershader, ShapedObject3 bodypart) {
 		init(defaultshader, markershader, bodypart);
@@ -48,7 +49,6 @@ public class AnimationPath3 {
 	private void init(Shader defaultshader, Shader markershader, ShapedObject3 bodypart) {
 		this.defaultshader = defaultshader;
 		this.markershader = markershader;
-		this.textureshader = textureshader;
 		markers = new ArrayList<ShapedObject3>();
 		rotationreferences = new ArrayList<ShapedObject3>();
 		beziercurves = new ArrayList<RenderedBezierCurve3>();
@@ -83,32 +83,36 @@ public class AnimationPath3 {
 
 	public void clickLeft(Vector3f campos, Vector3f clickdir, Vector3f projectedpos) {
 		System.out.println("Dir " + clickdir.length() + "; " + clickdir);
-		clickpos = projectedpos;
 		float maxproject = 0;
 		double dist;
 		for(int i = 0; i < markers.size(); i++) {
-			Vector3f camToMarker = VecMath.subtraction(markers.get(i).getTranslation(), campos);
+			ShapedObject3 marker = markers.get(i);
+			Vector3f camToMarker = VecMath.subtraction(marker.getTranslation(), campos);
 			camToMarker.normalize();
 			System.out.println(camToMarker);
 			if ((dist = VecMath.dotproduct(camToMarker, clickdir)) > maxproject) {
 				dragID = i;
+				draggedMarker = marker;
 				maxproject = (float) dist;
 				isMarkerDragged = true;
 			}
 			System.out.println("Dist1 " + dist);
 		}
 		for(int i = 0; i < rotationreferences.size(); i++) {
-			Vector3f camToMarker = VecMath.subtraction(rotationreferences.get(i).getTranslation(), campos);
+			ShapedObject3 rotationmarker = rotationreferences.get(i);
+			Vector3f camToMarker = VecMath.subtraction(rotationmarker.getTranslation(), campos);
 			camToMarker.normalize();
 			System.out.println(camToMarker);
 			if ((dist = VecMath.dotproduct(camToMarker, clickdir)) > maxproject) {
 				dragID = i;
+				draggedMarker = rotationmarker;
 				maxproject = (float) dist;
 				isMarkerDragged = false;
 			}
 			System.out.println("Dist2 " + dist);
 		}
 		System.out.println("Proj " + (1 - maxproject));
+		startpos.set(draggedMarker.getTranslation());
 		if ((1 - maxproject) <= maxDraggingDistanceSqr) {
 			System.out.println("Start drag");
 			dragging = true;
@@ -160,11 +164,7 @@ public class AnimationPath3 {
 	public void downLeft(Vector3f pos) {
 		if (dragging) {
 			System.out.println("DRAG");
-			if (isMarkerDragged) {
-				markers.get(dragID).translateTo(pos);
-			} else {
-				rotationreferences.get(dragID).translateTo(pos);
-			}
+			draggedMarker.translateTo(pos);
 		}
 	}
 
@@ -179,9 +179,10 @@ public class AnimationPath3 {
 					RenderedBezierCurve3 rb = beziercurves.get(bezierid);
 					BezierCurve3 b = rb.bezier;
 					rb.delete();
+					System.out.println(pos + "; " + startpos);
 					if (pointid == 0) {
 						rb = new RenderedBezierCurve3(new BezierCurve3(pos, b.getP1(), b.getP2(), b.getP3()));
-						rotationreferences.get(bezierid).translate(VecMath.subtraction(pos, clickpos));
+						rotationreferences.get(bezierid).translate(VecMath.subtraction(pos, startpos));
 						if (closed) {
 							RenderedBezierCurve3 rbLast = beziercurves.get(beziercurves.size() - 1);
 							BezierCurve3 b1 = rbLast.bezier;
@@ -195,7 +196,7 @@ public class AnimationPath3 {
 						rb = new RenderedBezierCurve3(new BezierCurve3(b.getP0(), b.getP1(), pos, b.getP3()));
 					} else if (pointid == 2) {
 						rb = new RenderedBezierCurve3(new BezierCurve3(b.getP0(), b.getP1(), b.getP2(), pos));
-						rotationreferences.get(bezierid + 1).translate(VecMath.subtraction(pos, clickpos));
+						rotationreferences.get(bezierid + 1).translate(VecMath.subtraction(pos, startpos));
 						if (beziercurves.size() > bezierid + 1) {
 							RenderedBezierCurve3 rbNext = beziercurves.get(bezierid + 1);
 							BezierCurve3 b1 = rbNext.bezier;
@@ -383,6 +384,7 @@ public class AnimationPath3 {
 			addVertex(new Vector3f(1, 0, 1));
 			addVertex(new Vector3f(0, 1, 0));
 			addIndices(0, 1, 2, 0, 1, 3, 1, 2, 3, 2, 0, 3);
+			scale(0.2f);
 			prerender();
 		}
 	}
