@@ -77,6 +77,7 @@ public class AnimationEditor3 extends StandardGame {
 				new PixelFormat().withSamples(0), new VideoSettings(), new NullSoundEnvironment());
 		//display.bindMouse();
 		cam.setFlyCam(true);
+		cam.translateTo(0, 0, 10);
 		
 		JFrame sliderframe = new JFrame("Animation-Timer");
 		slider = new JSlider(0, 100000, 0);
@@ -170,6 +171,20 @@ public class AnimationEditor3 extends StandardGame {
 		inputs.addEvent(switchLayer);
 		
 		debugger = new Debugger(inputs, defaultshader, lt1, font, cam);
+		
+		
+		AnimationPath3 path = new AnimationPath3(defaultshader, defaultshader, bodyparts[0]);
+		Quaternionf testrot = new Quaternionf();
+		System.out.println("Testrot: " + testrot);
+		Quaternionf result = path.getRotation(VectorConstants.AXIS_X, VectorConstants.ZERO);
+		System.out.println(result + "; " + testrot + "; " + QuatMath.transform(testrot, VectorConstants.AXIS_X) + "; " + QuatMath.transform(result, VectorConstants.AXIS_X));
+		testrot.rotate(90, VectorConstants.AXIS_Z);
+		result = path.getRotation(VectorConstants.AXIS_Y, VectorConstants.ZERO);
+		System.out.println(result + "; " + testrot + "; " + QuatMath.transform(testrot, VectorConstants.AXIS_X) + "; " + QuatMath.transform(result, VectorConstants.AXIS_X));
+		testrot.setIdentity();
+		testrot.rotate(90, VectorConstants.AXIS_Y);
+		result = path.getRotation(VectorConstants.AXIS_Z, VectorConstants.ZERO);
+		System.out.println(result + "; " + testrot + "; " + QuatMath.transform(testrot, VectorConstants.AXIS_X) + "; " + QuatMath.transform(result, VectorConstants.AXIS_X));
 	}
 	
 	private Vector3f screenPositionToRayDirection(float mouseX, float mouseY) {
@@ -361,9 +376,11 @@ public class AnimationEditor3 extends StandardGame {
 					// Complexf a = new
 					// Complexf(Float.parseFloat(p[1].split(",")[0]),
 					// Float.parseFloat(p[1].split(",")[1]));
-					Quaternionf b = new Quaternionf(Float.parseFloat(p[2].split(",")[0]),
-							Float.parseFloat(p[2].split(",")[1]), Float.parseFloat(p[2].split(",")[2]),
-							Float.parseFloat(p[2].split(",")[3]));
+					String[] bs = p[2].split(",");
+					Quaternionf b = new Quaternionf(Float.parseFloat(bs[0]),
+							Float.parseFloat(bs[1]), Float.parseFloat(bs[2]),
+							Float.parseFloat(bs[3]));
+					System.out.println("b " + b);
 					// Complexf c = new
 					// Complexf(Float.parseFloat(p[3].split(",")[0]),
 					// Float.parseFloat(p[3].split(",")[1]));

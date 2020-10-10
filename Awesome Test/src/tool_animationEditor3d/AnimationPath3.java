@@ -112,7 +112,9 @@ public class AnimationPath3 {
 			System.out.println("Dist2 " + dist);
 		}
 		System.out.println("Proj " + (1 - maxproject));
-		startpos.set(draggedMarker.getTranslation());
+		if(draggedMarker != null) {
+			startpos.set(draggedMarker.getTranslation());
+		}
 		if ((1 - maxproject) <= maxDraggingDistanceSqr) {
 			System.out.println("Start drag");
 			dragging = true;
@@ -358,20 +360,34 @@ public class AnimationPath3 {
 			// r0 = rotations.get(i-1);
 			// r3 = rotations.get((i+2)%rs);
 			// }
+			System.out.println(i + "; " + r1 + "; " + r2);
 			squadcurves.add(new SquadCurve3(r1, r1, r2, r2));
 		}
 	}
 
-	private Quaternionf getRotation(Vector3f rotationmarker, Vector3f pathmarker) {
+	// TODO: private
+	public Quaternionf getRotation(Vector3f rotationmarker, Vector3f pathmarker) {
 		Vector3f direction = VecMath.subtraction(rotationmarker, pathmarker);
 		direction.normalize();
 		Quaternionf result = new Quaternionf();
-		Vector3f a = VecMath.crossproduct(direction, VectorConstants.UP);
-		result.q0 = a.x;
-		result.q1 = a.y;
-		result.q2 = a.z;
-		result.q3 = VecMath.dotproduct(direction, VectorConstants.UP);
+		/*float projY = VecMath.dotproduct(direction, VectorConstants.AXIS_Y);
+		if(projY < 0.9) {
+			Vector3f a = VecMath.crossproduct(direction, VectorConstants.AXIS_Y);
+			result.q0 = a.x;
+			result.q1 = a.y;
+			result.q2 = a.z;
+			result.q3 = projY;
+		}
+		else {*/
+			// TODO
+			result.q0 = 1 + VecMath.dotproduct(direction, VectorConstants.AXIS_X);
+			Vector3f a = VecMath.crossproduct(VectorConstants.AXIS_X, direction);
+			result.q1 = a.x;
+			result.q2 = a.y;
+			result.q3 = a.z;/*
+		}*/
 		result.normalize(); // TODO: needed?
+		System.out.println("GetRot " + rotationmarker + "; " + pathmarker + "; " + direction + "; " + result);
 		return result;
 	}
 
