@@ -23,6 +23,7 @@ import input.KeyInput;
 import input.MouseInput;
 import loader.FileLoader;
 import loader.FontLoader;
+import loader.ModelLoader;
 import loader.ShaderLoader;
 import math.QuatMath;
 import math.VecMath;
@@ -31,8 +32,6 @@ import objects.ShapedObject3;
 import quaternion.Quaternionf;
 import shader.Shader;
 import shape.Box;
-import shape.Cylinder;
-import shape.Ellipsoid;
 import shape.Sphere;
 import sound.NullSoundEnvironment;
 import utils.Debugger;
@@ -100,20 +99,26 @@ public class AnimationEditor3 extends StandardGame {
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		
-		bodyparts = new ShapedObject3[4];
+		bodyparts = new ShapedObject3[6];
 		
-		Box box = new Box(-1, 0, 0, 1, 1, 1);
-		bodyparts[0] = box;
-		defaultshader.addObject(box);
-		Sphere sphere = new Sphere(2, 0, 0, 1, 36, 36);
-		bodyparts[1] = sphere;
-		defaultshader.addObject(sphere);
-		Ellipsoid ellipsoid = new Ellipsoid(5, 0, 0, 1, 2, 1, 36, 36);
-		bodyparts[2] = ellipsoid;
-		defaultshader.addObject(ellipsoid);
-		Cylinder cylinder = new Cylinder(8, 0, 0, 1, 2, 36);
-		bodyparts[3] = cylinder;
-		defaultshader.addObject(cylinder);
+		ShapedObject3 head = ModelLoader.load("../../Schall-Game/res/models/playerModel2/head.obj");
+		bodyparts[0] = head;
+		defaultshader.addObject(head);
+		ShapedObject3 torso = ModelLoader.load("../../Schall-Game/res/models/playerModel2/torso.obj");
+		bodyparts[1] = torso;
+		defaultshader.addObject(torso);
+		ShapedObject3 leftHand = ModelLoader.load("../../Schall-Game/res/models/playerModel2/leftHand.obj");
+		bodyparts[2] = leftHand;
+		defaultshader.addObject(leftHand);
+		ShapedObject3 rightHand = ModelLoader.load("../../Schall-Game/res/models/playerModel2/rightHand.obj");
+		bodyparts[3] = rightHand;
+		defaultshader.addObject(rightHand);
+		ShapedObject3 leftFoot = ModelLoader.load("../../Schall-Game/res/models/playerModel2/leftFoot.obj");
+		bodyparts[4] = leftFoot;
+		defaultshader.addObject(leftFoot);
+		ShapedObject3 rightFoot = ModelLoader.load("../../Schall-Game/res/models/playerModel2/rightFoot.obj");
+		bodyparts[5] = rightFoot;
+		defaultshader.addObject(rightFoot);
 		
 		animationcenter = new AnimationCenter3(new Vector3f());
 		
@@ -140,7 +145,7 @@ public class AnimationEditor3 extends StandardGame {
 		
 		paths = new ArrayList<AnimationPath3>();
 		currentpathID = 0;
-		currentpath = new AnimationPath3(defaultshader, defaultshader, box);
+		currentpath = new AnimationPath3(defaultshader, defaultshader, head);
 		paths.add(currentpath);
 		
 		loadFile();
@@ -171,20 +176,6 @@ public class AnimationEditor3 extends StandardGame {
 		inputs.addEvent(switchLayer);
 		
 		debugger = new Debugger(inputs, defaultshader, lt1, font, cam);
-		
-		
-		AnimationPath3 path = new AnimationPath3(defaultshader, defaultshader, bodyparts[0]);
-		Quaternionf testrot = new Quaternionf();
-		System.out.println("Testrot: " + testrot);
-		Quaternionf result = path.getRotation(VectorConstants.AXIS_X, VectorConstants.ZERO);
-		System.out.println(result + "; " + testrot + "; " + QuatMath.transform(testrot, VectorConstants.AXIS_X) + "; " + QuatMath.transform(result, VectorConstants.AXIS_X));
-		testrot.rotate(90, VectorConstants.AXIS_Z);
-		result = path.getRotation(VectorConstants.AXIS_Y, VectorConstants.ZERO);
-		System.out.println(result + "; " + testrot + "; " + QuatMath.transform(testrot, VectorConstants.AXIS_X) + "; " + QuatMath.transform(result, VectorConstants.AXIS_X));
-		testrot.setIdentity();
-		testrot.rotate(90, VectorConstants.AXIS_Y);
-		result = path.getRotation(VectorConstants.AXIS_Z, VectorConstants.ZERO);
-		System.out.println(result + "; " + testrot + "; " + QuatMath.transform(testrot, VectorConstants.AXIS_X) + "; " + QuatMath.transform(result, VectorConstants.AXIS_X));
 	}
 	
 	private Vector3f screenPositionToRayDirection(float mouseX, float mouseY) {
@@ -229,12 +220,14 @@ public class AnimationEditor3 extends StandardGame {
 		}
 		if (leftMouseDown.isActive()) {
 			Vector3f clickdir = screenPositionToRayDirection(inputs.getMouseX(), inputs.getMouseY());
-			Vector3f projectedPos = projectClickOntoObjectPlane(cam.getTranslation(), clickdir, currentpath.draggedMarker.getTranslation());
+			Vector3f planepos = currentpath.draggedMarker != null ? currentpath.draggedMarker.getTranslation() : currentpath.bodypart.getTranslation();
+			Vector3f projectedPos = projectClickOntoObjectPlane(cam.getTranslation(), clickdir, planepos);
 			currentpath.downLeft(projectedPos);
 		}
 		if (leftMouseReleased.isActive()) {
 			Vector3f clickdir = screenPositionToRayDirection(inputs.getMouseX(), inputs.getMouseY());
-			currentpath.releaseLeft(projectClickOntoObjectPlane(cam.getTranslation(), clickdir, currentpath.draggedMarker.getTranslation()));
+			Vector3f planepos = currentpath.draggedMarker != null ? currentpath.draggedMarker.getTranslation() : currentpath.bodypart.getTranslation();
+			currentpath.releaseLeft(projectClickOntoObjectPlane(cam.getTranslation(), clickdir, planepos));
 		}
 		if (closePath.isActive()) {
 			currentpath.closePath();
