@@ -399,7 +399,7 @@ public class AnimationPath3 {
 			addVertex(new Vector3f(-1, 0, 1));
 			addVertex(new Vector3f(1, 0, 1));
 			addVertex(new Vector3f(0, 1, 0));
-			addIndices(0, 1, 2, 0, 1, 3, 1, 2, 3, 2, 0, 3);
+			addIndices(0, 2, 1, 0, 1, 3, 1, 2, 3, 2, 0, 3);
 			scale(0.2f);
 			prerender();
 		}

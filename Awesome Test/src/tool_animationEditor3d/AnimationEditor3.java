@@ -79,6 +79,7 @@ public class AnimationEditor3 extends StandardGame {
 		//display.bindMouse();
 		cam.setFlyCam(true);
 		cam.translateTo(0, 1, 2);
+		cam.setFlySpeed(0.005f);
 		
 		JFrame sliderframe = new JFrame("Animation-Timer");
 		slider = new JSlider(0, 100000, 0);
@@ -455,7 +456,7 @@ public class AnimationEditor3 extends StandardGame {
 			addVertex(new Vector3f(-1, -1, 1));
 			addVertex(new Vector3f(1, -1, 0));
 			addVertex(new Vector3f(0, 1, 0));
-			addIndices(0, 1, 2, 0, 1, 3, 1, 2, 3, 2, 0, 3);
+			addIndices(0, 2, 1, 0, 1, 3, 1, 2, 3, 2, 0, 3);
 			prerender();
 		}
 	}
