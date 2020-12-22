@@ -25,6 +25,7 @@ import loader.FileLoader;
 import loader.FontLoader;
 import loader.ModelLoader;
 import loader.ShaderLoader;
+import loader.TextureLoader;
 import math.QuatMath;
 import math.VecMath;
 import matrix.Matrix4f;
@@ -34,6 +35,7 @@ import shader.Shader;
 import shape.Box;
 import shape.Sphere;
 import sound.NullSoundEnvironment;
+import texture.Texture;
 import utils.Debugger;
 import utils.GLConstants;
 import utils.ProjectionHelper;
@@ -76,7 +78,7 @@ public class AnimationEditor3 extends StandardGame {
 				new PixelFormat().withSamples(0), new VideoSettings(), new NullSoundEnvironment());
 		//display.bindMouse();
 		cam.setFlyCam(true);
-		cam.translateTo(0, 0, 10);
+		cam.translateTo(0, 1, 2);
 		
 		JFrame sliderframe = new JFrame("Animation-Timer");
 		slider = new JSlider(0, 100000, 0);
@@ -99,26 +101,38 @@ public class AnimationEditor3 extends StandardGame {
 				ShaderLoader.loadShaderFromFile("res/shaders/defaultshader.vert", "res/shaders/defaultshader.frag"));
 		addShader(defaultshader);
 		
+		Shader textureShader = new Shader(
+				ShaderLoader.loadShaderFromFile("../../Schall-Game/res/shaders/textureshader.vert", "../../Schall-Game/res/shaders/textureshader.frag"));
+		textureShader.addArgument("u_texture",
+				new Texture(TextureLoader.loadTexture("../../Schall-Game/res/textures/DefaultPalette.png")));
+		addShader(textureShader);
+		
 		bodyparts = new ShapedObject3[6];
 		
 		ShapedObject3 head = ModelLoader.load("../../Schall-Game/res/models/playerModel2/head.obj");
 		bodyparts[0] = head;
-		defaultshader.addObject(head);
+		head.setRenderHints(false, true, true);
+		textureShader.addObject(head);
 		ShapedObject3 torso = ModelLoader.load("../../Schall-Game/res/models/playerModel2/torso.obj");
 		bodyparts[1] = torso;
-		defaultshader.addObject(torso);
+		torso.setRenderHints(false, true, true);
+		textureShader.addObject(torso);
 		ShapedObject3 leftHand = ModelLoader.load("../../Schall-Game/res/models/playerModel2/leftHand.obj");
 		bodyparts[2] = leftHand;
-		defaultshader.addObject(leftHand);
+		leftHand.setRenderHints(false, true, true);
+		textureShader.addObject(leftHand);
 		ShapedObject3 rightHand = ModelLoader.load("../../Schall-Game/res/models/playerModel2/rightHand.obj");
 		bodyparts[3] = rightHand;
-		defaultshader.addObject(rightHand);
+		rightHand.setRenderHints(false, true, true);
+		textureShader.addObject(rightHand);
 		ShapedObject3 leftFoot = ModelLoader.load("../../Schall-Game/res/models/playerModel2/leftFoot.obj");
 		bodyparts[4] = leftFoot;
-		defaultshader.addObject(leftFoot);
+		leftFoot.setRenderHints(false, true, true);
+		textureShader.addObject(leftFoot);
 		ShapedObject3 rightFoot = ModelLoader.load("../../Schall-Game/res/models/playerModel2/rightFoot.obj");
 		bodyparts[5] = rightFoot;
-		defaultshader.addObject(rightFoot);
+		rightFoot.setRenderHints(false, true, true);
+		textureShader.addObject(rightFoot);
 		
 		animationcenter = new AnimationCenter3(new Vector3f());
 		
