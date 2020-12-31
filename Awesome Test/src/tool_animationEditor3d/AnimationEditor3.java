@@ -244,7 +244,7 @@ public class AnimationEditor3 extends StandardGame {
 			Vector3f planepos = currentpath.draggedMarker != null ? currentpath.draggedMarker.getTranslation() : currentpath.bodypart.getTranslation();
 			currentpath.releaseLeft(projectClickOntoObjectPlane(cam.getTranslation(), clickdir, planepos));
 		}
-		if (closePath.isActive()) {
+		if (closePath.isActive() && !display.isMouseBound()) {
 			currentpath.closePath();
 		}
 		if (deleteMarker.isActive()) {
