@@ -18,6 +18,7 @@ import vector.Vector3f;
 public class AnimationPath3 {
 	List<ShapedObject3> markers;
 	List<ShapedObject3> rotationreferences;
+	List<ShapedObject3> secondaryrotationreferences;
 	List<RenderedBezierCurve3> beziercurves;
 	List<SquadCurve3> squadcurves;
 	ShapedObject3 bodypart;
@@ -32,7 +33,7 @@ public class AnimationPath3 {
 	int temppoint = -1, temppoint2 = -1, tempreference = -1;
 	int dragID;
 	ShapedObject3 draggedMarker;
-	boolean isMarkerDragged = true;
+	int draggedMarkerType;
 	final float maxDraggingDistanceSqr = 0.001f;
 	float animationTimer = 0;
 	boolean closed = false;
@@ -51,6 +52,7 @@ public class AnimationPath3 {
 		this.markershader = markershader;
 		markers = new ArrayList<ShapedObject3>();
 		rotationreferences = new ArrayList<ShapedObject3>();
+		secondaryrotationreferences = new ArrayList<ShapedObject3>();
 		beziercurves = new ArrayList<RenderedBezierCurve3>();
 		squadcurves = new ArrayList<SquadCurve3>();
 		this.bodypart = bodypart;
@@ -80,13 +82,12 @@ public class AnimationPath3 {
 		}
 		return squadcurves.get(num).getRotation(t);
 	}
-
-	public void clickLeft(Vector3f campos, Vector3f clickdir, Vector3f projectedpos) {
-		System.out.println("Dir " + clickdir.length() + "; " + clickdir);
-		float maxproject = 0;
+	
+	float maxproject;
+	private void checkMarkers(List<ShapedObject3> markerlist, int markertype, Vector3f campos, Vector3f clickdir) {
 		double dist;
-		for(int i = 0; i < markers.size(); i++) {
-			ShapedObject3 marker = markers.get(i);
+		for(int i = 0; i < markerlist.size(); i++) {
+			ShapedObject3 marker = markerlist.get(i);
 			Vector3f camToMarker = VecMath.subtraction(marker.getTranslation(), campos);
 			camToMarker.normalize();
 			System.out.println(camToMarker);
@@ -94,23 +95,18 @@ public class AnimationPath3 {
 				dragID = i;
 				draggedMarker = marker;
 				maxproject = (float) dist;
-				isMarkerDragged = true;
+				draggedMarkerType = markertype;
 			}
-			System.out.println("Dist1 " + dist);
+			System.out.println("Dist " + dist);
 		}
-		for(int i = 0; i < rotationreferences.size(); i++) {
-			ShapedObject3 rotationmarker = rotationreferences.get(i);
-			Vector3f camToMarker = VecMath.subtraction(rotationmarker.getTranslation(), campos);
-			camToMarker.normalize();
-			System.out.println(camToMarker);
-			if ((dist = VecMath.dotproduct(camToMarker, clickdir)) > maxproject) {
-				dragID = i;
-				draggedMarker = rotationmarker;
-				maxproject = (float) dist;
-				isMarkerDragged = false;
-			}
-			System.out.println("Dist2 " + dist);
-		}
+	}
+
+	public void clickLeft(Vector3f campos, Vector3f clickdir, Vector3f projectedpos) {
+		System.out.println("Dir " + clickdir.length() + "; " + clickdir);
+		maxproject = 0;
+		checkMarkers(markers, 0, campos, clickdir);
+		checkMarkers(rotationreferences, 1, campos, clickdir);
+		checkMarkers(secondaryrotationreferences, 2, campos, clickdir);
 		System.out.println("Proj " + (1 - maxproject));
 		if(draggedMarker != null) {
 			startpos.set(draggedMarker.getTranslation());
@@ -133,6 +129,10 @@ public class AnimationPath3 {
 
 					projectedpos.x += 0.2;
 					addRotationMarker(projectedpos);
+					
+					projectedpos.x -= 0.2;
+					projectedpos.y += 0.2;
+					addSecondaryRotationMarker(projectedpos);
 				} else {
 					System.out.println("Add marker 2");
 					markers.add(markers.get(markers.size() - 2));
@@ -162,6 +162,12 @@ public class AnimationPath3 {
 		rotationreferences.add(rm);
 		markershader.addObject(rm);
 	}
+	
+	public void addSecondaryRotationMarker(Vector3f pos) {
+		SecondaryRotationMarker srm = new SecondaryRotationMarker(pos);
+		secondaryrotationreferences.add(srm);
+		markershader.addObject(srm);
+	}
 
 	public void downLeft(Vector3f pos) {
 		if (dragging) {
@@ -172,7 +178,7 @@ public class AnimationPath3 {
 
 	public void releaseLeft(Vector3f pos) {
 		if (dragging) {
-			if (isMarkerDragged) {
+			if (draggedMarkerType == 0) {
 				markers.get(dragID).translateTo(pos);
 
 				int bezierid = dragID / 4;
@@ -212,13 +218,20 @@ public class AnimationPath3 {
 				} else {
 					markers.get(dragID).translateTo(pos);
 				}
-			} else {
+			} else if(draggedMarkerType == 1) {
 				rotationreferences.get(dragID).translateTo(pos);
 				if (closed) {
 					updateSquad();
 					updatePathMarker();
 				}
 				System.out.println(rotationreferences.size());
+			} else if(draggedMarkerType == 2) {
+				secondaryrotationreferences.get(dragID).translateTo(pos);
+				if (closed) {
+					updateSquad();
+					updatePathMarker();
+				}
+				System.out.println(secondaryrotationreferences.size());
 			}
 
 			dragging = false;
@@ -400,6 +413,19 @@ public class AnimationPath3 {
 			addVertex(new Vector3f(1, 0, 1));
 			addVertex(new Vector3f(0, 1, 0));
 			addIndices(0, 2, 1, 0, 1, 3, 1, 2, 3, 2, 0, 3);
+			scale(0.2f);
+			prerender();
+		}
+	}
+	
+	private class SecondaryRotationMarker extends ShapedObject3 {
+		public SecondaryRotationMarker(Vector3f pos) {
+			super(pos);
+			setRenderMode(GLConstants.TRIANGLES);
+			addVertex(new Vector3f(0, 0, -1));
+			addVertex(new Vector3f(0, 0, 1));
+			addVertex(new Vector3f(0, 1, 0));
+			addIndices(0, 1, 2, 0, 2, 1);
 			scale(0.2f);
 			prerender();
 		}
