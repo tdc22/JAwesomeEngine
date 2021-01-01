@@ -110,14 +110,10 @@ public class AnimationPath3 {
 			startpos.set(draggedMarker.getTranslation());
 		}
 		if ((1 - maxproject) <= maxDraggingDistanceSqr) {
-			System.out.println("Start drag");
 			dragging = true;
 		} else {
-			System.out.println("A");
 			if (!closed) {
-				System.out.println("B");
 				if (!skipPress) {
-					System.out.println("Add marker 1");
 					if (temppoint == -1) {
 						temppoint = markers.size();
 					} else {
@@ -132,7 +128,6 @@ public class AnimationPath3 {
 					projectedpos.y += refpointdistance;
 					addSecondaryRotationMarker(projectedpos);
 				} else {
-					System.out.println("Add marker 2");
 					markers.add(markers.get(markers.size() - 2));
 					skipPress = false;
 				}
@@ -221,6 +216,19 @@ public class AnimationPath3 {
 				}
 			} else if(draggedMarkerType == 1) {
 				rotationreferences.get(dragID).translateTo(pos);
+				
+				Vector3f pathmarker = markers.get(dragID * 4).getTranslation();
+				ShapedObject3 secrotref = secondaryrotationreferences.get(dragID);
+				Vector3f direction = VecMath.subtraction(secrotref.getTranslation(), pathmarker);
+				if(squadcurves.size() > dragID) {
+					Quaternionf previousrotation = squadcurves.get(dragID).getR0();
+					previousrotation.invert();
+					direction.transform(previousrotation);
+				}
+				Quaternionf rot = getRotation(pos, VectorConstants.AXIS_Y, pathmarker);
+				direction.transform(rot);
+				secrotref.translateTo(VecMath.addition(direction, pathmarker));
+				
 				if (closed) {
 					updateSquad();
 					updatePathMarker();
@@ -355,11 +363,10 @@ public class AnimationPath3 {
 
 	public void updateSquad() {
 		List<Quaternionf> rotations = new ArrayList<Quaternionf>();
-		squadcurves.clear();
-		System.out.println("AAA " + rotationreferences.size() + "; " + markers.size());
 		for (int i = 0; i < rotationreferences.size(); i++) {
-			rotations.add(getRotation(rotationreferences.get(i).getTranslation(), markers.get(i * 4).getTranslation()));
+			rotations.add(getRotation(rotationreferences.get(i).getTranslation(), secondaryrotationreferences.get(i).getTranslation(), markers.get(i * 4).getTranslation()));
 		}
+		squadcurves.clear();
 		int rs = rotations.size();
 		for (int i = 0; i < rs; i++) {
 			// Complexf r0 = null;
@@ -374,34 +381,35 @@ public class AnimationPath3 {
 			// r0 = rotations.get(i-1);
 			// r3 = rotations.get((i+2)%rs);
 			// }
-			System.out.println(i + "; " + r1 + "; " + r2);
 			squadcurves.add(new SquadCurve3(r1, r1, r2, r2));
 		}
 	}
 
-	// TODO: private
-	public Quaternionf getRotation(Vector3f rotationmarker, Vector3f pathmarker) {
+	private Quaternionf getRotation(Vector3f rotationmarker, Vector3f secondaryrotationmarker, Vector3f pathmarker) {
 		Vector3f direction = VecMath.subtraction(rotationmarker, pathmarker);
 		direction.normalize();
 		Quaternionf result = new Quaternionf();
-		/*float projY = VecMath.dotproduct(direction, VectorConstants.AXIS_Y);
-		if(projY < 0.9) {
-			Vector3f a = VecMath.crossproduct(direction, VectorConstants.AXIS_Y);
-			result.q0 = a.x;
-			result.q1 = a.y;
-			result.q2 = a.z;
-			result.q3 = projY;
-		}
-		else {*/
-			// TODO
-			result.q0 = 1 + VecMath.dotproduct(direction, VectorConstants.AXIS_X);
-			Vector3f a = VecMath.crossproduct(VectorConstants.AXIS_X, direction);
-			result.q1 = a.x;
-			result.q2 = a.y;
-			result.q3 = a.z;/*
-		}*/
-		result.normalize(); // TODO: needed?
-		System.out.println("GetRot " + rotationmarker + "; " + pathmarker + "; " + direction + "; " + result);
+
+		result.q0 = 1 + VecMath.dotproduct(direction, VectorConstants.AXIS_X);
+		Vector3f a = VecMath.crossproduct(VectorConstants.AXIS_X, direction);
+		result.q1 = a.x;
+		result.q2 = a.y;
+		result.q3 = a.z;
+		result.normalize();
+		
+		Vector3f secdirection = VecMath.subtraction(secondaryrotationmarker, pathmarker);
+		secdirection.normalize();
+		Vector3f secref = new Vector3f(VectorConstants.AXIS_Y);
+		secref.transform(result);
+		Quaternionf secondrot = new Quaternionf();
+		secondrot.q0 = 1 + VecMath.dotproduct(secdirection, secref);
+		a = VecMath.crossproduct(secref, secdirection);
+		secondrot.q1 = a.x;
+		secondrot.q2 = a.y;
+		secondrot.q3 = a.z;
+		
+		result.rotate(secondrot);
+		
 		return result;
 	}
 
