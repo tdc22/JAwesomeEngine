@@ -445,8 +445,9 @@ public class AnimationEditor3 extends StandardGame {
 					// Complexf(Float.parseFloat(p[4].split(",")[0]),
 					// Float.parseFloat(p[4].split(",")[1]));
 					System.out.println("G "  + currentpath + "; " + currentpath.markers.size() + "; "  + currentpath.rotationreferences.size());
-					currentpath.addRotationMarker(invertRotation(
-							currentpath.markers.get(currentpath.rotationreferences.size() * 4).getTranslation(), b));
+					Vector3f markerpos = currentpath.markers.get(currentpath.rotationreferences.size() * 4).getTranslation();
+					currentpath.addRotationMarker(invertRotation(markerpos, b, VectorConstants.AXIS_X));
+					currentpath.addSecondaryRotationMarker(invertRotation(markerpos, b, VectorConstants.AXIS_Y));
 					lastSquad = true;
 				} else {
 					lastSquad = false;
@@ -472,9 +473,10 @@ public class AnimationEditor3 extends StandardGame {
 		}
 	}
 	
-	private Vector3f invertRotation(Vector3f pathmarker, Quaternionf rotation) {
-		Vector3f result = new Vector3f(1, 0, 0);
+	private Vector3f invertRotation(Vector3f pathmarker, Quaternionf rotation, Vector3f referenceaxis) {
+		Vector3f result = new Vector3f(referenceaxis);
 		result = QuatMath.transform(rotation, result);
+		result.scale(AnimationPath3.refpointdistance);
 		result.translate(pathmarker);
 		return result;
 	}

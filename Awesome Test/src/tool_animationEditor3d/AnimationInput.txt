@@ -1,6 +1,6 @@
-new BezierCurve3(new Vector3f(-1.9366199, 1.2816901, -0.64084506), new Vector3f(-1.9366199, 1.2816901, -0.64084506), new Vector3f(6.8072753, 0.6026886, -5.946235), new Vector3f(2.089431, 0.8780489, -0.43902445))
-new BezierCurve3(new Vector3f(2.089431, 0.8780489, -0.43902445), new Vector3f(1.7672607, 2.5931463, -0.6117151), new Vector3f(0.15551598, 3.1994424, -1.3324885), new Vector3f(0.17412917, 3.4626865, -1.7313433))
-new BezierCurve3(new Vector3f(0.17412917, 3.4626865, -1.7313433), new Vector3f(-0.45909554, 2.8083875, -1.4041938), new Vector3f(-1.3033952, 1.9359891, -0.9679946), new Vector3f(-1.9366199, 1.2816901, -0.64084506))
-new SquadCurve3(new Quaternionf(2.0, 0.0, 0.0, -3.9736435E-7), new Quaternionf(2.0, 0.0, 0.0, -3.9736435E-7), new Quaternionf(2.0, 0.0, 0.0, 0.0), new Quaternionf(2.0, 0.0, 0.0, 0.0))
-new SquadCurve3(new Quaternionf(2.0, 0.0, 0.0, 0.0), new Quaternionf(2.0, 0.0, 0.0, 0.0), new Quaternionf(2.0, 0.0, 0.0, -4.9670543E-8), new Quaternionf(2.0, 0.0, 0.0, -4.9670543E-8))
-new SquadCurve3(new Quaternionf(2.0, 0.0, 0.0, -4.9670543E-8), new Quaternionf(2.0, 0.0, 0.0, -4.9670543E-8), new Quaternionf(2.0, 0.0, 0.0, -3.9736435E-7), new Quaternionf(2.0, 0.0, 0.0, -3.9736435E-7))
+headPath.addCurve(new BezierCurve3(new Vector3f(-1.716418, 0.9751244, -0.48756218), new Vector3f(-1.716418, 0.9751244, -0.48756218), new Vector3f(3.3985953, 0.9128566, -3.2286081), new Vector3f(1.6115702, 0.9586777, -0.47933888)));
+headPath.addCurve(new BezierCurve3(new Vector3f(1.6115702, 0.9586777, -0.47933888), new Vector3f(1.1577024, 2.631308, -0.6311419), new Vector3f(-0.58257353, 3.2499394, -1.0133119), new Vector3f(-0.7712766, 3.9787238, -1.9893622)));
+headPath.addCurve(new BezierCurve3(new Vector3f(-0.7712766, 3.9787238, -1.9893622), new Vector3f(-1.0548191, 3.0776439, -1.5388222), new Vector3f(-1.4328756, 1.8762043, -0.93810225), new Vector3f(-1.716418, 0.9751244, -0.48756218)));
+headRotation.addCurve(new SquadCurve3(new Quaternionf(1.0, 0.0, 0.0, 0.0), new Quaternionf(1.0, 0.0, 0.0, 0.0), new Quaternionf(1.0, 0.0, 0.0, -1.9868214E-7), new Quaternionf(1.0, 0.0, 0.0, -1.9868214E-7)));
+headRotation.addCurve(new SquadCurve3(new Quaternionf(1.0, 0.0, 0.0, -1.9868214E-7), new Quaternionf(1.0, 0.0, 0.0, -1.9868214E-7), new Quaternionf(1.0, 0.0, 0.0, 0.0), new Quaternionf(1.0, 0.0, 0.0, 0.0)));
+headRotation.addCurve(new SquadCurve3(new Quaternionf(1.0, 0.0, 0.0, 0.0), new Quaternionf(1.0, 0.0, 0.0, 0.0), new Quaternionf(1.0, 0.0, 0.0, 0.0), new Quaternionf(1.0, 0.0, 0.0, 0.0)));

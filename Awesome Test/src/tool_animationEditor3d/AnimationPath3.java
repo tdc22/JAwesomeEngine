@@ -38,7 +38,7 @@ public class AnimationPath3 {
 	float animationTimer = 0;
 	boolean closed = false;
 	final Vector3f startpos = new Vector3f();
-	final float refpointdistance = 0.3f;
+	final static float refpointdistance = 0.3f;
 
 	public AnimationPath3(Shader defaultshader, Shader markershader, ShapedObject3 bodypart) {
 		init(defaultshader, markershader, bodypart);
@@ -406,6 +406,7 @@ public class AnimationPath3 {
 		secondrot.q3 = a.z;
 		
 		result.rotate(secondrot);
+		result.normalize();
 		
 		return result;
 	}
