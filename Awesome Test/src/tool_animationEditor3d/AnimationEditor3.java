@@ -36,15 +36,18 @@ import shape.Box;
 import shape.Sphere;
 import sound.NullSoundEnvironment;
 import texture.Texture;
+import tool_animationEditor.AnimationPath;
+import tool_animationEditor.RenderedBezierCurve;
 import utils.Debugger;
 import utils.GLConstants;
 import utils.ProjectionHelper;
 import utils.VectorConstants;
+import vector.Vector2f;
 import vector.Vector3f;
 import vector.Vector4f;
 
 public class AnimationEditor3 extends StandardGame {
-	InputEvent toggleMouseBind, leftMousePressed, leftMouseDown, leftMouseReleased, rightMouseReleased, closePath, deleteMarker, addLayer, switchLayer;
+	InputEvent toggleMouseBind, leftMousePressed, leftMouseDown, leftMouseReleased, rightMouseReleased, closePath, deleteMarker, addLayer, switchLayer, print;
 	
 	Shader colorshader;
 	Matrix4f inverseprojectionmatrix;
@@ -71,6 +74,10 @@ public class AnimationEditor3 extends StandardGame {
 	final int MAXLAYERS = 6;
 	
 	Debugger debugger;
+	
+	String[] pathnames = new String[] { "headPath", "bodyPath", "handPath1", "handPath2", "footPath1", "footPath2" };
+	String[] rotationnames = new String[] { "headRotation", "bodyRotation", "handRotation1", "handRotation2",
+			"footRotation1", "footRotation2" };
 
 	@Override
 	public void init() {
@@ -110,27 +117,27 @@ public class AnimationEditor3 extends StandardGame {
 		
 		bodyparts = new ShapedObject3[6];
 		
-		ShapedObject3 head = ModelLoader.load("../../Schall-Game/res/models/playerModel2/head.obj");
+		ShapedObject3 head = ModelLoader.load("../../Schall-Game/res/models/playerModel2/head_centered.obj");
 		bodyparts[0] = head;
 		head.setRenderHints(false, true, true);
 		textureShader.addObject(head);
-		ShapedObject3 torso = ModelLoader.load("../../Schall-Game/res/models/playerModel2/torso.obj");
+		ShapedObject3 torso = ModelLoader.load("../../Schall-Game/res/models/playerModel2/torso_centered.obj");
 		bodyparts[1] = torso;
 		torso.setRenderHints(false, true, true);
 		textureShader.addObject(torso);
-		ShapedObject3 leftHand = ModelLoader.load("../../Schall-Game/res/models/playerModel2/leftHand.obj");
+		ShapedObject3 leftHand = ModelLoader.load("../../Schall-Game/res/models/playerModel2/leftHand_centered.obj");
 		bodyparts[2] = leftHand;
 		leftHand.setRenderHints(false, true, true);
 		textureShader.addObject(leftHand);
-		ShapedObject3 rightHand = ModelLoader.load("../../Schall-Game/res/models/playerModel2/rightHand.obj");
+		ShapedObject3 rightHand = ModelLoader.load("../../Schall-Game/res/models/playerModel2/rightHand_centered.obj");
 		bodyparts[3] = rightHand;
 		rightHand.setRenderHints(false, true, true);
 		textureShader.addObject(rightHand);
-		ShapedObject3 leftFoot = ModelLoader.load("../../Schall-Game/res/models/playerModel2/leftFoot.obj");
+		ShapedObject3 leftFoot = ModelLoader.load("../../Schall-Game/res/models/playerModel2/leftFoot_centered.obj");
 		bodyparts[4] = leftFoot;
 		leftFoot.setRenderHints(false, true, true);
 		textureShader.addObject(leftFoot);
-		ShapedObject3 rightFoot = ModelLoader.load("../../Schall-Game/res/models/playerModel2/rightFoot.obj");
+		ShapedObject3 rightFoot = ModelLoader.load("../../Schall-Game/res/models/playerModel2/rightFoot_centered.obj");
 		bodyparts[5] = rightFoot;
 		rightFoot.setRenderHints(false, true, true);
 		textureShader.addObject(rightFoot);
@@ -179,6 +186,7 @@ public class AnimationEditor3 extends StandardGame {
 		deleteMarker = new InputEvent("deleteCurve", new Input(Input.KEYBOARD_EVENT, "D", KeyInput.KEY_PRESSED));
 		addLayer = new InputEvent("addLayer", new Input(Input.KEYBOARD_EVENT, "R", KeyInput.KEY_PRESSED));
 		switchLayer = new InputEvent("switchLayer", new Input(Input.KEYBOARD_EVENT, "Tab", KeyInput.KEY_PRESSED));
+		print = new InputEvent("print", new Input(Input.KEYBOARD_EVENT, "P", KeyInput.KEY_PRESSED));
 
 		inputs.addEvent(toggleMouseBind);
 		inputs.addEvent(leftMousePressed);
@@ -189,6 +197,7 @@ public class AnimationEditor3 extends StandardGame {
 		inputs.addEvent(deleteMarker);
 		inputs.addEvent(addLayer);
 		inputs.addEvent(switchLayer);
+		inputs.addEvent(print);
 		
 		debugger = new Debugger(inputs, defaultshader, lt1, font, cam);
 	}
@@ -264,6 +273,46 @@ public class AnimationEditor3 extends StandardGame {
 			currentpath = paths.get(currentpathID);
 			layertexts.get(currentpathID).setArgument("u_color", new Vector4f(1, 0, 0, 1));
 			System.out.println("Switched to layer: " + currentpathID);
+		}
+		if (print.isActive()) {
+			System.out.println("---------- Start Output ----------");
+			float invscale = 1 / scale;
+			for (int i = 0; i < paths.size(); i++) {
+				System.out.println("Path " + i);
+				AnimationPath3 ap = paths.get(i);
+				// System.out.println("Translationpaths");
+				for (int a = 0; a < ap.beziercurves.size(); a++) {
+					RenderedBezierCurve3 bc = ap.beziercurves.get(a);
+					Vector3f neg = VecMath.negate(animationcenter.getTranslation());
+					bc.bezier.getP0().translate(neg);
+					bc.bezier.getP1().translate(neg);
+					bc.bezier.getP2().translate(neg);
+					bc.bezier.getP3().translate(neg);
+					bc.bezier.getP0().scale(invscale);
+					bc.bezier.getP1().scale(invscale);
+					bc.bezier.getP2().scale(invscale);
+					bc.bezier.getP3().scale(invscale);
+					System.out.println(
+							pathnames[i] + ".addCurve(" + bc.toString().replace("BezierCurve[", "new BezierCurve3(")
+									.replace("Vector3f[", "new Vector3f(").replace("]", ")") + ");");
+					bc.bezier.getP0().scale(scale);
+					bc.bezier.getP1().scale(scale);
+					bc.bezier.getP2().scale(scale);
+					bc.bezier.getP3().scale(scale);
+					bc.bezier.getP0().translate(animationcenter.getTranslation());
+					bc.bezier.getP1().translate(animationcenter.getTranslation());
+					bc.bezier.getP2().translate(animationcenter.getTranslation());
+					bc.bezier.getP3().translate(animationcenter.getTranslation());
+				}
+				// System.out.println("Rotationpaths");
+				for (int b = 0; b < ap.squadcurves.size(); b++) {
+					System.out.println(rotationnames[i] + ".addCurve("
+							+ ap.squadcurves.get(b).toString().replace("SquadCurve[", "new SquadCurve3(")
+									.replace("Quaternionf[", "new Quaternionf(").replace("]", ")")
+							+ ");");
+				}
+			}
+			System.out.println("---------- End Output ----------");
 		}
 		
 		debugger.update(fps, 0, 0);

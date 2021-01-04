@@ -101,7 +101,7 @@ public class AnimationPath3 {
 	}
 
 	public void clickLeft(Vector3f campos, Vector3f clickdir, Vector3f projectedpos) {
-		System.out.println("Dir " + clickdir.length() + "; " + clickdir);
+		//System.out.println("Dir " + clickdir.length() + "; " + clickdir);
 		maxproject = 0;
 		checkMarkers(markers, 0, campos, clickdir);
 		checkMarkers(rotationreferences, 1, campos, clickdir);
@@ -179,7 +179,6 @@ public class AnimationPath3 {
 					RenderedBezierCurve3 rb = beziercurves.get(bezierid);
 					BezierCurve3 b = rb.bezier;
 					rb.delete();
-					System.out.println(pos + "; " + startpos);
 					if (pointid == 0) {
 						rb = new RenderedBezierCurve3(new BezierCurve3(pos, b.getP1(), b.getP2(), b.getP3()));
 						Vector3f dragtranslation = VecMath.subtraction(pos, startpos);
@@ -233,14 +232,12 @@ public class AnimationPath3 {
 					updateSquad();
 					updatePathMarker();
 				}
-				System.out.println(rotationreferences.size());
 			} else if(draggedMarkerType == 2) {
 				secondaryrotationreferences.get(dragID).translateTo(pos);
 				if (closed) {
 					updateSquad();
 					updatePathMarker();
 				}
-				System.out.println(secondaryrotationreferences.size());
 			}
 
 			dragging = false;
@@ -422,7 +419,7 @@ public class AnimationPath3 {
 			addVertex(new Vector3f(1, 0, 1));
 			addVertex(new Vector3f(0, 1, 0));
 			addIndices(0, 2, 1, 0, 1, 3, 1, 2, 3, 2, 0, 3);
-			scale(0.2f);
+			scale(0.1f);
 			prerender();
 		}
 	}
@@ -435,7 +432,7 @@ public class AnimationPath3 {
 			addVertex(new Vector3f(0, 0, 1));
 			addVertex(new Vector3f(0, 1, 0));
 			addIndices(0, 1, 2, 0, 2, 1);
-			scale(0.2f);
+			scale(0.1f);
 			prerender();
 		}
 	}
