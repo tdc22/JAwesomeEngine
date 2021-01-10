@@ -19,6 +19,10 @@ public class BoneAnimationSkeleton3 extends BoneAnimationSkeleton<Vector3f, Quat
 			BoneJoint rootJoint, int jointCount) {
 		super(animation, new ShapedObject3(), rootJoint, jointCount);
 	}
+	
+	public BoneAnimationSkeleton3(BoneJoint rootJoint, int jointCount) {
+		super(null, new ShapedObject3(), rootJoint, jointCount);
+	}
 
 	@Override
 	protected void interpolate(BoneAnimationKeyframe3 prevKeyframe, BoneAnimationKeyframe3 nextKeyframe,

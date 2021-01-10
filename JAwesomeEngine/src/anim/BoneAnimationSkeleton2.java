@@ -19,6 +19,10 @@ public class BoneAnimationSkeleton2 extends BoneAnimationSkeleton<Vector2f, Comp
 			BoneJoint rootJoint, int jointCount) {
 		super(animation, new ShapedObject2(), rootJoint, jointCount);
 	}
+	
+	public BoneAnimationSkeleton2(BoneJoint rootJoint, int jointCount) {
+		super(null, new ShapedObject2(), rootJoint, jointCount);
+	}
 
 	@Override
 	protected void interpolate(BoneAnimationKeyframe2 prevKeyframe, BoneAnimationKeyframe2 nextKeyframe,

@@ -42,4 +42,8 @@ public abstract class CurveSkeleton<L extends Vector, A extends Rotation> extend
 	public void addBodyPart(BaseObject<L, A> bodypart) {
 		bodyparts.add(bodypart);
 	}
+	
+	public List<BaseObject<L, A>> getBodyParts() {
+		return bodyparts;
+	}
 }

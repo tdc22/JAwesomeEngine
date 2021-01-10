@@ -14,6 +14,12 @@ public class CurveSkeleton2 extends CurveSkeleton<Vector2f, Complexf> {
 	boolean mirroredY = false;
 	boolean invertRotation = false;
 
+	public CurveSkeleton2() {
+		super(null, new BaseObject2[0]);
+		nullvec = new Vector2f();
+		nullrot = new Complexf();
+	}
+	
 	public CurveSkeleton2(CurveAnimation<Vector2f, Complexf> animation) {
 		super(animation, new BaseObject2[0]);
 		nullvec = new Vector2f();

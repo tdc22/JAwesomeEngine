@@ -9,6 +9,12 @@ import vector.Vector3f;
 
 public class CurveSkeleton3 extends CurveSkeleton<Vector3f, Quaternionf> {
 
+	public CurveSkeleton3() {
+		super(null, new BaseObject3[0]);
+		nullvec = new Vector3f();
+		nullrot = new Quaternionf();
+	}
+	
 	public CurveSkeleton3(CurveAnimation<Vector3f, Quaternionf> animation) {
 		super(animation, new BaseObject3[0]);
 		nullvec = new Vector3f();
