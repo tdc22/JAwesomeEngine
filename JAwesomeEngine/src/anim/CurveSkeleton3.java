@@ -32,7 +32,11 @@ public class CurveSkeleton3 extends CurveSkeleton<Vector3f, Quaternionf> {
 	public void updateAnimation(float animationTimer) {
 		for (int i = 0; i < bodyparts.size(); i++) {
 			BaseObject<Vector3f, Quaternionf> part = bodyparts.get(i);
-			part.translate(animation.getAnimationTranslationPath(i).getPoint(animationTimer));
+			Vector3f point = animation.getAnimationTranslationPath(i).getPoint(animationTimer);
+			if(attachedTo != null) {
+				point.transform(attachedTo.getRotation());
+			}
+			part.translate(point);
 			part.rotate(animation.getAnimationRotationPath(i).getRotation(animationTimer));
 		}
 	}
