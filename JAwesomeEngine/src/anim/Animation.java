@@ -5,7 +5,7 @@ import vector.Vector;
 
 public abstract class Animation<L extends Vector, A extends Rotation> {
 	boolean loops;
-	float speed;
+	float speed, animationTimer;
 
 	public Animation() {
 		init(0.001f, true);
@@ -46,5 +46,24 @@ public abstract class Animation<L extends Vector, A extends Rotation> {
 
 	public boolean isLooping() {
 		return loops;
+	}
+
+	public void setAnimationTimer(float timer) {
+		animationTimer = timer;
+	}
+
+	public float getAnimationTimer() {
+		return animationTimer;
+	}
+	
+	protected void updateAnimationTimer(int delta) {
+		animationTimer += delta * speed;
+		if (animationTimer > 1) {
+			if (loops) {
+				animationTimer %= 1;
+			} else {
+				animationTimer = 1;
+			}
+		}
 	}
 }

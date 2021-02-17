@@ -35,13 +35,11 @@ public class CurveSkeleton3 extends CurveSkeleton<Vector3f, Quaternionf> {
 	}
 
 	@Override
-	public void updateAnimation(float animationTimer) {
-		CurveAnimation<Vector3f, Quaternionf> currentAnimation = (dynamicAnimationTransition != null)
-				? dynamicAnimationTransition.getAnimation()
-				: animation;
+	public void updateAnimation() {
+		CurveAnimation<Vector3f, Quaternionf> currentAnimation = getCurrentAnimation();
 		for (int i = 0; i < bodyparts.size(); i++) {
 			BaseObject<Vector3f, Quaternionf> part = bodyparts.get(i);
-			Vector3f trans = currentAnimation.getAnimationTranslationPath(i).getPoint(animationTimer);
+			Vector3f trans = currentAnimation.getAnimationTranslationPath(i).getPoint(currentAnimation.animationTimer);
 			if (mirroredX)
 				trans.x = -trans.x;
 			if (mirroredY)
@@ -51,7 +49,7 @@ public class CurveSkeleton3 extends CurveSkeleton<Vector3f, Quaternionf> {
 			if(attachedTo != null)
 				trans.transform(attachedTo.getRotation());
 			part.translate(trans);
-			Quaternionf rot = currentAnimation.getAnimationRotationPath(i).getRotation(animationTimer);
+			Quaternionf rot = currentAnimation.getAnimationRotationPath(i).getRotation(currentAnimation.animationTimer);
 			if (invertRotation)
 				rot.invert();
 			part.rotate(rot);
@@ -63,7 +61,7 @@ public class CurveSkeleton3 extends CurveSkeleton<Vector3f, Quaternionf> {
 		dynamicAnimationTransition = new DynamicCurveAnimationTransition<Vector3f, Quaternionf>(animationparam,
 				dynamicAnimationSpeed);
 		for (int i = 0; i < bodyparts.size(); i++) {
-			Vector3f trans = animation.getAnimationTranslationPath(i).getPoint(animationTimer);
+			Vector3f trans = animation.getAnimationTranslationPath(i).getPoint(animation.animationTimer);
 			SimpleCurvePath<Vector3f> translationpath = new SimpleCurvePath<Vector3f>(
 					dynamicAnimationTransition.getAnimation().getAnimationTranslationPath(i));
 			SimpleAngularCurvePath<Quaternionf> rotationpath = new SimpleAngularCurvePath<Quaternionf>(
@@ -73,14 +71,14 @@ public class CurveSkeleton3 extends CurveSkeleton<Vector3f, Quaternionf> {
 			translationpath.getCurves().set(0,
 					new BezierCurve3(trans, oldcurve.getP1(), oldcurve.getP2(), oldcurve.getP3()));
 			// TODO: fix, when squadcurves are properly fixed.
-			Quaternionf newSquadrotation = animation.getAnimationRotationPath(i).getRotation(animationTimer);
+			Quaternionf newSquadrotation = animation.getAnimationRotationPath(i).getRotation(animation.animationTimer);
 			rotationpath.getCurves().set(0,
 					new SquadCurve3(newSquadrotation, newSquadrotation, oldrotcurve.getR2(), oldrotcurve.getR3()));
 			dynamicAnimationTransition.getAnimation().getAnimationTranslationPaths().set(i, translationpath);
 			dynamicAnimationTransition.getAnimation().getAnimationRotationPaths().set(i, rotationpath);
 		}
 		animation = animationparam;
-		animationTimer = 0;
+		animation.animationTimer = 0;
 	}
 	
 	public void mirrorX() {

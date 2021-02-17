@@ -11,4 +11,8 @@ public interface DynamicAnimationTransition<L extends Vector, A extends Rotation
 	public Anim getAnimation();
 
 	public boolean isInDynamicTransition(float animationTimer);
+	
+	public void updateAnimationTimer(int delta);
+	
+	public float getAnimationTimer();
 }

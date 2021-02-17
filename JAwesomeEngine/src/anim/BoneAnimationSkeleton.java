@@ -47,8 +47,8 @@ public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation
 
 	@Override
 	public void update(int delta) {
-		updateAnimationTimer(delta);
-		updateAnimation(animationTimer);
+		animation.updateAnimationTimer(delta);
+		updateAnimation();
 	}
 
 	@Override
@@ -58,9 +58,9 @@ public abstract class BoneAnimationSkeleton<L extends Vector, A extends Rotation
 	}
 
 	@Override
-	public void updateAnimation(float animationTimer) {
-		Pair<B, B> currentKeyframes = animation.getCurrentKeyframes(animationTimer);
-		float currentTime = animationTimer - currentKeyframes.getFirst().getTimestamp();
+	public void updateAnimation() {
+		Pair<B, B> currentKeyframes = animation.getCurrentKeyframes(animation.animationTimer);
+		float currentTime = animation.animationTimer - currentKeyframes.getFirst().getTimestamp();
 		float keyframeDifference = currentKeyframes.getSecond().getTimestamp()
 				- currentKeyframes.getFirst().getTimestamp();
 		float progression = currentTime / keyframeDifference;

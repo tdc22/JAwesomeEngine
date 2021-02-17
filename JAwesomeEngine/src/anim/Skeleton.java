@@ -9,7 +9,6 @@ public abstract class Skeleton<L extends Vector, A extends Rotation, Anim extend
 		implements Updateable {
 	BaseObject<L, A> attachedTo;
 	Anim animation;
-	float animationTimer = 0;
 	DynamicAnimationTransition<L, A, Anim> dynamicAnimationTransition;
 
 	public Skeleton(Anim animation) {
@@ -17,14 +16,17 @@ public abstract class Skeleton<L extends Vector, A extends Rotation, Anim extend
 	}
 
 	public void setAnimation(Anim animationparam) {
-		this.animation = animationparam;
-		animationTimer = 0;
+		animation = animationparam;
 	}
 
 	public abstract void setDynamicAnimation(Anim animationparam, float dynamicAnimationSpeed);
 
 	public Anim getAnimation() {
 		return animation;
+	}
+	
+	public Anim getCurrentAnimation() {
+		return (dynamicAnimationTransition != null) ? dynamicAnimationTransition.getAnimation() : animation;
 	}
 
 	public void attachTo(BaseObject<L, A> attach) {
@@ -39,36 +41,5 @@ public abstract class Skeleton<L extends Vector, A extends Rotation, Anim extend
 		return dynamicAnimationTransition;
 	}
 
-	public void setAnimationTimer(float timer) {
-		animationTimer = timer;
-	}
-
-	public float getAnimationTimer() {
-		return animationTimer;
-	}
-
-	protected void updateAnimationTimer(int delta) {
-		if (dynamicAnimationTransition != null) {
-			if (dynamicAnimationTransition.isInDynamicTransition(animationTimer)) {
-				animationTimer += delta * dynamicAnimationTransition.getDynamicTransitionSpeed();
-			} else {
-				animationTimer += delta * dynamicAnimationTransition.getAnimation().getSpeed();
-			}
-		} else {
-			animationTimer += delta * animation.getSpeed();
-		}
-
-		if (animationTimer > 1) {
-			if (animation.loops) {
-				if (dynamicAnimationTransition != null) {
-					dynamicAnimationTransition = null;
-				}
-				animationTimer %= 1;
-			} else {
-				animationTimer = 1;
-			}
-		}
-	}
-
-	public abstract void updateAnimation(float animationTimer);
+	public abstract void updateAnimation();
 }

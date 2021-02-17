@@ -778,7 +778,7 @@ public class ColladaLoader {
 				if (vectorValues.size() > 0) {
 					sources.put(sourcename, new ArrayList<Vector>(vectorValues));
 					vectorValues.clear();
-					valueType.put(sourcename, new Integer(stride)); // TODO:
+					valueType.put(sourcename, Integer.valueOf(stride)); // TODO:
 																	// check
 				} else if (matrixValues.size() > 0) {
 					matrixSources.put(sourcename, new ArrayList<Matrix>(matrixValues));
@@ -815,7 +815,7 @@ public class ColladaLoader {
 			System.err.println("File extension not recognized. (Use *.dae)");
 			return null;
 		}
-		object.updateAnimation(0);
+		object.updateAnimation();
 
 		return object;
 	}

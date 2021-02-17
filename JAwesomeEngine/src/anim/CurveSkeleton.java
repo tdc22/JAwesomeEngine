@@ -22,7 +22,16 @@ public abstract class CurveSkeleton<L extends Vector, A extends Rotation> extend
 
 	@Override
 	public void update(int delta) {
-		updateAnimationTimer(delta);
+		if(dynamicAnimationTransition != null) {
+			dynamicAnimationTransition.updateAnimationTimer(delta);
+			if(dynamicAnimationTransition.getAnimationTimer() >= 1) {
+				animation.animationTimer = 1;
+				dynamicAnimationTransition = null;
+			}
+		}
+		else {
+			animation.updateAnimationTimer(delta);
+		}
 
 		if (attachedTo != null) {
 			for (BaseObject<L, A> part : bodyparts) {
@@ -36,7 +45,7 @@ public abstract class CurveSkeleton<L extends Vector, A extends Rotation> extend
 			}
 		}
 
-		updateAnimation(animationTimer);
+		updateAnimation();
 	}
 
 	public void addBodyPart(BaseObject<L, A> bodypart) {

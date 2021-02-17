@@ -49,4 +49,13 @@ public class DynamicCurveAnimationTransition<L extends Vector, A extends Rotatio
 	public boolean isInDynamicTransition(float animationTimer) {
 		return getAnimation().getAnimationTranslationPath(0).getCurveNum(animationTimer) == 0;
 	}
+
+	@Override
+	public void updateAnimationTimer(int delta) {
+		if (isInDynamicTransition(animationTimer)) {
+			animationTimer += delta * dynamicTransitionSpeed;
+		} else {
+			animationTimer += delta * speed;
+		}
+	}
 }
