@@ -77,8 +77,6 @@ public class CurveSkeleton3 extends CurveSkeleton<Vector3f, Quaternionf> {
 			dynamicAnimationTransition.getAnimation().getAnimationTranslationPaths().set(i, translationpath);
 			dynamicAnimationTransition.getAnimation().getAnimationRotationPaths().set(i, rotationpath);
 		}
-		animation = animationparam;
-		animation.animationTimer = 0;
 	}
 	
 	public void mirrorX() {

@@ -75,8 +75,6 @@ public class CurveSkeleton2 extends CurveSkeleton<Vector2f, Complexf> {
 			dynamicAnimationTransition.getAnimation().getAnimationTranslationPaths().set(i, translationpath);
 			dynamicAnimationTransition.getAnimation().getAnimationRotationPaths().set(i, rotationpath);
 		}
-		animation = animationparam;
-		animation.animationTimer = 0;
 	}
 	
 	public void setPartialAnimation(CurveAnimation<Vector2f, Complexf> animationparam, int offset) {

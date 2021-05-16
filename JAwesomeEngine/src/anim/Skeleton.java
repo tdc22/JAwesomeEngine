@@ -20,6 +20,10 @@ public abstract class Skeleton<L extends Vector, A extends Rotation, Anim extend
 	}
 
 	public abstract void setDynamicAnimation(Anim animationparam, float dynamicAnimationSpeed);
+	
+	public void clearDynamicAnimation() {
+		dynamicAnimationTransition = null;
+	}
 
 	public Anim getAnimation() {
 		return animation;
