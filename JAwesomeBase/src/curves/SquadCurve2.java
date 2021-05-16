@@ -13,10 +13,4 @@ public class SquadCurve2 extends SquadCurve<Complexf> {
 	public Complexf getRotation(float t) {
 		return ComplexMath.lerp(r1, r2, t);
 	}
-
-	@Override
-	public void setStartRotation(Complexf startrotation) {
-		r0 = startrotation;
-	}
-
 }

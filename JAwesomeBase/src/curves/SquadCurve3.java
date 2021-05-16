@@ -13,10 +13,4 @@ public class SquadCurve3 extends SquadCurve<Quaternionf> {
 	public Quaternionf getRotation(float t) {
 		return QuatMath.squad(r0, r1, r2, r3, t);
 	}
-
-	@Override
-	public void setStartRotation(Quaternionf startrotation) {
-		r0 = startrotation;
-	}
-
 }
